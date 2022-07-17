@@ -1,6 +1,9 @@
 import {
   createUserWithEmailAndPassword,
+  GithubAuthProvider,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
 } from "firebase/auth"
 import { useRouter } from "next/router"
@@ -48,6 +51,24 @@ export default function Auth() {
     )
   }
 
+  const handleGoogleAuth = () => {
+    const googleProvider = new GoogleAuthProvider()
+    signInWithPopup(authService, googleProvider).then((response) => {
+      if (response.operationType === "signIn") {
+        router.push("/")
+      }
+    })
+  }
+
+  const handleGitHubAuth = () => {
+    const githubProvider = new GithubAuthProvider()
+    signInWithPopup(authService, githubProvider).then((response) => {
+      if (response.operationType === "signIn") {
+        router.push("/")
+      }
+    })
+  }
+
   return (
     <>
       <form onSubmit={handleOnSubmit}>
@@ -77,11 +98,11 @@ export default function Auth() {
           setIsNewAccount((current) => !current)
         }}
       >
-        {isNewAccount ? "회원가입" : "로그인"}
+        {isNewAccount ? "로그인" : "회원가입"}
       </button>
       <div>
-        <button>Continue with Google</button>
-        <button>Continue with GitHub</button>
+        <button onClick={handleGoogleAuth}>Continue with Google</button>
+        <button onClick={handleGitHubAuth}>Continue with GitHub</button>
       </div>
     </>
   )
