@@ -58,6 +58,7 @@ export default function Auth() {
         }
       })
       .catch((error) => {
+        console.log(error.code)
         if (error.code === "auth/wrong-password") {
           alert("비밀번호가 잘못되었습니다")
           setPassword("")
@@ -75,20 +76,36 @@ export default function Auth() {
 
   const handleGoogleAuth = () => {
     const googleProvider = new GoogleAuthProvider()
-    signInWithPopup(authService, googleProvider).then((response) => {
-      if (response.operationType === "signIn") {
-        router.push("/")
-      }
-    })
+    signInWithPopup(authService, googleProvider)
+      .then((response) => {
+        if (response.operationType === "signIn") {
+          router.push("/")
+        }
+      })
+      .catch((error) => {
+        if (error.code === "auth/cancelled-popup-request") {
+          alert(
+            "로그인 진행중에 오류가 발생하였습니다. 팝업창을 닫지 않도록 주의하시기 바랍니다.",
+          )
+        }
+      })
   }
 
   const handleGitHubAuth = () => {
     const githubProvider = new GithubAuthProvider()
-    signInWithPopup(authService, githubProvider).then((response) => {
-      if (response.operationType === "signIn") {
-        router.push("/")
-      }
-    })
+    signInWithPopup(authService, githubProvider)
+      .then((response) => {
+        if (response.operationType === "signIn") {
+          router.push("/")
+        }
+      })
+      .catch((error) => {
+        if (error.code === "auth/cancelled-popup-request") {
+          alert(
+            "로그인 진행중에 오류가 발생하였습니다. 팝업창을 닫지 않도록 주의하시기 바랍니다.",
+          )
+        }
+      })
   }
 
   return (
