@@ -1,10 +1,8 @@
 # 1. 로그인 기능 구현
 
-## 홈페이지
+## - 홈페이지
 
-<br/>
-
-### 홈페이지 첫 화면에서 아래와 같이 useEffect를 사용하여 현재 로그인 여부를 판별한다. 만약 로그인이 되어 있다면 현재 로그인 된 계정의 이메일을 화면에 보여주고 그렇지 않다면 auth페이지로 넘어가 회원가입 또는 로그인을 하도록 설정 하였다.
+##### 홈페이지 첫 화면에서 아래와 같이 useEffect를 사용하여 현재 로그인 여부를 판별한다. 만약 로그인이 되어 있다면 현재 로그인 된 계정의 이메일을 화면에 보여주고 그렇지 않다면 auth페이지로 넘어가 회원가입 또는 로그인을 하도록 설정 하였다.
 
 <br/>
 
@@ -24,7 +22,7 @@ return <span>환영합니다!! {currentUserEmail}님!</span>;
 
 <br/>
 
-### auth 페이지
+## - auth 페이지
 
 <br/>
 
@@ -92,7 +90,7 @@ const handleSubmit: React.FormEventHandler<HTMLFromElement> = (event) => {
 
 <br/>
 
-##### 위 함수에서 사용되는 `router`는 Next.js의 `useRouter`를 사용한 것이다.
+##### 위 함수에서 사용되는 `router`는 Next.js의 `useRouter`를 사용한 것이다. `router.push('link')`를 사용하면 link로 이동하게 된다.
 
 ```typescript
 import { useRouter } from "next/router";
