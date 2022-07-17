@@ -92,8 +92,6 @@ const handleSubmit: React.FormEventHandler<HTMLFromElement> = (event) => {
 
 ##### 위 함수는 다음의 2가지의 역할을 수행한다.
 
-<br/>
-
 ##### 1. isNewAccount가 참이라면 (회원가입 버튼을 클릭했다면) firebase의 `createUserWithEmailAndPassword(Auth, Email, Password)`함수를 사용하여 회원 가입을 진행하고, 회원 가입이 정상적으로 완료 되면 회원가입 된 정보를 통해 로그인을 진행하도록 한다.
 
 ##### 2. isNewAccount가 거짓이라면 (회원가입 버튼을 클릭하지 않았다면) firebase의 `signInWithEmailAndPassword(Auth, Email, Password)`함수를 사용하여 로그인을 진행하고, 로그인이 성공적으로 완료 되면 홈페이지로 이동시킨다.
