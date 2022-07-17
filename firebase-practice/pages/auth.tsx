@@ -27,8 +27,8 @@ export default function Auth() {
   const handleOnSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
     if (isNewAccount === true) {
-      createUserWithEmailAndPassword(authService, Email, Password).then(
-        (response) => {
+      createUserWithEmailAndPassword(authService, Email, Password)
+        .then((response) => {
           if ((response.operationType = "signIn")) {
             signOut(authService)
             setIsNewAccount(false)
@@ -38,16 +38,23 @@ export default function Auth() {
             setEmail("")
             setPassword("")
           }
-        },
-      )
+        })
+        .catch((error) => {
+          if (error.code === "auth/weak-password") {
+            alert("비밀번호는 최소 6자리 이상이어야 합니다.")
+            setPassword("")
+          } else if (error.code === "auth/email-already-in-use") {
+            alert("이미 사용중인 이메일 입니다.")
+            setPassword("")
+            setEmail("")
+          }
+        })
       return
     }
     signInWithEmailAndPassword(authService, Email, Password)
       .then((response) => {
         if (response.operationType === "signIn") {
           router.push("/")
-        } else {
-          console.log(response)
         }
       })
       .catch((error) => {
