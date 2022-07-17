@@ -1,6 +1,6 @@
 # 1. 로그인 기능 구현
 
-## `홈페이지`
+## 홈페이지
 
 <br/>
 
@@ -24,7 +24,7 @@ return <span>환영합니다!! {currentUserEmail}님!</span>;
 
 <br/>
 
-## `auth 페이지`
+## auth 페이지
 
 <br/>
 
