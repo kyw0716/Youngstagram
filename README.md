@@ -1,8 +1,8 @@
-# 1. 로그인 기능 구현
+# 1. 로그인 기능 구현 (Email, Google, GitHub)
 
 <br/><br/>
 
-## - 홈페이지
+## - 홈페이지 (Email 로그인)
 
 <br/>
 
@@ -101,12 +101,58 @@ const handleSubmit: React.FormEventHandler<HTMLFromElement> = (event) => {
 <br/>
 <br/>
 
-##### (참고) 위 함수에서 사용되는 `router`는 Next.js의 `useRouter`를 사용한 것이다. `router.push('link')`를 사용하면 link로 이동하게 된다.
-
-<br/>
+##### +위 함수에서 사용되는 `router`는 Next.js의 `useRouter`를 사용한 것이다. `router.push('link')`를 사용하면 link로 이동하게 된다.
 
 ```typescript
 import { useRouter } from "next/router";
 
 const router = useRouter();
 ```
+
+<br/>
+
+##### +위 함수에서 사용되는 `authService`는 firebase의 `getAuth`함수를 사용한 것이다.
+
+```typescript
+const FireBasApp = initializeApp(firebaseConfig);
+export const authService = getAuth(FireBasApp);
+```
+
+<br/>
+
+---
+
+## - Google, GitHub 로그인
+
+<br/>
+
+##### firebase에서 제공하는 google, github 로그인 방식은 매우 간단하다. `GithubAuthProvider`, `GoogleAuthProvider` 이 두 객체를 생성하고 `signInWithPopup(Auth, provider)`함수를 사용하면 쉽게 googe, github 로그인을 구현할 수 있다.
+
+```typescript
+const handleGoogleAuth = () => {
+  const googleProvider = new GoogleAuthProvider();
+  signInWithPopup(authService, googleProvider).then((response) => {
+    if (response.operationType === "signIn") {
+      router.push("/");
+    }
+  });
+};
+
+const handleGitHubAuth = () => {
+  const githubProvider = new GithubAuthProvider();
+  signInWithPopup(authService, githubProvider).then((response) => {
+    if (response.operationType === "signIn") {
+      router.push("/");
+    }
+  });
+};
+
+return (
+  <>
+    <button onClick={handleGoogleAuth}>Continue with Google</button>
+    <button onClick={handleGitHubAuth}>Continue with GitHub</button>
+  </>
+);
+```
+
+##### google 로그인, github 로그인 버튼을 클릭하였을 때 각각 `handleGoogleAuth`, `handleGitHubAuth` 함수가 실행되는데 해당 함수가 호출되면 함수 내에서 `GithubAuthProvider`, `GoogleAuthProvider`를 사용하여 새로운 provider를 생성하고 이를 `signInWithPopup(Auth, provider)`함수의 인자로 전달한 후 로그인이 성공되면 홈페이지로 이동하는 방식으로 로그인을 구현하였다.
