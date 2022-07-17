@@ -24,8 +24,8 @@ export default function Auth() {
   const handleOnSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
     if (isNewAccount === true) {
-      createUserWithEmailAndPassword(authService, Email, Password)
-        .then((response) => {
+      createUserWithEmailAndPassword(authService, Email, Password).then(
+        (response) => {
           if ((response.operationType = "signIn")) {
             signOut(authService)
             setIsNewAccount(false)
@@ -35,8 +35,8 @@ export default function Auth() {
             setEmail("")
             setPassword("")
           }
-        })
-        .catch((error) => alert(error))
+        },
+      )
       return
     }
     signInWithEmailAndPassword(authService, Email, Password).then(
@@ -74,10 +74,10 @@ export default function Auth() {
       </form>
       <button
         onClick={() => {
-          setIsNewAccount(true)
+          setIsNewAccount((current) => !current)
         }}
       >
-        회원가입
+        {isNewAccount ? "회원가입" : "로그인"}
       </button>
       <div>
         <button>Continue with Google</button>
