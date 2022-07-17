@@ -42,13 +42,28 @@ export default function Auth() {
       )
       return
     }
-    signInWithEmailAndPassword(authService, Email, Password).then(
-      (response) => {
+    signInWithEmailAndPassword(authService, Email, Password)
+      .then((response) => {
         if (response.operationType === "signIn") {
           router.push("/")
+        } else {
+          console.log(response)
         }
-      },
-    )
+      })
+      .catch((error) => {
+        if (error.code === "auth/wrong-password") {
+          alert("비밀번호가 잘못되었습니다")
+          setPassword("")
+          return
+        }
+        if (error.code === "auth/invalid-email") {
+          alert("이메일 똑바로 쓰세요")
+        } else if (error.code === "auth/user-not-found") {
+          alert("등록되지 않은 사용자 입니다")
+        }
+        setEmail("")
+        setPassword("")
+      })
   }
 
   const handleGoogleAuth = () => {
