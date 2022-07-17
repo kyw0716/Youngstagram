@@ -24,11 +24,11 @@ return <span>환영합니다!! {currentUserEmail}님!</span>;
 
 <br/>
 
-## auth 페이지
+### auth 페이지
 
 <br/>
 
-### auth 페이지에는 Email과 Password를 입력하는 두 input이 있고, 로그인 회원가입 버튼이 있다. 처음 auth 페이지가 랜더링 되면 로그인 버튼에는 Log In이 쓰여있고, 회원 가입을 클릭할 시 isNewAccount가 true가 되면서 해당 버튼에 Create Account가 쓰여지게 된다.
+##### auth 페이지에는 Email과 Password를 입력하는 두 input이 있고, 로그인 회원가입 버튼이 있다. 처음 auth 페이지가 랜더링 되면 로그인 버튼에는 Log In이 쓰여있고, 회원 가입을 클릭할 시 isNewAccount가 true가 되면서 해당 버튼에 Create Account가 쓰여지게 된다.
 
 ```javascript
 return (
@@ -53,7 +53,7 @@ return (
 
 <br/>
 
-### Email과 Password를 다 입력한 후 Submit이벤트가 발생하게 되면 아래의 handleSubmit 함수가 실행된다.
+##### Email과 Password를 다 입력한 후 Submit이벤트가 발생하게 되면 아래의 handleSubmit 함수가 실행된다.
 
 <br/>
 
@@ -84,15 +84,15 @@ const handleSubmit: React.FormEventHandler<HTMLFromElement> = (event) => {
 };
 ```
 
-### 위 함수는 다음의 2가지의 역할을 수행한다.
+##### 위 함수는 다음의 2가지의 역할을 수행한다.
 
-## 1. isNewAccount가 참이라면 (회원가입 버튼을 클릭했다면) firebase의 `createUserWithEmailAndPassword(Auth, Email, Password)`함수를 사용하여 회원 가입을 진행하고, 회원 가입이 정상적으로 완료 되면 회원가입 된 정보를 통해 로그인을 진행하도록 한다.
+##### 1. isNewAccount가 참이라면 (회원가입 버튼을 클릭했다면) firebase의 `createUserWithEmailAndPassword(Auth, Email, Password)`함수를 사용하여 회원 가입을 진행하고, 회원 가입이 정상적으로 완료 되면 회원가입 된 정보를 통해 로그인을 진행하도록 한다.
 
-## 2. isNewAccount가 거짓이라면 (회원가입 버튼을 클릭하지 않았다면) firebase의 `signInWithEmailAndPassword(Auth, Email, Password)`함수를 사용하여 로그인을 진행하고, 로그인이 성공적으로 완료 되면 홈페이지로 이동시킨다.
+##### 2. isNewAccount가 거짓이라면 (회원가입 버튼을 클릭하지 않았다면) firebase의 `signInWithEmailAndPassword(Auth, Email, Password)`함수를 사용하여 로그인을 진행하고, 로그인이 성공적으로 완료 되면 홈페이지로 이동시킨다.
 
 <br/>
 
-## 위 함수에서 사용되는 `router`는 Next.js의 `useRouter`를 사용한 것이다.
+##### 위 함수에서 사용되는 `router`는 Next.js의 `useRouter`를 사용한 것이다.
 
 ```typescript
 import { useRouter } from "next/router";
