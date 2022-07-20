@@ -15,6 +15,9 @@ export default function Auth() {
   const [Email, setEmail] = useState<string>("")
   const [Password, setPassword] = useState<string>("")
   const [isNewAccount, setIsNewAccount] = useState<boolean>(false)
+  const githubProvider = new GithubAuthProvider()
+  const googleProvider = new GoogleAuthProvider()
+
   const handleOnInputChange: React.ChangeEventHandler<HTMLInputElement> = (
     event,
   ) => {
@@ -75,7 +78,6 @@ export default function Auth() {
   }
 
   const handleGoogleAuth = () => {
-    const googleProvider = new GoogleAuthProvider()
     signInWithPopup(authService, googleProvider)
       .then((response) => {
         if (response.operationType === "signIn") {
@@ -92,7 +94,6 @@ export default function Auth() {
   }
 
   const handleGitHubAuth = () => {
-    const githubProvider = new GithubAuthProvider()
     signInWithPopup(authService, githubProvider)
       .then((response) => {
         if (response.operationType === "signIn") {
