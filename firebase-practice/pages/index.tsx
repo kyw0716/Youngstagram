@@ -2,7 +2,7 @@ import { signOut, User } from "firebase/auth"
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { authService } from "../src/FireBase"
+import { authService } from "@FireBase"
 
 const Home: NextPage = () => {
   const router = useRouter()

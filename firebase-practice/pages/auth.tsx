@@ -8,7 +8,7 @@ import {
 } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { authService } from "../src/FireBase"
+import { authService } from "@FireBase"
 
 export default function Auth() {
   const router = useRouter()

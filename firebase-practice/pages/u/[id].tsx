@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { DBService } from "../../src/FireBase"
+import { DBService } from "@FireBase"
 import ProfilePageImageList from "../../src/components/feature/ProfilePageImageList"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import ProfileNameInput from "../../src/components/feature/ProfileNameInput"
