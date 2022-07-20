@@ -4,7 +4,15 @@ import { useEffect, useRef, useState } from "react"
 import { DBService, storageService } from "../../src/FireBase"
 import styled from "styled-components"
 import ProfilePageImageList from "../../src/components/feature/ProfilePageImageList"
-import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
+import {
+  arrayUnion,
+  doc,
+  DocumentData,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore"
+import ProfileNameInput from "../../src/components/feature/ProfileNameInput"
 
 const Style = {
   PreviewImageSection: styled.div`
@@ -31,6 +39,14 @@ export default function Profile() {
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
 
   const [imageUrlToFirestore, setImageUrlToFirestore] = useState<string>("")
+  const [userData, setUserData] = useState<DocumentData>()
+
+  useEffect(() => {
+    const userDataRef = doc(DBService, "userData", `${router.asPath.slice(3)}`)
+    onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
+      setUserData(doc.data())
+    })
+  }, [])
 
   const encodeFileToBase64 = (fileblob: File) => {
     const reader = new FileReader()
@@ -85,24 +101,30 @@ export default function Profile() {
 
   return (
     <>
-      <input
-        type={"text"}
-        onChange={handleImageTitle}
-        value={imageTitle}
-        placeholder="이미지 제목?"
-      />
-      <input
-        type={"file"}
-        onChange={handleImageSelect}
-        accept="image/*"
-        ref={imageUploadRef}
-      />
-      <button onClick={handleImageSubmit}>이미지 업로드</button>
-      <Style.PreviewImageSection>
-        {(imagePreviewSrc !== undefined || imagePreviewSrc !== "") && (
-          <Style.PreviewImage src={imagePreviewSrc} />
-        )}
-      </Style.PreviewImageSection>
+      {userData !== undefined && userData.name ? (
+        <>
+          <input
+            type={"text"}
+            onChange={handleImageTitle}
+            value={imageTitle}
+            placeholder="이미지 제목?"
+          />
+          <input
+            type={"file"}
+            onChange={handleImageSelect}
+            accept="image/*"
+            ref={imageUploadRef}
+          />
+          <button onClick={handleImageSubmit}>이미지 업로드</button>
+          <Style.PreviewImageSection>
+            {(imagePreviewSrc !== undefined || imagePreviewSrc !== "") && (
+              <Style.PreviewImage src={imagePreviewSrc} />
+            )}
+          </Style.PreviewImageSection>
+        </>
+      ) : (
+        <ProfileNameInput />
+      )}
       <ProfilePageImageList />
     </>
   )

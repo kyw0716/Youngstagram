@@ -1,14 +1,8 @@
-import { doc, DocumentData, onSnapshot } from "firebase/firestore"
-import {
-  listAll,
-  ref,
-  StorageReference,
-  getDownloadURL,
-} from "firebase/storage"
+import { doc, DocumentData, onSnapshot, setDoc } from "firebase/firestore"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
-import { DBService, storageService } from "../../FireBase"
+import { DBService } from "../../FireBase"
 
 const Style = {
   ProfilePageImage: styled.img`
@@ -22,12 +16,14 @@ const Style = {
     justify-content: center;
     align-items: center;
   `,
+  FlexBox: styled.div`
+    display: flex;
+  `,
 }
 
 export default function ProfilePageImageList() {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
-  const [images, setImages] = useState<StorageReference[]>([])
   const [imageData, setImageData] = useState<
     { image: string; imageTitle: string }[]
   >([])
@@ -43,15 +39,16 @@ export default function ProfilePageImageList() {
   }, [userData])
 
   return (
-    <>
-      {imageData.map((data, index) => {
-        return (
-          <Style.ImageCard key={index}>
-            <Style.ProfilePageImage src={data.image} />
-            <span>{data.imageTitle}</span>
-          </Style.ImageCard>
-        )
-      })}
-    </>
+    <Style.FlexBox>
+      {imageData !== undefined &&
+        imageData.map((data, index) => {
+          return (
+            <Style.ImageCard key={index}>
+              <Style.ProfilePageImage src={data.image} />
+              <span>{data.imageTitle}</span>
+            </Style.ImageCard>
+          )
+        })}
+    </Style.FlexBox>
   )
 }
