@@ -2,7 +2,7 @@ import { signOut, User } from "firebase/auth"
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { authService, DBService } from "../src/FireBase"
+import { authService } from "../src/FireBase"
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -23,6 +23,7 @@ const Home: NextPage = () => {
       <button
         onClick={() => {
           signOut(authService)
+          router.push("/auth")
         }}
       >
         로그아웃
