@@ -77,8 +77,8 @@ export default function Auth() {
       })
   }
 
-  const handleGoogleAuth = () => {
-    signInWithPopup(authService, googleProvider)
+  const handleGoogleAuth = async () => {
+    await signInWithPopup(authService, googleProvider)
       .then((response) => {
         if (response) {
           router.push("/")
@@ -93,8 +93,8 @@ export default function Auth() {
       })
   }
 
-  const handleGitHubAuth = () => {
-    signInWithPopup(authService, githubProvider)
+  const handleGitHubAuth = async () => {
+    await signInWithPopup(authService, githubProvider)
       .then((response) => {
         if (response) {
           router.push("/")
