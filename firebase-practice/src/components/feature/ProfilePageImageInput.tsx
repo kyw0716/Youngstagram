@@ -1,15 +1,12 @@
-import {
-  arrayUnion,
-  doc,
-  DocumentData,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore"
+import { arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import { DBService, storageService } from "../../FireBase"
+
+type Props = {
+  userId: string
+}
 
 const Style = {
   PreviewImageSection: styled.div`
@@ -27,8 +24,7 @@ const Style = {
   `,
 }
 
-export default function ProfilePageImageInput() {
-  const router = useRouter()
+export default function ProfilePageImageInput({ userId }: Props) {
   const [imageFile, setImageFile] = useState<File>()
   const [imageTitle, setImageTitle] = useState<string>("")
   const imageUploadRef = useRef<HTMLInputElement>(null)
@@ -60,12 +56,9 @@ export default function ProfilePageImageInput() {
   }
 
   const handleImageSubmit: React.MouseEventHandler<HTMLButtonElement> = () => {
-    const imageSubmitRef = ref(
-      storageService,
-      `images/${String(router.asPath.slice(3))}/${imageTitle}`,
-    )
+    const imageSubmitRef = ref(storageService, `images/${userId}/${imageTitle}`)
     if (imageFile !== undefined)
-      uploadBytes(imageSubmitRef, imageFile).then((response) => {
+      uploadBytes(imageSubmitRef, imageFile).then(() => {
         getDownloadURL(imageSubmitRef).then((response) => {
           setImageUrlToFirestore(response)
         })
@@ -76,11 +69,7 @@ export default function ProfilePageImageInput() {
   }
 
   const uploadImageUrlListToFirestore = async (url: string, title: string) => {
-    const imageUrlListRef = doc(
-      DBService,
-      "userData",
-      String(router.asPath.slice(3)),
-    )
+    const imageUrlListRef = doc(DBService, "userData", userId)
     await updateDoc(imageUrlListRef, {
       images: arrayUnion({ image: url, imageTitle: title }),
     })

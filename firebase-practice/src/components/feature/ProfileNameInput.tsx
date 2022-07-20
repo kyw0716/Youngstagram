@@ -1,8 +1,11 @@
 import { doc, setDoc } from "firebase/firestore"
-import { useRouter } from "next/router"
 import { useState } from "react"
 import styled from "styled-components"
 import { DBService } from "../../FireBase"
+
+type Props = {
+  userId: string
+}
 
 const Style = {
   NameInput: styled.input`
@@ -15,8 +18,7 @@ const Style = {
   `,
 }
 
-export default function ProfileNameInput() {
-  const router = useRouter()
+export default function ProfileNameInput({ userId }: Props) {
   const [name, setName] = useState<string>("")
   const handleNameOnChange: React.ChangeEventHandler<HTMLInputElement> = (
     event,
@@ -24,7 +26,7 @@ export default function ProfileNameInput() {
     setName(event.target.value)
   }
   const uploadUserNameToFirestore = async (name: string) => {
-    const userDataRef = doc(DBService, "userData", `${router.asPath.slice(3)}`)
+    const userDataRef = doc(DBService, "userData", `${userId}`)
     await setDoc(userDataRef, {
       name: name,
     })

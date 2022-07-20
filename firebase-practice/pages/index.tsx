@@ -1,5 +1,4 @@
-import { signOut, updateProfile, User } from "firebase/auth"
-import { doc, onSnapshot, setDoc } from "firebase/firestore"
+import { signOut, User } from "firebase/auth"
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -31,7 +30,9 @@ const Home: NextPage = () => {
       <br />
       <button
         onClick={() => {
-          router.push(`/u/${currentUser?.uid}`)
+          if (currentUser?.uid !== null) {
+            router.push(`/u/${currentUser?.uid}`)
+          }
         }}
       >
         프로필 페이지

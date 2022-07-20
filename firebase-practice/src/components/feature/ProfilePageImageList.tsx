@@ -1,8 +1,11 @@
-import { doc, DocumentData, onSnapshot, setDoc } from "firebase/firestore"
-import { useRouter } from "next/router"
+import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { DBService } from "../../FireBase"
+
+type Props = {
+  userId: string
+}
 
 const Style = {
   ProfilePageImage: styled.img`
@@ -21,15 +24,14 @@ const Style = {
   `,
 }
 
-export default function ProfilePageImageList() {
-  const router = useRouter()
+export default function ProfilePageImageList({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
   const [imageData, setImageData] = useState<
     { image: string; imageTitle: string }[]
   >([])
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "userData", `${router.asPath.slice(3)}`)
+    const userDataRef = doc(DBService, "userData", `${userId}`)
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })

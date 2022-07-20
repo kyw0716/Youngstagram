@@ -1,42 +1,16 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { useRouter } from "next/router"
-import { useEffect, useRef, useState } from "react"
-import { DBService, storageService } from "../../src/FireBase"
-import styled from "styled-components"
+import { useEffect, useState } from "react"
+import { DBService } from "../../src/FireBase"
 import ProfilePageImageList from "../../src/components/feature/ProfilePageImageList"
-import {
-  arrayUnion,
-  doc,
-  DocumentData,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore"
+import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import ProfileNameInput from "../../src/components/feature/ProfileNameInput"
 import ProfilePageImageInput from "../../src/components/feature/ProfilePageImageInput"
+import { GetServerSideProps } from "next"
 
-const Style = {
-  PreviewImageSection: styled.div`
-    width: 200px;
-    height: 200px;
-    border: 1px solid black;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-  PreviewImage: styled.img`
-    width: 150px;
-    height: 150px;
-  `,
-}
-
-export default function Profile() {
-  const router = useRouter()
+export default function Page({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "userData", `${router.asPath.slice(3)}`)
+    const userDataRef = doc(DBService, "userData", userId)
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })
@@ -45,17 +19,26 @@ export default function Profile() {
   return (
     <>
       {userData !== undefined && userData.name ? (
-        <ProfilePageImageInput />
+        <ProfilePageImageInput userId={userId} />
       ) : (
-        <ProfileNameInput />
+        <ProfileNameInput userId={userId} />
       )}
-      <ProfilePageImageList />
+      <ProfilePageImageList userId={userId} />
     </>
   )
 }
 
-export async function getServerSideProps(context: string) {
+type Props = {
+  userId: string
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context,
+) => {
+  const userId = context.params?.id as string
   return {
-    props: {}, // will be passed to the page component as props
+    props: {
+      userId,
+    },
   }
 }
