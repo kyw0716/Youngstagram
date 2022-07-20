@@ -60,27 +60,27 @@ export default function Profile() {
     const imageSubmitRef = ref(storageService, `images/${userId}/${imageTitle}`)
     if (imageFile !== undefined)
       uploadBytes(imageSubmitRef, imageFile).then((response) => {
-        getDownloadURL(imageSubmitRef).then((response) =>
-          setImageUrlToFirestore(response),
-        )
+        getDownloadURL(imageSubmitRef).then((response) => {
+          setImageUrlToFirestore(response)
+        })
       })
-    setImageTitle("")
     if (imageUploadRef.current !== null) {
       imageUploadRef.current.value = ""
     }
-    setImagePreviewSrc("")
   }
 
-  const uploadImageUrlListToFirestore = async (url: string) => {
+  const uploadImageUrlListToFirestore = async (url: string, title: string) => {
     const imageUrlListRef = doc(DBService, "userData", userId)
     await updateDoc(imageUrlListRef, {
-      images: arrayUnion(url),
+      images: arrayUnion({ image: url, imageTitle: title }),
     })
   }
 
   useEffect(() => {
     if (imageUrlToFirestore == "") return
-    uploadImageUrlListToFirestore(imageUrlToFirestore)
+    uploadImageUrlListToFirestore(imageUrlToFirestore, imageTitle)
+    setImageTitle("")
+    setImagePreviewSrc("")
   }, [imageUrlToFirestore])
 
   return (

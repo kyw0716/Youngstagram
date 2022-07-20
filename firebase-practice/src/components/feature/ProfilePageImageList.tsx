@@ -15,13 +15,22 @@ const Style = {
     width: 200px;
     height: 200px;
   `,
+  ImageCard: styled.div`
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  `,
 }
 
 export default function ProfilePageImageList() {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
   const [images, setImages] = useState<StorageReference[]>([])
-  const [imageSrc, setImageSrc] = useState<string[]>([])
+  const [imageData, setImageData] = useState<
+    { image: string; imageTitle: string }[]
+  >([])
 
   useEffect(() => {
     const userDataRef = doc(DBService, "userData", `${router.asPath.slice(3)}`)
@@ -30,14 +39,18 @@ export default function ProfilePageImageList() {
     })
   }, [])
   useEffect(() => {
-    if (userData !== undefined) setImageSrc(userData.images)
+    if (userData !== undefined) setImageData(userData.images)
   }, [userData])
 
   return (
     <>
-      {imageSrc.map((src, index) => {
-        if (imageSrc.indexOf(src) === index)
-          return <Style.ProfilePageImage key={index} src={src} />
+      {imageData.map((data, index) => {
+        return (
+          <Style.ImageCard key={index}>
+            <Style.ProfilePageImage src={data.image} />
+            <span>{data.imageTitle}</span>
+          </Style.ImageCard>
+        )
       })}
     </>
   )
