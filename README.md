@@ -10,7 +10,7 @@
 
 <br/>
 
-```javascript
+```typescript
 useEffect(() => {
   onAuthStateChanged(authService, (user) => {
     if (user) {
@@ -34,7 +34,7 @@ return <span>환영합니다!! {currentUserEmail}님!</span>;
 
 <br/>
 
-```javascript
+```typescript
 return (
   <>
     <input type="text" placeholder="Email" />
