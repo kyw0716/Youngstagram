@@ -52,8 +52,6 @@ export default function ProfilePageImageList({ userId }: Props) {
     const firestoreImageRef = doc(DBService, "userData", `${userId}`)
 
     await deleteObject(storageImageRef)
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error))
 
     await updateDoc(firestoreImageRef, {
       images: arrayRemove({ image: url, imageTitle: title }),
