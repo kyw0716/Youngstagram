@@ -158,7 +158,7 @@ return (
 <br/>
 <br/>
 
-# 2. 이미지 업로드 및 랜더링 기능 구현 (storage, firestore)
+# 2. 이미지 업로드, 삭제 및 랜더링 기능 구현 (storage, firestore)
 
 <br/><br/>
 
@@ -238,6 +238,31 @@ return (
 <br/>
 
 ##### 이미지 파일이 선택될 때마다 `imageFile` state를 해당 파일로 변경 시키고, 이미지 업로드 버튼을 클릭할 시 `images/${userId}/${imageTitle}`의 경로로 이미지 파일을 업로드 시킨다. 이때 storage의 `getDownloadURL`함수를 사용하여 해당 파일의 다운로드 링크를 받아와 그 값과 이미지 제목으로 입력받은 문자열을 `{ image: url, imageTitle: tilte }`의 형식으로 업로드 시킨다.
+
+<br/>
+
+## - 이미지 삭제 기능 (storage, firestore)
+
+<br/>
+
+##### 랜더링 된 이미지를 삭제하기 위해선 화면에 보여지고 있는 firestore의 이미지 url을 삭제하여야 하고, 해당 이미지와 같은 이미지를 storage에서도 삭제해야 한다. firestore의 이미지 url을 삭제하기 위해서 `updateDoc`와 `arrayRemove`함수를 사용하였고, storage에 있는 이미지 파일을 삭제하기 위해서 `deleteObject`함수를 사용하였다.
+
+<br/>
+
+```typescript
+const handleDeleteImage = async (url: string, title: string) => {
+  const storageImageRef = ref(storageService, `images/${userId}/${title}`);
+  const firestoreImageRef = doc(DBService, "userData", `${userId}`);
+
+  await deleteObject(storageImageRef)
+    .then((response) => console.log(response))
+    .catch((error) => console.log(error));
+
+  await updateDoc(firestoreImageRef, {
+    images: arrayRemove({ image: url, imageTitle: title }),
+  });
+};
+```
 
 <br/>
 
