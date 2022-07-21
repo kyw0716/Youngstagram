@@ -1,5 +1,6 @@
 import {
   arrayRemove,
+  arrayUnion,
   doc,
   DocumentData,
   onSnapshot,
@@ -76,6 +77,46 @@ export default function ProfilePageImageList({ userId, userName }: Props) {
     })
   }
 
+  const handlePrivateToggle = async (
+    url: string,
+    title: string,
+    isPrivate: boolean,
+  ) => {
+    const firestoreImageRef = doc(DBService, "userData", `${userId}`)
+    const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
+
+    await updateDoc(firestoreImageRef, {
+      images: arrayRemove({
+        image: url,
+        imageTitle: title,
+        private: isPrivate,
+      }),
+    })
+    await updateDoc(firestoreImageAllRef, {
+      images: arrayRemove({
+        image: url,
+        imageTitle: title,
+        private: isPrivate,
+        creator: userName,
+      }),
+    })
+    await updateDoc(firestoreImageRef, {
+      images: arrayUnion({
+        image: url,
+        imageTitle: title,
+        private: !isPrivate,
+      }),
+    })
+    await updateDoc(firestoreImageAllRef, {
+      images: arrayUnion({
+        image: url,
+        imageTitle: title,
+        private: !isPrivate,
+        creator: userName,
+      }),
+    })
+  }
+
   return (
     <Style.FlexBox>
       {imageData !== undefined &&
@@ -91,7 +132,13 @@ export default function ProfilePageImageList({ userId, userName }: Props) {
               >
                 삭제
               </button>
-              {data.private && <div>비공개</div>}
+              <button
+                onClick={() => {
+                  handlePrivateToggle(data.image, data.imageTitle, data.private)
+                }}
+              >
+                {data.private ? "공개로 전환" : "비공개로 전환"}
+              </button>
             </Style.ImageCard>
           )
         })}
