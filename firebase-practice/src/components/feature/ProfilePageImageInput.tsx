@@ -6,6 +6,7 @@ import { DBService, storageService } from "../../FireBase"
 
 type Props = {
   userId: string
+  userName: string
 }
 
 const Style = {
@@ -24,15 +25,17 @@ const Style = {
   `,
 }
 
-export default function ProfilePageImageInput({ userId }: Props) {
+export default function ProfilePageImageInput({ userId, userName }: Props) {
   const [imageFile, setImageFile] = useState<File>()
   const [imageTitle, setImageTitle] = useState<string>("")
   const imageUploadRef = useRef<HTMLInputElement>(null)
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
   const [imageUrlToFirestore, setImageUrlToFirestore] = useState<string>("")
+  const [isPrivate, setIsPrivate] = useState<boolean>(false)
 
   const encodeFileToBase64 = (fileblob: File) => {
     const reader = new FileReader()
+    if (fileblob === undefined) return
     reader.readAsDataURL(fileblob)
     return new Promise(() => {
       reader.onload = () => {
@@ -56,6 +59,10 @@ export default function ProfilePageImageInput({ userId }: Props) {
   }
 
   const handleImageSubmit: React.MouseEventHandler<HTMLButtonElement> = () => {
+    if (imageTitle === "") {
+      alert("이미지 제목을 입력해주세요!")
+      return
+    }
     const imageSubmitRef = ref(storageService, `images/${userId}/${imageTitle}`)
     if (imageFile !== undefined)
       uploadBytes(imageSubmitRef, imageFile).then(() => {
@@ -68,18 +75,39 @@ export default function ProfilePageImageInput({ userId }: Props) {
     }
   }
 
-  const uploadImageUrlListToFirestore = async (url: string, title: string) => {
+  const handlePrivateChecked: React.ChangeEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
+    setIsPrivate(event.target.checked)
+  }
+
+  const uploadImageUrlListToFirestore = async (
+    url: string,
+    title: string,
+    isPrivate: boolean,
+  ) => {
     const imageUrlListRef = doc(DBService, "userData", userId)
+    const imageUrlListAllRef = doc(DBService, "mainPage", "userImageDataAll")
     await updateDoc(imageUrlListRef, {
-      images: arrayUnion({ image: url, imageTitle: title }),
+      images: arrayUnion({ image: url, imageTitle: title, private: isPrivate }),
+    })
+    await updateDoc(imageUrlListAllRef, {
+      images: arrayUnion({
+        image: url,
+        imageTitle: title,
+        private: isPrivate,
+        creator: userName,
+      }),
+    }).then(() => {
+      setImageTitle("")
+      setImagePreviewSrc("")
+      setIsPrivate(false)
     })
   }
 
   useEffect(() => {
     if (imageUrlToFirestore == "") return
-    uploadImageUrlListToFirestore(imageUrlToFirestore, imageTitle)
-    setImageTitle("")
-    setImagePreviewSrc("")
+    uploadImageUrlListToFirestore(imageUrlToFirestore, imageTitle, isPrivate)
   }, [imageUrlToFirestore])
 
   return (
@@ -90,15 +118,25 @@ export default function ProfilePageImageInput({ userId }: Props) {
         value={imageTitle}
         placeholder="이미지 제목?"
       />
+      <br />
       <input
         type={"file"}
         onChange={handleImageSelect}
         accept="image/*"
         ref={imageUploadRef}
       />
+      <br />
+      <label htmlFor="check">비공개</label>
+      <input
+        type={"checkbox"}
+        onChange={handlePrivateChecked}
+        id="check"
+        checked={isPrivate}
+      />
+      <br />
       <button onClick={handleImageSubmit}>이미지 업로드</button>
       <Style.PreviewImageSection>
-        {(imagePreviewSrc !== undefined || imagePreviewSrc !== "") && (
+        {imagePreviewSrc !== undefined && imagePreviewSrc !== "" && (
           <Style.PreviewImage src={imagePreviewSrc} />
         )}
       </Style.PreviewImageSection>

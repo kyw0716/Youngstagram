@@ -5,9 +5,11 @@ import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import ProfileNameInput from "../../src/components/feature/ProfileNameInput"
 import ProfilePageImageInput from "../../src/components/feature/ProfilePageImageInput"
 import { GetServerSideProps } from "next"
+import { useRouter } from "next/router"
 
 export default function Page({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
+  const router = useRouter()
 
   useEffect(() => {
     const userDataRef = doc(DBService, "userData", userId)
@@ -18,12 +20,27 @@ export default function Page({ userId }: Props) {
 
   return (
     <>
+      <button
+        onClick={() => {
+          router.push("/")
+        }}
+      >
+        홈으로
+      </button>
+      <br />
       {userData !== undefined && userData.name ? (
-        <ProfilePageImageInput userId={userId} />
+        <ProfilePageImageInput
+          userId={userId}
+          userName={userData !== undefined && userData.name}
+        />
       ) : (
         <ProfileNameInput userId={userId} />
       )}
-      <ProfilePageImageList userId={userId} />
+      <br />
+      <ProfilePageImageList
+        userId={userId}
+        userName={userData !== undefined && userData.name}
+      />
     </>
   )
 }

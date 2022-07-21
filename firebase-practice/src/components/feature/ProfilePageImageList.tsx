@@ -12,6 +12,7 @@ import { deleteObject, ref } from "firebase/storage"
 
 type Props = {
   userId: string
+  userName: string
 }
 
 const Style = {
@@ -31,10 +32,10 @@ const Style = {
   `,
 }
 
-export default function ProfilePageImageList({ userId }: Props) {
+export default function ProfilePageImageList({ userId, userName }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
   const [imageData, setImageData] = useState<
-    { image: string; imageTitle: string }[]
+    { image: string; imageTitle: string; private: boolean }[]
   >([])
 
   useEffect(() => {
@@ -47,14 +48,31 @@ export default function ProfilePageImageList({ userId }: Props) {
     if (userData !== undefined) setImageData(userData.images)
   }, [userData])
 
-  const handleDeleteImage = async (url: string, title: string) => {
+  const handleDeleteImage = async (
+    url: string,
+    title: string,
+    isPrivate: boolean,
+  ) => {
     const storageImageRef = ref(storageService, `images/${userId}/${title}`)
     const firestoreImageRef = doc(DBService, "userData", `${userId}`)
+    const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
 
     await deleteObject(storageImageRef)
 
     await updateDoc(firestoreImageRef, {
-      images: arrayRemove({ image: url, imageTitle: title }),
+      images: arrayRemove({
+        image: url,
+        imageTitle: title,
+        private: isPrivate,
+      }),
+    })
+    await updateDoc(firestoreImageAllRef, {
+      images: arrayRemove({
+        image: url,
+        imageTitle: title,
+        private: isPrivate,
+        creator: userName,
+      }),
     })
   }
 
@@ -68,11 +86,12 @@ export default function ProfilePageImageList({ userId }: Props) {
               <span>{data.imageTitle}</span>
               <button
                 onClick={() => {
-                  handleDeleteImage(data.image, data.imageTitle)
+                  handleDeleteImage(data.image, data.imageTitle, data.private)
                 }}
               >
                 삭제
               </button>
+              {data.private && <div>비공개</div>}
             </Style.ImageCard>
           )
         })}
