@@ -1,7 +1,14 @@
-import { doc, DocumentData, onSnapshot } from "firebase/firestore"
+import {
+  arrayRemove,
+  doc,
+  DocumentData,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
-import { DBService } from "@FireBase"
+import { DBService, storageService } from "@FireBase"
+import { deleteObject, ref } from "firebase/storage"
 
 type Props = {
   userId: string
@@ -40,6 +47,19 @@ export default function ProfilePageImageList({ userId }: Props) {
     if (userData !== undefined) setImageData(userData.images)
   }, [userData])
 
+  const handleDeleteImage = async (url: string, title: string) => {
+    const storageImageRef = ref(storageService, `images/${userId}/${title}`)
+    const firestoreImageRef = doc(DBService, "userData", `${userId}`)
+
+    await deleteObject(storageImageRef)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error))
+
+    await updateDoc(firestoreImageRef, {
+      images: arrayRemove({ image: url, imageTitle: title }),
+    })
+  }
+
   return (
     <Style.FlexBox>
       {imageData !== undefined &&
@@ -48,6 +68,13 @@ export default function ProfilePageImageList({ userId }: Props) {
             <Style.ImageCard key={index}>
               <Style.ProfilePageImage src={data.image} />
               <span>{data.imageTitle}</span>
+              <button
+                onClick={() => {
+                  handleDeleteImage(data.image, data.imageTitle)
+                }}
+              >
+                삭제
+              </button>
             </Style.ImageCard>
           )
         })}
