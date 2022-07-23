@@ -21,8 +21,13 @@ const Style = {
     justify-content: center;
     align-items: center;
   `,
-  FlexBox: styled.div`
+  ImageContainer: styled.div`
     display: flex;
+    width: 100vw;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 50px;
   `,
 }
 
@@ -43,7 +48,7 @@ export default function ProfilePageImageList({ userId, userName }: Props) {
   }, [userData])
 
   return (
-    <Style.FlexBox>
+    <Style.ImageContainer>
       {imageData !== undefined &&
         imageData.map((data, index) => {
           return (
@@ -54,9 +59,10 @@ export default function ProfilePageImageList({ userId, userName }: Props) {
               imageTitle={data.imageTitle}
               imageUrl={data.image}
               isPrivate={data.private}
+              isMainPage={false}
             />
           )
         })}
-    </Style.FlexBox>
+    </Style.ImageContainer>
   )
 }

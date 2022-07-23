@@ -5,11 +5,20 @@ import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import styled from "styled-components"
+import ImageCard from "@feature/profile/ImageCard"
 
 const Style = {
   MainPageImage: styled.img`
     width: 200px;
     height: 200px;
+  `,
+  ImageContainer: styled.div`
+    display: flex;
+    width: 100vw;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 50px;
   `,
 }
 
@@ -61,22 +70,28 @@ const Home: NextPage = () => {
       >
         프로필 페이지
       </button>
-      {imageData &&
-        imageData.map((imageObject, index) => {
-          return (
-            <>
-              {!imageObject.private && (
-                <div key={index}>
-                  <Style.MainPageImage src={imageObject.image} alt="image" />
-                  <br />
-                  <span>이미지 제목: {imageObject.imageTitle}</span>
-                  <br />
-                  <span>작성자: {imageObject.creator}</span>
-                </div>
-              )}
-            </>
-          )
-        })}
+      <Style.ImageContainer>
+        {imageData &&
+          imageData.map((imageObject, index) => {
+            return (
+              <>
+                {!imageObject.private && (
+                  <div key={index}>
+                    <ImageCard
+                      key={index}
+                      imageUrl={imageObject.image}
+                      imageTitle={imageObject.imageTitle}
+                      isPrivate={imageObject.private}
+                      userId={""}
+                      userName={imageObject.creator}
+                      isMainPage={true}
+                    />
+                  </div>
+                )}
+              </>
+            )
+          })}
+      </Style.ImageContainer>
     </>
   )
 }

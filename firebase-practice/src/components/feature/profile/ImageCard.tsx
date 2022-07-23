@@ -9,19 +9,53 @@ type Props = {
   isPrivate: boolean
   userId: string
   userName: string
+  isMainPage: boolean
 }
 
 const Style = {
   ProfilePageImage: styled.img`
-    width: 200px;
-    height: 200px;
+    width: 470px;
+    height: 600px;
+  `,
+  ImageHeader: styled.div`
+    width: 470px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    gap: 15px;
+  `,
+  CreatorImage: styled.div`
+    width: 38px;
+    height: 38px;
+    border: 1px solid lightgrey;
+    border-radius: 100px;
+  `,
+  HeaderText: styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 38px;
+    justify-content: center;
+  `,
+  UserName: styled.span`
+    font-size: 12px;
+    font-weight: bold;
+    color: black;
+  `,
+  ImageTitle: styled.span`
+    font-size: 7px;
+    font-weight: 400;
+    color: gray;
   `,
   ImageCard: styled.div`
-    width: 200px;
+    width: 470px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+    padding-bottom: 60px;
   `,
   FlexBox: styled.div`
     display: flex;
@@ -34,6 +68,7 @@ export default function ImageCard({
   isPrivate,
   userId,
   userName,
+  isMainPage,
 }: Props) {
   const handleDeleteImage = async (
     url: string,
@@ -105,22 +140,35 @@ export default function ImageCard({
 
   return (
     <Style.ImageCard>
+      <Style.ImageHeader>
+        <Style.CreatorImage />
+        <Style.HeaderText>
+          <Style.UserName>{userName}</Style.UserName>
+          <Style.ImageTitle>{imageTitle}</Style.ImageTitle>
+        </Style.HeaderText>
+      </Style.ImageHeader>
+
       <Style.ProfilePageImage src={imageUrl} />
-      <span>{imageTitle}</span>
-      <button
-        onClick={() => {
-          handleDeleteImage(imageUrl, imageTitle, isPrivate)
-        }}
-      >
-        삭제
-      </button>
-      <button
-        onClick={() => {
-          handlePrivateToggle(imageUrl, imageTitle, isPrivate)
-        }}
-      >
-        {isPrivate ? "공개로 전환" : "비공개로 전환"}
-      </button>
+      {isMainPage ? (
+        <></>
+      ) : (
+        <>
+          <button
+            onClick={() => {
+              handleDeleteImage(imageUrl, imageTitle, isPrivate)
+            }}
+          >
+            삭제
+          </button>
+          <button
+            onClick={() => {
+              handlePrivateToggle(imageUrl, imageTitle, isPrivate)
+            }}
+          >
+            {isPrivate ? "공개로 전환" : "비공개로 전환"}
+          </button>
+        </>
+      )}
     </Style.ImageCard>
   )
 }
