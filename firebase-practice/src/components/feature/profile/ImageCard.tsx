@@ -24,6 +24,14 @@ const Style = {
     align-items: center;
     padding-left: 15px;
     gap: 15px;
+    @media (max-width: 470px) {
+      width: 100vw;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      padding-left: 3%;
+      gap: 15px;
+    }
   `,
   CreatorImage: styled.div`
     width: 38px;
