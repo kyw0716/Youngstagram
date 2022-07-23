@@ -16,7 +16,8 @@
     "incremental": true,
     "baseUrl": "./src/",
     "paths": {
-      "@FireBase": ["FireBase"]
+      "@FireBase": ["FireBase"],
+      "@feature/*": ["components/feature/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
