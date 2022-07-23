@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import { DBService } from "@FireBase"
-import ProfilePageImageList from "../../src/components/feature/ProfilePageImageList"
+import ProfilePageImageInput from "@feature/profile/ProfilePageImageInput"
+import ProfilePageImageList from "@feature/profile/ProfilePageImageList"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
-import ProfileNameInput from "../../src/components/feature/ProfileNameInput"
-import ProfilePageImageInput from "../../src/components/feature/ProfilePageImageInput"
+import ProfileNameInput from "@feature/profile/ProfileNameInput"
 import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
 
-export default function Page({ userId }: Props) {
+export default function Profile({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
   const router = useRouter()
 
