@@ -2,7 +2,7 @@ import { arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
-import { DBService, storageService } from "../../FireBase"
+import { DBService, storageService } from "@FireBase"
 
 type Props = {
   userId: string

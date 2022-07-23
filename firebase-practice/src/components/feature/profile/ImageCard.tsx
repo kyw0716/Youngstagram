@@ -1,17 +1,12 @@
-import {
-  arrayRemove,
-  arrayUnion,
-  doc,
-  DocumentData,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore"
-import { useEffect, useState } from "react"
-import styled from "styled-components"
 import { DBService, storageService } from "@FireBase"
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
+import styled from "styled-components"
 
 type Props = {
+  imageUrl: string
+  imageTitle: string
+  isPrivate: boolean
   userId: string
   userName: string
 }
@@ -33,22 +28,13 @@ const Style = {
   `,
 }
 
-export default function ProfilePageImageList({ userId, userName }: Props) {
-  const [userData, setUserData] = useState<DocumentData>()
-  const [imageData, setImageData] = useState<
-    { image: string; imageTitle: string; private: boolean }[]
-  >([])
-
-  useEffect(() => {
-    const userDataRef = doc(DBService, "userData", `${userId}`)
-    onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
-      setUserData(doc.data())
-    })
-  }, [])
-  useEffect(() => {
-    if (userData !== undefined) setImageData(userData.images)
-  }, [userData])
-
+export default function ImageCard({
+  imageTitle,
+  imageUrl,
+  isPrivate,
+  userId,
+  userName,
+}: Props) {
   const handleDeleteImage = async (
     url: string,
     title: string,
@@ -118,30 +104,23 @@ export default function ProfilePageImageList({ userId, userName }: Props) {
   }
 
   return (
-    <Style.FlexBox>
-      {imageData !== undefined &&
-        imageData.map((data, index) => {
-          return (
-            <Style.ImageCard key={index}>
-              <Style.ProfilePageImage src={data.image} />
-              <span>{data.imageTitle}</span>
-              <button
-                onClick={() => {
-                  handleDeleteImage(data.image, data.imageTitle, data.private)
-                }}
-              >
-                삭제
-              </button>
-              <button
-                onClick={() => {
-                  handlePrivateToggle(data.image, data.imageTitle, data.private)
-                }}
-              >
-                {data.private ? "공개로 전환" : "비공개로 전환"}
-              </button>
-            </Style.ImageCard>
-          )
-        })}
-    </Style.FlexBox>
+    <Style.ImageCard>
+      <Style.ProfilePageImage src={imageUrl} />
+      <span>{imageTitle}</span>
+      <button
+        onClick={() => {
+          handleDeleteImage(imageUrl, imageTitle, isPrivate)
+        }}
+      >
+        삭제
+      </button>
+      <button
+        onClick={() => {
+          handlePrivateToggle(imageUrl, imageTitle, isPrivate)
+        }}
+      >
+        {isPrivate ? "공개로 전환" : "비공개로 전환"}
+      </button>
+    </Style.ImageCard>
   )
 }

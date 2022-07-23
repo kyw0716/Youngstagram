@@ -1,7 +1,7 @@
 import { doc, setDoc } from "firebase/firestore"
 import { useState } from "react"
 import styled from "styled-components"
-import { DBService } from "../../FireBase"
+import { DBService } from "@FireBase"
 
 type Props = {
   userId: string
