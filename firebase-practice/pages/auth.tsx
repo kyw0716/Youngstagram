@@ -266,7 +266,9 @@ export default function Auth() {
         </Style.FormContainer>
         <Margin direction="column" size={30} />
         <Style.SignUpContainer>
-          <Style.StyledSpan>계정이 없으신가요?</Style.StyledSpan>
+          <Style.StyledSpan>
+            {isNewAccount ? "계정이 있으신가요?" : "계정이 없으신가요?"}
+          </Style.StyledSpan>
           <Margin direction="row" size={10} />
           <Style.SignUpButton
             onClick={() => {
