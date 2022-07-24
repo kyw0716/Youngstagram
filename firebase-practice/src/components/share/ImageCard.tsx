@@ -77,6 +77,13 @@ const Style = {
     padding-bottom: 60px;
     background-color: white;
   `,
+  ThreeDotMenuBox: styled.div`
+    width: 60px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    z-index: 10000;
+  `,
   ThreeDotMenu: styled.img`
     width: 20px;
     height: 15px;
@@ -194,27 +201,15 @@ export default function ImageCard({
   }
 
   return (
-    <Style.ImageCard
-      onClick={() => {
-        setIsMenuOpen(false)
-      }}
-    >
-      <Style.ImageHeader
-        onClick={() => {
-          setIsMenuOpen(false)
-        }}
-      >
+    <Style.ImageCard>
+      <Style.ImageHeader>
         <FlexBox
           width={"fit-content"}
           height={58}
           gap={15}
           alignItems={"center"}
         >
-          <Style.CreatorImage
-            onClick={() => {
-              setIsMenuOpen(false)
-            }}
-          />
+          <Style.CreatorImage />
           <Style.HeaderText>
             <Style.UserName>{userName}</Style.UserName>
             <Style.ImageTitle>{imageTitle}</Style.ImageTitle>
@@ -244,6 +239,9 @@ export default function ImageCard({
               }}
             >
               {isPrivate ? "공개로 전환" : "비공개로 전환"}
+            </Style.DeleteOrPrivate>
+            <Style.DeleteOrPrivate onClick={handleThreeDotMenuClick}>
+              x
             </Style.DeleteOrPrivate>
           </Style.ButtonBox>
         ) : (
