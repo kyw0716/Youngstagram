@@ -1,7 +1,8 @@
 import { doc, setDoc } from "firebase/firestore"
 import { useState } from "react"
 import styled from "styled-components"
-import { DBService } from "@FireBase"
+import { authService, DBService } from "@FireBase"
+import { updateProfile } from "firebase/auth"
 
 type Props = {
   userId: string
@@ -36,8 +37,13 @@ export default function ProfileNameInput({ userId }: Props) {
     event,
   ) => {
     event.preventDefault()
+    if (authService.currentUser === null) return
     uploadUserNameToFirestore(name)
-    setName("")
+    await updateProfile(authService.currentUser, {
+      displayName: name,
+    }).then(() => {
+      setName("")
+    })
   }
   return (
     <form onSubmit={handleUserDataSubmit}>

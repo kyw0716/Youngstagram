@@ -1,3 +1,5 @@
+import { authService } from "@FireBase"
+import { signOut } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import styled from "styled-components"
@@ -51,6 +53,26 @@ const Style = {
     right: -28px;
     top: 60px;
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  `,
+  MenuItem: styled.div`
+    width: 105px;
+    height: 58px;
+    -webkit-appearance: none;
+    border: none;
+    color: #5f5f5f;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+      background-color: #dcdcdc;
+      width: 107px;
+      border: 1px solid #dcdcdc;
+    }
+    cursor: pointer;
   `,
 }
 
@@ -72,7 +94,36 @@ export default function Header() {
             youngstagram
           </Style.Logo>
           <Style.LineMenu src="/line-menu.svg" onClick={handleMenuOpen} />
-          {isMeunOpen ? <Style.DropDownMenu /> : <></>}
+          {isMeunOpen ? (
+            <Style.DropDownMenu
+              onMouseLeave={() => {
+                setIsMenuOpen(false)
+              }}
+            >
+              <Style.MenuItem
+                onClick={() => {
+                  signOut(authService)
+                  router.push("/auth")
+                }}
+              >
+                로그아웃
+              </Style.MenuItem>
+              <Style.MenuItem
+                onClick={() => {
+                  if (
+                    authService.currentUser?.uid !== null &&
+                    authService.currentUser?.uid !== undefined
+                  ) {
+                    router.push(`/u/${authService.currentUser?.uid}`)
+                  }
+                }}
+              >
+                프로필 페이지
+              </Style.MenuItem>
+            </Style.DropDownMenu>
+          ) : (
+            <></>
+          )}
         </Style.Nav>
       </Style.Container>
       <Margin direction="column" size={60} />

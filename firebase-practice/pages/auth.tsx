@@ -5,13 +5,15 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { authService } from "@FireBase"
+import { authService, DBService } from "@FireBase"
 import Header from "components/layout/Header"
 import styled from "styled-components"
 import { FlexBox, Margin } from "ui"
+import { doc, setDoc } from "firebase/firestore"
 
 const Style = {
   Wrapper: styled.div`
@@ -22,7 +24,8 @@ const Style = {
   `,
   FormContainer: styled.form`
     width: 350px;
-    height: 380px;
+    height: fit-content;
+    padding-bottom: 30px;
     border: 1px solid lightgrey;
     background-color: white;
     display: flex;
@@ -103,6 +106,7 @@ export default function Auth() {
   const [Email, setEmail] = useState<string>("")
   const [Password, setPassword] = useState<string>("")
   const [isNewAccount, setIsNewAccount] = useState<boolean>(false)
+  const [name, setName] = useState<string>("")
   const githubProvider = new GithubAuthProvider()
   const googleProvider = new GoogleAuthProvider()
 
@@ -115,14 +119,35 @@ export default function Auth() {
     }
     setPassword(event.target.value)
   }
-  const handleOnSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+  const handleNameOnChange: React.ChangeEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
+    setName(event.target.value)
+  }
+  const uploadUserNameToFirestore = async (name: string) => {
+    const userDataRef = doc(
+      DBService,
+      "userData",
+      `${authService.currentUser?.uid}`,
+    )
+    await setDoc(userDataRef, {
+      name: name,
+    })
+  }
+  const handleOnSubmit: React.FormEventHandler<HTMLFormElement> = async (
+    event,
+  ) => {
     event.preventDefault()
     if (Email.length === 0) return
     if (Password.length < 6) return
     if (isNewAccount === true) {
-      createUserWithEmailAndPassword(authService, Email, Password)
+      await createUserWithEmailAndPassword(authService, Email, Password)
         .then((response) => {
-          if ((response.operationType = "signIn")) {
+          if (response && authService.currentUser !== null) {
+            updateProfile(authService.currentUser, {
+              displayName: name,
+            })
+            uploadUserNameToFirestore(name)
             signOut(authService)
             setIsNewAccount(false)
             alert(
@@ -231,6 +256,19 @@ export default function Auth() {
             name="Password"
             value={Password}
           />
+          {isNewAccount ? (
+            <>
+              <Margin direction="column" size={6} />
+              <Style.InputBox
+                placeholder="Name"
+                required
+                minLength={3}
+                onChange={handleNameOnChange}
+              />
+            </>
+          ) : (
+            <></>
+          )}
           <Margin direction="column" size={16} />
           <Style.SubmitButton
             type={"submit"}

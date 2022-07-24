@@ -1,4 +1,4 @@
-import { signOut, User } from "firebase/auth"
+import { User } from "firebase/auth"
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -7,6 +7,7 @@ import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import styled from "styled-components"
 import ImageCard from "@share/ImageCard"
 import Header from "components/layout/Header"
+import { Margin } from "ui"
 
 const Style = {
   MainPageImage: styled.img`
@@ -53,25 +54,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Header />
-      <span>환영합니다!! {currentUser?.email}님!</span>
-      <button
-        onClick={() => {
-          signOut(authService)
-          router.push("/auth")
-        }}
-      >
-        로그아웃
-      </button>
-      <br />
-      <button
-        onClick={() => {
-          if (currentUser?.uid !== null) {
-            router.push(`/u/${currentUser?.uid}`)
-          }
-        }}
-      >
-        프로필 페이지
-      </button>
+      <Margin direction="column" size={30} />
       <Style.ImageContainer>
         {imageData &&
           imageData.map((imageObject, index) => {
