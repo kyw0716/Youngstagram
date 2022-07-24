@@ -117,6 +117,8 @@ export default function Auth() {
   }
   const handleOnSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
+    if (Email.length === 0) return
+    if (Password.length < 6) return
     if (isNewAccount === true) {
       createUserWithEmailAndPassword(authService, Email, Password)
         .then((response) => {
@@ -144,7 +146,7 @@ export default function Auth() {
     }
     signInWithEmailAndPassword(authService, Email, Password)
       .then((response) => {
-        if (response.operationType === "signIn") {
+        if (response) {
           router.push("/")
         }
       })
@@ -202,13 +204,7 @@ export default function Auth() {
       <Header />
       <Style.Wrapper>
         <Margin direction="column" size={60} />
-        <Style.FormContainer
-          onSubmit={() => {
-            if (Email.length === 0) return
-            if (Password.length < 6) return
-            handleOnSubmit
-          }}
-        >
+        <Style.FormContainer onSubmit={handleOnSubmit}>
           <Margin direction="column" size={20} />
           <Style.Logo
             onClick={() => {
