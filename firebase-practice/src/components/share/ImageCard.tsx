@@ -1,7 +1,9 @@
 import { DBService, storageService } from "@FireBase"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
+import { useState } from "react"
 import styled from "styled-components"
+import { FlexBox } from "ui"
 
 type Props = {
   imageUrl: string
@@ -18,19 +20,28 @@ const Style = {
     height: 600px;
   `,
   ImageHeader: styled.div`
-    width: 470px;
+    width: 468px;
     height: 58px;
     display: flex;
     align-items: center;
     padding-left: 15px;
-    gap: 15px;
+    justify-content: space-between;
+    border-radius: 10px;
+    background-color: white;
+    border-bottom: none;
+    padding-right: 40px;
+    position: relative;
     @media (max-width: 470px) {
       width: 100vw;
       height: 58px;
       display: flex;
       align-items: center;
       padding-left: 3%;
-      gap: 15px;
+      justify-content: space-between;
+      border-radius: 10px;
+      background-color: white;
+      padding-right: 3%;
+      position: relative;
     }
   `,
   CreatorImage: styled.div`
@@ -64,9 +75,36 @@ const Style = {
     border: 1px solid lightgrey;
     border-radius: 10px;
     padding-bottom: 60px;
+    background-color: white;
   `,
-  FlexBox: styled.div`
+  ThreeDotMenu: styled.img`
+    width: 20px;
+    height: 15px;
+    cursor: pointer;
+  `,
+  ButtonBox: styled.div`
+    width: 107px;
+    height: 60px;
+    border: 1px solid lightgrey;
+    border-bottom: none;
     display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    top: 11px;
+    right: 11px;
+  `,
+  DeleteOrPrivate: styled.button`
+    width: 105px;
+    height: 30px;
+    -webkit-appearance: none;
+    border: none;
+    background-color: white;
+    border-bottom: 1px solid lightgrey;
+    cursor: pointer;
+    &:hover {
+      background-color: rgb(237, 237, 237);
+    }
   `,
 }
 
@@ -86,6 +124,8 @@ export default function ImageCard({
     const storageImageRef = ref(storageService, `images/${userId}/${title}`)
     const firestoreImageRef = doc(DBService, "userData", `${userId}`)
     const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
+
+    handleThreeDotMenuClick()
 
     await deleteObject(storageImageRef)
 
@@ -114,6 +154,8 @@ export default function ImageCard({
     const firestoreImageRef = doc(DBService, "userData", `${userId}`)
     const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
 
+    handleThreeDotMenuClick()
+
     await updateDoc(firestoreImageRef, {
       images: arrayRemove({
         image: url,
@@ -146,37 +188,57 @@ export default function ImageCard({
     })
   }
 
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
+  const handleThreeDotMenuClick = () => {
+    setIsMenuOpen((current) => !current)
+  }
+
   return (
     <Style.ImageCard>
       <Style.ImageHeader>
-        <Style.CreatorImage />
-        <Style.HeaderText>
-          <Style.UserName>{userName}</Style.UserName>
-          <Style.ImageTitle>{imageTitle}</Style.ImageTitle>
-        </Style.HeaderText>
+        <FlexBox
+          width={"fit-content"}
+          height={58}
+          gap={15}
+          alignItems={"center"}
+        >
+          <Style.CreatorImage />
+          <Style.HeaderText>
+            <Style.UserName>{userName}</Style.UserName>
+            <Style.ImageTitle>{imageTitle}</Style.ImageTitle>
+          </Style.HeaderText>
+        </FlexBox>
+        {isMainPage ? (
+          <></>
+        ) : (
+          <Style.ThreeDotMenu
+            src="/dot-menu.svg"
+            alt="menu"
+            onClick={handleThreeDotMenuClick}
+          />
+        )}
+        {isMenuOpen ? (
+          <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
+            <Style.DeleteOrPrivate
+              onClick={() => {
+                handleDeleteImage(imageUrl, imageTitle, isPrivate)
+              }}
+            >
+              삭제
+            </Style.DeleteOrPrivate>
+            <Style.DeleteOrPrivate
+              onClick={() => {
+                handlePrivateToggle(imageUrl, imageTitle, isPrivate)
+              }}
+            >
+              {isPrivate ? "공개로 전환" : "비공개로 전환"}
+            </Style.DeleteOrPrivate>
+          </Style.ButtonBox>
+        ) : (
+          <></>
+        )}
       </Style.ImageHeader>
-
       <Style.ProfilePageImage src={imageUrl} />
-      {isMainPage ? (
-        <></>
-      ) : (
-        <>
-          <button
-            onClick={() => {
-              handleDeleteImage(imageUrl, imageTitle, isPrivate)
-            }}
-          >
-            삭제
-          </button>
-          <button
-            onClick={() => {
-              handlePrivateToggle(imageUrl, imageTitle, isPrivate)
-            }}
-          >
-            {isPrivate ? "공개로 전환" : "비공개로 전환"}
-          </button>
-        </>
-      )}
     </Style.ImageCard>
   )
 }

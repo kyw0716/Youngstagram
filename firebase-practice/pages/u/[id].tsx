@@ -6,6 +6,7 @@ import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import ProfileNameInput from "@feature/profile/ProfileNameInput"
 import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
+import Header from "layout/Header"
 
 export default function Profile({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
@@ -20,6 +21,7 @@ export default function Profile({ userId }: Props) {
 
   return (
     <>
+      <Header />
       <button
         onClick={() => {
           router.push("/")

@@ -9,6 +9,7 @@ import {
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { authService } from "@FireBase"
+import Header from "layout/Header"
 
 export default function Auth() {
   const router = useRouter()
@@ -111,6 +112,7 @@ export default function Auth() {
 
   return (
     <>
+      <Header />
       <form onSubmit={handleOnSubmit}>
         <input
           type={"text"}

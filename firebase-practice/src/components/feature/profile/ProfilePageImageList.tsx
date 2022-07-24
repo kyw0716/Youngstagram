@@ -2,7 +2,7 @@ import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { DBService } from "@FireBase"
-import ImageCard from "./ImageCard"
+import ImageCard from "../../share/ImageCard"
 
 type Props = {
   userId: string
