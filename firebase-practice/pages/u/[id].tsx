@@ -22,14 +22,6 @@ export default function Profile({ userId }: Props) {
   return (
     <>
       <Header />
-      <button
-        onClick={() => {
-          router.push("/")
-        }}
-      >
-        홈으로
-      </button>
-      <br />
       {userData !== undefined && userData.name ? (
         <ProfilePageImageInput
           userId={userId}
