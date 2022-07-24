@@ -195,12 +195,12 @@ export default function ImageCard({
 
   return (
     <Style.ImageCard
-      onMouseEnter={() => {
+      onClick={() => {
         setIsMenuOpen(false)
       }}
     >
       <Style.ImageHeader
-        onMouseEnter={() => {
+        onClick={() => {
           setIsMenuOpen(false)
         }}
       >
@@ -210,7 +210,11 @@ export default function ImageCard({
           gap={15}
           alignItems={"center"}
         >
-          <Style.CreatorImage />
+          <Style.CreatorImage
+            onClick={() => {
+              setIsMenuOpen(false)
+            }}
+          />
           <Style.HeaderText>
             <Style.UserName>{userName}</Style.UserName>
             <Style.ImageTitle>{imageTitle}</Style.ImageTitle>
