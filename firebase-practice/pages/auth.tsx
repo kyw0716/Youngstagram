@@ -49,9 +49,12 @@ const Style = {
     border: none;
     border-radius: 3px;
     background-color: #d7ecff;
+    background-color: ${(props) =>
+      props.color === "" ? "#37a2ff" : "#d7ecff"};
     color: white;
     font-size: 15px;
     font-weight: bold;
+    cursor: ${(props) => (props.color === "" ? "pointer" : "not-allowed")};
   `,
   Logo: styled.h3`
     font-family: "Dancing Script", Handwriting;
@@ -199,7 +202,13 @@ export default function Auth() {
       <Header />
       <Style.Wrapper>
         <Margin direction="column" size={60} />
-        <Style.FormContainer onSubmit={handleOnSubmit}>
+        <Style.FormContainer
+          onSubmit={() => {
+            if (Email.length === 0) return
+            if (Password.length < 6) return
+            handleOnSubmit
+          }}
+        >
           <Margin direction="column" size={20} />
           <Style.Logo
             onClick={() => {
@@ -230,6 +239,7 @@ export default function Auth() {
           <Style.SubmitButton
             type={"submit"}
             value={isNewAccount ? "Create Account" : "Log in"}
+            color={Email.length !== 0 && Password.length >= 6 ? "" : "fail"}
           />
           <Margin direction="column" size={15} />
           <FlexBox width={350} justifyContents="center" alignItems="center">
