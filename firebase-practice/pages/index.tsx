@@ -6,7 +6,7 @@ import { authService, DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import styled from "styled-components"
 import ImageCard from "@share/ImageCard"
-import Header from "layout/Header"
+import Header from "components/layout/Header"
 
 const Style = {
   MainPageImage: styled.img`

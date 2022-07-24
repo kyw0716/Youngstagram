@@ -22,6 +22,14 @@ const Style = {
     justify-content: space-between;
     align-items: center;
     position: relative;
+    @media (max-width: 900px) {
+      width: 90%;
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
   `,
   LineMenu: styled.img`
     width: 50px;
@@ -29,9 +37,11 @@ const Style = {
     cursor: pointer;
   `,
   Logo: styled.h3`
+    font-family: "Dancing Script", Handwriting;
     cursor: pointer;
     padding: 16px 0px;
     margin: 0;
+    font-size: 30px;
   `,
   DropDownMenu: styled.div`
     width: 107px;

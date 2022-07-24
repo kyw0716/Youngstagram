@@ -9,7 +9,91 @@ import {
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { authService } from "@FireBase"
-import Header from "layout/Header"
+import Header from "components/layout/Header"
+import styled from "styled-components"
+import { FlexBox, Margin } from "ui"
+
+const Style = {
+  Wrapper: styled.div`
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  `,
+  FormContainer: styled.form`
+    width: 350px;
+    height: 380px;
+    border: 1px solid lightgrey;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  `,
+  InputBox: styled.input`
+    width: 268px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    -webkit-appearance: none;
+    border: 1px solid lightgrey;
+    padding-left: 15px;
+    border-radius: 3px;
+    &::placeholder {
+      color: lightgrey;
+    }
+  `,
+  SubmitButton: styled.input`
+    width: 268px;
+    height: 30px;
+    -webkit-appearance: none;
+    border: none;
+    border-radius: 3px;
+    background-color: #d7ecff;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+  `,
+  Logo: styled.h3`
+    font-family: "Dancing Script", Handwriting;
+    cursor: pointer;
+    padding: 16px 0px;
+    margin: 0;
+    font-size: 45px;
+  `,
+  HorizontalLine: styled.div`
+    width: 104px;
+    border-top: 1px solid lightgrey;
+  `,
+  StyledH5: styled.h5`
+    font-size: 13px;
+    color: #a9a8a8;
+    padding: 0;
+    margin: 0;
+  `,
+  LoginIcon: styled.img`
+    width: 40px;
+    cursor: pointer;
+  `,
+  SignUpContainer: styled.div`
+    width: 350px;
+    height: 80px;
+    border: 1px solid lightgrey;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `,
+  StyledSpan: styled.span`
+    font-size: 15px;
+    color: #737373;
+  `,
+  SignUpButton: styled.span`
+    font-size: 16px;
+    color: #4891ff;
+    font-weight: bold;
+    cursor: pointer;
+  `,
+}
 
 export default function Auth() {
   const router = useRouter()
@@ -113,39 +197,76 @@ export default function Auth() {
   return (
     <>
       <Header />
-      <form onSubmit={handleOnSubmit}>
-        <input
-          type={"text"}
-          placeholder="Email"
-          required
-          onChange={handleOnInputChange}
-          name="Email"
-          value={Email}
-        />
-        <input
-          type={"password"}
-          placeholder="Password"
-          required
-          onChange={handleOnInputChange}
-          name="Password"
-          value={Password}
-        />
-        <input
-          type={"submit"}
-          value={isNewAccount ? "Create Account" : "Log in"}
-        />
-      </form>
-      <button
-        onClick={() => {
-          setIsNewAccount((current) => !current)
-        }}
-      >
-        {isNewAccount ? "로그인" : "회원가입"}
-      </button>
-      <div>
-        <button onClick={handleGoogleAuth}>Continue with Google</button>
-        <button onClick={handleGitHubAuth}>Continue with GitHub</button>
-      </div>
+      <Style.Wrapper>
+        <Margin direction="column" size={60} />
+        <Style.FormContainer onSubmit={handleOnSubmit}>
+          <Margin direction="column" size={20} />
+          <Style.Logo
+            onClick={() => {
+              router.push("/")
+            }}
+          >
+            youngstagram
+          </Style.Logo>
+          <Margin direction="column" size={20} />
+          <Style.InputBox
+            type={"text"}
+            placeholder="Email"
+            required
+            onChange={handleOnInputChange}
+            name="Email"
+            value={Email}
+          />
+          <Margin direction="column" size={6} />
+          <Style.InputBox
+            type={"password"}
+            placeholder="Password"
+            required
+            onChange={handleOnInputChange}
+            name="Password"
+            value={Password}
+          />
+          <Margin direction="column" size={16} />
+          <Style.SubmitButton
+            type={"submit"}
+            value={isNewAccount ? "Create Account" : "Log in"}
+          />
+          <Margin direction="column" size={15} />
+          <FlexBox width={350} justifyContents="center" alignItems="center">
+            <Style.HorizontalLine />
+            <Margin direction="row" size={18} />
+            <Style.StyledH5>또는</Style.StyledH5>
+            <Margin direction="row" size={18} />
+            <Style.HorizontalLine />
+          </FlexBox>
+          <Margin direction="column" size={22} />
+          <FlexBox justifyContents="center">
+            <Style.LoginIcon
+              src={"/GoogleIcon.png"}
+              alt="googleLogin"
+              onClick={handleGoogleAuth}
+            />
+            <Margin direction="row" size={20} />
+            <Style.LoginIcon
+              src={"/GitHubIcon.png"}
+              alt="githubLogin"
+              onClick={handleGitHubAuth}
+            />
+          </FlexBox>
+        </Style.FormContainer>
+        <Margin direction="column" size={30} />
+        <Style.SignUpContainer>
+          <Style.StyledSpan>계정이 없으신가요?</Style.StyledSpan>
+          <Margin direction="row" size={10} />
+          <Style.SignUpButton
+            onClick={() => {
+              setIsNewAccount((current) => !current)
+            }}
+          >
+            {isNewAccount ? "로그인" : "가입하기"}
+          </Style.SignUpButton>
+        </Style.SignUpContainer>
+      </Style.Wrapper>
     </>
   )
 }

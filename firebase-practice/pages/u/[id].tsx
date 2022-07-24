@@ -6,7 +6,7 @@ import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import ProfileNameInput from "@feature/profile/ProfileNameInput"
 import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
-import Header from "layout/Header"
+import Header from "components/layout/Header"
 
 export default function Profile({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
