@@ -17,7 +17,8 @@
     "baseUrl": "./src/",
     "paths": {
       "@FireBase": ["FireBase"],
-      "@feature/*": ["components/feature/*"]
+      "@feature/*": ["components/feature/*"],
+      "@share/*": ["components/share/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import styled from "styled-components"
-import ImageCard from "components/share/ImageCard"
+import ImageCard from "@share/ImageCard"
 import Header from "layout/Header"
 
 const Style = {
