@@ -194,8 +194,16 @@ export default function ImageCard({
   }
 
   return (
-    <Style.ImageCard>
-      <Style.ImageHeader>
+    <Style.ImageCard
+      onMouseEnter={() => {
+        setIsMenuOpen(false)
+      }}
+    >
+      <Style.ImageHeader
+        onMouseEnter={() => {
+          setIsMenuOpen(false)
+        }}
+      >
         <FlexBox
           width={"fit-content"}
           height={58}
