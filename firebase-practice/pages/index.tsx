@@ -26,7 +26,6 @@ const Style = {
 
 const Home: NextPage = () => {
   const router = useRouter()
-  const [currentUser, setCurrentUser] = useState<User>()
   const [userData, setUserData] = useState<DocumentData>()
   const [imageData, setImageData] = useState<
     { image: string; imageTitle: string; private: boolean; creator: string }[]
@@ -43,10 +42,7 @@ const Home: NextPage = () => {
   }, [userData])
 
   useEffect(() => {
-    if (authService.currentUser !== null) {
-      setCurrentUser(authService.currentUser)
-      return
-    }
+    if (authService.currentUser !== null) return
     router.push("/auth")
     /*eslint-disable-next-line*/
   }, [authService.currentUser])
