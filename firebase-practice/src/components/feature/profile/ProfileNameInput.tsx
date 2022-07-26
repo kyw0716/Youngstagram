@@ -1,12 +1,7 @@
-import { doc, setDoc } from "firebase/firestore"
 import { useState } from "react"
 import styled from "styled-components"
 import { authService, DBService } from "@FireBase"
 import { updateProfile } from "firebase/auth"
-
-type Props = {
-  userId: string
-}
 
 const Style = {
   NameInput: styled.input`
@@ -19,18 +14,12 @@ const Style = {
   `,
 }
 
-export default function ProfileNameInput({ userId }: Props) {
+export default function ProfileNameInput() {
   const [name, setName] = useState<string>("")
   const handleNameOnChange: React.ChangeEventHandler<HTMLInputElement> = (
     event,
   ) => {
     setName(event.target.value)
-  }
-  const uploadUserNameToFirestore = async (name: string) => {
-    const userDataRef = doc(DBService, "userData", `${userId}`)
-    await setDoc(userDataRef, {
-      name: name,
-    })
   }
 
   const handleUserDataSubmit: React.FormEventHandler<HTMLFormElement> = async (
@@ -38,7 +27,6 @@ export default function ProfileNameInput({ userId }: Props) {
   ) => {
     event.preventDefault()
     if (authService.currentUser === null) return
-    uploadUserNameToFirestore(name)
     await updateProfile(authService.currentUser, {
       displayName: name,
     }).then(() => {
