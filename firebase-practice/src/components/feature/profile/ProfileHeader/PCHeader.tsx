@@ -80,6 +80,9 @@ const Style = {
     border-top: 3px solid
       ${(props) => (props.about === "all" ? "grey" : "none")};
   `,
+  Icon: styled.img`
+    width: 15px;
+  `,
 }
 
 export default function PCHeader({
@@ -113,6 +116,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>전체 게시물</CustomH4>
+          <Style.Icon src="/all-file.svg" alt="allFile" />
         </Style.SortToAll>
         <Style.SortToPublic
           about={pickImageData}
@@ -121,6 +125,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>공개 게시물</CustomH4>
+          <Style.Icon src="/public-file.svg" alt="publicFile" />
         </Style.SortToPublic>
         <Style.SortToPrivate
           about={pickImageData}
@@ -129,6 +134,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>비공개 게시물</CustomH4>
+          <Style.Icon src="/private-file.svg" alt="privateFile" />
         </Style.SortToPrivate>
       </Style.SortWrapper>
     </>
