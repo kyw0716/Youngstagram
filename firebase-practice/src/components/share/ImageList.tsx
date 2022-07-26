@@ -1,4 +1,5 @@
 import { authService } from "@FireBase"
+import { SetStateAction } from "react"
 import styled from "styled-components"
 import ImageCard from "./ImageCard"
 
@@ -11,6 +12,7 @@ type Props = {
   }[]
   isMainPage: boolean
   userId: string
+  setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
 }
 
 const Style = {
@@ -35,7 +37,12 @@ const Style = {
   `,
 }
 
-export default function ImageList({ imageData, isMainPage, userId }: Props) {
+export default function ImageList({
+  imageData,
+  isMainPage,
+  userId,
+  setPickImageData,
+}: Props) {
   return (
     <Style.ImageContainer>
       {imageData.map((data, index) => {
@@ -52,6 +59,7 @@ export default function ImageList({ imageData, isMainPage, userId }: Props) {
             imageUrl={data.image}
             isPrivate={data.private}
             isMainPage={isMainPage}
+            setPickImageData={setPickImageData}
           />
         )
       })}

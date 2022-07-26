@@ -1,7 +1,7 @@
 import { DBService, storageService } from "@FireBase"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
-import { useState } from "react"
+import { SetStateAction, useState } from "react"
 import styled from "styled-components"
 import { FlexBox } from "ui"
 
@@ -12,6 +12,7 @@ type Props = {
   userId: string
   userName: string
   isMainPage: boolean
+  setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
 }
 
 const Style = {
@@ -122,6 +123,7 @@ export default function ImageCard({
   userId,
   userName,
   isMainPage,
+  setPickImageData,
 }: Props) {
   const handleDeleteImage = async (
     url: string,
@@ -151,6 +153,7 @@ export default function ImageCard({
         creator: userName,
       }),
     })
+    setPickImageData("all")
   }
 
   const handlePrivateToggle = async (
@@ -195,6 +198,7 @@ export default function ImageCard({
         }),
       })
     })
+    setPickImageData("all")
   }
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)

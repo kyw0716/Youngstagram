@@ -127,6 +127,7 @@ export default function Profile({ userId }: Props) {
                   imageData={dataToView}
                   isMainPage={false}
                   userId={authService.currentUser?.uid}
+                  setPickImageData={setPickImageData}
                 />
               )}
           </>

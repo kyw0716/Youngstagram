@@ -61,6 +61,7 @@ const Style = {
     gap: 9px;
     border-top: 3px solid
       ${(props) => (props.about === "public" ? "grey" : "none")};
+    cursor: pointer;
   `,
   SortToPrivate: styled.div`
     width: 33%;
@@ -70,6 +71,7 @@ const Style = {
     gap: 9px;
     border-top: 3px solid
       ${(props) => (props.about === "private" ? "grey" : "none")};
+    cursor: pointer;
   `,
   SortToAll: styled.div`
     width: 33%;
@@ -79,6 +81,7 @@ const Style = {
     gap: 9px;
     border-top: 3px solid
       ${(props) => (props.about === "all" ? "grey" : "none")};
+    cursor: pointer;
   `,
   Icon: styled.img`
     width: 15px;
