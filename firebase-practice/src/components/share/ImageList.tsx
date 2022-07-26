@@ -12,7 +12,9 @@ type Props = {
   }[]
   isMainPage: boolean
   userId: string
-  setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
+  setPickImageData?: React.Dispatch<
+    SetStateAction<"public" | "private" | "all">
+  >
 }
 
 const Style = {
@@ -45,24 +47,25 @@ export default function ImageList({
 }: Props) {
   return (
     <Style.ImageContainer>
-      {imageData.map((data, index) => {
-        return (
-          <ImageCard
-            key={index}
-            userId={userId}
-            userName={
-              isMainPage
-                ? data.creator
-                : `${authService.currentUser?.displayName}`
-            }
-            imageTitle={data.imageTitle}
-            imageUrl={data.image}
-            isPrivate={data.private}
-            isMainPage={isMainPage}
-            setPickImageData={setPickImageData}
-          />
-        )
-      })}
+      {setPickImageData !== undefined &&
+        imageData.map((data, index) => {
+          return (
+            <ImageCard
+              key={index}
+              userId={userId}
+              userName={
+                isMainPage
+                  ? data.creator
+                  : `${authService.currentUser?.displayName}`
+              }
+              imageTitle={data.imageTitle}
+              imageUrl={data.image}
+              isPrivate={data.private}
+              isMainPage={isMainPage}
+              setPickImageData={setPickImageData}
+            />
+          )
+        })}
     </Style.ImageContainer>
   )
 }
