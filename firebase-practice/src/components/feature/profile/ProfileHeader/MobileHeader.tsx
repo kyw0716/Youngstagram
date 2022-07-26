@@ -1,7 +1,7 @@
 import { authService } from "@FireBase"
 import { SetStateAction } from "react"
 import styled from "styled-components"
-import { CustomH2, CustomH3, FlexBox, Margin } from "ui"
+import { CustomH2, CustomH4, FlexBox, Margin } from "ui"
 
 type Props = {
   imageDataLength: number
@@ -99,8 +99,8 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH3>전체 게시물</CustomH3>
-          <CustomH3>{imageDataLength}</CustomH3>
+          <CustomH4>전체 게시물</CustomH4>
+          <CustomH4>{imageDataLength}</CustomH4>
         </Style.SortToAll>
         <Style.SortToPublic
           onClick={() => {
@@ -108,8 +108,8 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH3>공개 게시물</CustomH3>
-          <CustomH3>{imageDataLength - privateImageDataLength}</CustomH3>
+          <CustomH4>공개 게시물</CustomH4>
+          <CustomH4>{imageDataLength - privateImageDataLength}</CustomH4>
         </Style.SortToPublic>
         <Style.SortToPrivate
           onClick={() => {
@@ -117,8 +117,8 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH3>비공개 게시물</CustomH3>
-          <CustomH3>{privateImageDataLength}</CustomH3>
+          <CustomH4>비공개 게시물</CustomH4>
+          <CustomH4>{privateImageDataLength}</CustomH4>
         </Style.SortToPrivate>
       </Style.ProfileInfoWrapper>
     </>
