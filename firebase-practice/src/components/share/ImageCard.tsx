@@ -91,8 +91,8 @@ const Style = {
     cursor: pointer;
   `,
   ButtonBox: styled.div`
-    width: 107px;
-    height: 60px;
+    width: 152px;
+    height: 120px;
     border: 1px solid lightgrey;
     border-bottom: none;
     display: flex;
@@ -103,8 +103,8 @@ const Style = {
     right: 11px;
   `,
   DeleteOrPrivate: styled.button`
-    width: 105px;
-    height: 30px;
+    width: 150px;
+    height: 40px;
     -webkit-appearance: none;
     border: none;
     background-color: white;
