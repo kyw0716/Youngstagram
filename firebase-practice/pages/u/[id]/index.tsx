@@ -52,7 +52,7 @@ export default function Profile({ userId }: Props) {
     })
   }, [])
   useEffect(() => {
-    if (userData !== undefined) {
+    if (userData !== undefined && userData.images !== undefined) {
       setAllImageData(userData.images)
       setDataToView(userData.images)
       setPrivateImageData(
