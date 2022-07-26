@@ -2,11 +2,10 @@ import { arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
-import { DBService, storageService } from "@FireBase"
+import { authService, DBService, storageService } from "@FireBase"
 
 type Props = {
   userId: string
-  userName: string
 }
 
 const Style = {
@@ -25,7 +24,7 @@ const Style = {
   `,
 }
 
-export default function ProfilePageImageInput({ userId, userName }: Props) {
+export default function ProfilePageImageInput({ userId }: Props) {
   const [imageFile, setImageFile] = useState<File>()
   const [imageTitle, setImageTitle] = useState<string>("")
   const imageUploadRef = useRef<HTMLInputElement>(null)
@@ -96,7 +95,7 @@ export default function ProfilePageImageInput({ userId, userName }: Props) {
         image: url,
         imageTitle: title,
         private: isPrivate,
-        creator: userName,
+        creator: authService.currentUser?.displayName,
       }),
     }).then(() => {
       setImageTitle("")

@@ -46,7 +46,7 @@ const Style = {
     font-size: 30px;
   `,
   DropDownMenu: styled.div`
-    width: 107px;
+    width: 150px;
     height: 60px;
     border: 1px solid lightgrey;
     position: absolute;
@@ -58,7 +58,7 @@ const Style = {
     align-items: center;
   `,
   MenuItem: styled.div`
-    width: 105px;
+    width: 148px;
     height: 58px;
     -webkit-appearance: none;
     border: none;
@@ -67,12 +67,16 @@ const Style = {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 8px;
     &:hover {
       background-color: #dcdcdc;
-      width: 107px;
+      width: 150px;
       border: 1px solid #dcdcdc;
     }
     cursor: pointer;
+  `,
+  Icon: styled.img`
+    width: 15px;
   `,
 }
 
@@ -106,6 +110,7 @@ export default function Header() {
                   router.push("/auth")
                 }}
               >
+                <Style.Icon src="/logout.svg" alt="logout" />
                 로그아웃
               </Style.MenuItem>
               <Style.MenuItem
@@ -118,6 +123,7 @@ export default function Header() {
                   }
                 }}
               >
+                <Style.Icon src="/profile.svg" alt="profile" />
                 프로필 페이지
               </Style.MenuItem>
             </Style.DropDownMenu>

@@ -169,6 +169,14 @@ export default function ImageCard({
         imageTitle: title,
         private: isPrivate,
       }),
+    }).then(async () => {
+      await updateDoc(firestoreImageRef, {
+        images: arrayUnion({
+          image: url,
+          imageTitle: title,
+          private: !isPrivate,
+        }),
+      })
     })
     await updateDoc(firestoreImageAllRef, {
       images: arrayRemove({
@@ -177,21 +185,15 @@ export default function ImageCard({
         private: isPrivate,
         creator: userName,
       }),
-    })
-    await updateDoc(firestoreImageRef, {
-      images: arrayUnion({
-        image: url,
-        imageTitle: title,
-        private: !isPrivate,
-      }),
-    })
-    await updateDoc(firestoreImageAllRef, {
-      images: arrayUnion({
-        image: url,
-        imageTitle: title,
-        private: !isPrivate,
-        creator: userName,
-      }),
+    }).then(async () => {
+      await updateDoc(firestoreImageAllRef, {
+        images: arrayUnion({
+          image: url,
+          imageTitle: title,
+          private: !isPrivate,
+          creator: userName,
+        }),
+      })
     })
   }
 
