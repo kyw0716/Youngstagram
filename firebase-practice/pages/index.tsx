@@ -31,6 +31,10 @@ const Home: NextPage = () => {
     /*eslint-disable-next-line*/
   }, [authService.currentUser])
 
+  const [pickImageData, setPickImageData] = useState<
+    "public" | "private" | "all"
+  >("all")
+
   return (
     <>
       <Header />
@@ -41,6 +45,7 @@ const Home: NextPage = () => {
             imageData={imageData.filter((data) => !data.private)}
             isMainPage={true}
             userId={authService.currentUser?.uid}
+            setPickImageData={setPickImageData}
           />
         )}
     </>
