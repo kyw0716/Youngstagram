@@ -48,7 +48,7 @@ const Style = {
   DropDownMenu: styled.div`
     width: 150px;
     height: 100px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 10px 0px;
+    box-shadow: rgba(99, 99, 99, 0.4) 0px 5px 4px 0px;
     position: absolute;
     right: -28px;
     top: 65px;
@@ -68,7 +68,7 @@ const Style = {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding-left: 10px;
+    padding-left: 20px;
     border-radius: 9px 9px 0px 0px;
     &:hover {
       background-color: #f0f0f0;
@@ -84,7 +84,7 @@ const Style = {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding-left: 10px;
+    padding-left: 20px;
     border-radius: 0px 0px 9px 9px;
     &:hover {
       background-color: #f0f0f0;
@@ -100,7 +100,7 @@ const Style = {
     right: 13px;
     top: 55px;
     z-index: 6;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 7px 3px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   `,
   Icon: styled.img`
     width: 15px;
