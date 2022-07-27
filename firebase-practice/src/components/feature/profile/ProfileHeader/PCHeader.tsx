@@ -5,6 +5,7 @@ import { CustomH2, CustomH3, CustomH4, FlexBox, Margin } from "ui"
 
 type Props = {
   imageDataLength: number
+  privateImageDataLength: number
   setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
   pickImageData: "all" | "public" | "private"
 }
@@ -92,6 +93,7 @@ export default function PCHeader({
   imageDataLength,
   setPickImageData,
   pickImageData,
+  privateImageDataLength,
 }: Props) {
   return (
     <>
@@ -108,7 +110,17 @@ export default function PCHeader({
             <CustomH3>이메일: {authService.currentUser?.email}</CustomH3>
           </FlexBox>
           <Margin direction="column" size={15} />
-          <CustomH3>게시물: {imageDataLength}</CustomH3>
+          {pickImageData === "all" && (
+            <CustomH3>게시물: {imageDataLength}</CustomH3>
+          )}
+          {pickImageData === "public" && (
+            <CustomH3>
+              공개 게시물: {imageDataLength - privateImageDataLength}
+            </CustomH3>
+          )}
+          {pickImageData === "private" && (
+            <CustomH3>비공개 게시물: {privateImageDataLength}</CustomH3>
+          )}
         </Style.ProfileInfo>
       </Style.ProfileHeader>
       <Style.SortWrapper>
