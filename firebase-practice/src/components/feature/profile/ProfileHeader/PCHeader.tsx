@@ -140,7 +140,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>공개 게시물</CustomH4>
-          <Style.Icon src="/public-file.svg" alt="publicFile" />
+          <Style.Icon src="/unLock.svg" alt="publicFile" />
         </Style.SortToPublic>
         <Style.SortToPrivate
           about={pickImageData}
@@ -149,7 +149,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>비공개 게시물</CustomH4>
-          <Style.Icon src="/private-file.svg" alt="privateFile" />
+          <Style.Icon src="/lock.svg" alt="privateFile" />
         </Style.SortToPrivate>
       </Style.SortWrapper>
     </>
