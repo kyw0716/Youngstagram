@@ -1,3 +1,4 @@
+import ProfilePageImageInput from "@feature/profile/ProfilePageImageInput"
 import { authService } from "@FireBase"
 import Header from "components/layout/Header"
 import styled from "styled-components"
@@ -61,19 +62,7 @@ export default function test() {
     <>
       <Header />
       <Margin direction="column" size={30} />
-      <Style.Wrapper>
-        <Style.ProfileHeader>
-          <Margin direction="row" size={80} />
-          <Style.ProfileImage />
-          <Margin direction="row" size={80} />
-          <Style.ProfileInfo>
-            <Style.CustomH2>
-              {authService.currentUser?.displayName}
-            </Style.CustomH2>
-          </Style.ProfileInfo>
-        </Style.ProfileHeader>
-        <Margin direction="column" size={44} />
-      </Style.Wrapper>
+      <ProfilePageImageInput userId={`${authService.currentUser?.uid}`} />
     </>
   )
 }

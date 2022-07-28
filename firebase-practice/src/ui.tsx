@@ -69,9 +69,15 @@ const TextStyle = {
     padding: 0;
     color: #616161;
   `,
+  CustomH6: styled.h6`
+    margin: 0;
+    padding: 0;
+    color: #616161;
+  `,
 }
 export const CustomH1 = TextStyle.CustomH1
 export const CustomH2 = TextStyle.CustomH2
 export const CustomH3 = TextStyle.CustomH3
 export const CustomH4 = TextStyle.CustomH4
 export const CustomH5 = TextStyle.CustomH5
+export const CustomH6 = TextStyle.CustomH6
