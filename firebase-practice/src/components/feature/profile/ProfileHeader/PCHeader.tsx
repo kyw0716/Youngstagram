@@ -25,7 +25,6 @@ const Style = {
     width: 150px;
     height: 150px;
     border-radius: 200px;
-    border: 1px solid darkgrey;
     margin: 0px 80px;
   `,
   ProfileInfo: styled.div`
@@ -41,8 +40,8 @@ const Style = {
     -webkit-appearance: none;
     border: 1px solid lightgrey;
     border-radius: 10px;
-    background-color: white;
-    color: #616161;
+    background-color: #4891ff;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;

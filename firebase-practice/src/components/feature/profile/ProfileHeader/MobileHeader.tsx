@@ -20,7 +20,6 @@ const Style = {
   ProfileImage: styled.img`
     width: 90px;
     height: 90px;
-    border: 1px solid lightgrey;
     border-radius: 100px;
   `,
   ProfileEditButton: styled.div`
@@ -29,8 +28,8 @@ const Style = {
     -webkit-appearance: none;
     border: 1px solid lightgrey;
     border-radius: 10px;
-    background-color: white;
-    color: #616161;
+    background-color: #4891ff;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;

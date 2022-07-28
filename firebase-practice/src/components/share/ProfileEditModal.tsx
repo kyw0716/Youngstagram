@@ -21,7 +21,7 @@ const Style = {
   NameInput: styled.input`
     width: ${(props) => (props.about === "true" ? "350px" : "52vw")};
     height: ${(props) => (props.about === "true" ? "50px" : "8vw")};
-    border: 1px solid #bdbdbd;
+    border: 1.5px solid #4891ff;
     border-radius: ${(props) => (props.about === "true" ? "10px" : "1vw")};
     padding-left: 1vw;
     margin-bottom: ${(props) => (props.about === "true" ? "30px" : "5vw")};
@@ -30,7 +30,7 @@ const Style = {
   SubmitButton: styled.div`
     width: ${(props) => (props.about === "true" ? "100px" : "25vw")};
     height: ${(props) => (props.about === "true" ? "40px" : "8vw")};
-    background-color: #bdbdbd;
+    background-color: #4891ff;
     color: white;
     font-weight: bold;
     font-size: ${(props) => (props.about === "true" ? "16px" : "3vw")};
@@ -46,7 +46,7 @@ const Style = {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #bdbdbd;
+    background-color: #4891ff;
     color: white;
     font-weight: bold;
     font-size: ${(props) => (props.about === "true" ? "16px" : "2vw")};
@@ -57,7 +57,7 @@ const Style = {
   ImagePreviewName: styled.div`
     width: ${(props) => (props.about === "true" ? "250px" : "35vw")};
     height: ${(props) => (props.about === "true" ? "50px" : "8vw")};
-    border: 1px solid #bdbdbd;
+    border: 1.5px solid #4891ff;
     border-right: none;
     border-radius: ${(props) =>
       props.about === "true" ? "10px 0 0 10px" : "1.5vw 0 0 1.5vw"};
