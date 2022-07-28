@@ -7,6 +7,7 @@ import styled from "styled-components"
 import Header from "components/layout/Header"
 import { Margin } from "ui"
 import ImageList from "@share/ImageList"
+import { onAuthStateChanged } from "firebase/auth"
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -14,6 +15,16 @@ const Home: NextPage = () => {
   const [imageData, setImageData] = useState<
     { image: string; imageTitle: string; private: boolean; creator: string }[]
   >([])
+
+  useEffect(() => {
+    onAuthStateChanged(authService, (user) => {
+      if (user) {
+        router.push("/")
+      } else {
+        router.push("/auth")
+      }
+    })
+  }, [])
 
   useEffect(() => {
     const userDataRef = doc(DBService, "mainPage", `userImageDataAll`)
@@ -24,12 +35,6 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (userData !== undefined) setImageData(userData.images)
   }, [userData])
-
-  useEffect(() => {
-    if (authService.currentUser !== null) return
-    router.push("/auth")
-    /*eslint-disable-next-line*/
-  }, [authService.currentUser])
 
   const [pickImageData, setPickImageData] = useState<
     "public" | "private" | "all"

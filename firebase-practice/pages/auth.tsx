@@ -8,7 +8,7 @@ import {
   updateProfile,
 } from "firebase/auth"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
 import Header from "components/layout/Header"
 import styled from "styled-components"
