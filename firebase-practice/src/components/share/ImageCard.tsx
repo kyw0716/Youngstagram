@@ -30,7 +30,6 @@ const Style = {
     border-radius: 10px;
     background-color: white;
     border-bottom: none;
-    padding-right: 40px;
     position: relative;
     @media (max-width: 470px) {
       width: 100vw;
@@ -85,7 +84,15 @@ const Style = {
     align-items: center;
     z-index: 10000;
   `,
-  ThreeDotMenu: styled.img`
+  ThreeDotMenu: styled.div`
+    display: flex;
+    width: 100px;
+    height: 58px;
+    align-items: center;
+    padding-right: 40px;
+    justify-content: flex-end;
+  `,
+  ThreeDotMenuImg: styled.img`
     width: 20px;
     height: 15px;
     cursor: pointer;
@@ -93,26 +100,80 @@ const Style = {
   ButtonBox: styled.div`
     width: 152px;
     height: 120px;
-    border: 1px solid lightgrey;
     border-bottom: none;
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: flex-start;
     position: absolute;
-    top: 11px;
+    top: 65px;
     right: 11px;
+    box-shadow: rgba(99, 99, 99, 0.4) 0px 5px 4px 0px;
+    border-radius: 9px;
+    z-index: 2;
+    background-color: white;
   `,
-  DeleteOrPrivate: styled.button`
+  ChatBalloon: styled.div`
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    transform: rotate(45deg);
+    position: absolute;
+    right: 35px;
+    top: 55px;
+    box-shadow: rgba(99, 99, 99, 0.4) 0px 2px 8px 0px;
+    z-index: 1;
+  `,
+  Deletebutton: styled.div`
+    gap: 10px;
+    width: 150px;
+    height: 40px;
+    -webkit-appearance: none;
+    border: none;
+    background-color: white;
+    border-radius: 9px 9px 0px 0px;
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+  `,
+  PrivateToggleButton: styled.div`
+    gap: 10px;
+    width: 150px;
+    height: 40px;
+    -webkit-appearance: none;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+  `,
+  ExitButton: styled.div`
+    gap: 10px;
     width: 150px;
     height: 40px;
     -webkit-appearance: none;
     border: none;
     background-color: white;
     border-bottom: 1px solid lightgrey;
+    border-radius: 0px 0px 9px 9px;
     cursor: pointer;
     &:hover {
-      background-color: rgb(237, 237, 237);
+      background-color: #f0f0f0;
     }
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+  `,
+  Icon: styled.img`
+    width: 15px;
   `,
 }
 
@@ -224,32 +285,41 @@ export default function ImageCard({
         {isMainPage ? (
           <></>
         ) : (
-          <Style.ThreeDotMenu
-            src="/dot-menu.svg"
-            alt="menu"
-            onClick={handleThreeDotMenuClick}
-          />
+          <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
+            <Style.ThreeDotMenuImg src="/dot-menu.svg" alt="menu" />
+          </Style.ThreeDotMenu>
         )}
         {isMenuOpen ? (
-          <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
-            <Style.DeleteOrPrivate
-              onClick={() => {
-                handleDeleteImage(imageUrl, imageTitle, isPrivate)
-              }}
-            >
-              삭제
-            </Style.DeleteOrPrivate>
-            <Style.DeleteOrPrivate
-              onClick={() => {
-                handlePrivateToggle(imageUrl, imageTitle, isPrivate)
-              }}
-            >
-              {isPrivate ? "공개로 전환" : "비공개로 전환"}
-            </Style.DeleteOrPrivate>
-            <Style.DeleteOrPrivate onClick={handleThreeDotMenuClick}>
-              x
-            </Style.DeleteOrPrivate>
-          </Style.ButtonBox>
+          <>
+            <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
+              <Style.Deletebutton
+                onClick={() => {
+                  handleDeleteImage(imageUrl, imageTitle, isPrivate)
+                }}
+              >
+                <Style.Icon src="/delete.svg" />
+                삭제
+              </Style.Deletebutton>
+              <Style.PrivateToggleButton
+                onClick={() => {
+                  handlePrivateToggle(imageUrl, imageTitle, isPrivate)
+                }}
+              >
+                {isPrivate ? (
+                  <Style.Icon src="/unLock.svg" />
+                ) : (
+                  <Style.Icon src="/lock.svg" />
+                )}
+
+                {isPrivate ? "공개" : "비공개"}
+              </Style.PrivateToggleButton>
+              <Style.ExitButton onClick={handleThreeDotMenuClick}>
+                <Style.Icon src="/logout.svg" />
+                취소
+              </Style.ExitButton>
+            </Style.ButtonBox>
+            <Style.ChatBalloon />
+          </>
         ) : (
           <></>
         )}

@@ -1,10 +1,12 @@
 import { authService } from "@FireBase"
-import { SetStateAction } from "react"
+import ProfileEditModal from "@share/ProfileEditModal"
+import { SetStateAction, useState } from "react"
 import styled from "styled-components"
 import { CustomH2, CustomH3, CustomH4, FlexBox, Margin } from "ui"
 
 type Props = {
   imageDataLength: number
+  privateImageDataLength: number
   setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
   pickImageData: "all" | "public" | "private"
 }
@@ -92,23 +94,42 @@ export default function PCHeader({
   imageDataLength,
   setPickImageData,
   pickImageData,
+  privateImageDataLength,
 }: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   return (
     <>
+      <ProfileEditModal isOpen={isOpen} setIsOpen={setIsOpen} isPC={true} />
       <Style.ProfileHeader>
-        <Style.ProfileImage />
+        <Style.ProfileImage src={`${authService.currentUser?.photoURL}`} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
             <CustomH2>{authService.currentUser?.displayName}</CustomH2>
             <Margin direction="row" size={20} />
-            <Style.ProfileEditButton>프로필 편집</Style.ProfileEditButton>
+            <Style.ProfileEditButton
+              onClick={() => {
+                setIsOpen(true)
+              }}
+            >
+              프로필 편집
+            </Style.ProfileEditButton>
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
             <CustomH3>이메일: {authService.currentUser?.email}</CustomH3>
           </FlexBox>
           <Margin direction="column" size={15} />
-          <CustomH3>게시물: {imageDataLength}</CustomH3>
+          {pickImageData === "all" && (
+            <CustomH3>게시물: {imageDataLength}</CustomH3>
+          )}
+          {pickImageData === "public" && (
+            <CustomH3>
+              공개 게시물: {imageDataLength - privateImageDataLength}
+            </CustomH3>
+          )}
+          {pickImageData === "private" && (
+            <CustomH3>비공개 게시물: {privateImageDataLength}</CustomH3>
+          )}
         </Style.ProfileInfo>
       </Style.ProfileHeader>
       <Style.SortWrapper>
@@ -128,7 +149,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>공개 게시물</CustomH4>
-          <Style.Icon src="/public-file.svg" alt="publicFile" />
+          <Style.Icon src="/unLock.svg" alt="publicFile" />
         </Style.SortToPublic>
         <Style.SortToPrivate
           about={pickImageData}
@@ -137,7 +158,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>비공개 게시물</CustomH4>
-          <Style.Icon src="/private-file.svg" alt="privateFile" />
+          <Style.Icon src="/lock.svg" alt="privateFile" />
         </Style.SortToPrivate>
       </Style.SortWrapper>
     </>

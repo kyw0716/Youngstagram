@@ -1,5 +1,6 @@
 import { authService } from "@FireBase"
-import { SetStateAction } from "react"
+import ProfileEditModal from "@share/ProfileEditModal"
+import { SetStateAction, useState } from "react"
 import styled from "styled-components"
 import { CustomH2, CustomH4, FlexBox, Margin } from "ui"
 
@@ -78,16 +79,24 @@ export default function MobileHeader({
   setPickImageData,
   pickImageData,
 }: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   return (
     <>
+      <ProfileEditModal isPC={false} isOpen={isOpen} setIsOpen={setIsOpen} />
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
-          <Style.ProfileImage />
+          <Style.ProfileImage src={`${authService.currentUser?.photoURL}`} />
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
             <CustomH2>{authService.currentUser?.displayName}</CustomH2>
             <Margin direction="column" size={13} />
-            <Style.ProfileEditButton>프로필 편집</Style.ProfileEditButton>
+            <Style.ProfileEditButton
+              onClick={() => {
+                setIsOpen(true)
+              }}
+            >
+              프로필 편집
+            </Style.ProfileEditButton>
           </FlexBox>
         </FlexBox>
       </Style.ProfileWrapper>
