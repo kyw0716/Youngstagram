@@ -137,8 +137,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
     <>
       <Modal
         setIsOpen={setIsOpen}
-        // TODO: isOpen으로 바꾸기
-        isOpen={true}
+        isOpen={isOpen}
         width={isPC ? "600px" : "95vw"}
         height={"fit-content"}
         title="프로필 편집"
