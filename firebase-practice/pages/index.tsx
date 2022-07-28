@@ -23,6 +23,17 @@ const Style = {
   EmptyImage: styled.img`
     width: 150px;
   `,
+  TempButton: styled.div`
+    background-color: #4891ff;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 10px;
+  `,
 }
 
 const Home: NextPage = () => {
@@ -67,6 +78,16 @@ const Home: NextPage = () => {
   return (
     <>
       <Header />
+      <Margin direction="column" size={30} />
+      <FlexBox width={"100%"} justifyContents="center">
+        <Style.TempButton
+          onClick={() => {
+            router.push("test")
+          }}
+        >
+          임시 이미지 업로드 페이지
+        </Style.TempButton>
+      </FlexBox>
       <Margin direction="column" size={30} />
       {authService.currentUser?.uid !== undefined &&
         authService.currentUser.displayName !== null && (
