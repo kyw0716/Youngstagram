@@ -19,7 +19,7 @@ const Style = {
     border-radius: ${(props) => (props.about === "true" ? "10px" : "10px")};
   `,
   NameInput: styled.input`
-    width: ${(props) => (props.about === "true" ? "350px" : "210px")};
+    width: ${(props) => (props.about === "true" ? "350px" : "100%")};
     height: ${(props) => (props.about === "true" ? "50px" : "30px")};
     border: 1.5px solid #bdbdbd;
     border-radius: ${(props) => (props.about === "true" ? "10px" : "5px")};
@@ -41,7 +41,7 @@ const Style = {
     cursor: pointer;
   `,
   ProfileEditInputLabel: styled.label`
-    width: ${(props) => (props.about === "true" ? "100px" : "70px")};
+    width: ${(props) => (props.about === "true" ? "100px" : "40%")};
     height: ${(props) => (props.about === "true" ? "50px" : "30px")};
     display: flex;
     align-items: center;
@@ -55,7 +55,7 @@ const Style = {
     cursor: pointer;
   `,
   ImagePreviewName: styled.div`
-    width: ${(props) => (props.about === "true" ? "250px" : "140px")};
+    width: ${(props) => (props.about === "true" ? "250px" : "60%")};
     height: ${(props) => (props.about === "true" ? "50px" : "30px")};
     border: 1.5px solid #bdbdbd;
     border-right: none;
@@ -139,7 +139,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         setIsOpen={setIsOpen}
         isOpen={isOpen}
         width={isPC ? "600px" : "95vw"}
-        height={"fit-content"}
+        height={isPC ? "fit-content" : "210px"}
         title="프로필 편집"
         isPC={isPC}
       >
@@ -156,12 +156,12 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           />
           <Margin direction="row" size={15} />
           <FlexBox
-            width={isPC ? "300px" : "200px"}
+            width={isPC ? "350px" : "70%"}
             height={isPC ? "200px" : "100px"}
             column={true}
             justifyContents="center"
           >
-            <FlexBox width="fit-content" height="fit-content" column={true}>
+            <FlexBox width="100%" height="fit-content" column={true}>
               <FlexBox column={true}>
                 <label>
                   <CustomH6>이름 변경:</CustomH6>
@@ -179,7 +179,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
               </FlexBox>
               <CustomH6>이미지 변경:</CustomH6>
               <Margin direction="column" size={isPC ? 10 : 5} />
-              <FlexBox width={"100%"} justifyContents="flex-end">
+              <FlexBox width={"100%"}>
                 <Style.ImagePreviewName about={`${isPC}`}>
                   {imageFileName ? `${imageFileName.slice(0, 10)}...` : ""}
                 </Style.ImagePreviewName>
