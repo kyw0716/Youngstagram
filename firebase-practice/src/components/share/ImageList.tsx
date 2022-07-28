@@ -9,6 +9,7 @@ type Props = {
     imageTitle: string
     private: boolean
     creator: string
+    creatorProfile: string
   }[]
   isMainPage: boolean
   userId: string
@@ -63,6 +64,7 @@ export default function ImageList({
               isPrivate={data.private}
               isMainPage={isMainPage}
               setPickImageData={setPickImageData}
+              creatorProfile={data.creatorProfile}
             />
           )
         })}

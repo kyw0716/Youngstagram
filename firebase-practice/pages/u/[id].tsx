@@ -29,20 +29,44 @@ const Style = {
 export default function Profile({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
   const [allImageData, setAllImageData] = useState<
-    { image: string; imageTitle: string; private: boolean; creator: string }[]
+    {
+      image: string
+      imageTitle: string
+      private: boolean
+      creator: string
+      creatorProfile: string
+    }[]
   >([])
   const [privateImageData, setPrivateImageData] = useState<
-    { image: string; imageTitle: string; private: boolean; creator: string }[]
+    {
+      image: string
+      imageTitle: string
+      private: boolean
+      creator: string
+      creatorProfile: string
+    }[]
   >([])
   const [publicImageData, setPublicImageData] = useState<
-    { image: string; imageTitle: string; private: boolean; creator: string }[]
+    {
+      image: string
+      imageTitle: string
+      private: boolean
+      creator: string
+      creatorProfile: string
+    }[]
   >([])
 
   const [pickImageData, setPickImageData] = useState<
     "all" | "public" | "private"
   >("all")
   const [dataToView, setDataToView] = useState<
-    { image: string; imageTitle: string; private: boolean; creator: string }[]
+    {
+      image: string
+      imageTitle: string
+      private: boolean
+      creator: string
+      creatorProfile: string
+    }[]
   >([])
 
   useEffect(() => {
@@ -62,6 +86,7 @@ export default function Profile({ userId }: Props) {
             imageTitle: string
             private: boolean
             creator: string
+            creatorProfile: string
           }[]
         ).filter((data) => data.private),
       )
@@ -72,6 +97,7 @@ export default function Profile({ userId }: Props) {
             imageTitle: string
             private: boolean
             creator: string
+            creatorProfile: string
           }[]
         ).filter((data) => !data.private),
       )

@@ -1,12 +1,8 @@
-import { arrayUnion, doc, updateDoc } from "firebase/firestore"
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import { authService, DBService, storageService } from "@FireBase"
-
-type Props = {
-  userId: string
-}
 
 const Style = {
   PreviewImageSection: styled.div`
@@ -24,7 +20,7 @@ const Style = {
   `,
 }
 
-export default function ProfilePageImageInput({ userId }: Props) {
+export default function ProfilePageImageInput() {
   const [imageFile, setImageFile] = useState<File>()
   const [imageTitle, setImageTitle] = useState<string>("")
   const imageUploadRef = useRef<HTMLInputElement>(null)
@@ -62,7 +58,10 @@ export default function ProfilePageImageInput({ userId }: Props) {
       alert("이미지 제목을 입력해주세요!")
       return
     }
-    const imageSubmitRef = ref(storageService, `images/${userId}/${imageTitle}`)
+    const imageSubmitRef = ref(
+      storageService,
+      `images/${authService.currentUser?.uid}/${imageTitle}`,
+    )
     if (imageFile !== undefined)
       uploadBytes(imageSubmitRef, imageFile).then(() => {
         getDownloadURL(imageSubmitRef).then((response) => {
@@ -85,10 +84,20 @@ export default function ProfilePageImageInput({ userId }: Props) {
     title: string,
     isPrivate: boolean,
   ) => {
-    const imageUrlListRef = doc(DBService, "userData", userId)
+    const imageUrlListRef = doc(
+      DBService,
+      "userData",
+      `${authService.currentUser?.uid}`,
+    )
     const imageUrlListAllRef = doc(DBService, "mainPage", "userImageDataAll")
     await updateDoc(imageUrlListRef, {
       images: arrayUnion({ image: url, imageTitle: title, private: isPrivate }),
+    }).catch((error) => {
+      if (error.code === "not-found") {
+        setDoc(imageUrlListRef, {
+          images: [{ image: url, imageTitle: title, private: isPrivate }],
+        })
+      }
     })
     await updateDoc(imageUrlListAllRef, {
       images: arrayUnion({
@@ -96,6 +105,7 @@ export default function ProfilePageImageInput({ userId }: Props) {
         imageTitle: title,
         private: isPrivate,
         creator: authService.currentUser?.displayName,
+        creatorProfile: authService.currentUser?.photoURL,
       }),
     }).then(() => {
       setImageTitle("")

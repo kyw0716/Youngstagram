@@ -1,4 +1,4 @@
-import { DBService, storageService } from "@FireBase"
+import { authService, DBService, storageService } from "@FireBase"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import { SetStateAction, useState } from "react"
@@ -13,6 +13,7 @@ type Props = {
   userName: string
   isMainPage: boolean
   setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
+  creatorProfile: string
 }
 
 const Style = {
@@ -44,7 +45,7 @@ const Style = {
       position: relative;
     }
   `,
-  CreatorImage: styled.div`
+  CreatorImage: styled.img`
     width: 38px;
     height: 38px;
     border: 1px solid lightgrey;
@@ -185,6 +186,7 @@ export default function ImageCard({
   userName,
   isMainPage,
   setPickImageData,
+  creatorProfile,
 }: Props) {
   const handleDeleteImage = async (
     url: string,
@@ -212,6 +214,7 @@ export default function ImageCard({
         imageTitle: title,
         private: isPrivate,
         creator: userName,
+        creatorProfile: authService.currentUser?.photoURL,
       }),
     })
     setPickImageData("all")
@@ -248,6 +251,7 @@ export default function ImageCard({
         imageTitle: title,
         private: isPrivate,
         creator: userName,
+        creatorProfile: authService.currentUser?.photoURL,
       }),
     }).then(async () => {
       await updateDoc(firestoreImageAllRef, {
@@ -256,6 +260,7 @@ export default function ImageCard({
           imageTitle: title,
           private: !isPrivate,
           creator: userName,
+          creatorProfile: authService.currentUser?.photoURL,
         }),
       })
     })
@@ -276,7 +281,13 @@ export default function ImageCard({
           gap={15}
           alignItems={"center"}
         >
-          <Style.CreatorImage />
+          <Style.CreatorImage
+            src={
+              isMainPage
+                ? `${creatorProfile}`
+                : `${authService.currentUser?.photoURL}`
+            }
+          />
           <Style.HeaderText>
             <Style.UserName>{userName}</Style.UserName>
             <Style.ImageTitle>{imageTitle}</Style.ImageTitle>

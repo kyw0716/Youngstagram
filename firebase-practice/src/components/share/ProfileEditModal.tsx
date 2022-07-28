@@ -1,5 +1,6 @@
-import { authService, storageService } from "@FireBase"
+import { authService, DBService, storageService } from "@FireBase"
 import { updateProfile } from "firebase/auth"
+import { doc, DocumentData, onSnapshot, setDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
@@ -81,6 +82,27 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const [submitUserName, setSubmitUserName] = useState<string>("")
   const [imageUrlToAuthService, setImageUrlToAuthService] = useState<string>("")
 
+  const [userData, setUserData] = useState<DocumentData>()
+  const [imageData, setImageData] = useState<
+    {
+      image: string
+      imageTitle: string
+      private: boolean
+      creator: string
+      creatorProfile: string
+    }[]
+  >([])
+
+  useEffect(() => {
+    const userDataRef = doc(DBService, "mainPage", `userImageDataAll`)
+    onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
+      setUserData(doc.data())
+    })
+  }, [])
+  useEffect(() => {
+    if (userData !== undefined) setImageData(userData.images)
+  }, [userData])
+
   const encodeFileToBase64 = (fileblob: File) => {
     const reader = new FileReader()
     if (fileblob === undefined) return
@@ -107,20 +129,69 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   }
 
   const updateName = async () => {
-    if (authService.currentUser !== null)
+    console.log(
+      "이름 업데이트",
+      imageData.map((data) => {
+        if (data.creator === authService.currentUser?.displayName) {
+          return {
+            image: data.image,
+            imageTitle: data.imageTitle,
+            private: data.private,
+            creator: userName,
+            creatorProfile: data.creatorProfile,
+          }
+        }
+      }),
+    )
+    console.log("이름 업데이트", imageData)
+    if (authService.currentUser !== null) {
+      const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
+      await setDoc(updateFirestoreRef, {
+        images: [
+          ...imageData.map((data) => {
+            if (data.creator === authService.currentUser?.displayName) {
+              return {
+                creator: userName,
+                creatorProfile: data.creatorProfile,
+                image: data.image,
+                imageTitle: data.imageTitle,
+                private: data.private,
+              }
+            }
+          }),
+        ],
+      })
       await updateProfile(authService.currentUser, {
         displayName: submitUserName,
-      }).then(() => {
+      }).then(async () => {
         router.push(`/`)
       })
+    }
   }
   const updateProfileImage = async () => {
-    if (authService.currentUser !== null)
+    if (authService.currentUser !== null) {
+      const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
+      await setDoc(updateFirestoreRef, {
+        images: [
+          ...imageData.map((data) => {
+            if (data.creatorProfile === authService.currentUser?.photoURL) {
+              return {
+                image: data.image,
+                imageTitle: data.imageTitle,
+                private: data.private,
+                creator: data.creator,
+                creatorProfile: imageUrlToAuthService,
+              }
+            }
+          }),
+        ],
+      })
       await updateProfile(authService.currentUser, {
         photoURL: imageUrlToAuthService,
       }).then(() => {
         router.push(`/`)
       })
+    }
   }
 
   useEffect(() => {

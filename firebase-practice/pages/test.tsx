@@ -57,12 +57,11 @@ const Style = {
 }
 
 export default function test() {
-  console.log(authService.currentUser?.displayName)
   return (
     <>
       <Header />
       <Margin direction="column" size={30} />
-      <ProfilePageImageInput userId={`${authService.currentUser?.uid}`} />
+      <ProfilePageImageInput />
     </>
   )
 }
