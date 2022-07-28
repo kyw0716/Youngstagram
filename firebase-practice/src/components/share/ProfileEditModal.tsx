@@ -14,56 +14,53 @@ type Props = {
 }
 const Style = {
   ProfileImgMobile: styled.img`
-    width: 35vw;
-    height: 35vw;
-    border-radius: 5vw;
-    border: 1px solid lightgrey;
+    width: ${(props) => (props.about === "true" ? "200px" : "35vw")};
+    height: ${(props) => (props.about === "true" ? "200px" : "35vw")};
+    border-radius: ${(props) => (props.about === "true" ? "10px" : "5vw")};
   `,
-  //   ProfileImgPc: styled.img`
-  //     width: ;
-  //     height: ;
-  //   `,
   NameInput: styled.input`
-    width: 52vw;
-    height: 8vw;
+    width: ${(props) => (props.about === "true" ? "350px" : "52vw")};
+    height: ${(props) => (props.about === "true" ? "50px" : "8vw")};
     border: 1px solid #bdbdbd;
-    border-radius: 1vw;
+    border-radius: ${(props) => (props.about === "true" ? "10px" : "1vw")};
     padding-left: 1vw;
-    margin-bottom: 5vw;
+    margin-bottom: ${(props) => (props.about === "true" ? "30px" : "5vw")};
     font-size: 12px;
   `,
   SubmitButton: styled.div`
-    width: 25vw;
-    height: 8vw;
+    width: ${(props) => (props.about === "true" ? "100px" : "25vw")};
+    height: ${(props) => (props.about === "true" ? "40px" : "8vw")};
     background-color: #bdbdbd;
     color: white;
     font-weight: bold;
-    font-size: 3vw;
+    font-size: ${(props) => (props.about === "true" ? "16px" : "3vw")};
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 1.5vw;
+    border-radius: ${(props) => (props.about === "true" ? "10px" : "1.5vw")};
     cursor: pointer;
   `,
   ProfileEditInputLabel: styled.label`
-    width: 17vw;
-    height: 8vw;
+    width: ${(props) => (props.about === "true" ? "100px" : "17vw")};
+    height: ${(props) => (props.about === "true" ? "50px" : "8vw")};
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #bdbdbd;
     color: white;
     font-weight: bold;
-    font-size: 2vw;
-    border-radius: 0 1.5vw 1.5vw 0;
+    font-size: ${(props) => (props.about === "true" ? "16px" : "2vw")};
+    border-radius: ${(props) =>
+      props.about === "true" ? "0 10px 10px 0" : "0 1.5vw 1.5vw 0"};
     cursor: pointer;
   `,
   ImagePreviewName: styled.div`
-    width: 35vw;
-    height: 8vw;
+    width: ${(props) => (props.about === "true" ? "250px" : "35vw")};
+    height: ${(props) => (props.about === "true" ? "50px" : "8vw")};
     border: 1px solid #bdbdbd;
     border-right: none;
-    border-radius: 1.5vw 0 0 1.5vw;
+    border-radius: ${(props) =>
+      props.about === "true" ? "10px 0 0 10px" : "1.5vw 0 0 1.5vw"};
     display: flex;
     align-items: center;
     padding-left: 1vw;
@@ -141,14 +138,16 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
       <Modal
         setIsOpen={setIsOpen}
         isOpen={isOpen}
-        width={isPC ? "600PX" : "95vw"}
-        height={isPC ? "500PX" : "fit-content"}
+        width={isPC ? "600px" : "95vw"}
+        height={"fit-content"}
         title="프로필 편집"
+        isPC={isPC}
       >
         <Margin direction="column" size={15} />
-        <FlexBox width={"100%"} height={"35vw"}>
+        <FlexBox width={"100%"} height={isPC ? "200px" : "35vw"}>
           <Margin direction="row" size={15} />
           <Style.ProfileImgMobile
+            about={`${isPC}`}
             src={
               imagePreviewSrc
                 ? imagePreviewSrc
@@ -157,8 +156,8 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           />
           <Margin direction="row" size={15} />
           <FlexBox
-            width={"60vw"}
-            height="35vw"
+            width={isPC ? "300px" : "60vw"}
+            height={isPC ? "200px" : "35vw"}
             column={true}
             justifyContents="center"
           >
@@ -167,8 +166,9 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
                 <label>
                   <CustomH5>이름 변경:</CustomH5>
                 </label>
-                <Margin direction="column" size={5} />
+                <Margin direction="column" size={isPC ? 10 : 5} />
                 <Style.NameInput
+                  about={`${isPC}`}
                   id="PROFILE-NAME-INPUT"
                   placeholder={`${authService.currentUser?.displayName}`}
                   onChange={(event) => {
@@ -178,12 +178,15 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
                 />
               </FlexBox>
               <CustomH5>이미지 변경:</CustomH5>
-              <Margin direction="column" size={5} />
+              <Margin direction="column" size={isPC ? 10 : 5} />
               <FlexBox width={"100%"} justifyContents="flex-end">
-                <Style.ImagePreviewName>
+                <Style.ImagePreviewName about={`${isPC}`}>
                   {imageFileName ? `${imageFileName.slice(0, 10)}...` : ""}
                 </Style.ImagePreviewName>
-                <Style.ProfileEditInputLabel htmlFor="PROFILE-Edit">
+                <Style.ProfileEditInputLabel
+                  htmlFor="PROFILE-Edit"
+                  about={`${isPC}`}
+                >
                   이미지 선택
                 </Style.ProfileEditInputLabel>
                 <Style.ProflieImageInput
@@ -205,10 +208,10 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         </FlexBox>
         <Margin direction="column" size={10} />
         <FlexBox width={"100%"} height="fit-content" justifyContents="flex-end">
-          <Style.SubmitButton onClick={handleSubmit}>
+          <Style.SubmitButton onClick={handleSubmit} about={`${isPC}`}>
             작성완료
           </Style.SubmitButton>
-          <Margin direction="row" size={10} />
+          <Margin direction="row" size={isPC ? 20 : 10} />
         </FlexBox>
         <Margin direction="column" size={15} />
       </Modal>

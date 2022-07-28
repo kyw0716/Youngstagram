@@ -10,6 +10,7 @@ type Props = {
   width: string
   height: string
   children: ReactNode
+  isPC: boolean
 }
 
 const Style = {
@@ -39,6 +40,7 @@ export default function Modal({
   width,
   height,
   children,
+  isPC,
 }: Props) {
   return (
     <ReactModal
@@ -48,8 +50,9 @@ export default function Modal({
           zIndex: "9999999",
         },
         content: {
-          marginTop: "100px",
-          left: "2.5vw",
+          top: isPC ? "50%" : "100px",
+          left: isPC ? "50%" : "2.5vw",
+          transform: isPC ? "translate(-50%,-50%)" : "",
           padding: 0,
           width,
           height,
