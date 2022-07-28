@@ -129,21 +129,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   }
 
   const updateName = async () => {
-    console.log(
-      "이름 업데이트",
-      imageData.map((data) => {
-        if (data.creator === authService.currentUser?.displayName) {
-          return {
-            image: data.image,
-            imageTitle: data.imageTitle,
-            private: data.private,
-            creator: userName,
-            creatorProfile: data.creatorProfile,
-          }
-        }
-      }),
-    )
-    console.log("이름 업데이트", imageData)
     if (authService.currentUser !== null) {
       const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
       await setDoc(updateFirestoreRef, {

@@ -176,7 +176,6 @@ export default function Auth() {
         }
       })
       .catch((error) => {
-        console.log(error.code)
         if (error.code === "auth/wrong-password") {
           alert("비밀번호가 잘못되었습니다")
           setPassword("")

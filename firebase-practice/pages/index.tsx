@@ -73,8 +73,6 @@ const Home: NextPage = () => {
     "public" | "private" | "all"
   >("all")
 
-  console.log(imageData)
-
   return (
     <>
       <Header />
