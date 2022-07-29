@@ -103,12 +103,7 @@ const Home: NextPage = () => {
         <></>
       ) : (
         <Style.Wrapper>
-          <FlexBox
-            column={true}
-            width="fit-content
-          "
-            alignItems="center"
-          >
+          <FlexBox column={true} width="fit-content" alignItems="center">
             <Style.EmptyImage src="/empty.svg" alt="empty" />
             <Margin direction="column" size={15} />
             <CustomH2>공개된 게시물이 없어용</CustomH2>

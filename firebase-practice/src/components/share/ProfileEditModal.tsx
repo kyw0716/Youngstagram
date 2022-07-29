@@ -5,7 +5,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
-import { CustomH5, CustomH6, FlexBox, Margin } from "ui"
+import { CustomH6, FlexBox, Margin } from "ui"
 import Modal from "./Modal"
 
 type Props = {
