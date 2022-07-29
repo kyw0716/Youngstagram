@@ -155,8 +155,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
       })
       await updateProfile(authService.currentUser, {
         displayName: submitUserName,
-      }).then(async () => {
-        router.push(`/`)
       })
     }
   }
@@ -186,15 +184,19 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
       })
       await updateProfile(authService.currentUser, {
         photoURL: imageUrlToAuthService,
-      }).then(() => {
-        router.push(`/`)
       })
     }
   }
 
   useEffect(() => {
-    if (submitUserName !== "") updateName()
-    if (imageUrlToAuthService !== "") updateProfileImage()
+    if (submitUserName !== "")
+      updateName().then(() => {
+        if (imageUrlToAuthService !== "") router.push("/")
+      })
+    if (imageUrlToAuthService !== "")
+      updateProfileImage().then(() => {
+        router.push("/")
+      })
     setImageFileName("")
     setImagePreviewSrc("")
     setUserName("")

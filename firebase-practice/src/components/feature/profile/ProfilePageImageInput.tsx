@@ -111,6 +111,7 @@ export default function ProfilePageImageInput() {
       setImageTitle("")
       setImagePreviewSrc("")
       setIsPrivate(false)
+      setImageFile(undefined)
     })
   }
 
