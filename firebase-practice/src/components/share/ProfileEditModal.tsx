@@ -92,6 +92,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
       creatorProfile: string
     }[]
   >([])
+  const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
 
   useEffect(() => {
     const userDataRef = doc(DBService, "mainPage", `userImageDataAll`)
@@ -100,7 +101,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
     })
   }, [])
   useEffect(() => {
-    if (userData !== undefined) setImageData(userData.images)
+    if (userData !== undefined && userData !== {}) setImageData(userData.images)
   }, [userData])
 
   const encodeFileToBase64 = (fileblob: File) => {
@@ -129,8 +130,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   }
 
   const updateName = async () => {
-    if (authService.currentUser !== null) {
-      const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
+    if (authService.currentUser !== null && imageData !== undefined) {
       await setDoc(updateFirestoreRef, {
         images: [
           ...imageData.map((data) => {
@@ -143,6 +143,13 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
                 private: data.private,
               }
             }
+            return {
+              image: data.image,
+              imageTitle: data.imageTitle,
+              private: data.private,
+              creator: data.creator,
+              creatorProfile: data.creatorProfile,
+            }
           }),
         ],
       })
@@ -154,8 +161,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
     }
   }
   const updateProfileImage = async () => {
-    if (authService.currentUser !== null) {
-      const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
+    if (authService.currentUser !== null && imageData !== undefined) {
       await setDoc(updateFirestoreRef, {
         images: [
           ...imageData.map((data) => {
@@ -167,6 +173,13 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
                 creator: data.creator,
                 creatorProfile: imageUrlToAuthService,
               }
+            }
+            return {
+              image: data.image,
+              imageTitle: data.imageTitle,
+              private: data.private,
+              creator: data.creator,
+              creatorProfile: data.creatorProfile,
             }
           }),
         ],

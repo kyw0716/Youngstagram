@@ -121,12 +121,6 @@ export default function Profile({ userId }: Props) {
   return (
     <>
       <Header />
-      {authService.currentUser?.displayName ? (
-        // <ProfilePageImageInput userId={userId} />
-        <></>
-      ) : (
-        <ProfileNameInput />
-      )}
       <Style.Wrapper>
         <ProfileHeader
           imageDataLength={allImageData.length}
