@@ -65,6 +65,7 @@ export default function Modal({
       }}
       isOpen={isOpen}
       onRequestClose={() => setIsOpen(false)}
+      ariaHideApp={false}
     >
       <Style.Wrapper>
         <Style.Header>
