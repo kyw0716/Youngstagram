@@ -140,7 +140,10 @@ export default function Header() {
               src="/image-plus.svg"
               alt="plus"
               onClick={() => {
-                if (authService.currentUser) setIsModalOpen(true)
+                if (authService.currentUser) {
+                  setIsModalOpen(true)
+                  return
+                }
                 alert("로그인 후 이용 가능합니다")
               }}
               style={{ cursor: "pointer" }}
