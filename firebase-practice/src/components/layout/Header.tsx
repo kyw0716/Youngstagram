@@ -140,7 +140,8 @@ export default function Header() {
               src="/image-plus.svg"
               alt="plus"
               onClick={() => {
-                setIsModalOpen(true)
+                if (authService.currentUser) setIsModalOpen(true)
+                alert("로그인 후 이용 가능합니다")
               }}
               style={{ cursor: "pointer" }}
             />
@@ -194,7 +195,6 @@ export default function Header() {
                 <Style.LogoutButton
                   onClick={() => {
                     signOut(authService)
-                    router.push("/auth")
                   }}
                 >
                   <Image
