@@ -88,6 +88,13 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
   })
   const [isFileExist, setIsFileExist] = useState<boolean>(false)
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
+  const [windowSize, setWindowSize] = useState<number>(0)
+  useEffect(() => {
+    setWindowSize(window.innerWidth)
+    window.addEventListener("resize", () => {
+      setWindowSize(window.innerWidth)
+    })
+  }, [])
 
   useEffect(() => {
     if (acceptedFiles.length === 0) {
@@ -112,8 +119,9 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
 
   return (
     <ModalForImageUpload
-      width={isFileExist ? "835px" : "495px"}
-      height="537px"
+      width={windowSize < 784 ? "95%" : isFileExist ? "835px" : "495px"}
+      // TODO: 이거 높이 값 나중에 바꾸기
+      height={windowSize < 784 && isFileExist ? "550px" : "537px"}
       title="새 게시물 만들기"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
@@ -122,15 +130,33 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
       setIsFileExist={setIsFileExist}
     >
       {isFileExist ? (
-        <FlexBox>
+        <FlexBox
+          column={windowSize < 784 ? true : false}
+          height={"fit-content"}
+          width={"100%"}
+        >
           <Image
-            width={494}
-            height={494}
-            style={{ boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px" }}
+            width={windowSize < 784 ? "95%" : 494}
+            height={windowSize < 784 ? 250 : 494}
+            style={{
+              boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
+              maxWidth: 495,
+            }}
             src={imagePreviewSrc ? imagePreviewSrc : "/empty.svg"}
             alt="selectedImage"
           />
-          <Style.InputSection>
+          <Style.InputSection
+            style={
+              windowSize < 784
+                ? {
+                    height: "fit-content",
+                    width: "95%",
+                    alignItems: "flex-start",
+                    paddingLeft: "2.5%",
+                  }
+                : {}
+            }
+          >
             <FlexBox
               width={"310px"}
               gap={10}
@@ -151,15 +177,18 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
               <CustomH5>{authService.currentUser?.displayName}</CustomH5>
             </FlexBox>
             <Margin direction="column" size={10} />
-            <Style.TextArea placeholder="문구 입력..." />
-            <Style.SubmitButton
-              onClick={() => {
-                alert("아직 기능 구현은 안했어용")
-              }}
-            >
-              공유하기
-            </Style.SubmitButton>
+            <Style.TextArea
+              placeholder="문구 입력..."
+              style={windowSize < 784 ? { height: 150, width: "100%" } : {}}
+            />
           </Style.InputSection>
+          <Style.SubmitButton
+            onClick={() => {
+              alert("아직 기능 구현은 안했어용")
+            }}
+          >
+            공유하기
+          </Style.SubmitButton>
         </FlexBox>
       ) : (
         <Style.Wrapper

@@ -65,6 +65,7 @@ export default function ModalForImageUpload({
           transform: isPC ? "translate(-50%,-50%)" : "",
           padding: 0,
           width,
+          maxWidth: isFileExist ? 835 : 495,
           height,
           border: "solid 1px #d3d3d3",
           borderRadius: "10px",
