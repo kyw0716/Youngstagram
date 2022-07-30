@@ -17,8 +17,6 @@ const Style = {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: ${(props) =>
-      props.about === "true" ? "#4891ff" : "white"};
   `,
   Icon: styled.img`
     width: 96px;
@@ -34,7 +32,6 @@ const Style = {
     width: fit-content;
     height: fit-content;
     padding: 10px;
-    color: ${(props) => (props.about === "true" ? "#4891ff" : "white")};
     font-weight: bold;
     font-size: 15px;
     cursor: pointer;
@@ -161,27 +158,45 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
             </FlexBox>
             <Margin direction="column" size={10} />
             <Style.TextArea placeholder="문구 입력..." />
-            <Style.SubmitButton>게시하기</Style.SubmitButton>
+            <Style.SubmitButton
+              onClick={() => {
+                alert("아직 기능 구현은 안했어용")
+              }}
+            >
+              공유하기
+            </Style.SubmitButton>
           </Style.InputSection>
         </FlexBox>
       ) : (
         <Style.Wrapper
           {...getRootProps({ className: "dropzone" })}
           about={`${isDragAccept}`}
+          style={
+            isDragReject
+              ? { backgroundColor: "#ff4848" }
+              : isDragAccept
+              ? { backgroundColor: "#4891ff" }
+              : { backgroundColor: "white" }
+          }
         >
           <FlexBox column={true} width={"100%"} alignItems="center">
             <Style.Icon src="/image-upload.svg" alt="imageUpload" />
             <Margin direction="column" size={20} />
             {isDragReject ? (
-              <CustomH3>사진만 올릴 수 있어요 ㅡㅡ</CustomH3>
+              <CustomH3 style={{ color: "white" }}>
+                사진만 올릴 수 있어요
+              </CustomH3>
             ) : (
-              <CustomH3>사진을 여기에 끌어다 놓으세요</CustomH3>
+              <CustomH3
+                style={isDragAccept ? { color: "white" } : { color: "" }}
+              >
+                사진을 여기에 끌어다 놓으세요
+              </CustomH3>
             )}
-
             <Margin direction="column" size={25} />
             <Style.TempButton
               htmlFor="IMAGE-UPLOAD-INPUT"
-              about={`${isDragAccept}`}
+              style={isDragAccept ? { color: "#4891ff" } : { color: "white" }}
             >
               컴퓨터에서 선택
             </Style.TempButton>
