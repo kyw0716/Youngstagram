@@ -10,7 +10,7 @@ type Props = {
   width: string
   height: string
   children: ReactNode
-  isPC: boolean
+  isPC?: boolean
 }
 
 const Style = {
@@ -20,7 +20,7 @@ const Style = {
   `,
   Header: styled.div`
     width: 100%;
-    height: 50px;
+    height: 40px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px;
     display: flex;
     align-items: center;
@@ -33,7 +33,7 @@ const Style = {
   `,
 }
 
-export default function Modal({
+export default function ModalForProfileEdit({
   isOpen,
   setIsOpen,
   title,
@@ -57,7 +57,7 @@ export default function Modal({
           width,
           height,
           border: "solid 1px #d3d3d3",
-          borderRadius: "5px",
+          borderRadius: "10px",
           boxShadow: "3px 3px 20px 0 rgba(0, 0, 0, 0.25)",
           overflow: "hidden",
           backgroundColor: "white",

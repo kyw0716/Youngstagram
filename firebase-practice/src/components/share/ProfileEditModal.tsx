@@ -6,7 +6,7 @@ import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH6, FlexBox, Margin } from "ui"
-import Modal from "./Modal"
+import ModalForProfileEdit from "./ModalForProfileEdit"
 
 type Props = {
   isOpen: boolean
@@ -206,7 +206,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
 
   return (
     <>
-      <Modal
+      <ModalForProfileEdit
         setIsOpen={setIsOpen}
         isOpen={isOpen}
         width={isPC ? "600px" : "95vw"}
@@ -285,7 +285,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           <Margin direction="row" size={isPC ? 20 : 10} />
         </FlexBox>
         <Margin direction="column" size={15} />
-      </Modal>
+      </ModalForProfileEdit>
     </>
   )
 }
