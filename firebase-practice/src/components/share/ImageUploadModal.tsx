@@ -17,6 +17,8 @@ const Style = {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: ${(props) =>
+      props.about === "true" ? "#4891ff" : "white"};
   `,
   Icon: styled.img`
     width: 96px;
@@ -32,7 +34,7 @@ const Style = {
     width: fit-content;
     height: fit-content;
     padding: 10px;
-    color: white;
+    color: ${(props) => (props.about === "true" ? "#4891ff" : "white")};
     font-weight: bold;
     font-size: 15px;
     cursor: pointer;
@@ -90,8 +92,15 @@ const Style = {
 }
 
 export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
-  const { getRootProps, acceptedFiles, getInputProps } = useDropzone({
+  const {
+    getRootProps,
+    acceptedFiles,
+    getInputProps,
+    isDragAccept,
+    isDragReject,
+  } = useDropzone({
     noClick: true,
+    accept: { "image/*": [] },
   })
   const [isFileExist, setIsFileExist] = useState<boolean>(false)
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
@@ -156,13 +165,24 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
           </Style.InputSection>
         </FlexBox>
       ) : (
-        <Style.Wrapper {...getRootProps({ className: "dropzone" })}>
+        <Style.Wrapper
+          {...getRootProps({ className: "dropzone" })}
+          about={`${isDragAccept}`}
+        >
           <FlexBox column={true} width={"100%"} alignItems="center">
             <Style.Icon src="/image-upload.svg" alt="imageUpload" />
             <Margin direction="column" size={20} />
-            <CustomH3>사진을 여기에 끌어다 놓으세요</CustomH3>
+            {isDragReject ? (
+              <CustomH3>사진만 올릴 수 있어요 ㅡㅡ</CustomH3>
+            ) : (
+              <CustomH3>사진을 여기에 끌어다 놓으세요</CustomH3>
+            )}
+
             <Margin direction="column" size={25} />
-            <Style.TempButton htmlFor="IMAGE-UPLOAD-INPUT">
+            <Style.TempButton
+              htmlFor="IMAGE-UPLOAD-INPUT"
+              about={`${isDragAccept}`}
+            >
               컴퓨터에서 선택
             </Style.TempButton>
             <Style.HiddenInput
