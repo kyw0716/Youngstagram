@@ -1,9 +1,10 @@
 import { authService } from "@FireBase"
+import ImageUploadModal from "@share/ImageUploadModal"
 import { signOut } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import styled from "styled-components"
-import { Margin } from "ui"
+import { FlexBox, Margin } from "ui"
 
 const Style = {
   Container: styled.div`
@@ -33,17 +34,19 @@ const Style = {
       position: relative;
     }
   `,
-  LineMenu: styled.img`
-    width: 50px;
-    height: 30px;
-    cursor: pointer;
-  `,
   Logo: styled.h3`
     font-family: "Dancing Script", Handwriting;
     cursor: pointer;
     padding: 16px 0px;
     margin: 0;
     font-size: 30px;
+  `,
+  NavIcon: styled.img`
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    border-radius: ${(props) => (props.about === "profile" ? "30px" : "0px")};
+    cursor: pointer;
   `,
   DropDownMenu: styled.div`
     width: 150px;
@@ -97,7 +100,7 @@ const Style = {
     transform: rotate(45deg);
     background-color: white;
     position: absolute;
-    right: 13px;
+    right: 2px;
     top: 55px;
     z-index: 6;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -113,8 +116,10 @@ export default function Header() {
   const handleMenuOpen = () => {
     setIsMenuOpen((current) => !current)
   }
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   return (
     <>
+      <ImageUploadModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
       <Style.Container>
         <Style.Nav>
           <Style.Logo
@@ -124,7 +129,32 @@ export default function Header() {
           >
             youngstagram
           </Style.Logo>
-          <Style.LineMenu src="/line-menu.svg" onClick={handleMenuOpen} />
+          <FlexBox width={"fit-content"} gap={30} alignItems="center">
+            <Style.NavIcon
+              src="/home.svg"
+              alt="home"
+              onClick={() => {
+                router.push("/")
+              }}
+            />
+            <Style.NavIcon
+              src="/image-plus.svg"
+              alt="plus"
+              onClick={() => {
+                setIsModalOpen(true)
+              }}
+            />
+            {authService.currentUser ? (
+              <Style.NavIcon
+                src={`${authService.currentUser.photoURL}`}
+                onClick={handleMenuOpen}
+                about="profile"
+              />
+            ) : (
+              <Style.NavIcon src="/line-menu.svg" onClick={handleMenuOpen} />
+            )}
+          </FlexBox>
+
           {isMeunOpen ? (
             <>
               <Style.DropDownMenu

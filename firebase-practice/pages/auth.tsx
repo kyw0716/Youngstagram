@@ -14,6 +14,8 @@ import Header from "components/layout/Header"
 import styled from "styled-components"
 import { FlexBox, Margin } from "ui"
 import { doc, setDoc } from "firebase/firestore"
+import Footer from "components/layout/Footer"
+import Layout from "components/layout"
 
 const Style = {
   Wrapper: styled.div`
@@ -224,8 +226,7 @@ export default function Auth() {
   }
 
   return (
-    <>
-      <Header />
+    <Layout>
       <Style.Wrapper>
         <Margin direction="column" size={60} />
         <Style.FormContainer onSubmit={handleOnSubmit}>
@@ -312,6 +313,6 @@ export default function Auth() {
           </Style.SignUpButton>
         </Style.SignUpContainer>
       </Style.Wrapper>
-    </>
+    </Layout>
   )
 }

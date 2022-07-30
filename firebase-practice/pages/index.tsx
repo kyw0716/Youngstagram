@@ -8,6 +8,8 @@ import { CustomH2, FlexBox, Margin } from "ui"
 import ImageList from "@share/ImageList"
 import { onAuthStateChanged } from "firebase/auth"
 import styled from "styled-components"
+import Footer from "components/layout/Footer"
+import Layout from "components/layout"
 
 const Style = {
   Wrapper: styled.div`
@@ -74,8 +76,7 @@ const Home: NextPage = () => {
   >("all")
 
   return (
-    <>
-      <Header />
+    <Layout>
       <Margin direction="column" size={30} />
       <FlexBox width={"100%"} justifyContents="center">
         <Style.TempButton
@@ -110,7 +111,7 @@ const Home: NextPage = () => {
           </FlexBox>
         </Style.Wrapper>
       )}
-    </>
+    </Layout>
   )
 }
 

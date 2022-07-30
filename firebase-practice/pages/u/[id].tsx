@@ -9,6 +9,8 @@ import Header from "components/layout/Header"
 import ProfileHeader from "@feature/profile/ProfileHeader"
 import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
+import Footer from "components/layout/Footer"
+import Layout from "components/layout"
 
 const Style = {
   Wrapper: styled.div`
@@ -119,8 +121,7 @@ export default function Profile({ userId }: Props) {
   }, [pickImageData])
 
   return (
-    <>
-      <Header />
+    <Layout>
       <Style.Wrapper>
         <ProfileHeader
           imageDataLength={allImageData.length}
@@ -153,7 +154,7 @@ export default function Profile({ userId }: Props) {
           </>
         )}
       </Style.Wrapper>
-    </>
+    </Layout>
   )
 }
 

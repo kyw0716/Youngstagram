@@ -1,5 +1,7 @@
 import ProfilePageImageInput from "@feature/profile/ProfilePageImageInput"
 import { authService } from "@FireBase"
+import Layout from "components/layout"
+import Footer from "components/layout/Footer"
 import Header from "components/layout/Header"
 import styled from "styled-components"
 import { Margin } from "ui"
@@ -58,10 +60,9 @@ const Style = {
 
 export default function test() {
   return (
-    <>
-      <Header />
+    <Layout>
       <Margin direction="column" size={30} />
       <ProfilePageImageInput />
-    </>
+    </Layout>
   )
 }
