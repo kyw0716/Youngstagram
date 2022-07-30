@@ -1,3 +1,4 @@
+import Image from "next/image"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
 import styled from "styled-components"
@@ -30,10 +31,6 @@ const Style = {
     justify-content: space-between;
     padding: 0px 15px;
     position: relative;
-  `,
-  Icon: styled.img`
-    width: 15px;
-    cursor: pointer;
   `,
   Title: styled.div`
     width: fit-content;
@@ -84,7 +81,10 @@ export default function ModalForImageUpload({
         {isFileExist ? (
           <>
             <Style.Header>
-              <Style.Icon
+              <Image
+                style={{ cursor: "pointer" }}
+                width={15}
+                height={15}
                 src="/x.svg"
                 alt="x"
                 onClick={() => {
@@ -95,7 +95,10 @@ export default function ModalForImageUpload({
               <Style.Title>
                 <CustomH4>{title}</CustomH4>
               </Style.Title>
-              <Style.Icon
+              <Image
+                style={{ cursor: "pointer" }}
+                width={15}
+                height={15}
                 src="/left-arrow.svg"
                 alt="prev"
                 onClick={() => {
@@ -109,7 +112,10 @@ export default function ModalForImageUpload({
             <Style.Title>
               <CustomH4>{title}</CustomH4>
             </Style.Title>
-            <Style.Icon
+            <Image
+              style={{ cursor: "pointer" }}
+              width={15}
+              height={15}
               src="/x.svg"
               alt="x"
               onClick={() => {

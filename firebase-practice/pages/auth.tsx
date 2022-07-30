@@ -8,14 +8,13 @@ import {
   updateProfile,
 } from "firebase/auth"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { authService, DBService } from "@FireBase"
-import Header from "components/layout/Header"
 import styled from "styled-components"
 import { FlexBox, Margin } from "ui"
 import { doc, setDoc } from "firebase/firestore"
-import Footer from "components/layout/Footer"
 import Layout from "components/layout"
+import Image from "next/image"
 
 const Style = {
   Wrapper: styled.div`
@@ -77,10 +76,6 @@ const Style = {
     color: #a9a8a8;
     padding: 0;
     margin: 0;
-  `,
-  LoginIcon: styled.img`
-    width: 40px;
-    cursor: pointer;
   `,
   SignUpContainer: styled.div`
     width: 350px;
@@ -285,16 +280,22 @@ export default function Auth() {
           </FlexBox>
           <Margin direction="column" size={22} />
           <FlexBox justifyContents="center">
-            <Style.LoginIcon
+            <Image
               src={"/GoogleIcon.png"}
               alt="googleLogin"
               onClick={handleGoogleAuth}
+              width={40}
+              height={40}
+              style={{ cursor: "pointer" }}
             />
             <Margin direction="row" size={20} />
-            <Style.LoginIcon
+            <Image
               src={"/GitHubIcon.png"}
               alt="githubLogin"
               onClick={handleGitHubAuth}
+              width={40}
+              height={40}
+              style={{ cursor: "pointer" }}
             />
           </FlexBox>
         </Style.FormContainer>

@@ -4,6 +4,7 @@ import { CustomH3, CustomH5, CustomH6, FlexBox, Margin } from "ui"
 import { useDropzone } from "react-dropzone"
 import ModalForImageUpload from "./ModalForImageUpload"
 import { authService } from "@FireBase"
+import Image from "next/image"
 
 type Props = {
   isOpen: boolean
@@ -17,15 +18,6 @@ const Style = {
     display: flex;
     align-items: center;
     justify-content: center;
-  `,
-  Icon: styled.img`
-    width: 96px;
-    height: 77px;
-  `,
-  SelectedImage: styled.img`
-    width: 494px;
-    height: 494px;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   `,
   TempButton: styled.label`
     background-color: #4891ff;
@@ -48,11 +40,6 @@ const Style = {
     padding-top: 20px;
     align-items: center;
     position: relative;
-  `,
-  ProfileImage: styled.img`
-    width: 30px;
-    height: 30px;
-    border-radius: 30px;
   `,
   TextArea: styled.textarea`
     width: 310px;
@@ -136,8 +123,11 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
     >
       {isFileExist ? (
         <FlexBox>
-          <Style.SelectedImage
-            src={imagePreviewSrc ? imagePreviewSrc : "empty.svg"}
+          <Image
+            width={494}
+            height={494}
+            style={{ boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px" }}
+            src={imagePreviewSrc ? imagePreviewSrc : "/empty.svg"}
             alt="selectedImage"
           />
           <Style.InputSection>
@@ -147,12 +137,16 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
               height="fit-content"
               alignItems="center"
             >
-              <Style.ProfileImage
+              <Image
                 src={
                   authService.currentUser?.photoURL
                     ? `${authService.currentUser?.photoURL}`
                     : "/empty.svg"
                 }
+                alt="profile"
+                width={30}
+                height={30}
+                style={{ borderRadius: "30px" }}
               />
               <CustomH5>{authService.currentUser?.displayName}</CustomH5>
             </FlexBox>
@@ -180,7 +174,12 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
           }
         >
           <FlexBox column={true} width={"100%"} alignItems="center">
-            <Style.Icon src="/image-upload.svg" alt="imageUpload" />
+            <Image
+              width={96}
+              height={77}
+              src="/image-upload.svg"
+              alt="imageUpload"
+            />
             <Margin direction="column" size={20} />
             {isDragReject ? (
               <CustomH3 style={{ color: "white" }}>

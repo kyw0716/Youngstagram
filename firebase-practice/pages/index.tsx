@@ -10,6 +10,7 @@ import { onAuthStateChanged } from "firebase/auth"
 import styled from "styled-components"
 import Footer from "components/layout/Footer"
 import Layout from "components/layout"
+import Image from "next/image"
 
 const Style = {
   Wrapper: styled.div`
@@ -21,9 +22,6 @@ const Style = {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-  `,
-  EmptyImage: styled.img`
-    width: 150px;
   `,
   TempButton: styled.div`
     background-color: #4891ff;
@@ -99,18 +97,6 @@ const Home: NextPage = () => {
             setPickImageData={setPickImageData}
           />
         )}
-      {imageData !== undefined &&
-      imageData.filter((data) => !data.private).length !== 0 ? (
-        <></>
-      ) : (
-        <Style.Wrapper>
-          <FlexBox column={true} width="fit-content" alignItems="center">
-            <Style.EmptyImage src="/empty.svg" alt="empty" />
-            <Margin direction="column" size={15} />
-            <CustomH2>공개된 게시물이 없어용</CustomH2>
-          </FlexBox>
-        </Style.Wrapper>
-      )}
     </Layout>
   )
 }

@@ -1,5 +1,6 @@
 import { authService } from "@FireBase"
 import ProfileEditModal from "@share/ProfileEditModal"
+import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
 import { CustomH2, CustomH4, FlexBox, Margin } from "ui"
@@ -44,6 +45,7 @@ const Style = {
     justify-content: space-between;
   `,
   SortToPublic: styled.div`
+    cursor: pointer;
     width: 33%;
     display: flex;
     flex-direction: column;
@@ -53,6 +55,7 @@ const Style = {
       ${(props) => (props.about === "public" ? "grey" : "none")};
   `,
   SortToPrivate: styled.div`
+    cursor: pointer;
     width: 33%;
     display: flex;
     flex-direction: column;
@@ -62,6 +65,7 @@ const Style = {
       ${(props) => (props.about === "private" ? "grey" : "none")};
   `,
   SortToAll: styled.div`
+    cursor: pointer;
     width: 33%;
     display: flex;
     flex-direction: column;
@@ -84,7 +88,21 @@ export default function MobileHeader({
       <ProfileEditModal isPC={false} isOpen={isOpen} setIsOpen={setIsOpen} />
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
-          <Style.ProfileImage src={`${authService.currentUser?.photoURL}`} />
+          <Image
+            src={
+              authService.currentUser?.photoURL
+                ? `${authService.currentUser?.photoURL}`
+                : "/empty.svg"
+            }
+            alt="profile"
+            width={90}
+            height={90}
+            style={
+              authService.currentUser?.photoURL
+                ? { borderRadius: "100px" }
+                : { borderRadius: "none" }
+            }
+          />
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
             <CustomH2>{authService.currentUser?.displayName}</CustomH2>

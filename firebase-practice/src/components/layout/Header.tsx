@@ -1,6 +1,7 @@
 import { authService } from "@FireBase"
 import ImageUploadModal from "@share/ImageUploadModal"
 import { signOut } from "firebase/auth"
+import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import styled from "styled-components"
@@ -40,13 +41,6 @@ const Style = {
     padding: 16px 0px;
     margin: 0;
     font-size: 30px;
-  `,
-  NavIcon: styled.img`
-    width: 30px;
-    height: 30px;
-    border-radius: 30px;
-    border-radius: ${(props) => (props.about === "profile" ? "30px" : "0px")};
-    cursor: pointer;
   `,
   DropDownMenu: styled.div`
     width: 150px;
@@ -130,28 +124,45 @@ export default function Header() {
             youngstagram
           </Style.Logo>
           <FlexBox width={"fit-content"} gap={30} alignItems="center">
-            <Style.NavIcon
+            <Image
+              width={30}
+              height={30}
               src="/home.svg"
               alt="home"
               onClick={() => {
                 router.push("/")
               }}
+              style={{ cursor: "pointer" }}
             />
-            <Style.NavIcon
+            <Image
+              width={30}
+              height={30}
               src="/image-plus.svg"
               alt="plus"
               onClick={() => {
                 setIsModalOpen(true)
               }}
+              style={{ cursor: "pointer" }}
             />
             {authService.currentUser ? (
-              <Style.NavIcon
+              <Image
                 src={`${authService.currentUser.photoURL}`}
                 onClick={handleMenuOpen}
                 about="profile"
+                width={30}
+                height={30}
+                alt="profile"
+                style={{ cursor: "pointer", borderRadius: "30px" }}
               />
             ) : (
-              <Style.NavIcon src="/line-menu.svg" onClick={handleMenuOpen} />
+              <Image
+                width={30}
+                height={30}
+                src="/line-menu.svg"
+                onClick={handleMenuOpen}
+                alt="menu"
+                style={{ cursor: "pointer" }}
+              />
             )}
           </FlexBox>
 
@@ -172,7 +183,12 @@ export default function Header() {
                     }
                   }}
                 >
-                  <Style.Icon src="/profile.svg" alt="profile" />
+                  <Image
+                    width={15}
+                    height={15}
+                    src="/profile.svg"
+                    alt="profile"
+                  />
                   프로필
                 </Style.ProfileButton>
                 <Style.LogoutButton
@@ -181,7 +197,12 @@ export default function Header() {
                     router.push("/auth")
                   }}
                 >
-                  <Style.Icon src="/logout.svg" alt="logout" />
+                  <Image
+                    width={15}
+                    height={15}
+                    src="/logout.svg"
+                    alt="logout"
+                  />
                   로그아웃
                 </Style.LogoutButton>
               </Style.DropDownMenu>

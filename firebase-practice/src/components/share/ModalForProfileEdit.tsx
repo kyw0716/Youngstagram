@@ -1,3 +1,4 @@
+import Image from "next/image"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
 import styled from "styled-components"
@@ -26,10 +27,6 @@ const Style = {
     align-items: center;
     justify-content: space-between;
     padding: 0px 15px;
-  `,
-  Icon: styled.img`
-    width: 15px;
-    cursor: pointer;
   `,
 }
 
@@ -70,12 +67,15 @@ export default function ModalForProfileEdit({
       <Style.Wrapper>
         <Style.Header>
           <CustomH4>{title}</CustomH4>
-          <Style.Icon
+          <Image
             src="/x.svg"
             alt="x"
             onClick={() => {
               setIsOpen(false)
             }}
+            width={15}
+            height={15}
+            style={{ cursor: "pointer" }}
           />
         </Style.Header>
         {children}

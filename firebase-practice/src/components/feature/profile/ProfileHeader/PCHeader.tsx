@@ -1,5 +1,6 @@
 import { authService } from "@FireBase"
 import ProfileEditModal from "@share/ProfileEditModal"
+import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
 import { CustomH2, CustomH3, CustomH4, FlexBox, Margin } from "ui"
@@ -20,12 +21,6 @@ const Style = {
     align-items: center;
     padding-bottom: 44px;
     padding-top: 10px;
-  `,
-  ProfileImage: styled.img`
-    width: 150px;
-    height: 150px;
-    border-radius: 200px;
-    margin: 0px 80px;
   `,
   ProfileInfo: styled.div`
     width: fit-content;
@@ -84,9 +79,6 @@ const Style = {
       ${(props) => (props.about === "all" ? "grey" : "none")};
     cursor: pointer;
   `,
-  Icon: styled.img`
-    width: 15px;
-  `,
 }
 
 export default function PCHeader({
@@ -100,7 +92,23 @@ export default function PCHeader({
     <>
       <ProfileEditModal isOpen={isOpen} setIsOpen={setIsOpen} isPC={true} />
       <Style.ProfileHeader>
-        <Style.ProfileImage src={`${authService.currentUser?.photoURL}`} />
+        <Margin direction="row" size={80} />
+        <Image
+          src={
+            authService.currentUser?.photoURL
+              ? `${authService.currentUser?.photoURL}`
+              : "/empty.svg"
+          }
+          width={150}
+          height={150}
+          style={
+            authService.currentUser?.photoURL
+              ? { borderRadius: 150 }
+              : { borderRadius: "none" }
+          }
+          alt="profile"
+        />
+        <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
             <CustomH2>{authService.currentUser?.displayName}</CustomH2>
@@ -139,7 +147,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>전체 게시물</CustomH4>
-          <Style.Icon src="/all-file.svg" alt="allFile" />
+          <Image src="/all-file.svg" alt="allFile" width={15} height={15} />
         </Style.SortToAll>
         <Style.SortToPublic
           about={pickImageData}
@@ -148,7 +156,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>공개 게시물</CustomH4>
-          <Style.Icon src="/unLock.svg" alt="publicFile" />
+          <Image src="/unLock.svg" alt="publicFile" width={15} height={15} />
         </Style.SortToPublic>
         <Style.SortToPrivate
           about={pickImageData}
@@ -157,7 +165,7 @@ export default function PCHeader({
           }}
         >
           <CustomH4>비공개 게시물</CustomH4>
-          <Style.Icon src="/lock.svg" alt="privateFile" />
+          <Image src="/lock.svg" alt="privateFile" width={15} height={15} />
         </Style.SortToPrivate>
       </Style.SortWrapper>
     </>

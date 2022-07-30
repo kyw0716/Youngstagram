@@ -11,6 +11,7 @@ import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
 import Footer from "components/layout/Footer"
 import Layout from "components/layout"
+import Image from "next/image"
 
 const Style = {
   Wrapper: styled.div`
@@ -22,9 +23,6 @@ const Style = {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-  `,
-  EmptyImage: styled.img`
-    width: 150px;
   `,
 }
 
@@ -136,7 +134,7 @@ export default function Profile({ userId }: Props) {
           "
             alignItems="center"
           >
-            <Style.EmptyImage src="/empty.svg" alt="empty" />
+            <Image src="/empty.svg" alt="empty" width={150} height={150} />
             <Margin direction="column" size={15} />
             <CustomH2>게시물이 없어용</CustomH2>
           </FlexBox>

@@ -2,6 +2,7 @@ import { authService, DBService, storageService } from "@FireBase"
 import { updateProfile } from "firebase/auth"
 import { doc, DocumentData, onSnapshot, setDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import Image from "next/image"
 import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
@@ -14,11 +15,6 @@ type Props = {
   isPC: boolean
 }
 const Style = {
-  ProfileImgMobile: styled.img`
-    width: ${(props) => (props.about === "true" ? "200px" : "100px")};
-    height: ${(props) => (props.about === "true" ? "200px" : "100px")};
-    border-radius: ${(props) => (props.about === "true" ? "10px" : "10px")};
-  `,
   NameInput: styled.input`
     width: ${(props) => (props.about === "true" ? "350px" : "100%")};
     height: ${(props) => (props.about === "true" ? "50px" : "30px")};
@@ -217,13 +213,16 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         <Margin direction="column" size={15} />
         <FlexBox width={"100%"} height={isPC ? "200px" : "100px"}>
           <Margin direction="row" size={15} />
-          <Style.ProfileImgMobile
-            about={`${isPC}`}
+          <Image
             src={
               imagePreviewSrc
                 ? imagePreviewSrc
                 : `${authService.currentUser?.photoURL}`
             }
+            alt={"profile"}
+            style={{ borderRadius: 10 }}
+            width={isPC ? 200 : 100}
+            height={isPC ? 200 : 100}
           />
           <Margin direction="row" size={15} />
           <FlexBox

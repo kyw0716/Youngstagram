@@ -1,6 +1,7 @@
 import { authService, DBService, storageService } from "@FireBase"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
+import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
 import { FlexBox } from "ui"
@@ -17,10 +18,6 @@ type Props = {
 }
 
 const Style = {
-  ProfilePageImage: styled.img`
-    width: 470px;
-    height: 600px;
-  `,
   ImageHeader: styled.div`
     width: 468px;
     height: 58px;
@@ -44,12 +41,6 @@ const Style = {
       padding-right: 3%;
       position: relative;
     }
-  `,
-  CreatorImage: styled.img`
-    width: 38px;
-    height: 38px;
-    border: 1px solid lightgrey;
-    border-radius: 100px;
   `,
   HeaderText: styled.div`
     display: flex;
@@ -92,11 +83,6 @@ const Style = {
     align-items: center;
     padding-right: 40px;
     justify-content: flex-end;
-  `,
-  ThreeDotMenuImg: styled.img`
-    width: 20px;
-    height: 15px;
-    cursor: pointer;
   `,
   ButtonBox: styled.div`
     width: 152px;
@@ -172,9 +158,6 @@ const Style = {
     display: flex;
     align-items: center;
     padding-left: 20px;
-  `,
-  Icon: styled.img`
-    width: 15px;
   `,
 }
 
@@ -281,12 +264,20 @@ export default function ImageCard({
           gap={15}
           alignItems={"center"}
         >
-          <Style.CreatorImage
+          <Image
             src={
               isMainPage
-                ? `${creatorProfile}`
-                : `${authService.currentUser?.photoURL}`
+                ? creatorProfile
+                  ? `${creatorProfile}`
+                  : "/empty.svg"
+                : authService.currentUser?.photoURL
+                ? `${authService.currentUser?.photoURL}`
+                : "/empty.svg"
             }
+            alt="creator"
+            width={38}
+            height={38}
+            style={{ borderRadius: 38 }}
           />
           <Style.HeaderText>
             <Style.UserName>{userName}</Style.UserName>
@@ -297,7 +288,13 @@ export default function ImageCard({
           <></>
         ) : (
           <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
-            <Style.ThreeDotMenuImg src="/dot-menu.svg" alt="menu" />
+            <Image
+              src="/dot-menu.svg"
+              alt="menu"
+              width={20}
+              height={15}
+              style={{ cursor: "pointer" }}
+            />
           </Style.ThreeDotMenu>
         )}
         {isMenuOpen ? (
@@ -308,7 +305,7 @@ export default function ImageCard({
                   handleDeleteImage(imageUrl, imageTitle, isPrivate)
                 }}
               >
-                <Style.Icon src="/delete.svg" />
+                <Image src="/delete.svg" alt="delete" width={15} height={15} />
                 삭제
               </Style.Deletebutton>
               <Style.PrivateToggleButton
@@ -317,15 +314,20 @@ export default function ImageCard({
                 }}
               >
                 {isPrivate ? (
-                  <Style.Icon src="/unLock.svg" />
+                  <Image
+                    src="/unLock.svg"
+                    alt="unlock"
+                    width={15}
+                    height={15}
+                  />
                 ) : (
-                  <Style.Icon src="/lock.svg" />
+                  <Image src="/lock.svg" alt="lock" width={15} height={15} />
                 )}
 
                 {isPrivate ? "공개" : "비공개"}
               </Style.PrivateToggleButton>
               <Style.ExitButton onClick={handleThreeDotMenuClick}>
-                <Style.Icon src="/logout.svg" />
+                <Image src="/logout.svg" alt="cancle" width={15} height={15} />
                 취소
               </Style.ExitButton>
             </Style.ButtonBox>
@@ -335,7 +337,12 @@ export default function ImageCard({
           <></>
         )}
       </Style.ImageHeader>
-      <Style.ProfilePageImage src={imageUrl} />
+      <Image
+        src={imageUrl ? imageUrl : "/empty.svg"}
+        width={470}
+        height={600}
+        alt="proflie"
+      />
     </Style.ImageCard>
   )
 }
