@@ -3,14 +3,12 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
-import Header from "components/layout/Header"
-import { CustomH2, FlexBox, Margin } from "ui"
+import { FlexBox, Margin } from "ui"
 import ImageList from "@share/ImageList"
 import { onAuthStateChanged } from "firebase/auth"
 import styled from "styled-components"
-import Footer from "components/layout/Footer"
 import Layout from "components/layout"
-import Image from "next/image"
+import { UserImageDataAll } from "backend/dto"
 
 const Style = {
   Wrapper: styled.div`
@@ -39,15 +37,7 @@ const Style = {
 const Home: NextPage = () => {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
-  const [imageData, setImageData] = useState<
-    {
-      image: string
-      imageTitle: string
-      private: boolean
-      creator: string
-      creatorProfile: string
-    }[]
-  >([])
+  const [imageData, setImageData] = useState<UserImageDataAll[]>([])
 
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {

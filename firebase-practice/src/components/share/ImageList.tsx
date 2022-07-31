@@ -1,4 +1,5 @@
 import { authService } from "@FireBase"
+import { UserImageDataAll } from "backend/dto"
 import Image from "next/image"
 import { SetStateAction } from "react"
 import styled from "styled-components"
@@ -6,13 +7,7 @@ import { CustomH2, Margin } from "ui"
 import ImageCard from "./ImageCard"
 
 type Props = {
-  imageData: {
-    image: string
-    imageTitle: string
-    private: boolean
-    creator: string
-    creatorProfile: string
-  }[]
+  imageData: UserImageDataAll[]
   isMainPage: boolean
   userId: string
   setPickImageData?: React.Dispatch<

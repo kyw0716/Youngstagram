@@ -1,4 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
+import { UserImageDataAll } from "backend/dto"
 import { updateProfile } from "firebase/auth"
 import { doc, DocumentData, onSnapshot, setDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
@@ -79,15 +80,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const [imageUrlToAuthService, setImageUrlToAuthService] = useState<string>("")
 
   const [userData, setUserData] = useState<DocumentData>()
-  const [imageData, setImageData] = useState<
-    {
-      image: string
-      imageTitle: string
-      private: boolean
-      creator: string
-      creatorProfile: string
-    }[]
-  >([])
+  const [imageData, setImageData] = useState<UserImageDataAll[]>([])
   const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
 
   useEffect(() => {

@@ -1,62 +1,6 @@
 import ProfilePageImageInput from "@feature/profile/ProfilePageImageInput"
-import { authService } from "@FireBase"
 import Layout from "components/layout"
-import Footer from "components/layout/Footer"
-import Header from "components/layout/Header"
-import styled from "styled-components"
 import { Margin } from "ui"
-
-const Style = {
-  Wrapper: styled.div`
-    width: 100vw;
-    height: fit-content;
-    overflow-y: hidden;
-    display: flex;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-  `,
-  ProfileHeader: styled.div`
-    width: 975px;
-    height: 150px;
-    border: 1px solid;
-    display: flex;
-    align-items: center;
-  `,
-  ProfileImage: styled.div`
-    width: 150px;
-    height: 150px;
-    border-radius: 200px;
-    border: 1px solid;
-  `,
-  ProfileInfo: styled.div`
-    width: 600px;
-    height: 150px;
-    border: 1px solid;
-    display: flex;
-    flex-direction: column;
-  `,
-  CustomH1: styled.h1`
-    margin: 0;
-    padding: 0;
-  `,
-  CustomH2: styled.h2`
-    margin: 0;
-    padding: 0;
-  `,
-  CustomH3: styled.h3`
-    margin: 0;
-    padding: 0;
-  `,
-  CustomH4: styled.h4`
-    margin: 0;
-    padding: 0;
-  `,
-  CustomH5: styled.h5`
-    margin: 0;
-    padding: 0;
-  `,
-}
 
 export default function test() {
   return (

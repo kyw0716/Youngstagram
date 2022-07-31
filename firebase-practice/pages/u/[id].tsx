@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
-import ProfilePageImageInput from "@feature/profile/ProfilePageImageInput"
 import ImageList from "@share/ImageList"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
-import ProfileNameInput from "@feature/profile/ProfileNameInput"
 import { GetServerSideProps } from "next"
-import Header from "components/layout/Header"
 import ProfileHeader from "@feature/profile/ProfileHeader"
 import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
-import Footer from "components/layout/Footer"
 import Layout from "components/layout"
 import Image from "next/image"
+import { UserImageDataAll } from "backend/dto"
 
 const Style = {
   Wrapper: styled.div`
@@ -28,46 +25,16 @@ const Style = {
 
 export default function Profile({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
-  const [allImageData, setAllImageData] = useState<
-    {
-      image: string
-      imageTitle: string
-      private: boolean
-      creator: string
-      creatorProfile: string
-    }[]
-  >([])
-  const [privateImageData, setPrivateImageData] = useState<
-    {
-      image: string
-      imageTitle: string
-      private: boolean
-      creator: string
-      creatorProfile: string
-    }[]
-  >([])
-  const [publicImageData, setPublicImageData] = useState<
-    {
-      image: string
-      imageTitle: string
-      private: boolean
-      creator: string
-      creatorProfile: string
-    }[]
-  >([])
+  const [allImageData, setAllImageData] = useState<UserImageDataAll[]>([])
+  const [privateImageData, setPrivateImageData] = useState<UserImageDataAll[]>(
+    [],
+  )
+  const [publicImageData, setPublicImageData] = useState<UserImageDataAll[]>([])
 
   const [pickImageData, setPickImageData] = useState<
     "all" | "public" | "private"
   >("all")
-  const [dataToView, setDataToView] = useState<
-    {
-      image: string
-      imageTitle: string
-      private: boolean
-      creator: string
-      creatorProfile: string
-    }[]
-  >([])
+  const [dataToView, setDataToView] = useState<UserImageDataAll[]>([])
 
   useEffect(() => {
     const userDataRef = doc(DBService, "userData", userId)
@@ -80,26 +47,10 @@ export default function Profile({ userId }: Props) {
       setAllImageData(userData.images)
       setDataToView(userData.images)
       setPrivateImageData(
-        (
-          userData.images as {
-            image: string
-            imageTitle: string
-            private: boolean
-            creator: string
-            creatorProfile: string
-          }[]
-        ).filter((data) => data.private),
+        (userData.images as UserImageDataAll[]).filter((data) => data.private),
       )
       setPublicImageData(
-        (
-          userData.images as {
-            image: string
-            imageTitle: string
-            private: boolean
-            creator: string
-            creatorProfile: string
-          }[]
-        ).filter((data) => !data.private),
+        (userData.images as UserImageDataAll[]).filter((data) => !data.private),
       )
     }
   }, [userData])
@@ -128,12 +79,7 @@ export default function Profile({ userId }: Props) {
           pickImageData={pickImageData}
         />
         {allImageData.length === 0 ? (
-          <FlexBox
-            column={true}
-            width="fit-content
-          "
-            alignItems="center"
-          >
+          <FlexBox column={true} width="fit-content" alignItems="center">
             <Image src="/empty.svg" alt="empty" width={150} height={150} />
             <Margin direction="column" size={15} />
             <CustomH2>게시물이 없어용</CustomH2>
