@@ -1,6 +1,6 @@
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
-import { CustomH3, CustomH5, CustomH6, FlexBox, Margin } from "ui"
+import { CustomH3, CustomH5, FlexBox, Margin } from "ui"
 import { useDropzone } from "react-dropzone"
 import ModalForImageUpload from "./ModalForImageUpload"
 import { authService } from "@FireBase"
@@ -182,23 +182,32 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
             }
           >
             <FlexBox
-              width={"310px"}
+              width={windowSize < 784 ? "100%" : "310px"}
               gap={10}
               height="fit-content"
               alignItems="center"
+              justifyContents="space-between"
             >
-              <Image
-                src={
-                  authService.currentUser?.photoURL
-                    ? `${authService.currentUser?.photoURL}`
-                    : "/empty.svg"
-                }
-                alt="profile"
-                width={30}
-                height={30}
-                style={{ borderRadius: "30px" }}
-              />
-              <CustomH5>{authService.currentUser?.displayName}</CustomH5>
+              <FlexBox alignItems="center">
+                <Image
+                  src={
+                    authService.currentUser?.photoURL
+                      ? `${authService.currentUser?.photoURL}`
+                      : "/empty.svg"
+                  }
+                  alt="profile"
+                  width={30}
+                  height={30}
+                  style={{ borderRadius: "30px" }}
+                />
+                <Margin direction="row" size={10} />
+                <CustomH5>{authService.currentUser?.displayName}</CustomH5>
+              </FlexBox>
+
+              <FlexBox alignItems="center" width={80}>
+                <CustomH5>비공개</CustomH5>
+                <input type={"checkbox"} />
+              </FlexBox>
             </FlexBox>
             <Margin direction="column" size={10} />
             <Style.TextArea
@@ -212,7 +221,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
             />
             <Margin direction="column" size={8} />
             <FlexBox
-              width={windowSize < 784 ? "100%" : 310}
+              width={windowSize < 784 ? "" : 310}
               justifyContents={"flex-end"}
               alignItems="center"
               style={{ color: "lightgrey" }}
@@ -276,7 +285,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
               htmlFor="IMAGE-UPLOAD-INPUT"
               style={isDragAccept ? { color: "#4891ff" } : { color: "white" }}
             >
-              컴퓨터에서 선택
+              {windowSize < 784 ? "갤러리에서 선택" : "컴퓨터에서 선택"}
             </Style.TempButton>
             <Style.HiddenInput
               type="file"

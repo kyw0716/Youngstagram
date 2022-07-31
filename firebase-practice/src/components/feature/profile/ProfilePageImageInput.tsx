@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { FlexBox } from "ui"
 
 export default function ProfilePageImageInput() {
-  const [desc, setImageDesc] = useState<string>("")
+  const [desc, setDesc] = useState<string>("")
   const [location, setLocation] = useState<string>("")
   const [isPrivate, setIsPrivate] = useState<boolean>(false)
   const [imageFile, setImageFile] = useState<File>()
@@ -72,7 +72,7 @@ export default function ProfilePageImageInput() {
       images: arrayUnion(data),
     })
       .then(() => {
-        setImageDesc("")
+        setDesc("")
         setIsPrivate(false)
         setLocation("")
         setRandomId(cuid())
@@ -83,7 +83,7 @@ export default function ProfilePageImageInput() {
           await setDoc(firestoreRef, {
             images: [data],
           }).then(() => {
-            setImageDesc("")
+            setDesc("")
             setIsPrivate(false)
             setLocation("")
             setRandomId(cuid())
@@ -98,7 +98,7 @@ export default function ProfilePageImageInput() {
       <label>문구 입력</label>
       <textarea
         onChange={(event) => {
-          setImageDesc(event.target.value)
+          setDesc(event.target.value)
         }}
         value={desc}
         required
