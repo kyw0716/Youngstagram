@@ -5,9 +5,9 @@ import { useDropzone } from "react-dropzone"
 import ModalForImageUpload from "./ModalForImageUpload"
 import { authService, DBService, storageService } from "@FireBase"
 import Image from "next/image"
-import cuid from "cuid"
+import { v4 } from "uuid"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { UserImageData, UserImageDataAll } from "backend/dto"
+import { UserImageDataAll } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 
 type Props = {
@@ -123,7 +123,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
   const [randomId, setRandomId] = useState<string>("")
 
   useEffect(() => {
-    setRandomId(cuid())
+    setRandomId(v4())
   }, [])
 
   useEffect(() => {
@@ -202,7 +202,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
         setDesc("")
         setIsPrivate(false)
         setLocation("")
-        setRandomId(cuid())
+        setRandomId(v4())
         setImageFile(undefined)
         setIsFileExist(false)
         setIsOpen(false)
