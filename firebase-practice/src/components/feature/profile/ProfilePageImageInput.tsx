@@ -1,6 +1,6 @@
 import { authService, DBService, storageService } from "@FireBase"
 import { UserImageData, UserImageDataAll } from "backend/dto"
-import cuid from "cuid"
+import { v4 } from "uuid"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { useEffect, useState } from "react"
@@ -14,7 +14,7 @@ export default function ProfilePageImageInput() {
   const [randomId, setRandomId] = useState<string>("")
 
   useEffect(() => {
-    setRandomId(cuid())
+    setRandomId(v4())
   }, [])
 
   const uploadToStorage = async () => {
@@ -75,7 +75,7 @@ export default function ProfilePageImageInput() {
         setDesc("")
         setIsPrivate(false)
         setLocation("")
-        setRandomId(cuid())
+        setRandomId(v4())
         setImageFile(undefined)
       })
       .catch(async (error) => {
@@ -86,7 +86,7 @@ export default function ProfilePageImageInput() {
             setDesc("")
             setIsPrivate(false)
             setLocation("")
-            setRandomId(cuid())
+            setRandomId(v4())
             setImageFile(undefined)
           })
         }
