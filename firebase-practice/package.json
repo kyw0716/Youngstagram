@@ -17,7 +17,8 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.2",
     "react-modal": "^3.15.1",
-    "styled-components": "^5.3.5"
+    "styled-components": "^5.3.5",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@types/node": "18.0.5",

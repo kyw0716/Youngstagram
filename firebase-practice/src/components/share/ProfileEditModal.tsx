@@ -70,6 +70,7 @@ const Style = {
 
 export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const router = useRouter()
+  const [isSubmit, setIsSubmit] = useState<boolean>(false)
 
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
   const [imageFileName, setImageFileName] = useState<string>("")
@@ -109,89 +110,80 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
       storageService,
       `images/${authService.currentUser?.uid}/profileImage`,
     )
+    setSubmitUserName(userName)
     if (imageFile !== undefined)
       uploadBytes(imageSubmitRef, imageFile).then(() => {
         getDownloadURL(imageSubmitRef).then((response) => {
           setImageUrlToAuthService(response)
+          setIsSubmit(true)
         })
       })
-    setSubmitUserName(userName)
-  }
-
-  const updateName = async () => {
-    if (authService.currentUser !== null && imageData !== undefined) {
-      await setDoc(updateFirestoreRef, {
-        images: [
-          ...imageData.map((data) => {
-            if (data.creator === authService.currentUser?.displayName) {
-              return {
-                creator: userName,
-                creatorProfile: data.creatorProfile,
-                image: data.image,
-                imageTitle: data.imageTitle,
-                private: data.private,
-              }
-            }
-            return {
-              image: data.image,
-              imageTitle: data.imageTitle,
-              private: data.private,
-              creator: data.creator,
-              creatorProfile: data.creatorProfile,
-            }
-          }),
-        ],
-      })
-      await updateProfile(authService.currentUser, {
-        displayName: submitUserName,
-      })
+    else {
+      setIsSubmit(true)
     }
   }
-  const updateProfileImage = async () => {
+
+  const updateProfileNameAndImage = async () => {
     if (authService.currentUser !== null && imageData !== undefined) {
       await setDoc(updateFirestoreRef, {
         images: [
           ...imageData.map((data) => {
-            if (data.creatorProfile === authService.currentUser?.photoURL) {
+            if (data.creator.id === authService.currentUser?.uid) {
               return {
-                image: data.image,
-                imageTitle: data.imageTitle,
+                creator: {
+                  id: data.creator.id,
+                  name:
+                    submitUserName !== "" ? submitUserName : data.creator.name,
+                  profileImage:
+                    imageUrlToAuthService !== ""
+                      ? imageUrlToAuthService
+                      : data.creator.profileImage,
+                },
+                desc: data.desc,
+                imageUrl: data.imageUrl,
+                location: data.location,
                 private: data.private,
-                creator: data.creator,
-                creatorProfile: imageUrlToAuthService,
+                storageId: data.storageId,
               }
             }
             return {
-              image: data.image,
-              imageTitle: data.imageTitle,
+              creator: {
+                id: data.creator.id,
+                name: data.creator.name,
+                profileImage: data.creator.profileImage,
+              },
+              desc: data.desc,
+              imageUrl: data.imageUrl,
+              location: data.location,
               private: data.private,
-              creator: data.creator,
-              creatorProfile: data.creatorProfile,
+              storageId: data.storageId,
             }
           }),
         ],
       })
-      await updateProfile(authService.currentUser, {
-        photoURL: imageUrlToAuthService,
-      })
+      if (submitUserName !== "")
+        await updateProfile(authService.currentUser, {
+          displayName: submitUserName,
+        })
+      if (imageUrlToAuthService !== "")
+        await updateProfile(authService.currentUser, {
+          photoURL: imageUrlToAuthService,
+        })
     }
   }
 
   useEffect(() => {
-    if (submitUserName !== "")
-      updateName().then(() => {
-        if (imageUrlToAuthService !== "") router.push("/")
-      })
-    if (imageUrlToAuthService !== "")
-      updateProfileImage().then(() => {
+    if (isSubmit) {
+      updateProfileNameAndImage().then(() => {
+        setImageFileName("")
+        setImagePreviewSrc("")
+        setUserName("")
+        setIsOpen(false)
         router.push("/")
       })
-    setImageFileName("")
-    setImagePreviewSrc("")
-    setUserName("")
-    setIsOpen(false)
+    }
     /*eslint-disable-next-line*/
-  }, [submitUserName, imageUrlToAuthService])
+  }, [isSubmit])
 
   return (
     <>

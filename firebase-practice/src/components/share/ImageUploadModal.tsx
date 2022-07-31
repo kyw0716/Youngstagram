@@ -1,10 +1,14 @@
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
-import { CustomH3, CustomH5, CustomH6, FlexBox, Margin } from "ui"
+import { CustomH3, CustomH5, FlexBox, Margin } from "ui"
 import { useDropzone } from "react-dropzone"
 import ModalForImageUpload from "./ModalForImageUpload"
-import { authService } from "@FireBase"
+import { authService, DBService, storageService } from "@FireBase"
 import Image from "next/image"
+import { v4 } from "uuid"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { UserImageDataAll } from "backend/dto"
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 
 type Props = {
   isOpen: boolean
@@ -37,7 +41,7 @@ const Style = {
     height: 494px;
     display: flex;
     flex-direction: column;
-    padding-top: 20px;
+    padding-top: 10px;
     align-items: center;
     position: relative;
   `,
@@ -73,6 +77,28 @@ const Style = {
     bottom: 15px;
     right: 15px;
   `,
+  LocationInputSection: styled.div`
+    width: 100%;
+    padding-right: 10px;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
+  LocationInput: styled.input`
+    width: 291px;
+    height: 44px;
+    border: none;
+    padding-left: 10px;
+    ::placeholder {
+      color: lightgrey;
+      font-size: 15px;
+    }
+    :focus {
+      outline: none;
+    }
+  `,
 }
 
 export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
@@ -89,6 +115,17 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
   const [isFileExist, setIsFileExist] = useState<boolean>(false)
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
   const [windowSize, setWindowSize] = useState<number>(0)
+
+  const [desc, setDesc] = useState<string>("")
+  const [location, setLocation] = useState<string>("")
+  const [isPrivate, setIsPrivate] = useState<boolean>(false)
+  const [imageFile, setImageFile] = useState<File>()
+  const [randomId, setRandomId] = useState<string>("")
+
+  useEffect(() => {
+    setRandomId(v4())
+  }, [])
+
   useEffect(() => {
     setWindowSize(window.innerWidth)
     window.addEventListener("resize", () => {
@@ -103,6 +140,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
     }
     setImagePreviewSrc("")
     encodeFileToBase64(acceptedFiles[0])
+    setImageFile(acceptedFiles[0])
     setIsFileExist(true)
   }, [acceptedFiles])
 
@@ -115,6 +153,60 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
         setImagePreviewSrc(String(reader.result))
       }
     })
+  }
+
+  const uploadToStorage = async () => {
+    const storageRef = ref(
+      storageService,
+      `images/${authService.currentUser?.uid}/${randomId}`,
+    )
+    if (imageFile !== undefined)
+      await uploadBytes(storageRef, imageFile)
+        .then(
+          async () =>
+            await getDownloadURL(storageRef).then((response) => {
+              uploadToFirestore(response)
+            }),
+        )
+        .catch((error) => {
+          console.log(error.code)
+        })
+  }
+
+  const uploadToFirestore = async (downloadUrl: string) => {
+    const dataAll: UserImageDataAll = {
+      imageUrl: downloadUrl,
+      desc: desc,
+      location: location,
+      private: isPrivate,
+      storageId: randomId,
+      creator: {
+        name: `${authService.currentUser?.displayName}`,
+        id: `${authService.currentUser?.uid}`,
+        profileImage: `${authService.currentUser?.photoURL}`,
+      },
+    }
+
+    const firestoreAllRef = doc(DBService, "mainPage", `userImageDataAll`)
+    await updateDoc(firestoreAllRef, {
+      images: arrayUnion(dataAll),
+    })
+      .catch(async (error) => {
+        if (error.code === "not-found") {
+          await setDoc(firestoreAllRef, {
+            images: [dataAll],
+          })
+        }
+      })
+      .then(() => {
+        setDesc("")
+        setIsPrivate(false)
+        setLocation("")
+        setRandomId(v4())
+        setImageFile(undefined)
+        setIsFileExist(false)
+        setIsOpen(false)
+      })
   }
 
   return (
@@ -137,7 +229,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
         >
           <Image
             width={windowSize < 784 ? "95%" : 494}
-            height={windowSize < 784 ? 250 : 494}
+            height={windowSize < 784 ? 200 : 494}
             style={{
               boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
               maxWidth: 495,
@@ -158,35 +250,76 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
             }
           >
             <FlexBox
-              width={"310px"}
+              width={windowSize < 784 ? "100%" : "310px"}
               gap={10}
               height="fit-content"
               alignItems="center"
+              justifyContents="space-between"
             >
-              <Image
-                src={
-                  authService.currentUser?.photoURL
-                    ? `${authService.currentUser?.photoURL}`
-                    : "/empty.svg"
-                }
-                alt="profile"
-                width={30}
-                height={30}
-                style={{ borderRadius: "30px" }}
-              />
-              <CustomH5>{authService.currentUser?.displayName}</CustomH5>
+              <FlexBox alignItems="center">
+                <Image
+                  src={
+                    authService.currentUser?.photoURL
+                      ? `${authService.currentUser?.photoURL}`
+                      : "/empty.svg"
+                  }
+                  alt="profile"
+                  width={30}
+                  height={30}
+                  style={{ borderRadius: "30px" }}
+                />
+                <Margin direction="row" size={10} />
+                <CustomH5>{authService.currentUser?.displayName}</CustomH5>
+              </FlexBox>
+              <FlexBox alignItems="center" width={80}>
+                <CustomH5>비공개</CustomH5>
+                <input
+                  type={"checkbox"}
+                  checked={isPrivate}
+                  onChange={(event) => {
+                    setIsPrivate(event.target.checked)
+                  }}
+                />
+              </FlexBox>
             </FlexBox>
             <Margin direction="column" size={10} />
             <Style.TextArea
               placeholder="문구 입력..."
-              style={windowSize < 784 ? { height: 150, width: "100%" } : {}}
+              style={windowSize < 784 ? { height: 100, width: "100%" } : {}}
+              maxLength={2200}
+              value={desc}
+              onChange={(event) => {
+                setDesc(event.target.value)
+              }}
             />
+            <Margin direction="column" size={8} />
+            <FlexBox
+              width={windowSize < 784 ? "" : 310}
+              justifyContents={"flex-end"}
+              alignItems="center"
+              style={{ color: "lightgrey" }}
+            >
+              {desc.length}/2200
+            </FlexBox>
+            <Margin direction="column" size={windowSize < 784 ? 0 : 8} />
+            <Style.LocationInputSection>
+              <Style.LocationInput
+                placeholder="위치 추가"
+                onChange={(event) => {
+                  setLocation(event.target.value)
+                }}
+                value={location}
+              />
+              <Margin direction="row" size={10} />
+              <Image
+                src={"/location.svg"}
+                width={16}
+                height={16}
+                alt="location"
+              />
+            </Style.LocationInputSection>
           </Style.InputSection>
-          <Style.SubmitButton
-            onClick={() => {
-              alert("아직 기능 구현은 안했어용")
-            }}
-          >
+          <Style.SubmitButton onClick={uploadToStorage}>
             공유하기
           </Style.SubmitButton>
         </FlexBox>
@@ -226,12 +359,16 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
               htmlFor="IMAGE-UPLOAD-INPUT"
               style={isDragAccept ? { color: "#4891ff" } : { color: "white" }}
             >
-              컴퓨터에서 선택
+              {windowSize < 784 ? "갤러리에서 선택" : "컴퓨터에서 선택"}
             </Style.TempButton>
             <Style.HiddenInput
               type="file"
               accept="image/*"
               id="IMAGE-UPLOAD-INPUT"
+              onChange={(event) => {
+                if (event.target.files !== null)
+                  setImageFile(event.target.files[0])
+              }}
               {...getInputProps()}
             />
           </FlexBox>

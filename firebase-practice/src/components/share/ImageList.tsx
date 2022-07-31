@@ -1,5 +1,5 @@
 import { authService } from "@FireBase"
-import { UserImageDataAll } from "backend/dto"
+import { UserImageData, UserImageDataAll } from "backend/dto"
 import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
@@ -9,7 +9,6 @@ import ImageCard from "./ImageCard"
 type Props = {
   imageData: UserImageDataAll[]
   isMainPage: boolean
-  userId: string
   setPickImageData?: React.Dispatch<
     SetStateAction<"public" | "private" | "all">
   >
@@ -36,7 +35,6 @@ const Style = {
 export default function ImageList({
   imageData,
   isMainPage,
-  userId,
   setPickImageData,
 }: Props) {
   const [windowSize, setWindowSize] = useState<number>(0)
@@ -54,18 +52,9 @@ export default function ImageList({
             return (
               <ImageCard
                 key={index}
-                userId={userId}
-                userName={
-                  isMainPage
-                    ? data.creator
-                    : `${authService.currentUser?.displayName}`
-                }
-                imageTitle={data.imageTitle}
-                imageUrl={data.image}
-                isPrivate={data.private}
+                imageData={data}
                 isMainPage={isMainPage}
                 setPickImageData={setPickImageData}
-                creatorProfile={data.creatorProfile}
                 windowSize={windowSize}
               />
             )
