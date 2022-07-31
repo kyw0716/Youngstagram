@@ -1,7 +1,7 @@
 import { authService } from "@FireBase"
 import { UserImageDataAll } from "backend/dto"
 import Image from "next/image"
-import { SetStateAction } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH2, Margin } from "ui"
 import ImageCard from "./ImageCard"
@@ -39,6 +39,13 @@ export default function ImageList({
   userId,
   setPickImageData,
 }: Props) {
+  const [windowSize, setWindowSize] = useState<number>(0)
+  useEffect(() => {
+    setWindowSize(window.innerWidth)
+    window.addEventListener("resize", () => {
+      setWindowSize(window.innerWidth)
+    })
+  }, [])
   return (
     <Style.ImageContainer>
       {setPickImageData !== undefined &&
@@ -59,6 +66,7 @@ export default function ImageList({
                 isMainPage={isMainPage}
                 setPickImageData={setPickImageData}
                 creatorProfile={data.creatorProfile}
+                windowSize={windowSize}
               />
             )
           })

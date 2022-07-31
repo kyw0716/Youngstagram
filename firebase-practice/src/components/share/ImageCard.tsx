@@ -15,32 +15,20 @@ type Props = {
   isMainPage: boolean
   setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
   creatorProfile: string
+  windowSize: number
 }
 
 const Style = {
   ImageHeader: styled.div`
-    width: 468px;
+    width: 470px;
     height: 58px;
     display: flex;
     align-items: center;
     padding-left: 15px;
     justify-content: space-between;
     border-radius: 10px;
-    background-color: white;
     border-bottom: none;
     position: relative;
-    @media (max-width: 470px) {
-      width: 100vw;
-      height: 58px;
-      display: flex;
-      align-items: center;
-      padding-left: 3%;
-      justify-content: space-between;
-      border-radius: 10px;
-      background-color: white;
-      padding-right: 3%;
-      position: relative;
-    }
   `,
   HeaderText: styled.div`
     display: flex;
@@ -68,6 +56,7 @@ const Style = {
     border-radius: 10px;
     padding-bottom: 60px;
     background-color: white;
+    max-width: 470px;
   `,
   ThreeDotMenuBox: styled.div`
     width: 60px;
@@ -81,7 +70,7 @@ const Style = {
     width: 100px;
     height: 58px;
     align-items: center;
-    padding-right: 40px;
+    padding-right: 20px;
     justify-content: flex-end;
   `,
   ButtonBox: styled.div`
@@ -170,6 +159,7 @@ export default function ImageCard({
   isMainPage,
   setPickImageData,
   creatorProfile,
+  windowSize,
 }: Props) {
   const handleDeleteImage = async (
     url: string,
@@ -256,8 +246,16 @@ export default function ImageCard({
   }
 
   return (
-    <Style.ImageCard>
-      <Style.ImageHeader>
+    <Style.ImageCard
+      style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
+    >
+      <Style.ImageHeader
+        style={
+          windowSize < 900
+            ? { width: "95%", padding: "0px 5px" }
+            : { width: 470 }
+        }
+      >
         <FlexBox
           width={"fit-content"}
           height={58}
