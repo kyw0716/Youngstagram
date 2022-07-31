@@ -37,20 +37,32 @@ export default function Profile({ userId }: Props) {
   const [dataToView, setDataToView] = useState<UserImageDataAll[]>([])
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "userData", userId)
+    const userDataRef = doc(DBService, "mainPage", "userImageDataAll")
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })
   }, [])
   useEffect(() => {
     if (userData !== undefined && userData.images !== undefined) {
-      setAllImageData(userData.images)
-      setDataToView(userData.images)
+      setAllImageData(
+        (userData.images as UserImageDataAll[]).filter(
+          (data) => data.creator.id === authService.currentUser?.uid,
+        ),
+      )
+      setDataToView(
+        (userData.images as UserImageDataAll[]).filter(
+          (data) => data.creator.id === authService.currentUser?.uid,
+        ),
+      )
       setPrivateImageData(
-        (userData.images as UserImageDataAll[]).filter((data) => data.private),
+        (userData.images as UserImageDataAll[])
+          .filter((data) => data.creator.id === authService.currentUser?.uid)
+          .filter((data) => data.private),
       )
       setPublicImageData(
-        (userData.images as UserImageDataAll[]).filter((data) => !data.private),
+        (userData.images as UserImageDataAll[])
+          .filter((data) => data.creator.id === authService.currentUser?.uid)
+          .filter((data) => !data.private),
       )
     }
   }, [userData])
@@ -91,7 +103,6 @@ export default function Profile({ userId }: Props) {
                 <ImageList
                   imageData={dataToView}
                   isMainPage={false}
-                  userId={authService.currentUser?.uid}
                   setPickImageData={setPickImageData}
                 />
               )}

@@ -76,17 +76,11 @@ const Home: NextPage = () => {
         </Style.TempButton>
       </FlexBox>
       <Margin direction="column" size={30} />
-      {authService.currentUser?.uid !== undefined &&
-        authService.currentUser.displayName !== null && (
-          <ImageList
-            imageData={
-              imageData ? imageData.filter((data) => !data.private) : []
-            }
-            isMainPage={true}
-            userId={authService.currentUser?.uid}
-            setPickImageData={setPickImageData}
-          />
-        )}
+      <ImageList
+        imageData={imageData ? imageData.filter((data) => !data.private) : []}
+        isMainPage={true}
+        setPickImageData={setPickImageData}
+      />
     </Layout>
   )
 }

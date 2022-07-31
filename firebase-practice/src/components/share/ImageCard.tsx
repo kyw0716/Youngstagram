@@ -1,4 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
+import { UserImageData, UserImageDataAll } from "backend/dto"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
@@ -7,14 +8,9 @@ import styled from "styled-components"
 import { FlexBox } from "ui"
 
 type Props = {
-  imageUrl: string
-  imageTitle: string
-  isPrivate: boolean
-  userId: string
-  userName: string
+  imageData: UserImageDataAll
   isMainPage: boolean
   setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
-  creatorProfile: string
   windowSize: number
 }
 
@@ -151,43 +147,34 @@ const Style = {
 }
 
 export default function ImageCard({
-  imageTitle,
-  imageUrl,
-  isPrivate,
-  userId,
-  userName,
+  imageData,
   isMainPage,
   setPickImageData,
-  creatorProfile,
   windowSize,
 }: Props) {
-  const handleDeleteImage = async (
-    url: string,
-    title: string,
-    isPrivate: boolean,
-  ) => {
-    const storageImageRef = ref(storageService, `images/${userId}/${title}`)
-    const firestoreImageRef = doc(DBService, "userData", `${userId}`)
+  const handleDeleteImage = async () => {
+    const storageImageRef = ref(
+      storageService,
+      `images/${authService.currentUser?.uid}/${imageData.storageId}`,
+    )
     const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
 
     handleThreeDotMenuClick()
 
     await deleteObject(storageImageRef)
 
-    await updateDoc(firestoreImageRef, {
-      images: arrayRemove({
-        image: url,
-        imageTitle: title,
-        private: isPrivate,
-      }),
-    })
     await updateDoc(firestoreImageAllRef, {
       images: arrayRemove({
-        image: url,
-        imageTitle: title,
-        private: isPrivate,
-        creator: userName,
-        creatorProfile: authService.currentUser?.photoURL,
+        creator: {
+          id: imageData.creator.id,
+          name: imageData.creator.name,
+          profileImage: imageData.creator.profileImage,
+        },
+        desc: imageData.desc,
+        imageUrl: imageData.imageUrl,
+        location: imageData.location,
+        private: imageData.private,
+        storageId: imageData.storageId,
       }),
     })
     setPickImageData("all")
@@ -198,42 +185,36 @@ export default function ImageCard({
     title: string,
     isPrivate: boolean,
   ) => {
-    const firestoreImageRef = doc(DBService, "userData", `${userId}`)
     const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
 
     handleThreeDotMenuClick()
 
-    await updateDoc(firestoreImageRef, {
-      images: arrayRemove({
-        image: url,
-        imageTitle: title,
-        private: isPrivate,
-      }),
-    }).then(async () => {
-      await updateDoc(firestoreImageRef, {
-        images: arrayUnion({
-          image: url,
-          imageTitle: title,
-          private: !isPrivate,
-        }),
-      })
-    })
     await updateDoc(firestoreImageAllRef, {
       images: arrayRemove({
-        image: url,
-        imageTitle: title,
-        private: isPrivate,
-        creator: userName,
-        creatorProfile: authService.currentUser?.photoURL,
+        creator: {
+          id: imageData.creator.id,
+          name: imageData.creator.name,
+          profileImage: imageData.creator.profileImage,
+        },
+        desc: imageData.desc,
+        imageUrl: imageData.imageUrl,
+        location: imageData.location,
+        private: imageData.private,
+        storageId: imageData.storageId,
       }),
     }).then(async () => {
       await updateDoc(firestoreImageAllRef, {
         images: arrayUnion({
-          image: url,
-          imageTitle: title,
-          private: !isPrivate,
-          creator: userName,
-          creatorProfile: authService.currentUser?.photoURL,
+          creator: {
+            id: imageData.creator.id,
+            name: imageData.creator.name,
+            profileImage: imageData.creator.profileImage,
+          },
+          desc: imageData.desc,
+          imageUrl: imageData.imageUrl,
+          location: imageData.location,
+          private: !imageData.private,
+          storageId: imageData.storageId,
         }),
       })
     })
@@ -264,12 +245,8 @@ export default function ImageCard({
         >
           <Image
             src={
-              isMainPage
-                ? creatorProfile
-                  ? `${creatorProfile}`
-                  : "/empty.svg"
-                : authService.currentUser?.photoURL
-                ? `${authService.currentUser?.photoURL}`
+              imageData.creator.profileImage
+                ? `${imageData.creator.profileImage}`
                 : "/empty.svg"
             }
             alt="creator"
@@ -278,8 +255,10 @@ export default function ImageCard({
             style={{ borderRadius: 38 }}
           />
           <Style.HeaderText>
-            <Style.UserName>{userName}</Style.UserName>
-            <Style.ImageTitle>{imageTitle}</Style.ImageTitle>
+            <Style.UserName>
+              {imageData.creator ? imageData.creator.name : ""}
+            </Style.UserName>
+            <Style.ImageTitle>{imageData.location}</Style.ImageTitle>
           </Style.HeaderText>
         </FlexBox>
         {isMainPage ? (
@@ -298,20 +277,20 @@ export default function ImageCard({
         {isMenuOpen ? (
           <>
             <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
-              <Style.Deletebutton
-                onClick={() => {
-                  handleDeleteImage(imageUrl, imageTitle, isPrivate)
-                }}
-              >
+              <Style.Deletebutton onClick={handleDeleteImage}>
                 <Image src="/delete.svg" alt="delete" width={15} height={15} />
                 삭제
               </Style.Deletebutton>
               <Style.PrivateToggleButton
                 onClick={() => {
-                  handlePrivateToggle(imageUrl, imageTitle, isPrivate)
+                  handlePrivateToggle(
+                    imageData.imageUrl,
+                    imageData.location,
+                    imageData.private,
+                  )
                 }}
               >
-                {isPrivate ? (
+                {imageData.private ? (
                   <Image
                     src="/unLock.svg"
                     alt="unlock"
@@ -322,7 +301,7 @@ export default function ImageCard({
                   <Image src="/lock.svg" alt="lock" width={15} height={15} />
                 )}
 
-                {isPrivate ? "공개" : "비공개"}
+                {imageData.private ? "공개" : "비공개"}
               </Style.PrivateToggleButton>
               <Style.ExitButton onClick={handleThreeDotMenuClick}>
                 <Image src="/logout.svg" alt="cancle" width={15} height={15} />
@@ -336,11 +315,12 @@ export default function ImageCard({
         )}
       </Style.ImageHeader>
       <Image
-        src={imageUrl ? imageUrl : "/empty.svg"}
+        src={imageData.imageUrl ? imageData.imageUrl : "/empty.svg"}
         width={470}
         height={600}
-        alt="proflie"
+        alt="Image"
       />
+      {imageData.desc}
     </Style.ImageCard>
   )
 }
