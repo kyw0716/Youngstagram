@@ -1,155 +1,139 @@
+import { authService, DBService, storageService } from "@FireBase"
+import { UserImageData, UserImageDataAll } from "backend/dto"
+import cuid from "cuid"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { useEffect, useRef, useState } from "react"
-import styled from "styled-components"
-import { authService, DBService, storageService } from "@FireBase"
-
-const Style = {
-  PreviewImageSection: styled.div`
-    width: 200px;
-    height: 200px;
-    border: 1px solid black;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
-  PreviewImage: styled.img`
-    width: 150px;
-    height: 150px;
-  `,
-}
+import { useEffect, useState } from "react"
+import { FlexBox } from "ui"
 
 export default function ProfilePageImageInput() {
-  const [imageFile, setImageFile] = useState<File>()
-  const [imageTitle, setImageTitle] = useState<string>("")
-  const imageUploadRef = useRef<HTMLInputElement>(null)
-  const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
-  const [imageUrlToFirestore, setImageUrlToFirestore] = useState<string>("")
+  const [desc, setImageDesc] = useState<string>("")
+  const [location, setLocation] = useState<string>("")
   const [isPrivate, setIsPrivate] = useState<boolean>(false)
+  const [imageFile, setImageFile] = useState<File>()
+  const [randomId, setRandomId] = useState<string>("")
 
-  const encodeFileToBase64 = (fileblob: File) => {
-    const reader = new FileReader()
-    if (fileblob === undefined) return
-    reader.readAsDataURL(fileblob)
-    return new Promise(() => {
-      reader.onload = () => {
-        setImagePreviewSrc(String(reader.result))
-      }
-    })
-  }
+  useEffect(() => {
+    setRandomId(cuid())
+  }, [])
 
-  const handleImageSelect: React.ChangeEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    if (event.target.files !== null) {
-      setImageFile(event.target.files[0])
-      encodeFileToBase64(event.target.files[0])
-    }
-  }
-  const handleImageTitle: React.ChangeEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    setImageTitle(event.target.value)
-  }
-
-  const handleImageSubmit: React.MouseEventHandler<HTMLButtonElement> = () => {
-    if (imageTitle === "") {
-      alert("이미지 제목을 입력해주세요!")
-      return
-    }
-    const imageSubmitRef = ref(
+  const uploadToStorage = async () => {
+    const storageRef = ref(
       storageService,
-      `images/${authService.currentUser?.uid}/${imageTitle}`,
+      `images/${authService.currentUser?.uid}/${randomId}`,
     )
     if (imageFile !== undefined)
-      uploadBytes(imageSubmitRef, imageFile).then(() => {
-        getDownloadURL(imageSubmitRef).then((response) => {
-          setImageUrlToFirestore(response)
-        })
-      })
-    if (imageUploadRef.current !== null) {
-      imageUploadRef.current.value = ""
+      await uploadBytes(storageRef, imageFile).then(
+        async () =>
+          await getDownloadURL(storageRef).then((response) => {
+            uploadToFirestore(response)
+          }),
+      )
+  }
+
+  const uploadToFirestore = async (downloadUrl: string) => {
+    const dataAll: UserImageDataAll = {
+      imageUrl: downloadUrl,
+      desc: desc,
+      location: location,
+      private: isPrivate,
+      storageId: randomId,
+      creator: {
+        name: `${authService.currentUser?.displayName}`,
+        id: `${authService.currentUser?.uid}`,
+        profileImage: `${authService.currentUser?.photoURL}`,
+      },
     }
-  }
 
-  const handlePrivateChecked: React.ChangeEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    setIsPrivate(event.target.checked)
-  }
+    const data: UserImageData = {
+      imageUrl: downloadUrl,
+      desc: desc,
+      location: location,
+      private: isPrivate,
+      storageId: randomId,
+    }
 
-  const uploadImageUrlListToFirestore = async (
-    url: string,
-    title: string,
-    isPrivate: boolean,
-  ) => {
-    const imageUrlListRef = doc(
+    const firestoreAllRef = doc(DBService, "mainPage", `userImageDataAll`)
+    const firestoreRef = doc(
       DBService,
       "userData",
       `${authService.currentUser?.uid}`,
     )
-    const imageUrlListAllRef = doc(DBService, "mainPage", "userImageDataAll")
-    await updateDoc(imageUrlListRef, {
-      images: arrayUnion({ image: url, imageTitle: title, private: isPrivate }),
-    }).catch((error) => {
-      if (error.code === "not-found") {
-        setDoc(imageUrlListRef, {
-          images: [{ image: url, imageTitle: title, private: isPrivate }],
+    await updateDoc(firestoreAllRef, {
+      images: arrayUnion(dataAll),
+    }).catch(async (error) => {
+      if (error.code) {
+        await setDoc(firestoreAllRef, {
+          images: [dataAll],
         })
       }
     })
-    await updateDoc(imageUrlListAllRef, {
-      images: arrayUnion({
-        image: url,
-        imageTitle: title,
-        private: isPrivate,
-        creator: authService.currentUser?.displayName,
-        creatorProfile: authService.currentUser?.photoURL,
-      }),
-    }).then(() => {
-      setImageTitle("")
-      setImagePreviewSrc("")
-      setIsPrivate(false)
-      setImageFile(undefined)
+    await updateDoc(firestoreRef, {
+      images: arrayUnion(data),
     })
+      .then(() => {
+        setImageDesc("")
+        setIsPrivate(false)
+        setLocation("")
+        setRandomId(cuid())
+        setImageFile(undefined)
+      })
+      .catch(async (error) => {
+        if (error.code === "not-found") {
+          await setDoc(firestoreRef, {
+            images: [data],
+          }).then(() => {
+            setImageDesc("")
+            setIsPrivate(false)
+            setLocation("")
+            setRandomId(cuid())
+            setImageFile(undefined)
+          })
+        }
+      })
   }
 
-  useEffect(() => {
-    if (imageUrlToFirestore == "") return
-    uploadImageUrlListToFirestore(imageUrlToFirestore, imageTitle, isPrivate)
-  }, [imageUrlToFirestore])
-
   return (
-    <>
-      <input
-        type={"text"}
-        onChange={handleImageTitle}
-        value={imageTitle}
-        placeholder="이미지 제목?"
+    <FlexBox column={true} width={200}>
+      <label>문구 입력</label>
+      <textarea
+        onChange={(event) => {
+          setImageDesc(event.target.value)
+        }}
+        value={desc}
+        required
       />
       <br />
+      <label>장소 입력</label>
       <input
-        type={"file"}
-        onChange={handleImageSelect}
-        accept="image/*"
-        ref={imageUploadRef}
+        onChange={(event) => {
+          setLocation(event.target.value)
+        }}
+        value={location}
+        required
       />
       <br />
-      <label htmlFor="check">비공개</label>
+      <label>공개 비공개 설정</label>
       <input
         type={"checkbox"}
-        onChange={handlePrivateChecked}
-        id="check"
+        onChange={(event) => {
+          setIsPrivate(event.target.checked)
+        }}
         checked={isPrivate}
+        required
       />
       <br />
-      <button onClick={handleImageSubmit}>이미지 업로드</button>
-      <Style.PreviewImageSection>
-        {imagePreviewSrc !== undefined && imagePreviewSrc !== "" && (
-          <Style.PreviewImage src={imagePreviewSrc} />
-        )}
-      </Style.PreviewImageSection>
-    </>
+      <label>이미지 선택</label>
+      <input
+        type={"file"}
+        accept="image/*"
+        onChange={(event) => {
+          if (event.target.files !== null) setImageFile(event.target.files[0])
+        }}
+        required
+      />
+      <button onClick={uploadToStorage}>제출</button>
+      {randomId}
+    </FlexBox>
   )
 }
