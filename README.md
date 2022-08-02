@@ -53,25 +53,25 @@ export const storageService = getStorage(FireBasApp);
 # Stack
 
 - Programming Langruage:
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" style="border-radius: 5px;"/>
-  <img src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white" style="border-radius: 5px;"/>
-  <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" style="border-radius: 5px;"/>
-  <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/css3-%231572B6.svg?style=flat&logo=css3&logoColor=white" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E" style="border-radius: 5px;"/>
 
 - Framework:
-  <img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white" style="border-radius: 5px;"/>
-  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" style="border-radius: 5px;"/>
-  <img src="https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/Next-black?style=flat&logo=next.js&logoColor=white" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/styled--components-DB7093?style=flat&logo=styled-components&logoColor=white" style="border-radius: 5px;"/>
 - DataBase:
-  <img src="https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/Firebase-039BE5?style=flat&logo=Firebase&logoColor=white" style="border-radius: 5px;"/>
 
 - Deployment:
-  <img src="https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/vercel-%23000000.svg?style=flat&logo=vercel&logoColor=white" style="border-radius: 5px;"/>
 
 - IDE:
-  <img src="https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white" style="border-radius: 5px;"/>
+  <img src="https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=flat&logo=visual-studio-code&logoColor=white" style="border-radius: 5px;"/>
 
 - Browser Support:
-  <img src="https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white" style="border-radius: 5px;">
-  <img src="https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=Firefox-Browser&logoColor=white" style="border-radius: 5px;">
-  <img src="https://img.shields.io/badge/Edge-0078D7?style=for-the-badge&logo=Microsoft-edge&logoColor=white" style="border-radius: 5px;">
+  <img src="https://img.shields.io/badge/Google%20Chrome-4285F4?style=flat&logo=GoogleChrome&logoColor=white" style="border-radius: 5px;">
+  <img src="https://img.shields.io/badge/Firefox-FF7139?style=flat&logo=Firefox-Browser&logoColor=white" style="border-radius: 5px;">
+  <img src="https://img.shields.io/badge/Edge-0078D7?style=flat&logo=Microsoft-edge&logoColor=white" style="border-radius: 5px;">
