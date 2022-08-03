@@ -1,5 +1,4 @@
-import { authService } from "@FireBase"
-import { UserImageData, UserImageDataAll } from "backend/dto"
+import { UserImageDataAll } from "backend/dto"
 import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
