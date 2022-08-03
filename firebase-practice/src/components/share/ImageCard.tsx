@@ -1,5 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { UserImageData, UserImageDataAll } from "backend/dto"
+import { UserImageDataAll } from "backend/dto"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
@@ -245,7 +245,7 @@ export default function ImageCard({
         >
           <Image
             src={
-              imageData.creator.profileImage
+              imageData.creator.profileImage !== null
                 ? `${imageData.creator.profileImage}`
                 : "/empty.svg"
             }
