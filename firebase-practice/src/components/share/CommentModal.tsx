@@ -35,7 +35,7 @@ const Style = {
     height: 423px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 25px;
     overflow-y: scroll;
     overflow-x: hidden;
     ::-webkit-scrollbar {
@@ -61,6 +61,10 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [randomId, setRandomId] = useState<string>(v4())
   const handleCommentSubmit = async () => {
+    if (comment.length === 0) {
+      alert("댓글은 한글자 이상 작성해야합니다.")
+      return
+    }
     const commentRef = doc(DBService, "Comments", imageData.storageId)
     await updateDoc(commentRef, {
       AllComments: arrayUnion({
@@ -160,9 +164,8 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
                 return (
                   <CommentWrapper
                     key={v4()}
-                    profileImage={data.profileImage}
-                    name={data.name}
-                    comment={data.comment}
+                    commentData={data}
+                    storageId={imageData.storageId}
                   />
                 )
               })}
