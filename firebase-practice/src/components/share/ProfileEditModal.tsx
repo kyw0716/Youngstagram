@@ -8,7 +8,7 @@ import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH6, FlexBox, Margin } from "ui"
-import ModalForProfileEdit from "./ModalForProfileEdit"
+import YoungstagramModal from "./YoungstagramModal"
 
 type Props = {
   isOpen: boolean
@@ -187,7 +187,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
 
   return (
     <>
-      <ModalForProfileEdit
+      <YoungstagramModal
         setIsOpen={setIsOpen}
         isOpen={isOpen}
         width={isPC ? "600px" : "95vw"}
@@ -202,7 +202,9 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
             src={
               imagePreviewSrc
                 ? imagePreviewSrc
-                : `${authService.currentUser?.photoURL}`
+                : authService.currentUser?.photoURL
+                ? `${authService.currentUser?.photoURL}`
+                : "/profile.svg"
             }
             alt={"profile"}
             style={{ borderRadius: 10 }}
@@ -269,7 +271,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           <Margin direction="row" size={isPC ? 20 : 10} />
         </FlexBox>
         <Margin direction="column" size={15} />
-      </ModalForProfileEdit>
+      </YoungstagramModal>
     </>
   )
 }
