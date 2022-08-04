@@ -97,7 +97,7 @@ export default function PCHeader({
           src={
             authService.currentUser?.photoURL
               ? `${authService.currentUser?.photoURL}`
-              : "/empty.svg"
+              : "/profile.svg"
           }
           width={150}
           height={150}

@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import styled from "styled-components"
-import { FlexBox, Margin } from "ui"
+import { CustomH6, FlexBox, Margin } from "ui"
 
 const Style = {
   Container: styled.div`
@@ -150,7 +150,11 @@ export default function Header() {
             />
             {authService.currentUser ? (
               <Image
-                src={`${authService.currentUser.photoURL}`}
+                src={
+                  authService.currentUser.photoURL
+                    ? `${authService.currentUser.photoURL}`
+                    : "/profile.svg"
+                }
                 onClick={handleMenuOpen}
                 about="profile"
                 width={30}

@@ -261,7 +261,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
                   src={
                     authService.currentUser?.photoURL
                       ? `${authService.currentUser?.photoURL}`
-                      : "/empty.svg"
+                      : "/profile.svg"
                   }
                   alt="profile"
                   width={30}

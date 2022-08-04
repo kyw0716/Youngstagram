@@ -92,7 +92,7 @@ export default function MobileHeader({
             src={
               authService.currentUser?.photoURL
                 ? `${authService.currentUser?.photoURL}`
-                : "/empty.svg"
+                : "/profile.svg"
             }
             alt="profile"
             width={90}
