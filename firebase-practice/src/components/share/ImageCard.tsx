@@ -5,7 +5,7 @@ import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
-import { FlexBox } from "ui"
+import { Comment, FlexBox, Heart, Margin, Share } from "ui"
 
 type Props = {
   imageData: UserImageDataAll
@@ -245,9 +245,9 @@ export default function ImageCard({
         >
           <Image
             src={
-              imageData.creator.profileImage !== null
+              imageData.creator.profileImage !== "null"
                 ? `${imageData.creator.profileImage}`
-                : "/empty.svg"
+                : "/profile.svg"
             }
             alt="creator"
             width={38}
@@ -320,7 +320,25 @@ export default function ImageCard({
         height={600}
         alt="Image"
       />
-      {imageData.desc}
+      <Margin direction="column" size={10} />
+      <FlexBox
+        width={"100%"}
+        height={"fit-content"}
+        justifyContents="flex-start"
+        alignItems="center"
+      >
+        <Margin direction="row" size={10} />
+        <Heart />
+        <Margin direction="row" size={15} />
+        <Comment />
+        <Margin direction="row" size={15} />
+        <Share />
+      </FlexBox>
+      <Margin direction="column" size={15} />
+      <FlexBox>
+        <Margin direction="row" size={10} />
+        {imageData.desc}
+      </FlexBox>
     </Style.ImageCard>
   )
 }
