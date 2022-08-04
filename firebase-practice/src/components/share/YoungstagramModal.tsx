@@ -30,7 +30,7 @@ const Style = {
   `,
 }
 
-export default function ModalForProfileEdit({
+export default function YoungstagramModal({
   isOpen,
   setIsOpen,
   title,
