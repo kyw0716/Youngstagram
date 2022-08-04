@@ -6,6 +6,7 @@ import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
 import { Comment, FlexBox, Heart, Margin, Share } from "ui"
+import CommentModal from "./CommentModal"
 
 type Props = {
   imageData: UserImageDataAll
@@ -50,7 +51,7 @@ const Style = {
     align-items: center;
     border: 1px solid lightgrey;
     border-radius: 10px;
-    padding-bottom: 60px;
+    padding-bottom: 10px;
     background-color: white;
     max-width: 470px;
   `,
@@ -226,119 +227,138 @@ export default function ImageCard({
     setIsMenuOpen((current) => !current)
   }
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
   return (
-    <Style.ImageCard
-      style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
-    >
-      <Style.ImageHeader
-        style={
-          windowSize < 900
-            ? { width: "95%", padding: "0px 5px" }
-            : { width: 470 }
-        }
+    <>
+      <CommentModal
+        isOpen={isModalOpen}
+        setIsOpen={setIsModalOpen}
+        imageData={imageData}
+      />
+      <Style.ImageCard
+        style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
       >
-        <FlexBox
-          width={"fit-content"}
-          height={58}
-          gap={15}
-          alignItems={"center"}
+        <Style.ImageHeader
+          style={
+            windowSize < 900
+              ? { width: "95%", padding: "0px 5px" }
+              : { width: 470 }
+          }
         >
-          <Image
-            src={
-              imageData.creator.profileImage !== "null"
-                ? `${imageData.creator.profileImage}`
-                : "/profile.svg"
-            }
-            alt="creator"
-            width={38}
-            height={38}
-            style={{ borderRadius: 38 }}
-          />
-          <Style.HeaderText>
-            <Style.UserName>
-              {imageData.creator ? imageData.creator.name : ""}
-            </Style.UserName>
-            <Style.ImageTitle>{imageData.location}</Style.ImageTitle>
-          </Style.HeaderText>
-        </FlexBox>
-        {isMainPage ? (
-          <></>
-        ) : (
-          <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
+          <FlexBox
+            width={"fit-content"}
+            height={58}
+            gap={15}
+            alignItems={"center"}
+          >
             <Image
-              src="/dot-menu.svg"
-              alt="menu"
-              width={20}
-              height={15}
-              style={{ cursor: "pointer" }}
+              src={
+                imageData.creator.profileImage !== "null"
+                  ? `${imageData.creator.profileImage}`
+                  : "/profile.svg"
+              }
+              alt="creator"
+              width={38}
+              height={38}
+              style={{ borderRadius: 38 }}
             />
-          </Style.ThreeDotMenu>
-        )}
-        {isMenuOpen ? (
-          <>
-            <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
-              <Style.Deletebutton onClick={handleDeleteImage}>
-                <Image src="/delete.svg" alt="delete" width={15} height={15} />
-                삭제
-              </Style.Deletebutton>
-              <Style.PrivateToggleButton
-                onClick={() => {
-                  handlePrivateToggle(
-                    imageData.imageUrl,
-                    imageData.location,
-                    imageData.private,
-                  )
-                }}
-              >
-                {imageData.private ? (
+            <Style.HeaderText>
+              <Style.UserName>
+                {imageData.creator ? imageData.creator.name : ""}
+              </Style.UserName>
+              <Style.ImageTitle>{imageData.location}</Style.ImageTitle>
+            </Style.HeaderText>
+          </FlexBox>
+          {isMainPage ? (
+            <></>
+          ) : (
+            <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
+              <Image
+                src="/dot-menu.svg"
+                alt="menu"
+                width={20}
+                height={15}
+                style={{ cursor: "pointer" }}
+              />
+            </Style.ThreeDotMenu>
+          )}
+          {isMenuOpen ? (
+            <>
+              <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
+                <Style.Deletebutton onClick={handleDeleteImage}>
                   <Image
-                    src="/unLock.svg"
-                    alt="unlock"
+                    src="/delete.svg"
+                    alt="delete"
                     width={15}
                     height={15}
                   />
-                ) : (
-                  <Image src="/lock.svg" alt="lock" width={15} height={15} />
-                )}
+                  삭제
+                </Style.Deletebutton>
+                <Style.PrivateToggleButton
+                  onClick={() => {
+                    handlePrivateToggle(
+                      imageData.imageUrl,
+                      imageData.location,
+                      imageData.private,
+                    )
+                  }}
+                >
+                  {imageData.private ? (
+                    <Image
+                      src="/unLock.svg"
+                      alt="unlock"
+                      width={15}
+                      height={15}
+                    />
+                  ) : (
+                    <Image src="/lock.svg" alt="lock" width={15} height={15} />
+                  )}
 
-                {imageData.private ? "공개" : "비공개"}
-              </Style.PrivateToggleButton>
-              <Style.ExitButton onClick={handleThreeDotMenuClick}>
-                <Image src="/logout.svg" alt="cancle" width={15} height={15} />
-                취소
-              </Style.ExitButton>
-            </Style.ButtonBox>
-            <Style.ChatBalloon />
-          </>
-        ) : (
-          <></>
-        )}
-      </Style.ImageHeader>
-      <Image
-        src={imageData.imageUrl ? imageData.imageUrl : "/empty.svg"}
-        width={470}
-        height={600}
-        alt="Image"
-      />
-      <Margin direction="column" size={10} />
-      <FlexBox
-        width={"100%"}
-        height={"fit-content"}
-        justifyContents="flex-start"
-        alignItems="center"
-      >
-        <Margin direction="row" size={10} />
-        <Heart />
-        <Margin direction="row" size={15} />
-        <Comment />
-        <Margin direction="row" size={15} />
-        <Share />
-      </FlexBox>
-      <Margin direction="column" size={15} />
-      <FlexBox>
-        <Margin direction="row" size={10} />
-        {imageData.desc}
-      </FlexBox>
-    </Style.ImageCard>
+                  {imageData.private ? "공개" : "비공개"}
+                </Style.PrivateToggleButton>
+                <Style.ExitButton onClick={handleThreeDotMenuClick}>
+                  <Image
+                    src="/logout.svg"
+                    alt="cancle"
+                    width={15}
+                    height={15}
+                  />
+                  취소
+                </Style.ExitButton>
+              </Style.ButtonBox>
+              <Style.ChatBalloon />
+            </>
+          ) : (
+            <></>
+          )}
+        </Style.ImageHeader>
+        <Image
+          src={imageData.imageUrl ? imageData.imageUrl : "/empty.svg"}
+          width={470}
+          height={600}
+          alt="Image"
+        />
+        <Margin direction="column" size={10} />
+        <FlexBox
+          width={"100%"}
+          height={"fit-content"}
+          justifyContents="flex-start"
+          alignItems="center"
+        >
+          <Margin direction="row" size={10} />
+          <Heart />
+          <Margin direction="row" size={15} />
+          <Comment setIsOpen={setIsModalOpen} />
+          <Margin direction="row" size={15} />
+          <Share />
+        </FlexBox>
+        <Margin direction="column" size={15} />
+        <FlexBox style={{ whiteSpace: "pre-wrap" }}>
+          <Margin direction="row" size={10} />
+          {imageData.desc}
+        </FlexBox>
+      </Style.ImageCard>
+    </>
   )
 }
