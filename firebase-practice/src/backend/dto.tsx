@@ -3,10 +3,6 @@ export type Creator = {
   id: string
   profileImage: string | null
 }
-export type Comment = {
-  name: string
-  comment: string
-}
 export type UserImageDataAll = {
   imageUrl: string
   desc: string
@@ -14,5 +10,11 @@ export type UserImageDataAll = {
   private: boolean
   storageId: string
   creator: Creator
-  comments: Comment[]
+}
+export type Comment = {
+  name: string
+  userId: string
+  commentId: string
+  comment: string
+  profileImage: string
 }
