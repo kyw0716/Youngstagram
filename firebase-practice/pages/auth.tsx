@@ -121,16 +121,6 @@ export default function Auth() {
   ) => {
     setName(event.target.value)
   }
-  const uploadUserNameToFirestore = async (name: string) => {
-    const userDataRef = doc(
-      DBService,
-      "userData",
-      `${authService.currentUser?.uid}`,
-    )
-    await setDoc(userDataRef, {
-      name: name,
-    })
-  }
   const handleOnSubmit: React.FormEventHandler<HTMLFormElement> = async (
     event,
   ) => {
@@ -144,7 +134,6 @@ export default function Auth() {
             updateProfile(authService.currentUser, {
               displayName: name,
             })
-            uploadUserNameToFirestore(name)
             signOut(authService)
             setIsNewAccount(false)
             alert(
