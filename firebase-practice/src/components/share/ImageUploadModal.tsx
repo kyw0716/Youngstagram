@@ -9,6 +9,7 @@ import { v4 } from "uuid"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { UserImageDataAll } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
+import getCurrentTime from "lib/getCurrentTime"
 
 type Props = {
   isOpen: boolean
@@ -180,6 +181,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
       location: location,
       private: isPrivate,
       storageId: randomId,
+      uploadTime: getCurrentTime(),
       creator: {
         name: `${authService.currentUser?.displayName}`,
         id: `${authService.currentUser?.uid}`,
@@ -212,7 +214,6 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
   return (
     <ModalForImageUpload
       width={windowSize < 784 ? "95%" : isFileExist ? "835px" : "495px"}
-      // TODO: 이거 높이 값 나중에 바꾸기
       height={windowSize < 784 && isFileExist ? "550px" : "537px"}
       title="새 게시물 만들기"
       isOpen={isOpen}

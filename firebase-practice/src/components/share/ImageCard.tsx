@@ -1,6 +1,12 @@
 import { authService, DBService, storageService } from "@FireBase"
 import { UserImageDataAll } from "backend/dto"
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
+import {
+  arrayRemove,
+  arrayUnion,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
@@ -159,10 +165,12 @@ export default function ImageCard({
       `images/${authService.currentUser?.uid}/${imageData.storageId}`,
     )
     const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
+    const firestoreCommentRef = doc(DBService, "Comments", imageData.storageId)
 
     handleThreeDotMenuClick()
 
     await deleteObject(storageImageRef)
+    await deleteDoc(firestoreCommentRef)
 
     await updateDoc(firestoreImageAllRef, {
       images: arrayRemove({
@@ -176,6 +184,7 @@ export default function ImageCard({
         location: imageData.location,
         private: imageData.private,
         storageId: imageData.storageId,
+        uploadTime: imageData.uploadTime,
       }),
     })
     setPickImageData("all")
@@ -202,6 +211,7 @@ export default function ImageCard({
         location: imageData.location,
         private: imageData.private,
         storageId: imageData.storageId,
+        uploadTime: imageData.uploadTime,
       }),
     }).then(async () => {
       await updateDoc(firestoreImageAllRef, {
@@ -216,6 +226,7 @@ export default function ImageCard({
           location: imageData.location,
           private: !imageData.private,
           storageId: imageData.storageId,
+          uploadTime: imageData.uploadTime,
         }),
       })
     })

@@ -47,17 +47,21 @@ export default function ImageList({
     <Style.ImageContainer>
       {setPickImageData !== undefined &&
         (imageData.length !== 0 ? (
-          imageData.map((data, index) => {
-            return (
-              <ImageCard
-                key={index}
-                imageData={data}
-                isMainPage={isMainPage}
-                setPickImageData={setPickImageData}
-                windowSize={windowSize}
-              />
-            )
-          })
+          imageData
+            .sort(function (a, b) {
+              return Number(a.uploadTime) - Number(b.uploadTime)
+            })
+            .map((data, index) => {
+              return (
+                <ImageCard
+                  key={index}
+                  imageData={data}
+                  isMainPage={isMainPage}
+                  setPickImageData={setPickImageData}
+                  windowSize={windowSize}
+                />
+              )
+            })
         ) : (
           <>
             <Image src={"/empty.svg"} width={150} height={150} alt="empty" />

@@ -46,6 +46,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
         name: commentData.name,
         profileImage: commentData.profileImage,
         userId: commentData.userId,
+        uploadTime: commentData.uploadTime,
       }),
     }).catch((error) => console.log(error.code))
   }
@@ -63,123 +64,127 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
           name: commentData.name,
           profileImage: commentData.profileImage,
           userId: commentData.userId,
+          uploadTime: commentData.uploadTime,
         }),
       })
     })
   }
   return (
-    <Style.Wrapper>
-      <FlexBox width={32} height={32}>
-        <Image
-          width={32}
-          height={32}
-          style={{ borderRadius: "32px" }}
-          src={commentData.profileImage}
-          alt="profile"
-        />
-      </FlexBox>
-      <Margin direction="row" size={10} />
-      <FlexBox
-        column={true}
-        width="fit-content"
-        style={{ width: "325px", position: "relative" }}
-      >
-        <Margin direction="column" size={5} />
-        <CustomH4>{commentData.name}</CustomH4>
-        {isModifyMode ? (
-          <FlexBox>
-            <Style.ModifyCommentInput
-              value={newComment}
-              onChange={(event) => {
-                setNewComment(event.target.value)
-              }}
-              placeholder={commentData.comment}
-            />
-            <Margin direction="row" size={5} />
+    <>
+      <Style.Wrapper>
+        <FlexBox width={32} height={32}>
+          <Image
+            width={32}
+            height={32}
+            style={{ borderRadius: "32px" }}
+            src={commentData.profileImage}
+            alt="profile"
+          />
+        </FlexBox>
+        <Margin direction="row" size={10} />
+        <FlexBox
+          column={true}
+          width="fit-content"
+          style={{ width: "325px", position: "relative" }}
+        >
+          <Margin direction="column" size={5} />
+          <CustomH4>{commentData.name}</CustomH4>
+          {isModifyMode ? (
+            <FlexBox>
+              <Style.ModifyCommentInput
+                value={newComment}
+                onChange={(event) => {
+                  setNewComment(event.target.value)
+                }}
+                placeholder={commentData.comment}
+              />
+              <Margin direction="row" size={5} />
+              <FlexBox
+                width={30}
+                height={30}
+                alignItems="flex-end"
+                justifyContents="center"
+                style={{
+                  color: newComment.length > 0 ? "#4891ff" : "#d1e3ff",
+                  fontSize: "13px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+                onClick={handleModifyComment}
+              >
+                게시
+              </FlexBox>
+            </FlexBox>
+          ) : (
+            <>
+              {isShowAllComment ? (
+                <>
+                  {commentData.comment}
+                  <Margin direction="row" size={10} />
+                  <CustomH6
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "bolder",
+                      color: "black",
+                    }}
+                    onClick={() => {
+                      setIsShowAllComment(false)
+                    }}
+                  >
+                    접기
+                  </CustomH6>
+                </>
+              ) : commentData.comment.length > 17 ? (
+                <FlexBox alignItems="center">
+                  {commentData.comment.slice(0, 17)}
+                  <Margin direction="row" size={5} />
+                  <CustomH6
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "bolder",
+                      color: "black",
+                    }}
+                    onClick={() => {
+                      setIsShowAllComment(true)
+                    }}
+                  >
+                    더보기...
+                  </CustomH6>
+                </FlexBox>
+              ) : (
+                commentData.comment
+              )}
+            </>
+          )}
+          {authService.currentUser?.uid === commentData.userId && (
             <FlexBox
-              width={30}
-              height={30}
-              alignItems="flex-end"
-              justifyContents="center"
+              width={"fit-content"}
+              height={"fit-content"}
               style={{
-                color: newComment.length > 0 ? "#4891ff" : "#d1e3ff",
-                fontSize: "13px",
-                fontWeight: "bold",
+                position: "absolute",
+                bottom: "0",
+                right: "-80px",
                 cursor: "pointer",
               }}
-              onClick={handleModifyComment}
             >
-              게시
+              <CustomH5
+                onClick={() => {
+                  setIsModifyMode((current) => !current)
+                  if (isModifyMode) setNewComment("")
+                  if (!isModifyMode) setNewComment(commentData.comment)
+                }}
+              >
+                {isModifyMode ? "취소" : "수정"}
+              </CustomH5>
+              <Margin direction="row" size={5} />
+              <CustomH5 style={{ color: "red" }} onClick={handleRemoveComment}>
+                삭제
+              </CustomH5>
             </FlexBox>
-          </FlexBox>
-        ) : (
-          <>
-            {isShowAllComment ? (
-              <>
-                {commentData.comment}
-                <Margin direction="row" size={10} />
-                <CustomH6
-                  style={{
-                    cursor: "pointer",
-                    fontWeight: "bolder",
-                    color: "black",
-                  }}
-                  onClick={() => {
-                    setIsShowAllComment(false)
-                  }}
-                >
-                  접기
-                </CustomH6>
-              </>
-            ) : commentData.comment.length > 17 ? (
-              <FlexBox alignItems="center">
-                {commentData.comment.slice(0, 17)}
-                <Margin direction="row" size={5} />
-                <CustomH6
-                  style={{
-                    cursor: "pointer",
-                    fontWeight: "bolder",
-                    color: "black",
-                  }}
-                  onClick={() => {
-                    setIsShowAllComment(true)
-                  }}
-                >
-                  더보기...
-                </CustomH6>
-              </FlexBox>
-            ) : (
-              commentData.comment
-            )}
-          </>
-        )}
-        {authService.currentUser?.uid === commentData.userId && (
-          <FlexBox
-            width={"fit-content"}
-            height={"fit-content"}
-            style={{
-              position: "absolute",
-              bottom: "0",
-              right: "-80px",
-              cursor: "pointer",
-            }}
-          >
-            <CustomH5
-              onClick={() => {
-                setIsModifyMode((current) => !current)
-                if (isModifyMode) setNewComment("")
-                if (!isModifyMode) setNewComment(commentData.comment)
-              }}
-            >
-              {isModifyMode ? "취소" : "수정"}
-            </CustomH5>
-            <Margin direction="row" size={5} />
-            <CustomH5 style={{ color: "red" }} onClick={handleRemoveComment}>
-              삭제
-            </CustomH5>
-          </FlexBox>
-        )}
-      </FlexBox>
-    </Style.Wrapper>
+          )}
+        </FlexBox>
+      </Style.Wrapper>
+      <Margin direction="column" size={25} style={{ flexShrink: 0 }} />
+    </>
   )
 }

@@ -14,6 +14,7 @@ import { CustomH4, CustomH6, FlexBox, Margin } from "ui"
 import CommentWrapper from "./CommentWrapper"
 import YoungstagramModal from "./YoungstagramModal"
 import { v4 } from "uuid"
+import getCurrentTime from "lib/getCurrentTime"
 
 type Props = {
   isOpen: boolean
@@ -35,7 +36,7 @@ const Style = {
     height: 423px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    align-items: flex-start;
     overflow-y: scroll;
     overflow-x: hidden;
     ::-webkit-scrollbar {
@@ -65,28 +66,22 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
       alert("댓글은 한글자 이상 작성해야합니다.")
       return
     }
+    const commentToFirestore: Comment = {
+      name: `${authService.currentUser?.displayName}`,
+      userId: `${authService.currentUser?.uid}`,
+      commentId: randomId,
+      comment: comment,
+      profileImage: `${authService.currentUser?.photoURL}`,
+      uploadTime: getCurrentTime(),
+    }
     const commentRef = doc(DBService, "Comments", imageData.storageId)
     await updateDoc(commentRef, {
-      AllComments: arrayUnion({
-        name: authService.currentUser?.displayName,
-        userId: authService.currentUser?.uid,
-        commentId: randomId,
-        comment: comment,
-        profileImage: authService.currentUser?.photoURL,
-      }),
+      AllComments: arrayUnion(commentToFirestore),
     })
       .catch(async (error) => {
         if (error.code === "not-found") {
           await setDoc(commentRef, {
-            AllComments: [
-              {
-                name: authService.currentUser?.displayName,
-                userId: authService.currentUser?.uid,
-                commentId: randomId,
-                comment: comment,
-                profileImage: authService.currentUser?.photoURL,
-              },
-            ],
+            AllComments: [commentToFirestore],
           })
         }
       })
@@ -111,7 +106,7 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
     >
       <FlexBox width={"100%"} height={"100%"} style={{ position: "relative" }}>
         <Image src={imageData.imageUrl} width={611} height={611} alt="image" />
-        <FlexBox column={true} width={499} height={"fit-content"}>
+        <FlexBox column={true} width={499} height={"auto"}>
           <Style.Header>
             <Image
               width={32}
@@ -137,7 +132,7 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
             <FlexBox
               width={499}
               height="fit-content"
-              style={{ paddingLeft: "15px", minHeight: "50px" }}
+              style={{ paddingLeft: "15px", flexShrink: 0 }}
             >
               <FlexBox height={32} width={32}>
                 <Image
@@ -159,19 +154,23 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
                 {imageData.desc}
               </FlexBox>
             </FlexBox>
+            <Margin direction="column" size={25} style={{ flexShrink: 0 }} />
             {commentData !== undefined &&
-              commentData.map((data) => {
-                return (
-                  <CommentWrapper
-                    key={v4()}
-                    commentData={data}
-                    storageId={imageData.storageId}
-                  />
-                )
-              })}
+              commentData
+                .sort(function (a, b) {
+                  return Number(a.uploadTime) - Number(b.uploadTime)
+                })
+                .map((data) => {
+                  return (
+                    <CommentWrapper
+                      key={v4()}
+                      commentData={data}
+                      storageId={imageData.storageId}
+                    />
+                  )
+                })}
           </Style.CommentsWrapper>
         </FlexBox>
-
         <FlexBox
           style={{
             position: "absolute",
