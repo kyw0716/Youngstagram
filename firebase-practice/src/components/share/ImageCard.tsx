@@ -11,7 +11,7 @@ import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
-import { Comment, FlexBox, Heart, Margin, Share } from "ui"
+import { Comment, CustomH6, FlexBox, Heart, Margin, Share } from "ui"
 import CommentModal from "./CommentModal"
 
 type Props = {
@@ -159,6 +159,10 @@ export default function ImageCard({
   setPickImageData,
   windowSize,
 }: Props) {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [isShowMore, setIsShowMore] = useState<boolean>(false)
+
   const handleDeleteImage = async () => {
     const storageImageRef = ref(
       storageService,
@@ -189,7 +193,6 @@ export default function ImageCard({
     })
     setPickImageData("all")
   }
-
   const handlePrivateToggle = async (
     url: string,
     title: string,
@@ -232,13 +235,9 @@ export default function ImageCard({
     })
     setPickImageData("all")
   }
-
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const handleThreeDotMenuClick = () => {
     setIsMenuOpen((current) => !current)
   }
-
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   return (
     <>
@@ -365,9 +364,48 @@ export default function ImageCard({
           <Share />
         </FlexBox>
         <Margin direction="column" size={15} />
-        <FlexBox style={{ whiteSpace: "pre-wrap" }}>
+
+        <FlexBox style={{ whiteSpace: "pre-wrap" }} alignItems="center">
           <Margin direction="row" size={10} />
-          {imageData.desc}
+          {imageData.desc.length > 30 ? (
+            <>
+              {isShowMore ? (
+                <span>
+                  {imageData.desc}
+                  <CustomH6
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "bolder",
+                      color: "black",
+                    }}
+                    onClick={() => {
+                      setIsShowMore(false)
+                    }}
+                  >
+                    접기
+                  </CustomH6>
+                </span>
+              ) : (
+                <FlexBox>
+                  {imageData.desc.slice(0, 30)}
+                  <CustomH6
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "bolder",
+                      color: "black",
+                    }}
+                    onClick={() => {
+                      setIsShowMore(true)
+                    }}
+                  >
+                    더보기...
+                  </CustomH6>
+                </FlexBox>
+              )}
+            </>
+          ) : (
+            <>{imageData.desc}</>
+          )}
         </FlexBox>
       </Style.ImageCard>
     </>
