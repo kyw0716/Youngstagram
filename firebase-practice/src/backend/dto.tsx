@@ -10,6 +10,7 @@ export type UserImageDataAll = {
   private: boolean
   storageId: string
   creator: Creator
+  uploadTime: string
 }
 export type Comment = {
   name: string
@@ -17,4 +18,5 @@ export type Comment = {
   commentId: string
   comment: string
   profileImage: string
+  uploadTime: string
 }
