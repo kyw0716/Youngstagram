@@ -20,20 +20,21 @@ type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   imageData: UserImageDataAll
+  windowSize: number
 }
 
 const Style = {
   Header: styled.div`
     display: flex;
     height: 70px;
-    width: 499px;
+    width: ${(props) => (props.about ? "95vw" : "499px")};
     border-bottom: 1px solid lightgrey;
     align-items: center;
     padding-left: 15px;
   `,
   CommentsWrapper: styled.div`
-    width: 499px;
-    height: 423px;
+    width: ${(props) => (props.about ? "95vw" : "499px")};
+    height: ${(props) => (props.about ? props.about : "423px")};
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -44,7 +45,7 @@ const Style = {
     }
   `,
   CommentInput: styled.input`
-    width: 429px;
+    width: ${(props) => (props.about ? props.about : "429px")};
     height: 53px;
     border: none;
     padding-left: 15px;
@@ -55,9 +56,18 @@ const Style = {
       color: lightgrey;
     }
   `,
+  Img: styled.img`
+    width: 100%;
+    height: 100%;
+  `,
 }
 
-export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
+export default function CommentModal({
+  isOpen,
+  setIsOpen,
+  imageData,
+  windowSize,
+}: Props) {
   const [comment, setComment] = useState<string>("")
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [randomId, setRandomId] = useState<string>(v4())
@@ -97,17 +107,32 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
   }, [])
   return (
     <YoungstagramModal
-      width="70vw"
-      height="95vh"
+      width={windowSize < 900 ? "95vw" : "70vw"}
+      height={windowSize < 900 ? "90vh" : "95vh"}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={"이미지 상세"}
       isPC={true}
     >
-      <FlexBox width={"100%"} height={"100%"} style={{ position: "relative" }}>
-        <Image src={imageData.imageUrl} width={611} height={611} alt="image" />
-        <FlexBox column={true} width={499} height={"auto"}>
-          <Style.Header>
+      <FlexBox
+        width={"100%"}
+        height={"100%"}
+        style={{ position: "relative" }}
+        column={windowSize < 900 ? true : false}
+      >
+        <FlexBox
+          width={windowSize < 900 ? "100%" : 611}
+          height={windowSize < 900 ? "30vh" : 611}
+        >
+          <Style.Img src={imageData.imageUrl} alt="image" />
+        </FlexBox>
+
+        <FlexBox
+          column={true}
+          width={windowSize < 900 ? "95vw" : 499}
+          height={"auto"}
+        >
+          <Style.Header about={windowSize < 900 ? "window" : ""}>
             <Image
               width={32}
               height={32}
@@ -128,9 +153,9 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
             </FlexBox>
           </Style.Header>
           <Margin direction="column" size={10} />
-          <Style.CommentsWrapper>
+          <Style.CommentsWrapper about={windowSize < 900 ? "30vh" : "423px"}>
             <FlexBox
-              width={499}
+              width={windowSize < 900 ? "90vw" : 499}
               height="fit-content"
               style={{ paddingLeft: "15px", flexShrink: 0 }}
             >
@@ -166,6 +191,7 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
                       key={v4()}
                       commentData={data}
                       storageId={imageData.storageId}
+                      windowSize={windowSize}
                     />
                   )
                 })}
@@ -178,19 +204,20 @@ export default function CommentModal({ isOpen, setIsOpen, imageData }: Props) {
             right: "0",
             borderTop: "1px solid lightGrey",
           }}
-          width="499px"
+          width={windowSize < 900 ? "95vw" : "499px"}
         >
           <Style.CommentInput
             value={comment}
             onChange={(event) => {
               setComment(event.target.value)
             }}
+            about={windowSize < 900 ? "85vw" : "429px"}
             placeholder="댓글 달기..."
           />
           <button
             onClick={handleCommentSubmit}
             style={{
-              width: "70px",
+              width: windowSize < 900 ? "10vw" : "70px",
               border: "none",
               backgroundColor: "white",
               fontWeight: "bold",

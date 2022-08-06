@@ -245,6 +245,7 @@ export default function ImageCard({
         isOpen={isModalOpen}
         setIsOpen={setIsModalOpen}
         imageData={imageData}
+        windowSize={windowSize}
       />
       <Style.ImageCard
         style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
