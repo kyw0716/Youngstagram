@@ -2,7 +2,7 @@
 
 <br/>
 
-[youngstagram](https://youngstagram-demo.vercel.app)은 typescript, react, firebase 등을 이용하여 백엔드 개발자 없이 인스타그램을 클론코딩하기 위해 만들었다.
+[youngstagram](https://youngstagram-demo.vercel.app)은 typescript, react, firebase 등을 이용하여 백엔드 개발자 없이 인스타그램이 제공하는 서비스를 구현해보고자 만들었다.
 
 - 현재까지 공부한 내용을 어떻게 활용할까 고민해보다 평소 아무 생각없이 자주 접속하던 인스타그램을 만들어보는게 어떨까 하는 생각이 들어 이 프로젝트를 시작하게 되었다.
 - 그냥 겉모습만 비슷한 프로젝트가 아닌 실제로 사용할 수 있는 프로젝트를 하고 싶어 firebase를 사용하여 배포까지 진행하였다.
