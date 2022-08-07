@@ -6,15 +6,18 @@ import {
   signInWithPopup,
   signOut,
   updateProfile,
+  UserCredential,
 } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { authService, DBService } from "@FireBase"
 import styled from "styled-components"
 import { FlexBox, Margin } from "ui"
-import { doc, setDoc } from "firebase/firestore"
+import { addDoc, doc, setDoc, updateDoc } from "firebase/firestore"
 import Layout from "components/layout"
 import Image from "next/image"
+import { UserData } from "backend/dto"
+import { async } from "@firebase/util"
 
 const Style = {
   Wrapper: styled.div`
@@ -156,8 +159,9 @@ export default function Auth() {
       return
     }
     signInWithEmailAndPassword(authService, Email, Password)
-      .then((response) => {
+      .then(async (response) => {
         if (response) {
+          CreateNewUserToFirestore(response)
           router.push("/")
         }
       })
@@ -179,8 +183,9 @@ export default function Auth() {
 
   const handleGoogleAuth = async () => {
     await signInWithPopup(authService, googleProvider)
-      .then((response) => {
+      .then(async (response) => {
         if (response) {
+          CreateNewUserToFirestore(response)
           router.push("/")
         }
       })
@@ -195,8 +200,9 @@ export default function Auth() {
 
   const handleGitHubAuth = async () => {
     await signInWithPopup(authService, githubProvider)
-      .then((response) => {
+      .then(async (response) => {
         if (response) {
+          CreateNewUserToFirestore(response)
           router.push("/")
         }
       })
@@ -207,6 +213,24 @@ export default function Auth() {
           )
         }
       })
+  }
+
+  const CreateNewUserToFirestore = async (response: UserCredential) => {
+    const newUserToFirestoreRef = doc(DBService, "users", response.user.uid)
+    const UserDataForm: UserData = {
+      userId: response.user.uid,
+      profileImage: response.user.photoURL,
+      name: response.user.displayName,
+    }
+    await updateDoc(newUserToFirestoreRef, UserDataForm).catch(
+      async (error) => {
+        if (error.code === "not-found") {
+          await setDoc(newUserToFirestoreRef, UserDataForm).catch((error) =>
+            console.log(error.code),
+          )
+        }
+      },
+    )
   }
 
   return (
