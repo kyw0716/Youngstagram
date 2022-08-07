@@ -1,7 +1,13 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { UserImageDataAll } from "backend/dto"
+import { UserData, UserImageDataAll } from "backend/dto"
 import { updateProfile } from "firebase/auth"
-import { doc, DocumentData, onSnapshot, setDoc } from "firebase/firestore"
+import {
+  doc,
+  DocumentData,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import Image from "next/image"
 import { useRouter } from "next/router"
@@ -125,6 +131,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
 
   const updateProfileNameAndImage = async () => {
     if (authService.currentUser !== null && imageData !== undefined) {
+      const profileRef = doc(DBService, "users", authService.currentUser.uid)
       await setDoc(updateFirestoreRef, {
         images: [
           ...imageData.map((data) => {
@@ -161,14 +168,32 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           }),
         ],
       })
-      if (submitUserName !== "")
+      if (submitUserName !== "") {
+        const profileForm: UserData = {
+          userId: authService.currentUser.uid,
+          profileImage: authService.currentUser.photoURL,
+          name: submitUserName,
+        }
         await updateProfile(authService.currentUser, {
           displayName: submitUserName,
         })
-      if (imageUrlToAuthService !== "")
+        await updateDoc(profileRef, profileForm).catch((error) =>
+          console.log(error.code),
+        )
+      }
+      if (imageUrlToAuthService !== "") {
+        const profileForm: UserData = {
+          userId: authService.currentUser.uid,
+          profileImage: imageUrlToAuthService,
+          name: authService.currentUser.displayName,
+        }
         await updateProfile(authService.currentUser, {
           photoURL: imageUrlToAuthService,
         })
+        await updateDoc(profileRef, profileForm).catch((error) =>
+          console.log(error.code),
+        )
+      }
     }
   }
 
