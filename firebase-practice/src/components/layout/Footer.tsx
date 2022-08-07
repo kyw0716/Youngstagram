@@ -14,7 +14,7 @@ const Style = {
 export default function Footer() {
   return (
     <Style.Wrapper>
-      <CustomH4>&copy; 2022. 김영우 all rights reserved.</CustomH4>
+      <CustomH4>&copy; 2022. Young Woo Kim all rights reserved.</CustomH4>
     </Style.Wrapper>
   )
 }
