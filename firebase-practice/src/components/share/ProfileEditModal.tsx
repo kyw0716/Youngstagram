@@ -23,7 +23,7 @@ const Style = {
     border-radius: ${(props) => (props.about === "true" ? "10px" : "5px")};
     padding-left: 1vw;
     margin-bottom: ${(props) => (props.about === "true" ? "30px" : "5px")};
-    font-size: 12px;
+    font-size: 16px;
   `,
   SubmitButton: styled.div`
     width: ${(props) => (props.about === "true" ? "100px" : "70px")};
@@ -75,7 +75,9 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
   const [imageFileName, setImageFileName] = useState<string>("")
   const [imageFile, setImageFile] = useState<File>()
-  const [userName, setUserName] = useState<string>("")
+  const [userName, setUserName] = useState<string>(
+    `${authService.currentUser?.displayName}`,
+  )
 
   const [submitUserName, setSubmitUserName] = useState<string>("")
   const [imageUrlToAuthService, setImageUrlToAuthService] = useState<string>("")
