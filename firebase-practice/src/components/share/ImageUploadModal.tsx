@@ -92,9 +92,10 @@ const Style = {
     height: 44px;
     border: none;
     padding-left: 10px;
+    font-size: 16px;
     ::placeholder {
       color: lightgrey;
-      font-size: 15px;
+      font-size: 16px;
     }
     :focus {
       outline: none;
