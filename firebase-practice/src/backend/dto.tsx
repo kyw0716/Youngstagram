@@ -20,3 +20,8 @@ export type Comment = {
   profileImage: string
   uploadTime: string
 }
+export type UserData = {
+  userId: string
+  profileImage: string | null
+  name: string | null
+}
