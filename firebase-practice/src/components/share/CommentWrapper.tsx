@@ -9,10 +9,11 @@ import { CustomH4, CustomH5, CustomH6, FlexBox, Margin } from "ui"
 type Props = {
   commentData: Comment
   storageId: string
+  windowSize: number
 }
 const Style = {
   Wrapper: styled.div`
-    width: 499px;
+    width: ${(props) => props.about};
     height: fit-content;
     align-items: flex-start;
     padding-left: 15px;
@@ -32,7 +33,11 @@ const Style = {
   `,
 }
 
-export default function CommentWrapper({ commentData, storageId }: Props) {
+export default function CommentWrapper({
+  commentData,
+  storageId,
+  windowSize,
+}: Props) {
   const [isModifyMode, setIsModifyMode] = useState<boolean>(false)
   const [newComment, setNewComment] = useState<string>(commentData.comment)
   const [isShowAllComment, setIsShowAllComment] = useState<boolean>(false)
@@ -71,7 +76,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
   }
   return (
     <>
-      <Style.Wrapper>
+      <Style.Wrapper about={windowSize < 900 ? "85vw" : "499px"}>
         <FlexBox width={32} height={32}>
           <Image
             width={32}
@@ -85,7 +90,11 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
         <FlexBox
           column={true}
           width="fit-content"
-          style={{ width: "325px", position: "relative" }}
+          style={{
+            width: windowSize < 900 ? "85vw" : "325px",
+            position: "relative",
+            wordBreak: "break-all",
+          }}
         >
           <Margin direction="column" size={5} />
           <CustomH4>{commentData.name}</CustomH4>
@@ -134,21 +143,22 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
                     접기
                   </CustomH6>
                 </>
-              ) : commentData.comment.length > 17 ? (
+              ) : commentData.comment.length > 12 ? (
                 <FlexBox alignItems="center">
-                  {commentData.comment.slice(0, 17)}
+                  {commentData.comment.slice(0, 12)}
                   <Margin direction="row" size={5} />
                   <CustomH6
                     style={{
                       cursor: "pointer",
                       fontWeight: "bolder",
                       color: "black",
+                      flexShrink: 0,
                     }}
                     onClick={() => {
                       setIsShowAllComment(true)
                     }}
                   >
-                    더보기...
+                    더보기{windowSize < 900 ? "" : "..."}
                   </CustomH6>
                 </FlexBox>
               ) : (
@@ -162,8 +172,8 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
               height={"fit-content"}
               style={{
                 position: "absolute",
-                bottom: "0",
-                right: "-80px",
+                bottom: "-20px",
+                right: windowSize < 900 ? "0px" : "-80px",
                 cursor: "pointer",
               }}
             >
