@@ -57,6 +57,7 @@ const Style = {
     height: 53px;
     border: none;
     padding-left: 15px;
+    font-size: 16px;
     :focus {
       outline: none;
     }
