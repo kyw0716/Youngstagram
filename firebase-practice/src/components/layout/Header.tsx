@@ -129,6 +129,7 @@ export default function Header() {
               height={30}
               src="/home.svg"
               alt="home"
+              priority
               onClick={() => {
                 router.push("/")
               }}
@@ -139,6 +140,7 @@ export default function Header() {
               height={30}
               src="/image-plus.svg"
               alt="plus"
+              priority
               onClick={() => {
                 if (authService.currentUser) {
                   setIsModalOpen(true)
@@ -155,6 +157,7 @@ export default function Header() {
                     ? `${authService.currentUser.photoURL}`
                     : "/profile.svg"
                 }
+                priority
                 onClick={handleMenuOpen}
                 about="profile"
                 width={30}
@@ -168,6 +171,7 @@ export default function Header() {
                 height={30}
                 src="/line-menu.svg"
                 onClick={handleMenuOpen}
+                priority
                 alt="menu"
                 style={{ cursor: "pointer" }}
               />
@@ -196,6 +200,7 @@ export default function Header() {
                     height={15}
                     src="/profile.svg"
                     alt="profile"
+                    priority
                   />
                   프로필
                 </Style.ProfileButton>
@@ -207,6 +212,7 @@ export default function Header() {
                   <Image
                     width={15}
                     height={15}
+                    priority
                     src="/logout.svg"
                     alt="logout"
                   />

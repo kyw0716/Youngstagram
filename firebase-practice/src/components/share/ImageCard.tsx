@@ -321,6 +321,7 @@ export default function ImageCard({
                     alt="delete"
                     width={15}
                     height={15}
+                    priority
                   />
                   삭제
                 </Style.Deletebutton>
@@ -352,6 +353,7 @@ export default function ImageCard({
                     alt="cancle"
                     width={15}
                     height={15}
+                    priority
                   />
                   취소
                 </Style.ExitButton>
@@ -367,6 +369,7 @@ export default function ImageCard({
           width={470}
           height={600}
           alt="Image"
+          priority
         />
         <Margin direction="column" size={10} />
         <FlexBox
