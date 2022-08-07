@@ -77,7 +77,6 @@ export default function CommentModal({
   imageData,
   windowSize,
 }: Props) {
-  console.log(getCurrentTime())
   const [comment, setComment] = useState<string>("")
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [randomId, setRandomId] = useState<string>(v4())
