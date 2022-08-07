@@ -77,6 +77,7 @@ const Style = {
 export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const router = useRouter()
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
+  const [isClicked, setIsClicked] = useState<boolean>(false)
 
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
   const [imageFileName, setImageFileName] = useState<string>("")
@@ -112,6 +113,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   }
 
   const handleSubmit = () => {
+    setIsClicked(true)
     const imageSubmitRef = ref(
       storageService,
       `images/${authService.currentUser?.uid}/profileImage`,
@@ -204,6 +206,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         setImagePreviewSrc("")
         setUserName("")
         setIsOpen(false)
+        setIsClicked(false)
         router.push("/")
       })
     }
@@ -290,9 +293,12 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         </FlexBox>
         <Margin direction="column" size={10} />
         <FlexBox width={"100%"} height="fit-content" justifyContents="flex-end">
-          <Style.SubmitButton onClick={handleSubmit} about={`${isPC}`}>
-            작성완료
-          </Style.SubmitButton>
+          {isClicked || (
+            <Style.SubmitButton onClick={handleSubmit} about={`${isPC}`}>
+              작성완료
+            </Style.SubmitButton>
+          )}
+
           <Margin direction="row" size={isPC ? 20 : 10} />
         </FlexBox>
         <Margin direction="column" size={15} />
