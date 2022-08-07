@@ -83,7 +83,7 @@ export const CustomH4 = TextStyle.CustomH4
 export const CustomH5 = TextStyle.CustomH5
 export const CustomH6 = TextStyle.CustomH6
 
-export function Heart() {
+export function HeartIcon() {
   const [isHover, setIsHover] = useState<boolean>(false)
   return (
     <svg
@@ -111,10 +111,10 @@ export function Heart() {
 }
 
 type CommentProps = {
-  setIsOpen: React.Dispatch<SetStateAction<boolean>>
+  onClick: () => void
 }
 
-export function Comment({ setIsOpen }: CommentProps) {
+export function CommentIcon({ onClick }: CommentProps) {
   const [isHover, setIsHover] = useState<boolean>(false)
   return (
     <svg
@@ -126,9 +126,7 @@ export function Comment({ setIsOpen }: CommentProps) {
       viewBox="0 0 24 24"
       width="24"
       style={{ cursor: "pointer" }}
-      onClick={() => {
-        setIsOpen(true)
-      }}
+      onClick={onClick}
       onMouseEnter={() => {
         setIsHover(true)
       }}
@@ -146,7 +144,7 @@ export function Comment({ setIsOpen }: CommentProps) {
     </svg>
   )
 }
-export function Share() {
+export function ShareIcon() {
   const [isHover, setIsHover] = useState<boolean>(false)
 
   return (

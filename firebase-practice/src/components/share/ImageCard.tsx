@@ -11,7 +11,14 @@ import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
-import { Comment, CustomH6, FlexBox, Heart, Margin, Share } from "ui"
+import {
+  CommentIcon,
+  CustomH6,
+  FlexBox,
+  HeartIcon,
+  Margin,
+  ShareIcon,
+} from "ui"
 import CommentModal from "./CommentModal"
 
 type Props = {
@@ -150,6 +157,17 @@ const Style = {
     display: flex;
     align-items: center;
     padding-left: 20px;
+  `,
+  CommentBox: styled.div`
+    width: 100%;
+    white-space: pre-wrap;
+    padding: 0px 10px;
+    max-height: 200px;
+    display: flex;
+    overflow-y: scroll;
+    ::-webkit-scrollbar {
+      display: none;
+    }
   `,
 }
 
@@ -358,17 +376,20 @@ export default function ImageCard({
           alignItems="center"
         >
           <Margin direction="row" size={10} />
-          <Heart />
+          <HeartIcon />
           <Margin direction="row" size={15} />
-          <Comment setIsOpen={setIsModalOpen} />
+          <CommentIcon
+            onClick={() => {
+              setIsModalOpen(true)
+            }}
+          />
           <Margin direction="row" size={15} />
-          <Share />
+          <ShareIcon />
         </FlexBox>
         <Margin direction="column" size={15} />
 
-        <FlexBox style={{ whiteSpace: "pre-wrap" }} alignItems="center">
-          <Margin direction="row" size={10} />
-          {imageData.desc.length > 30 ? (
+        <Style.CommentBox>
+          {imageData.desc.length > 20 ? (
             <>
               {isShowMore ? (
                 <span>
@@ -387,13 +408,15 @@ export default function ImageCard({
                   </CustomH6>
                 </span>
               ) : (
-                <FlexBox>
-                  {imageData.desc.slice(0, 30)}
+                <FlexBox alignItems="flex-end">
+                  {imageData.desc.slice(0, 20)}
+                  <Margin direction="row" size={10} />
                   <CustomH6
                     style={{
                       cursor: "pointer",
                       fontWeight: "bolder",
                       color: "black",
+                      flexShrink: 0,
                     }}
                     onClick={() => {
                       setIsShowMore(true)
@@ -407,7 +430,7 @@ export default function ImageCard({
           ) : (
             <>{imageData.desc}</>
           )}
-        </FlexBox>
+        </Style.CommentBox>
       </Style.ImageCard>
     </>
   )

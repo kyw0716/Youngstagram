@@ -93,6 +93,7 @@ export default function CommentWrapper({
           style={{
             width: windowSize < 900 ? "85vw" : "325px",
             position: "relative",
+            wordBreak: "break-all",
           }}
         >
           <Margin direction="column" size={5} />
@@ -142,21 +143,22 @@ export default function CommentWrapper({
                     접기
                   </CustomH6>
                 </>
-              ) : commentData.comment.length > 17 ? (
+              ) : commentData.comment.length > 12 ? (
                 <FlexBox alignItems="center">
-                  {commentData.comment.slice(0, 17)}
+                  {commentData.comment.slice(0, 12)}
                   <Margin direction="row" size={5} />
                   <CustomH6
                     style={{
                       cursor: "pointer",
                       fontWeight: "bolder",
                       color: "black",
+                      flexShrink: 0,
                     }}
                     onClick={() => {
                       setIsShowAllComment(true)
                     }}
                   >
-                    더보기...
+                    더보기{windowSize < 900 ? "" : "..."}
                   </CustomH6>
                 </FlexBox>
               ) : (
@@ -170,7 +172,7 @@ export default function CommentWrapper({
               height={"fit-content"}
               style={{
                 position: "absolute",
-                bottom: "0",
+                bottom: "-20px",
                 right: windowSize < 900 ? "0px" : "-80px",
                 cursor: "pointer",
               }}
