@@ -75,9 +75,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
   const [imageFileName, setImageFileName] = useState<string>("")
   const [imageFile, setImageFile] = useState<File>()
-  const [userName, setUserName] = useState<string>(
-    `${authService.currentUser?.displayName}`,
-  )
+  const [userName, setUserName] = useState<string>("")
 
   const [submitUserName, setSubmitUserName] = useState<string>("")
   const [imageUrlToAuthService, setImageUrlToAuthService] = useState<string>("")
