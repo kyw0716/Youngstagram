@@ -68,6 +68,10 @@ export const storageService = getStorage(FireBasApp);
 - Deployment:
   <img src="https://img.shields.io/badge/vercel-%23000000.svg?style=flat&logo=vercel&logoColor=white" style="border-radius: 5px;"/>
 
+- Version Control:
+  <img src="https://img.shields.io/badge/GIT-E44C30?style=flat&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white">
+
 - IDE:
   <img src="https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=flat&logo=visual-studio-code&logoColor=white" style="border-radius: 5px;"/>
 
