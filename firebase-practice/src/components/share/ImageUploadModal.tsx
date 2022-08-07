@@ -65,6 +65,7 @@ const Style = {
     }
   `,
   SubmitButton: styled.div`
+    display: ${(props) => (props.about ? props.about : "")};
     background-color: #4891ff;
     width: fit-content;
     height: fit-content;
@@ -117,6 +118,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
   const [isFileExist, setIsFileExist] = useState<boolean>(false)
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
   const [windowSize, setWindowSize] = useState<number>(0)
+  const [isSubmit, setIsSubmit] = useState<boolean>(false)
 
   const [desc, setDesc] = useState<string>("")
   const [location, setLocation] = useState<string>("")
@@ -158,6 +160,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
   }
 
   const uploadToStorage = async () => {
+    setIsSubmit(true)
     const storageRef = ref(
       storageService,
       `images/${authService.currentUser?.uid}/${randomId}`,
@@ -209,6 +212,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
         setImageFile(undefined)
         setIsFileExist(false)
         setIsOpen(false)
+        setIsSubmit(false)
       })
   }
 
@@ -321,7 +325,10 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
               />
             </Style.LocationInputSection>
           </Style.InputSection>
-          <Style.SubmitButton onClick={uploadToStorage}>
+          <Style.SubmitButton
+            onClick={uploadToStorage}
+            about={isSubmit ? "none" : ""}
+          >
             공유하기
           </Style.SubmitButton>
         </FlexBox>
