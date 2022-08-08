@@ -8,13 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import Image from "next/image"
-import React, {
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { SetStateAction, useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -79,6 +73,14 @@ const Style = {
     width: 100%;
     height: 100%;
   `,
+  CommentInputArea: styled.form`
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-top: 1px solid lightgrey;
+    display: flex;
+    width: ${(props) => props.about};
+  `,
 }
 
 export default function CommentModal({
@@ -92,10 +94,13 @@ export default function CommentModal({
   const [randomId, setRandomId] = useState<string>(v4())
   const inputRef = useRef<HTMLInputElement>(null)
   const commentAreaRef = useRef<HTMLDivElement>(null)
+  const [isSubmit, setIsSubmit] = useState<boolean>(false)
 
   const handleCommentSubmit = async () => {
+    setIsSubmit(true)
     if (comment.length === 0) {
       alert("댓글은 한글자 이상 작성해야합니다.")
+      setIsSubmit(false)
       return
     }
     const commentToFirestore: Comment = {
@@ -125,6 +130,7 @@ export default function CommentModal({
       block: "start",
       behavior: "smooth",
     })
+    setIsSubmit(false)
   }
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", imageData.storageId), (doc) => {
@@ -250,14 +256,12 @@ export default function CommentModal({
           </FlexBox>
         </FlexBox>
       </FlexBox>
-      <FlexBox
-        style={{
-          position: "absolute",
-          bottom: "0",
-          right: "0",
-          borderTop: "1px solid lightGrey",
+      <Style.CommentInputArea
+        about={windowSize < 900 ? "95vw" : "499px"}
+        onSubmit={(event) => {
+          event.preventDefault()
+          handleCommentSubmit()
         }}
-        width={windowSize < 900 ? "95vw" : "499px"}
       >
         <Style.CommentInput
           value={comment}
@@ -268,20 +272,22 @@ export default function CommentModal({
           placeholder="댓글 달기..."
           ref={inputRef}
         />
-        <button
-          onClick={handleCommentSubmit}
-          style={{
-            width: windowSize < 900 ? "15vw" : "70px",
-            border: "none",
-            backgroundColor: "white",
-            fontWeight: "bold",
-            color: comment.length > 0 ? "#4891ff" : "#d1e3ff",
-            cursor: "pointer",
-          }}
-        >
-          게시
-        </button>
-      </FlexBox>
+        {isSubmit || (
+          <button
+            onClick={handleCommentSubmit}
+            style={{
+              width: windowSize < 900 ? "15vw" : "70px",
+              border: "none",
+              backgroundColor: "white",
+              fontWeight: "bold",
+              color: comment.length > 0 ? "#4891ff" : "#d1e3ff",
+              cursor: "pointer",
+            }}
+          >
+            게시
+          </button>
+        )}
+      </Style.CommentInputArea>
     </YoungstagramModal>
   )
 }

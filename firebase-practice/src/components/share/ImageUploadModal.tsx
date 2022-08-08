@@ -37,7 +37,7 @@ const Style = {
   HiddenInput: styled.input`
     display: none;
   `,
-  InputSection: styled.div`
+  InputSection: styled.form`
     width: 340px;
     height: 494px;
     display: flex;
@@ -254,6 +254,10 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
                   }
                 : {}
             }
+            onSubmit={(event) => {
+              event.preventDefault()
+              uploadToStorage()
+            }}
           >
             <FlexBox
               width={windowSize < 784 ? "100%" : "310px"}

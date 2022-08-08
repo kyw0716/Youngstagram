@@ -1,28 +1,15 @@
 import type { NextPage } from "next"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { Margin } from "ui"
 import ImageList from "@share/ImageList"
-import { onAuthStateChanged } from "firebase/auth"
 import Layout from "components/layout"
 import { UserImageDataAll } from "backend/dto"
 
 const Home: NextPage = () => {
-  const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
   const [imageData, setImageData] = useState<UserImageDataAll[]>([])
-
-  useEffect(() => {
-    onAuthStateChanged(authService, (user) => {
-      if (user) {
-        router.push("/")
-      } else {
-        router.push("/auth")
-      }
-    })
-  }, [])
 
   useEffect(() => {
     const userDataRef = doc(DBService, "mainPage", `userImageDataAll`)
