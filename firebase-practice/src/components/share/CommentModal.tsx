@@ -8,7 +8,13 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import Image from "next/image"
-import { SetStateAction, useEffect, useRef, useState } from "react"
+import React, {
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -81,6 +87,8 @@ export default function CommentModal({
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [randomId, setRandomId] = useState<string>(v4())
   const inputRef = useRef<HTMLInputElement>(null)
+  const commentAreaRef = useRef<HTMLDivElement>(null)
+
   const handleCommentSubmit = async () => {
     if (comment.length === 0) {
       alert("댓글은 한글자 이상 작성해야합니다.")
@@ -109,6 +117,10 @@ export default function CommentModal({
         setComment("")
         setRandomId(v4())
       })
+    commentAreaRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    })
   }
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", imageData.storageId), (doc) => {
@@ -136,7 +148,6 @@ export default function CommentModal({
         >
           <Style.Img src={imageData.imageUrl} alt="image" />
         </FlexBox>
-
         <FlexBox
           column={true}
           width={windowSize < 900 ? "95vw" : 499}
@@ -199,14 +210,19 @@ export default function CommentModal({
                 .sort(function (a, b) {
                   return Number(a.uploadTime) - Number(b.uploadTime)
                 })
-                .map((data) => {
+                .map((data, index) => {
                   return (
-                    <CommentWrapper
-                      key={v4()}
-                      commentData={data}
-                      storageId={imageData.storageId}
-                      windowSize={windowSize}
-                    />
+                    <>
+                      {index === commentData.length - 1 && (
+                        <div ref={commentAreaRef}></div>
+                      )}
+                      <CommentWrapper
+                        key={v4()}
+                        commentData={data}
+                        storageId={imageData.storageId}
+                        windowSize={windowSize}
+                      />
+                    </>
                   )
                 })}
           </Style.CommentsWrapper>
@@ -229,39 +245,44 @@ export default function CommentModal({
             <ShareIcon />
           </FlexBox>
         </FlexBox>
-
-        <FlexBox
-          style={{
-            position: "absolute",
-            bottom: "6%",
-            right: "0",
-            borderTop: "1px solid lightGrey",
+      </FlexBox>
+      <FlexBox
+        style={{
+          position: "absolute",
+          bottom: "0",
+          right: "0",
+          borderTop: "1px solid lightGrey",
+        }}
+        width={windowSize < 900 ? "95vw" : "499px"}
+      >
+        <Style.CommentInput
+          value={comment}
+          onChange={(event) => {
+            setComment(event.target.value)
           }}
-          width={windowSize < 900 ? "95vw" : "499px"}
+          about={windowSize < 900 ? "80vw" : "429px"}
+          placeholder="댓글 달기..."
+          onFocus={() => {
+            commentAreaRef.current?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            })
+          }}
+          ref={inputRef}
+        />
+        <button
+          onClick={handleCommentSubmit}
+          style={{
+            width: windowSize < 900 ? "15vw" : "70px",
+            border: "none",
+            backgroundColor: "white",
+            fontWeight: "bold",
+            color: comment.length > 0 ? "#4891ff" : "#d1e3ff",
+            cursor: "pointer",
+          }}
         >
-          <Style.CommentInput
-            value={comment}
-            onChange={(event) => {
-              setComment(event.target.value)
-            }}
-            about={windowSize < 900 ? "80vw" : "429px"}
-            placeholder="댓글 달기..."
-            ref={inputRef}
-          />
-          <button
-            onClick={handleCommentSubmit}
-            style={{
-              width: windowSize < 900 ? "15vw" : "70px",
-              border: "none",
-              backgroundColor: "white",
-              fontWeight: "bold",
-              color: comment.length > 0 ? "#4891ff" : "#d1e3ff",
-              cursor: "pointer",
-            }}
-          >
-            게시
-          </button>
-        </FlexBox>
+          게시
+        </button>
       </FlexBox>
     </YoungstagramModal>
   )
