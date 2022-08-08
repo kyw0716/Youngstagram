@@ -2,7 +2,7 @@ import Image from "next/image"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
 import styled from "styled-components"
-import { CustomH4 } from "ui"
+import { CustomH4, FlexBox } from "ui"
 
 type Props = {
   isOpen: boolean
@@ -56,30 +56,29 @@ export default function YoungstagramModal({
           border: "solid 1px #d3d3d3",
           borderRadius: "10px",
           boxShadow: "3px 3px 20px 0 rgba(0, 0, 0, 0.25)",
-          overflow: "hidden",
+          overflow: "clip",
           backgroundColor: "white",
+          position: "relative",
         },
       }}
       isOpen={isOpen}
       onRequestClose={() => setIsOpen(false)}
       ariaHideApp={false}
     >
-      <Style.Wrapper>
-        <Style.Header>
-          <CustomH4>{title}</CustomH4>
-          <Image
-            src="/x.svg"
-            alt="x"
-            onClick={() => {
-              setIsOpen(false)
-            }}
-            width={15}
-            height={15}
-            style={{ cursor: "pointer" }}
-          />
-        </Style.Header>
-        {children}
-      </Style.Wrapper>
+      <Style.Header>
+        <CustomH4>{title}</CustomH4>
+        <Image
+          src="/x.svg"
+          alt="x"
+          onClick={() => {
+            setIsOpen(false)
+          }}
+          width={15}
+          height={15}
+          style={{ cursor: "pointer" }}
+        />
+      </Style.Header>
+      <Style.Wrapper>{children}</Style.Wrapper>
     </ReactModal>
   )
 }
