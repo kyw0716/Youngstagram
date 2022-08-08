@@ -1,13 +1,11 @@
 import type { NextPage } from "next"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { Margin } from "ui"
 import ImageList from "@share/ImageList"
 import Layout from "components/layout"
 import { UserImageDataAll } from "backend/dto"
-import { onAuthStateChanged } from "firebase/auth"
 
 const Home: NextPage = () => {
   const [userData, setUserData] = useState<DocumentData>()
