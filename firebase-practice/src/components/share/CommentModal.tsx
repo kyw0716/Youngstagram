@@ -121,16 +121,18 @@ export default function CommentModal({
         setComment("")
         setRandomId(v4())
       })
-    commentAreaRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    })
   }
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", imageData.storageId), (doc) => {
       setCommentData(doc.data()?.AllComments)
     })
   }, [])
+  useEffect(() => {
+    commentAreaRef.current?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    })
+  }, [commentData])
   return (
     <YoungstagramModal
       width={windowSize < 900 ? "95vw" : "70vw"}
@@ -266,12 +268,6 @@ export default function CommentModal({
           }}
           about={windowSize < 900 ? "80vw" : "429px"}
           placeholder="댓글 달기..."
-          onFocus={() => {
-            commentAreaRef.current?.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            })
-          }}
           ref={inputRef}
         />
         <button
