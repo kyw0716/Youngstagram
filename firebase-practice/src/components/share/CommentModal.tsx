@@ -53,6 +53,7 @@ const Style = {
     }
   `,
   CommentInput: styled.input`
+    appearance: none;
     width: ${(props) => (props.about ? props.about : "429px")};
     height: 53px;
     border: none;
@@ -66,6 +67,24 @@ const Style = {
       color: lightgrey;
     }
     :-webkit-appearance {
+      display: none;
+    }
+    :-moz-appearance {
+      display: none;
+    }
+  `,
+  SubmitButton: styled.button`
+    appearance: none;
+    width: ${(props) => props.about};
+    border: none;
+    background-color: inherit;
+    font-weight: bold;
+    color: ${(props) => props.color};
+    cursor: pointer;
+    :-webkit-appearance {
+      display: none;
+    }
+    :-moz-appearance {
       display: none;
     }
   `,
@@ -273,19 +292,13 @@ export default function CommentModal({
           ref={inputRef}
         />
         {isSubmit || (
-          <button
+          <Style.SubmitButton
             onClick={handleCommentSubmit}
-            style={{
-              width: windowSize < 900 ? "15vw" : "70px",
-              border: "none",
-              backgroundColor: "white",
-              fontWeight: "bold",
-              color: comment.length > 0 ? "#4891ff" : "#d1e3ff",
-              cursor: "pointer",
-            }}
+            about={windowSize < 900 ? "15vw" : "70px"}
+            color={comment.length > 0 ? "#4891ff" : "#d1e3ff"}
           >
             게시
-          </button>
+          </Style.SubmitButton>
         )}
       </Style.CommentInputArea>
     </YoungstagramModal>
