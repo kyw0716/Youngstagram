@@ -57,9 +57,10 @@ const Style = {
     width: ${(props) => (props.about ? props.about : "429px")};
     height: 53px;
     border: none;
+    border-radius: none;
     padding-left: 15px;
     font-size: 16px;
-    background-color: none;
+    background-color: inherit;
     :focus {
       outline: none;
     }
