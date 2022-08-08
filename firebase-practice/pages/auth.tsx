@@ -45,6 +45,7 @@ const Style = {
     border: 1px solid lightgrey;
     padding-left: 15px;
     border-radius: 3px;
+    font-size: 16px;
     &::placeholder {
       color: lightgrey;
     }
@@ -239,13 +240,7 @@ export default function Auth() {
         <Margin direction="column" size={60} />
         <Style.FormContainer onSubmit={handleOnSubmit}>
           <Margin direction="column" size={20} />
-          <Style.Logo
-            onClick={() => {
-              router.push("/")
-            }}
-          >
-            youngstagram
-          </Style.Logo>
+          <Style.Logo>youngstagram</Style.Logo>
           <Margin direction="column" size={20} />
           <Style.InputBox
             type={"text"}
@@ -300,6 +295,7 @@ export default function Auth() {
               width={40}
               height={40}
               style={{ cursor: "pointer" }}
+              priority
             />
             <Margin direction="row" size={20} />
             <Image
@@ -309,6 +305,7 @@ export default function Auth() {
               width={40}
               height={40}
               style={{ cursor: "pointer" }}
+              priority
             />
           </FlexBox>
         </Style.FormContainer>
