@@ -121,18 +121,16 @@ export default function CommentModal({
         setComment("")
         setRandomId(v4())
       })
+    commentAreaRef.current?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    })
   }
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", imageData.storageId), (doc) => {
       setCommentData(doc.data()?.AllComments)
     })
   }, [])
-  useEffect(() => {
-    commentAreaRef.current?.scrollIntoView({
-      block: "start",
-      behavior: "smooth",
-    })
-  }, [commentData])
   return (
     <YoungstagramModal
       width={windowSize < 900 ? "95vw" : "70vw"}
