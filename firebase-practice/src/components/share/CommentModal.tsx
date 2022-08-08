@@ -64,11 +64,15 @@ const Style = {
     border: none;
     padding-left: 15px;
     font-size: 16px;
+    background-color: none;
     :focus {
       outline: none;
     }
     ::placeholder {
       color: lightgrey;
+    }
+    :-webkit-appearance {
+      display: none;
     }
   `,
   Img: styled.img`
