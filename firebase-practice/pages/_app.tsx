@@ -12,6 +12,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       if (user) {
         router.push("/")
       } else {
+        history.pushState(null, "", location.href)
+        window.onpopstate = function () {
+          history.go(1)
+        }
         router.push("/auth")
       }
     })

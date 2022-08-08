@@ -118,7 +118,7 @@ export default function Header() {
         <Style.Nav>
           <Style.Logo
             onClick={() => {
-              router.push("/")
+              if (router.asPath !== "/auth") router.push("/")
             }}
           >
             youngstagram
@@ -131,7 +131,7 @@ export default function Header() {
               alt="home"
               priority
               onClick={() => {
-                router.push("/")
+                if (router.asPath !== "/auth") router.push("/")
               }}
               style={{ cursor: "pointer" }}
             />
