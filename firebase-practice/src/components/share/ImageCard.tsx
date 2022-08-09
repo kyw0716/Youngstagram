@@ -20,6 +20,7 @@ import {
   ShareIcon,
 } from "ui"
 import CommentModal from "./CommentModal"
+import ImageUploadModal from "./ImageUploadModal"
 
 type Props = {
   imageData: UserImageDataAll
@@ -85,7 +86,7 @@ const Style = {
   `,
   ButtonBox: styled.div`
     width: 152px;
-    height: 120px;
+    height: 160px;
     border-bottom: none;
     display: flex;
     align-items: center;
@@ -117,7 +118,6 @@ const Style = {
     -webkit-appearance: none;
     border: none;
     background-color: white;
-    border-radius: 9px 9px 0px 0px;
     cursor: pointer;
     &:hover {
       background-color: #f0f0f0;
@@ -158,6 +158,22 @@ const Style = {
     align-items: center;
     padding-left: 20px;
   `,
+  EditButton: styled.div`
+    gap: 10px;
+    width: 150px;
+    height: 40px;
+    -webkit-appearance: none;
+    border: none;
+    border-radius: 9px 9px 0px 0px;
+    background-color: white;
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+  `,
   CommentBox: styled.div`
     width: 100%;
     white-space: pre-wrap;
@@ -178,7 +194,9 @@ export default function ImageCard({
   windowSize,
 }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
+  const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
+    useState<boolean>(false)
   const [isShowMore, setIsShowMore] = useState<boolean>(false)
 
   const handleDeleteImage = async () => {
@@ -211,11 +229,7 @@ export default function ImageCard({
     })
     setPickImageData("all")
   }
-  const handlePrivateToggle = async (
-    url: string,
-    title: string,
-    isPrivate: boolean,
-  ) => {
+  const handlePrivateToggle = async () => {
     const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
 
     handleThreeDotMenuClick()
@@ -260,10 +274,15 @@ export default function ImageCard({
   return (
     <>
       <CommentModal
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
+        isOpen={isCommentModalOpen}
+        setIsOpen={setIsCommentModalOpen}
         imageData={imageData}
         windowSize={windowSize}
+      />
+      <ImageUploadModal
+        isOpen={isImageUploadModalOpen}
+        setIsOpen={setIsImageUploadModalOpen}
+        imageData={imageData}
       />
       <Style.ImageCard
         style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
@@ -315,25 +334,21 @@ export default function ImageCard({
           {isMenuOpen ? (
             <>
               <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
-                <Style.Deletebutton onClick={handleDeleteImage}>
+                <Style.EditButton
+                  onClick={() => {
+                    setIsImageUploadModalOpen(true)
+                  }}
+                >
                   <Image
-                    src="/delete.svg"
-                    alt="delete"
+                    src="/edit.svg"
+                    alt="edit"
                     width={15}
                     height={15}
                     priority
                   />
-                  삭제
-                </Style.Deletebutton>
-                <Style.PrivateToggleButton
-                  onClick={() => {
-                    handlePrivateToggle(
-                      imageData.imageUrl,
-                      imageData.location,
-                      imageData.private,
-                    )
-                  }}
-                >
+                  편집
+                </Style.EditButton>
+                <Style.PrivateToggleButton onClick={handlePrivateToggle}>
                   {imageData.private ? (
                     <Image
                       src="/unLock.svg"
@@ -347,6 +362,16 @@ export default function ImageCard({
 
                   {imageData.private ? "공개" : "비공개"}
                 </Style.PrivateToggleButton>
+                <Style.Deletebutton onClick={handleDeleteImage}>
+                  <Image
+                    src="/delete.svg"
+                    alt="delete"
+                    width={15}
+                    height={15}
+                    priority
+                  />
+                  삭제
+                </Style.Deletebutton>
                 <Style.ExitButton onClick={handleThreeDotMenuClick}>
                   <Image
                     src="/logout.svg"
@@ -383,7 +408,7 @@ export default function ImageCard({
           <Margin direction="row" size={15} />
           <CommentIcon
             onClick={() => {
-              setIsModalOpen(true)
+              setIsCommentModalOpen(true)
             }}
           />
           <Margin direction="row" size={15} />

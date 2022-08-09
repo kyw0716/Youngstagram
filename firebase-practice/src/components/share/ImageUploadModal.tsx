@@ -8,12 +8,19 @@ import Image from "next/image"
 import { v4 } from "uuid"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { UserImageDataAll } from "backend/dto"
-import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore"
 import getCurrentTime from "lib/getCurrentTime"
 
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
+  imageData?: UserImageDataAll
 }
 
 const Style = {
@@ -104,7 +111,11 @@ const Style = {
   `,
 }
 
-export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
+export default function ImageUploadModal({
+  setIsOpen,
+  isOpen,
+  imageData,
+}: Props) {
   const {
     getRootProps,
     acceptedFiles,
@@ -120,11 +131,17 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
   const [windowSize, setWindowSize] = useState<number>(0)
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
 
-  const [desc, setDesc] = useState<string>("")
-  const [location, setLocation] = useState<string>("")
-  const [isPrivate, setIsPrivate] = useState<boolean>(false)
+  const [desc, setDesc] = useState<string>(imageData ? imageData.desc : "")
+  const [location, setLocation] = useState<string>(
+    imageData ? imageData.location : "",
+  )
+  const [isPrivate, setIsPrivate] = useState<boolean>(
+    imageData ? imageData.private : false,
+  )
   const [imageFile, setImageFile] = useState<File>()
-  const [randomId, setRandomId] = useState<string>("")
+  const [randomId, setRandomId] = useState<string>(
+    imageData ? imageData.storageId : "",
+  )
 
   useEffect(() => {
     setRandomId(v4())
@@ -138,7 +155,7 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
   }, [])
 
   useEffect(() => {
-    if (acceptedFiles.length === 0) {
+    if (acceptedFiles.length === 0 && imageData === undefined) {
       setIsFileExist(false)
       return
     }
@@ -160,7 +177,6 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
   }
 
   const uploadToStorage = async () => {
-    setIsSubmit(true)
     const storageRef = ref(
       storageService,
       `images/${authService.currentUser?.uid}/${randomId}`,
@@ -177,6 +193,31 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
           console.log(error.code)
         })
   }
+  const EditToFireStore = async () => {
+    if (imageData === undefined) return
+    const firestoreAllRef = doc(DBService, "mainPage", `userImageDataAll`)
+    const dataAll: UserImageDataAll = {
+      imageUrl: imageData.imageUrl,
+      desc: imageData.desc,
+      location: imageData.location,
+      private: imageData.private,
+      storageId: imageData.storageId,
+      uploadTime: imageData.uploadTime,
+      creator: {
+        name: imageData.creator.name,
+        id: imageData.creator.id,
+        profileImage: imageData.creator.profileImage,
+      },
+    }
+    await updateDoc(firestoreAllRef, {
+      images: arrayRemove(dataAll),
+    })
+      .then((response) => {
+        console.log(response)
+        uploadToFirestore(imageData.imageUrl)
+      })
+      .catch((error) => console.log(error.code))
+  }
 
   const uploadToFirestore = async (downloadUrl: string) => {
     const dataAll: UserImageDataAll = {
@@ -185,14 +226,15 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
       location: location,
       private: isPrivate,
       storageId: randomId,
-      uploadTime: getCurrentTime(),
+      uploadTime: imageData?.uploadTime
+        ? imageData.uploadTime
+        : getCurrentTime(),
       creator: {
         name: `${authService.currentUser?.displayName}`,
         id: `${authService.currentUser?.uid}`,
         profileImage: `${authService.currentUser?.photoURL}`,
       },
     }
-
     const firestoreAllRef = doc(DBService, "mainPage", `userImageDataAll`)
     await updateDoc(firestoreAllRef, {
       images: arrayUnion(dataAll),
@@ -205,29 +247,38 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
         }
       })
       .then(() => {
+        setIsOpen(false)
+        setIsSubmit(false)
+        if (imageData) return
         setDesc("")
         setIsPrivate(false)
         setLocation("")
         setRandomId(v4())
         setImageFile(undefined)
         setIsFileExist(false)
-        setIsOpen(false)
-        setIsSubmit(false)
       })
   }
 
   return (
     <ModalForImageUpload
-      width={windowSize < 784 ? "95%" : isFileExist ? "835px" : "495px"}
+      width={
+        windowSize < 784
+          ? "95%"
+          : isFileExist
+          ? "835px"
+          : imageData
+          ? "835px"
+          : "495px"
+      }
       height={windowSize < 784 && isFileExist ? "550px" : "537px"}
       title="새 게시물 만들기"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       isPC={true}
-      isFileExist={isFileExist}
+      isFileExist={imageData?.imageUrl ? true : isFileExist}
       setIsFileExist={setIsFileExist}
     >
-      {isFileExist ? (
+      {isFileExist || imageData !== undefined ? (
         <FlexBox
           column={windowSize < 784 ? true : false}
           height={"fit-content"}
@@ -240,7 +291,13 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
               boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
               maxWidth: 495,
             }}
-            src={imagePreviewSrc ? imagePreviewSrc : "/empty.svg"}
+            src={
+              imageData
+                ? imageData.imageUrl
+                : imagePreviewSrc
+                ? imagePreviewSrc
+                : "/empty.svg"
+            }
             alt="selectedImage"
           />
           <Style.InputSection
@@ -256,6 +313,11 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
             }
             onSubmit={(event) => {
               event.preventDefault()
+              setIsSubmit(true)
+              if (imageData) {
+                EditToFireStore()
+                return
+              }
               uploadToStorage()
             }}
           >
@@ -330,7 +392,14 @@ export default function ImageUploadModal({ setIsOpen, isOpen }: Props) {
             </Style.LocationInputSection>
           </Style.InputSection>
           <Style.SubmitButton
-            onClick={uploadToStorage}
+            onClick={() => {
+              setIsSubmit(true)
+              if (imageData) {
+                EditToFireStore()
+                return
+              }
+              uploadToStorage()
+            }}
             about={isSubmit ? "none" : ""}
           >
             공유하기
