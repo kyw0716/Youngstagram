@@ -212,7 +212,7 @@ export default function ImageUploadModal({
     await updateDoc(firestoreAllRef, {
       images: arrayRemove(dataAll),
     })
-      .then((response) => {
+      .then(() => {
         uploadToFirestore(imageData.imageUrl)
       })
       .catch((error) => console.log(error.code))
@@ -224,7 +224,7 @@ export default function ImageUploadModal({
       desc: desc,
       location: location,
       private: isPrivate,
-      storageId: randomId,
+      storageId: imageData?.storageId ? imageData.storageId : randomId,
       uploadTime: imageData?.uploadTime
         ? imageData.uploadTime
         : getCurrentTime(),
