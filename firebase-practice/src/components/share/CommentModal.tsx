@@ -23,6 +23,7 @@ import CommentWrapper from "./CommentWrapper"
 import YoungstagramModal from "./YoungstagramModal"
 import { v4 } from "uuid"
 import getCurrentTime from "lib/getCurrentTime"
+import { useRouter } from "next/router"
 
 type Props = {
   isOpen: boolean
@@ -109,6 +110,7 @@ export default function CommentModal({
   imageData,
   windowSize,
 }: Props) {
+  const router = useRouter()
   const [comment, setComment] = useState<string>("")
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [randomId, setRandomId] = useState<string>(v4())
@@ -187,12 +189,15 @@ export default function CommentModal({
             <Image
               width={32}
               height={32}
-              style={{ borderRadius: "32px" }}
+              style={{ borderRadius: "32px", cursor: "pointer" }}
               src={
                 imageData.creator.profileImage
                   ? imageData.creator.profileImage
                   : "/profile.svg"
               }
+              onClick={() => {
+                router.push(`/profile/${imageData.creator.id}`)
+              }}
               alt="profile"
             />
             <Margin direction="row" size={14} />
@@ -220,7 +225,10 @@ export default function CommentModal({
                       : "/profile.svg"
                   }
                   alt="profile"
-                  style={{ borderRadius: "32px" }}
+                  onClick={() => {
+                    router.push(`/profile/${imageData.creator.id}`)
+                  }}
+                  style={{ borderRadius: "32px", cursor: "pointer" }}
                 />
               </FlexBox>
               <Margin direction="row" size={10} />
