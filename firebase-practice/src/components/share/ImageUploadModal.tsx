@@ -213,7 +213,6 @@ export default function ImageUploadModal({
       images: arrayRemove(dataAll),
     })
       .then((response) => {
-        console.log(response)
         uploadToFirestore(imageData.imageUrl)
       })
       .catch((error) => console.log(error.code))
