@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import styled from "styled-components"
-import { CustomH6, FlexBox, Margin } from "ui"
+import { FlexBox, Margin } from "ui"
 
 const Style = {
   Container: styled.div`
