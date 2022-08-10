@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
 import {
@@ -193,6 +194,7 @@ export default function ImageCard({
   setPickImageData,
   windowSize,
 }: Props) {
+  const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
@@ -309,7 +311,10 @@ export default function ImageCard({
               alt="creator"
               width={38}
               height={38}
-              style={{ borderRadius: 38 }}
+              style={{ borderRadius: 38, cursor: "pointer" }}
+              onClick={() => {
+                router.push(`/profile/${imageData.creator.id}`)
+              }}
             />
             <Style.HeaderText>
               <Style.UserName>

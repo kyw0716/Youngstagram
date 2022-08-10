@@ -14,6 +14,7 @@ type Props = {
   isPC?: boolean
   isFileExist: boolean
   setIsFileExist: React.Dispatch<SetStateAction<boolean>>
+  isModifyMode: boolean
 }
 
 const Style = {
@@ -50,6 +51,7 @@ export default function ModalForImageUpload({
   children,
   isPC,
   isFileExist,
+  isModifyMode,
   setIsFileExist,
 }: Props) {
   return (
@@ -96,16 +98,18 @@ export default function ModalForImageUpload({
               <Style.Title>
                 <CustomH4>{title}</CustomH4>
               </Style.Title>
-              <Image
-                style={{ cursor: "pointer" }}
-                width={15}
-                height={15}
-                src="/left-arrow.svg"
-                alt="prev"
-                onClick={() => {
-                  setIsFileExist(false)
-                }}
-              />
+              {isModifyMode || (
+                <Image
+                  style={{ cursor: "pointer" }}
+                  width={15}
+                  height={15}
+                  src="/left-arrow.svg"
+                  alt="prev"
+                  onClick={() => {
+                    setIsFileExist(false)
+                  }}
+                />
+              )}
             </Style.Header>
           </>
         ) : (

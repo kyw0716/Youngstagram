@@ -3,6 +3,7 @@ import { Comment, UserData } from "backend/dto"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
 import getUserByUid from "lib/getUserByUid"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH4, CustomH5, CustomH6, FlexBox, Margin } from "ui"
@@ -39,6 +40,7 @@ export default function CommentWrapper({
   storageId,
   windowSize,
 }: Props) {
+  const router = useRouter()
   const [isModifyMode, setIsModifyMode] = useState<boolean>(false)
   const [newComment, setNewComment] = useState<string>(commentData.comment)
   const [isShowAllComment, setIsShowAllComment] = useState<boolean>(false)
@@ -136,9 +138,12 @@ export default function CommentWrapper({
           <Image
             width={32}
             height={32}
-            style={{ borderRadius: "32px" }}
+            style={{ borderRadius: "32px", cursor: "pointer" }}
             src={commentData.profileImage}
             alt="profile"
+            onClick={() => {
+              router.push(`/profile/${commentData.userId}`)
+            }}
             priority
           />
         </FlexBox>
