@@ -270,12 +270,13 @@ export default function ImageUploadModal({
           : "495px"
       }
       height={windowSize < 784 && isFileExist ? "550px" : "537px"}
-      title="새 게시물 만들기"
+      title={imageData ? "게시글 편집하기" : "새 게시물 만들기"}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       isPC={true}
       isFileExist={imageData?.imageUrl ? true : isFileExist}
       setIsFileExist={setIsFileExist}
+      isModifyMode={imageData ? true : false}
     >
       {isFileExist || imageData !== undefined ? (
         <FlexBox
