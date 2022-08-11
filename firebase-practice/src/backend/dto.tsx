@@ -1,4 +1,4 @@
-export type Creator = {
+export type ImageCreator = {
   name: string | null
   id: string
   profileImage: string | null
@@ -9,7 +9,7 @@ export type UserImageDataAll = {
   location: string
   private: boolean
   storageId: string
-  creator: Creator
+  creator: ImageCreator
   uploadTime: string
 }
 export type Comment = {
