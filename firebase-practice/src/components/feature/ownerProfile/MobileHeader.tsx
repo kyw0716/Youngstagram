@@ -10,6 +10,7 @@ type Props = {
   privateImageDataLength: number
   setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
   pickImageData: "all" | "public" | "private"
+  isOwner: boolean
 }
 
 const Style = {
@@ -81,6 +82,7 @@ export default function MobileHeader({
   privateImageDataLength,
   setPickImageData,
   pickImageData,
+  isOwner,
 }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   return (

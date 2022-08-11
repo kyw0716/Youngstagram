@@ -8,6 +8,7 @@ type Props = {
   privateImageDataLength: number
   setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
   pickImageData: "all" | "public" | "private"
+  isOwner: boolean
 }
 
 export default function ProfileHeader({
@@ -15,6 +16,7 @@ export default function ProfileHeader({
   privateImageDataLength,
   setPickImageData,
   pickImageData,
+  isOwner,
 }: Props) {
   const [windowSize, setWindowSize] = useState<number>(0)
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function ProfileHeader({
             setPickImageData={setPickImageData}
             pickImageData={pickImageData}
             privateImageDataLength={privateImageDataLength}
+            isOwner={isOwner}
           />
         ) : (
           <MobileHeader
@@ -40,6 +43,7 @@ export default function ProfileHeader({
             privateImageDataLength={privateImageDataLength}
             setPickImageData={setPickImageData}
             pickImageData={pickImageData}
+            isOwner={isOwner}
           />
         )}
         <Margin direction="column" size={44} />

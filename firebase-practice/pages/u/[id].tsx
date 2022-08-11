@@ -89,6 +89,7 @@ export default function Profile({ userId }: Props) {
           privateImageDataLength={privateImageData.length}
           setPickImageData={setPickImageData}
           pickImageData={pickImageData}
+          isOwner={true}
         />
         {allImageData.length === 0 ? (
           <FlexBox column={true} width="fit-content" alignItems="center">
