@@ -7,7 +7,7 @@ import { authService, DBService, storageService } from "@FireBase"
 import Image from "next/image"
 import { v4 } from "uuid"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { UserImageDataAll } from "backend/dto"
+import { FeedData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -20,7 +20,7 @@ import getCurrentTime from "lib/getCurrentTime"
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
-  imageData?: UserImageDataAll
+  imageData?: FeedData
 }
 
 const Style = {
@@ -196,7 +196,7 @@ export default function ImageUploadModal({
   const EditToFireStore = async () => {
     if (imageData === undefined) return
     const firestoreAllRef = doc(DBService, "mainPage", `userImageDataAll`)
-    const dataAll: UserImageDataAll = {
+    const dataAll: FeedData = {
       imageUrl: imageData.imageUrl,
       desc: imageData.desc,
       location: imageData.location,
@@ -205,12 +205,12 @@ export default function ImageUploadModal({
       uploadTime: imageData.uploadTime,
       creator: {
         name: imageData.creator.name,
-        id: imageData.creator.id,
+        userId: imageData.creator.userId,
         profileImage: imageData.creator.profileImage,
       },
     }
     await updateDoc(firestoreAllRef, {
-      images: arrayRemove(dataAll),
+      feed: arrayRemove(dataAll),
     })
       .then(() => {
         uploadToFirestore(imageData.imageUrl)
@@ -219,7 +219,7 @@ export default function ImageUploadModal({
   }
 
   const uploadToFirestore = async (downloadUrl: string) => {
-    const dataAll: UserImageDataAll = {
+    const feed: FeedData = {
       imageUrl: downloadUrl,
       desc: desc,
       location: location,
@@ -230,18 +230,23 @@ export default function ImageUploadModal({
         : getCurrentTime(),
       creator: {
         name: `${authService.currentUser?.displayName}`,
-        id: `${authService.currentUser?.uid}`,
+        userId: `${authService.currentUser?.uid}`,
         profileImage: `${authService.currentUser?.photoURL}`,
       },
     }
-    const firestoreAllRef = doc(DBService, "mainPage", `userImageDataAll`)
+    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
+    const firestorePersonalRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
     await updateDoc(firestoreAllRef, {
-      images: arrayUnion(dataAll),
+      feed: arrayUnion(feed),
     })
       .catch(async (error) => {
         if (error.code === "not-found") {
           await setDoc(firestoreAllRef, {
-            images: [dataAll],
+            feed: [feed],
           })
         }
       })
@@ -256,6 +261,15 @@ export default function ImageUploadModal({
         setImageFile(undefined)
         setIsFileExist(false)
       })
+    await updateDoc(firestorePersonalRef, {
+      feed: arrayUnion(feed),
+    }).catch(async (error) => {
+      if (error.code === "not-found") {
+        await setDoc(firestorePersonalRef, {
+          feed: [feed],
+        })
+      }
+    })
   }
 
   return (

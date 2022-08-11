@@ -1,5 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { UserImageDataAll } from "backend/dto"
+import { FeedData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -24,7 +24,7 @@ import CommentModal from "./CommentModal"
 import ImageUploadModal from "./ImageUploadModal"
 
 type Props = {
-  imageData: UserImageDataAll
+  imageData: FeedData
   isMainPage: boolean
   setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
   windowSize: number
@@ -217,7 +217,7 @@ export default function ImageCard({
     await updateDoc(firestoreImageAllRef, {
       images: arrayRemove({
         creator: {
-          id: imageData.creator.id,
+          id: imageData.creator.userId,
           name: imageData.creator.name,
           profileImage: imageData.creator.profileImage,
         },
@@ -239,7 +239,7 @@ export default function ImageCard({
     await updateDoc(firestoreImageAllRef, {
       images: arrayRemove({
         creator: {
-          id: imageData.creator.id,
+          id: imageData.creator.userId,
           name: imageData.creator.name,
           profileImage: imageData.creator.profileImage,
         },
@@ -254,7 +254,7 @@ export default function ImageCard({
       await updateDoc(firestoreImageAllRef, {
         images: arrayUnion({
           creator: {
-            id: imageData.creator.id,
+            id: imageData.creator.userId,
             name: imageData.creator.name,
             profileImage: imageData.creator.profileImage,
           },
@@ -313,7 +313,7 @@ export default function ImageCard({
               height={38}
               style={{ borderRadius: 38, cursor: "pointer" }}
               onClick={() => {
-                router.push(`/profile/${imageData.creator.id}`)
+                router.push(`/profile/${imageData.creator.userId}`)
               }}
             />
             <Style.HeaderText>

@@ -1,5 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { UserData, UserImageDataAll } from "backend/dto"
+import { UserData, FeedData } from "backend/dto"
 import { updateProfile } from "firebase/auth"
 import {
   doc,
@@ -88,7 +88,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const [imageUrlToAuthService, setImageUrlToAuthService] = useState<string>("")
 
   const [userData, setUserData] = useState<DocumentData>()
-  const [imageData, setImageData] = useState<UserImageDataAll[]>([])
+  const [imageData, setImageData] = useState<FeedData[]>([])
   const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
 
   useEffect(() => {
@@ -137,10 +137,10 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
       await setDoc(updateFirestoreRef, {
         images: [
           ...imageData.map((data) => {
-            if (data.creator.id === authService.currentUser?.uid) {
+            if (data.creator.userId === authService.currentUser?.uid) {
               return {
                 creator: {
-                  id: data.creator.id,
+                  id: data.creator.userId,
                   name:
                     submitUserName !== "" ? submitUserName : data.creator.name,
                   profileImage:
@@ -157,7 +157,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
             }
             return {
               creator: {
-                id: data.creator.id,
+                id: data.creator.userId,
                 name: data.creator.name,
                 profileImage: data.creator.profileImage,
               },

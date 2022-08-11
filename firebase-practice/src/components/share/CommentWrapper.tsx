@@ -1,7 +1,7 @@
 import { authService, DBService } from "@FireBase"
 import { Comment, UserData } from "backend/dto"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
-import getUserByUid from "lib/getUserByUid"
+import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -47,7 +47,7 @@ export default function CommentWrapper({
 
   useEffect(() => {
     const commentRef = doc(DBService, "Comments", storageId)
-    getUserByUid(commentData.userId).then(async (data) => {
+    getUserDataByUid(commentData.userId).then(async (data) => {
       if (data) {
         if (commentData.profileImage !== (data as UserData).profileImage) {
           await updateDoc(commentRef, {

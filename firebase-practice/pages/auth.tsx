@@ -223,11 +223,11 @@ export default function Auth() {
       profileImage: response.user.photoURL,
       name: response.user.displayName,
     }
-    await updateDoc(newUserToFirestoreRef, UserDataForm).catch(
+    await updateDoc(newUserToFirestoreRef, { info: UserDataForm }).catch(
       async (error) => {
         if (error.code === "not-found") {
-          await setDoc(newUserToFirestoreRef, UserDataForm).catch((error) =>
-            console.log(error.code),
+          await setDoc(newUserToFirestoreRef, { info: UserDataForm }).catch(
+            (error) => console.log(error.code),
           )
         }
       },

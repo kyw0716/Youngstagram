@@ -8,7 +8,7 @@ import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
 import Layout from "components/layout"
 import Image from "next/image"
-import { UserImageDataAll } from "backend/dto"
+import { FeedData } from "backend/dto"
 
 const Style = {
   Wrapper: styled.div`
@@ -25,16 +25,14 @@ const Style = {
 
 export default function Profile({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
-  const [allImageData, setAllImageData] = useState<UserImageDataAll[]>([])
-  const [privateImageData, setPrivateImageData] = useState<UserImageDataAll[]>(
-    [],
-  )
-  const [publicImageData, setPublicImageData] = useState<UserImageDataAll[]>([])
+  const [allImageData, setAllImageData] = useState<FeedData[]>([])
+  const [privateImageData, setPrivateImageData] = useState<FeedData[]>([])
+  const [publicImageData, setPublicImageData] = useState<FeedData[]>([])
 
   const [pickImageData, setPickImageData] = useState<
     "all" | "public" | "private"
   >("all")
-  const [dataToView, setDataToView] = useState<UserImageDataAll[]>([])
+  const [dataToView, setDataToView] = useState<FeedData[]>([])
 
   useEffect(() => {
     const userDataRef = doc(DBService, "mainPage", "userImageDataAll")
@@ -45,23 +43,27 @@ export default function Profile({ userId }: Props) {
   useEffect(() => {
     if (userData !== undefined && userData.images !== undefined) {
       setAllImageData(
-        (userData.images as UserImageDataAll[]).filter(
-          (data) => data.creator.id === authService.currentUser?.uid,
+        (userData.images as FeedData[]).filter(
+          (data) => data.creator.userId === authService.currentUser?.uid,
         ),
       )
       setDataToView(
-        (userData.images as UserImageDataAll[]).filter(
-          (data) => data.creator.id === authService.currentUser?.uid,
+        (userData.images as FeedData[]).filter(
+          (data) => data.creator.userId === authService.currentUser?.uid,
         ),
       )
       setPrivateImageData(
-        (userData.images as UserImageDataAll[])
-          .filter((data) => data.creator.id === authService.currentUser?.uid)
+        (userData.images as FeedData[])
+          .filter(
+            (data) => data.creator.userId === authService.currentUser?.uid,
+          )
           .filter((data) => data.private),
       )
       setPublicImageData(
-        (userData.images as UserImageDataAll[])
-          .filter((data) => data.creator.id === authService.currentUser?.uid)
+        (userData.images as FeedData[])
+          .filter(
+            (data) => data.creator.userId === authService.currentUser?.uid,
+          )
           .filter((data) => !data.private),
       )
     }

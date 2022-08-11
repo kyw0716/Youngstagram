@@ -1,9 +1,9 @@
 export type ImageCreator = {
   name: string | null
-  id: string
+  userId: string
   profileImage: string | null
 }
-export type UserImageDataAll = {
+export type FeedData = {
   imageUrl: string
   desc: string
   location: string

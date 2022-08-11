@@ -1,5 +1,5 @@
 import { authService, DBService } from "@FireBase"
-import { Comment, UserImageDataAll } from "backend/dto"
+import { Comment, FeedData } from "backend/dto"
 import {
   arrayUnion,
   doc,
@@ -28,7 +28,7 @@ import { useRouter } from "next/router"
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
-  imageData: UserImageDataAll
+  imageData: FeedData
   windowSize: number
 }
 
@@ -196,7 +196,7 @@ export default function CommentModal({
                   : "/profile.svg"
               }
               onClick={() => {
-                router.push(`/profile/${imageData.creator.id}`)
+                router.push(`/profile/${imageData.creator.userId}`)
               }}
               alt="profile"
             />
@@ -226,7 +226,7 @@ export default function CommentModal({
                   }
                   alt="profile"
                   onClick={() => {
-                    router.push(`/profile/${imageData.creator.id}`)
+                    router.push(`/profile/${imageData.creator.userId}`)
                   }}
                   style={{ borderRadius: "32px", cursor: "pointer" }}
                 />

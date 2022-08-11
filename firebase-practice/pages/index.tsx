@@ -5,11 +5,11 @@ import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { Margin } from "ui"
 import ImageList from "@share/ImageList"
 import Layout from "components/layout"
-import { UserImageDataAll } from "backend/dto"
+import { FeedData } from "backend/dto"
 
 const Home: NextPage = () => {
   const [userData, setUserData] = useState<DocumentData>()
-  const [imageData, setImageData] = useState<UserImageDataAll[]>([])
+  const [imageData, setImageData] = useState<FeedData[]>([])
 
   useEffect(() => {
     const userDataRef = doc(DBService, "mainPage", `userImageDataAll`)

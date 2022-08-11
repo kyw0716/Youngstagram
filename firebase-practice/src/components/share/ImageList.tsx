@@ -1,4 +1,4 @@
-import { UserImageDataAll } from "backend/dto"
+import { FeedData } from "backend/dto"
 import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
@@ -6,7 +6,7 @@ import { CustomH2, Margin } from "ui"
 import ImageCard from "./ImageCard"
 
 type Props = {
-  imageData: UserImageDataAll[]
+  imageData: FeedData[]
   isMainPage: boolean
   setPickImageData?: React.Dispatch<
     SetStateAction<"public" | "private" | "all">
