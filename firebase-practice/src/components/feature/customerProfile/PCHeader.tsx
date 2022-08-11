@@ -101,7 +101,7 @@ export default function PCHeader({ userData }: Props) {
           <FlexBox>
             <CustomH3Light>
               {/* TODO: 이거 dto 수정해서 고쳐야함 */}
-              이메일: {authService.currentUser?.email}
+              이메일: {userData.info.email}
             </CustomH3Light>
           </FlexBox>
           <Margin direction="column" size={15} />
@@ -120,7 +120,7 @@ export default function PCHeader({ userData }: Props) {
       </Style.ProfileHeader>
       <Style.SortWrapper>
         <Style.SortToAll>
-          <CustomH4Light>전체 게시물</CustomH4Light>
+          <CustomH4Light>게시물</CustomH4Light>
           <Image src="/all-file.svg" alt="allFile" width={15} height={15} />
         </Style.SortToAll>
       </Style.SortWrapper>

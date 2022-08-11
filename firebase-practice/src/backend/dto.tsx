@@ -24,15 +24,11 @@ export type UserInfo = {
   userId: string
   profileImage: string | null
   name: string | null
+  email: string | null
 }
 export type UserData = {
   info: UserInfo
-  follow: UserInfoForFollow[]
-  follower: UserInfoForFollow[]
+  follow: UserInfo[]
+  follower: UserInfo[]
   feed: FeedData[]
-}
-export type UserInfoForFollow = {
-  userId: string
-  profileImage: string | null
-  name: string | null
 }

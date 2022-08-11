@@ -10,7 +10,6 @@ type Props = {
   privateImageDataLength: number
   setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
   pickImageData: "all" | "public" | "private"
-  isOwner: boolean
 }
 
 const Style = {
@@ -82,16 +81,12 @@ export default function MobileHeader({
   privateImageDataLength,
   setPickImageData,
   pickImageData,
-  isOwner,
 }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   return (
     <>
-      {isOwner ? (
-        <ProfileEditModal isPC={false} isOpen={isOpen} setIsOpen={setIsOpen} />
-      ) : (
-        <></>
-      )}
+      <ProfileEditModal isPC={false} isOpen={isOpen} setIsOpen={setIsOpen} />
+
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
           <Image
@@ -115,20 +110,14 @@ export default function MobileHeader({
               {authService.currentUser?.displayName}
             </CustomH2Light>
             <Margin direction="column" size={13} />
-            {isOwner ? (
-              <Style.ProfileEditButton
-                onClick={() => {
-                  setIsOpen(true)
-                }}
-                style={{ fontWeight: 300 }}
-              >
-                프로필 편집
-              </Style.ProfileEditButton>
-            ) : (
-              <Style.ProfileEditButton style={{ fontWeight: 300 }}>
-                팔로우
-              </Style.ProfileEditButton>
-            )}
+
+            <Style.ProfileEditButton
+              onClick={() => {
+                setIsOpen(true)
+              }}
+            >
+              프로필 편집
+            </Style.ProfileEditButton>
           </FlexBox>
         </FlexBox>
       </Style.ProfileWrapper>

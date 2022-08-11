@@ -222,6 +222,7 @@ export default function Auth() {
       userId: response.user.uid,
       profileImage: response.user.photoURL,
       name: response.user.displayName,
+      email: response.user.email,
     }
     await updateDoc(newUserToFirestoreRef, { info: UserDataForm }).catch(
       async (error) => {

@@ -126,7 +126,6 @@ export default function PCHeader({
               onClick={() => {
                 setIsOpen(true)
               }}
-              style={{ fontWeight: 400 }}
             >
               프로필 편집
             </Style.ProfileEditButton>
