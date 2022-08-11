@@ -35,7 +35,6 @@ export default function ProfileHeader({
             setPickImageData={setPickImageData}
             pickImageData={pickImageData}
             privateImageDataLength={privateImageDataLength}
-            isOwner={isOwner}
           />
         ) : (
           <MobileHeader

@@ -7,9 +7,6 @@ import { CustomH2, CustomH3, CustomH4, FlexBox, Margin } from "ui"
 
 type Props = {
   imageDataLength: number
-  privateImageDataLength: number
-  setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
-  pickImageData: "all" | "public" | "private"
 }
 
 const Style = {
@@ -47,27 +44,7 @@ const Style = {
     width: 600px;
     display: flex;
     height: 60px;
-    justify-content: space-between;
-  `,
-  SortToPublic: styled.div`
-    width: 33%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 9px;
-    border-top: 3px solid
-      ${(props) => (props.about === "public" ? "grey" : "none")};
-    cursor: pointer;
-  `,
-  SortToPrivate: styled.div`
-    width: 33%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 9px;
-    border-top: 3px solid
-      ${(props) => (props.about === "private" ? "grey" : "none")};
-    cursor: pointer;
+    justify-content: center;
   `,
   SortToAll: styled.div`
     width: 33%;
@@ -75,22 +52,16 @@ const Style = {
     flex-direction: column;
     align-items: center;
     gap: 9px;
-    border-top: 3px solid
-      ${(props) => (props.about === "all" ? "grey" : "none")};
+    border-top: 3px solid grey;
     cursor: pointer;
   `,
 }
 
-export default function PCHeader({
-  imageDataLength,
-  setPickImageData,
-  pickImageData,
-  privateImageDataLength,
-}: Props) {
+export default function PCHeader({ imageDataLength }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   return (
     <>
-      <ProfileEditModal isOpen={isOpen} setIsOpen={setIsOpen} isPC={true} />
+      {/* 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
         <Image
@@ -113,60 +84,26 @@ export default function PCHeader({
           <FlexBox alignItems="center">
             <CustomH2>{authService.currentUser?.displayName}</CustomH2>
             <Margin direction="row" size={20} />
-            <Style.ProfileEditButton
-              onClick={() => {
-                setIsOpen(true)
-              }}
-            >
-              프로필 편집
-            </Style.ProfileEditButton>
+
+            <Style.ProfileEditButton>팔로우</Style.ProfileEditButton>
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
             <CustomH3>이메일: {authService.currentUser?.email}</CustomH3>
           </FlexBox>
           <Margin direction="column" size={15} />
-          {pickImageData === "all" && (
+          <FlexBox gap={40}>
             <CustomH3>게시물: {imageDataLength}</CustomH3>
-          )}
-          {pickImageData === "public" && (
-            <CustomH3>
-              공개 게시물: {imageDataLength - privateImageDataLength}
-            </CustomH3>
-          )}
-          {pickImageData === "private" && (
-            <CustomH3>비공개 게시물: {privateImageDataLength}</CustomH3>
-          )}
+            <CustomH3>팔로워: </CustomH3>
+            <CustomH3>팔로우: </CustomH3>
+          </FlexBox>
         </Style.ProfileInfo>
       </Style.ProfileHeader>
       <Style.SortWrapper>
-        <Style.SortToAll
-          about={pickImageData}
-          onClick={() => {
-            setPickImageData("all")
-          }}
-        >
+        <Style.SortToAll>
           <CustomH4>전체 게시물</CustomH4>
           <Image src="/all-file.svg" alt="allFile" width={15} height={15} />
         </Style.SortToAll>
-        <Style.SortToPublic
-          about={pickImageData}
-          onClick={() => {
-            setPickImageData("public")
-          }}
-        >
-          <CustomH4>공개 게시물</CustomH4>
-          <Image src="/unLock.svg" alt="publicFile" width={15} height={15} />
-        </Style.SortToPublic>
-        <Style.SortToPrivate
-          about={pickImageData}
-          onClick={() => {
-            setPickImageData("private")
-          }}
-        >
-          <CustomH4>비공개 게시물</CustomH4>
-          <Image src="/lock.svg" alt="privateFile" width={15} height={15} />
-        </Style.SortToPrivate>
       </Style.SortWrapper>
     </>
   )

@@ -1,5 +1,4 @@
 import { authService } from "@FireBase"
-import ProfileEditModal from "@share/ProfileEditModal"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
@@ -7,10 +6,6 @@ import { CustomH2, CustomH4, FlexBox, Margin } from "ui"
 
 type Props = {
   imageDataLength: number
-  privateImageDataLength: number
-  setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
-  pickImageData: "all" | "public" | "private"
-  isOwner: boolean
 }
 
 const Style = {
@@ -77,21 +72,11 @@ const Style = {
   `,
 }
 
-export default function MobileHeader({
-  imageDataLength,
-  privateImageDataLength,
-  setPickImageData,
-  pickImageData,
-  isOwner,
-}: Props) {
+export default function MobileHeader({ imageDataLength }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   return (
     <>
-      {isOwner ? (
-        <ProfileEditModal isPC={false} isOpen={isOpen} setIsOpen={setIsOpen} />
-      ) : (
-        <></>
-      )}
+      {/* 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
           <Image
@@ -113,48 +98,23 @@ export default function MobileHeader({
           <FlexBox column={true} width="fit-content">
             <CustomH2>{authService.currentUser?.displayName}</CustomH2>
             <Margin direction="column" size={13} />
-            {isOwner ? (
-              <Style.ProfileEditButton
-                onClick={() => {
-                  setIsOpen(true)
-                }}
-              >
-                프로필 편집
-              </Style.ProfileEditButton>
-            ) : (
-              <Style.ProfileEditButton>팔로우</Style.ProfileEditButton>
-            )}
+            <Style.ProfileEditButton>팔로우</Style.ProfileEditButton>
           </FlexBox>
         </FlexBox>
       </Style.ProfileWrapper>
       <Margin direction="column" size={15} />
       <Style.ProfileInfoWrapper>
-        <Style.SortToAll
-          onClick={() => {
-            setPickImageData("all")
-          }}
-          about={pickImageData}
-        >
-          <CustomH4>전체 게시물</CustomH4>
+        <Style.SortToAll>
+          <CustomH4>게시물</CustomH4>
           <CustomH4>{imageDataLength}</CustomH4>
         </Style.SortToAll>
-        <Style.SortToPublic
-          onClick={() => {
-            setPickImageData("public")
-          }}
-          about={pickImageData}
-        >
-          <CustomH4>공개 게시물</CustomH4>
-          <CustomH4>{imageDataLength - privateImageDataLength}</CustomH4>
+        <Style.SortToPublic>
+          <CustomH4>팔로워</CustomH4>
+          <CustomH4>{}</CustomH4>
         </Style.SortToPublic>
-        <Style.SortToPrivate
-          onClick={() => {
-            setPickImageData("private")
-          }}
-          about={pickImageData}
-        >
-          <CustomH4>비공개 게시물</CustomH4>
-          <CustomH4>{privateImageDataLength}</CustomH4>
+        <Style.SortToPrivate>
+          <CustomH4>팔로우</CustomH4>
+          <CustomH4>{}</CustomH4>
         </Style.SortToPrivate>
       </Style.ProfileInfoWrapper>
     </>
