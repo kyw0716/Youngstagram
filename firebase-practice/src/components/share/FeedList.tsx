@@ -53,7 +53,7 @@ export default function FeedList({
             return (
               <FeedCard
                 key={index}
-                imageData={data}
+                feedData={data}
                 isMainPage={isMainPage}
                 setPickImageData={setPickImageData}
                 windowSize={windowSize}

@@ -16,7 +16,7 @@ import { FlexBox, Margin } from "ui"
 import { addDoc, doc, setDoc, updateDoc } from "firebase/firestore"
 import Layout from "components/layout"
 import Image from "next/image"
-import { UserData } from "backend/dto"
+import { UserInfo } from "backend/dto"
 import { async } from "@firebase/util"
 
 const Style = {
@@ -218,7 +218,7 @@ export default function Auth() {
 
   const CreateNewUserToFirestore = async (response: UserCredential) => {
     const newUserToFirestoreRef = doc(DBService, "users", response.user.uid)
-    const UserDataForm: UserData = {
+    const UserDataForm: UserInfo = {
       userId: response.user.uid,
       profileImage: response.user.photoURL,
       name: response.user.displayName,

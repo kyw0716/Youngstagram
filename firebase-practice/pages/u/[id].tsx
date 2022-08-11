@@ -8,7 +8,7 @@ import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
 import Layout from "components/layout"
 import Image from "next/image"
-import { FeedData } from "backend/dto"
+import { FeedData, UserData } from "backend/dto"
 
 const Style = {
   Wrapper: styled.div`
@@ -46,17 +46,13 @@ export default function Profile({ userId }: Props) {
   }, [])
   useEffect(() => {
     if (userData !== undefined && userData.feed !== undefined) {
-      setAllImageData(
-        (userData.feed as FeedData[]).filter(
-          (data) => data.creator.userId === authService.currentUser?.uid,
-        ),
-      )
-      setDataToView(userData.feed as FeedData[])
+      setAllImageData((userData as UserData).feed)
+      setDataToView((userData as UserData).feed)
       setPrivateImageData(
-        (userData.feed as FeedData[]).filter((data) => data.private),
+        (userData as UserData).feed.filter((data) => data.private),
       )
       setPublicImageData(
-        (userData.feed as FeedData[]).filter((data) => !data.private),
+        (userData as UserData).feed.filter((data) => !data.private),
       )
     }
   }, [userData])

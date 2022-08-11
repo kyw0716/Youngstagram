@@ -1,5 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { UserData, FeedData } from "backend/dto"
+import { UserInfo, FeedData } from "backend/dto"
 import { updateProfile } from "firebase/auth"
 import {
   doc,
@@ -171,7 +171,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         ],
       })
       if (submitUserName !== "") {
-        const profileForm: UserData = {
+        const profileForm: UserInfo = {
           userId: authService.currentUser.uid,
           profileImage: authService.currentUser.photoURL,
           name: submitUserName,
@@ -184,7 +184,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         )
       }
       if (imageUrlToAuthService !== "") {
-        const profileForm: UserData = {
+        const profileForm: UserInfo = {
           userId: authService.currentUser.uid,
           profileImage: imageUrlToAuthService,
           name: authService.currentUser.displayName,

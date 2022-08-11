@@ -8,7 +8,7 @@ import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
 import Layout from "components/layout"
 import Image from "next/image"
-import { FeedData } from "backend/dto"
+import { FeedData, UserData } from "backend/dto"
 
 const Style = {
   Wrapper: styled.div`
@@ -25,91 +25,40 @@ const Style = {
 
 export default function Profile({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
-  const [allImageData, setAllImageData] = useState<FeedData[]>([])
-  const [privateImageData, setPrivateImageData] = useState<FeedData[]>([])
-  const [publicImageData, setPublicImageData] = useState<FeedData[]>([])
+  const [feedData, setFeedData] = useState<FeedData[]>([])
 
   const [pickImageData, setPickImageData] = useState<
     "all" | "public" | "private"
   >("all")
-  const [dataToView, setDataToView] = useState<FeedData[]>([])
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "mainPage", "userImageDataAll")
+    const userDataRef = doc(DBService, "users", `${userId}`)
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })
   }, [])
   useEffect(() => {
-    if (userData !== undefined && userData.images !== undefined) {
-      setAllImageData(
-        (userData.images as FeedData[]).filter(
-          (data) => data.creator.userId === authService.currentUser?.uid,
-        ),
-      )
-      setDataToView(
-        (userData.images as FeedData[]).filter(
-          (data) => data.creator.userId === authService.currentUser?.uid,
-        ),
-      )
-      setPrivateImageData(
-        (userData.images as FeedData[])
-          .filter(
-            (data) => data.creator.userId === authService.currentUser?.uid,
-          )
-          .filter((data) => data.private),
-      )
-      setPublicImageData(
-        (userData.images as FeedData[])
-          .filter(
-            (data) => data.creator.userId === authService.currentUser?.uid,
-          )
-          .filter((data) => !data.private),
-      )
+    if (userData !== undefined && userData.feed !== undefined) {
+      setFeedData((userData as UserData).feed)
     }
   }, [userData])
-
-  useEffect(() => {
-    if (pickImageData === "all") {
-      setDataToView(allImageData)
-      return
-    }
-    if (pickImageData === "public") {
-      setDataToView(publicImageData)
-      return
-    }
-    if (pickImageData === "private") {
-      setDataToView(privateImageData)
-    }
-  }, [pickImageData])
 
   return (
     <Layout>
       <Style.Wrapper>
-        <ProfileHeader
-          imageDataLength={allImageData.length}
-          privateImageDataLength={privateImageData.length}
-          setPickImageData={setPickImageData}
-          pickImageData={pickImageData}
-          isOwner={false}
-        />
-        {allImageData.length === 0 ? (
+        <ProfileHeader imageDataLength={feedData.length} />
+        {feedData.length === 0 ? (
           <FlexBox column={true} width="fit-content" alignItems="center">
             <Image src="/empty.svg" alt="empty" width={150} height={150} />
             <Margin direction="column" size={15} />
             <CustomH2>게시물이 없어용</CustomH2>
           </FlexBox>
         ) : (
-          <>
-            {authService.currentUser?.uid !== undefined &&
-              authService.currentUser.displayName !== null && (
-                <FeedList
-                  FeedData={dataToView}
-                  isMainPage={false}
-                  setPickImageData={setPickImageData}
-                />
-              )}
-          </>
+          <FeedList
+            FeedData={feedData}
+            isMainPage={false}
+            setPickImageData={setPickImageData}
+          />
         )}
       </Style.Wrapper>
     </Layout>

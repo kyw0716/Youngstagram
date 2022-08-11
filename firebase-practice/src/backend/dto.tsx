@@ -20,7 +20,18 @@ export type Comment = {
   profileImage: string
   uploadTime: string
 }
+export type UserInfo = {
+  userId: string
+  profileImage: string | null
+  name: string | null
+}
 export type UserData = {
+  info: UserInfo
+  follow: UserInfoForFollow[]
+  follower: UserInfoForFollow[]
+  feed: FeedData[]
+}
+export type UserInfoForFollow = {
   userId: string
   profileImage: string | null
   name: string | null

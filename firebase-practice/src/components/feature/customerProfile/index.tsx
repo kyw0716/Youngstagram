@@ -5,19 +5,9 @@ import { Margin } from "ui"
 
 type Props = {
   imageDataLength: number
-  privateImageDataLength: number
-  setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
-  pickImageData: "all" | "public" | "private"
-  isOwner: boolean
 }
 
-export default function ProfileHeader({
-  imageDataLength,
-  privateImageDataLength,
-  setPickImageData,
-  pickImageData,
-  isOwner,
-}: Props) {
+export default function ProfileHeader({ imageDataLength }: Props) {
   const [windowSize, setWindowSize] = useState<number>(0)
   useEffect(() => {
     setWindowSize(window.innerWidth)

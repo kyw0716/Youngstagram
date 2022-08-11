@@ -24,7 +24,7 @@ import CommentModal from "./CommentModal"
 import FeedUploadModal from "./FeedUploadModal"
 
 type Props = {
-  imageData: FeedData
+  feedData: FeedData
   isMainPage: boolean
   setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
   windowSize: number
@@ -189,7 +189,7 @@ const Style = {
 }
 
 export default function FeedCard({
-  imageData,
+  feedData,
   isMainPage,
   setPickImageData,
   windowSize,
@@ -202,69 +202,91 @@ export default function FeedCard({
   const [isShowMore, setIsShowMore] = useState<boolean>(false)
 
   const handleDeleteImage = async () => {
+    const feed: FeedData = {
+      creator: {
+        userId: feedData.creator.userId,
+        name: feedData.creator.name,
+        profileImage: feedData.creator.profileImage,
+      },
+      desc: feedData.desc,
+      imageUrl: feedData.imageUrl,
+      location: feedData.location,
+      private: feedData.private,
+      storageId: feedData.storageId,
+      uploadTime: feedData.uploadTime,
+    }
     const storageImageRef = ref(
       storageService,
-      `images/${authService.currentUser?.uid}/${imageData.storageId}`,
+      `images/${feedData.creator.userId}/${feedData.storageId}`,
     )
-    const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
-    const firestoreCommentRef = doc(DBService, "Comments", imageData.storageId)
+    const firestoreAllRef = doc(DBService, "mainPage", "userFeedDataAll")
+    const firestoreCommentRef = doc(DBService, "Comments", feedData.storageId)
+    const firestorePersonalRef = doc(
+      DBService,
+      `users`,
+      `${feedData.creator.userId}`,
+    )
 
     handleThreeDotMenuClick()
 
     await deleteObject(storageImageRef)
     await deleteDoc(firestoreCommentRef)
 
-    await updateDoc(firestoreImageAllRef, {
-      images: arrayRemove({
-        creator: {
-          id: imageData.creator.userId,
-          name: imageData.creator.name,
-          profileImage: imageData.creator.profileImage,
-        },
-        desc: imageData.desc,
-        imageUrl: imageData.imageUrl,
-        location: imageData.location,
-        private: imageData.private,
-        storageId: imageData.storageId,
-        uploadTime: imageData.uploadTime,
-      }),
+    await updateDoc(firestorePersonalRef, {
+      feed: arrayRemove(feed),
+    })
+    await updateDoc(firestoreAllRef, {
+      feed: arrayRemove(feed),
     })
     setPickImageData("all")
   }
   const handlePrivateToggle = async () => {
-    const firestoreImageAllRef = doc(DBService, "mainPage", "userImageDataAll")
+    const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
+    const firestorePersonalRef = doc(
+      DBService,
+      `users`,
+      `${feedData.creator.userId}`,
+    )
+    const feed: FeedData = {
+      creator: {
+        userId: feedData.creator.userId,
+        name: feedData.creator.name,
+        profileImage: feedData.creator.profileImage,
+      },
+      desc: feedData.desc,
+      imageUrl: feedData.imageUrl,
+      location: feedData.location,
+      private: feedData.private,
+      storageId: feedData.storageId,
+      uploadTime: feedData.uploadTime,
+    }
+    const toggleFeed: FeedData = {
+      creator: {
+        userId: feedData.creator.userId,
+        name: feedData.creator.name,
+        profileImage: feedData.creator.profileImage,
+      },
+      desc: feedData.desc,
+      imageUrl: feedData.imageUrl,
+      location: feedData.location,
+      private: !feedData.private,
+      storageId: feedData.storageId,
+      uploadTime: feedData.uploadTime,
+    }
 
     handleThreeDotMenuClick()
-
+    await updateDoc(firestorePersonalRef, {
+      feed: arrayRemove(feed),
+    }).then(async () => {
+      await updateDoc(firestorePersonalRef, {
+        feed: arrayUnion(toggleFeed),
+      })
+    })
     await updateDoc(firestoreImageAllRef, {
-      images: arrayRemove({
-        creator: {
-          id: imageData.creator.userId,
-          name: imageData.creator.name,
-          profileImage: imageData.creator.profileImage,
-        },
-        desc: imageData.desc,
-        imageUrl: imageData.imageUrl,
-        location: imageData.location,
-        private: imageData.private,
-        storageId: imageData.storageId,
-        uploadTime: imageData.uploadTime,
-      }),
+      feed: arrayRemove(feed),
     }).then(async () => {
       await updateDoc(firestoreImageAllRef, {
-        images: arrayUnion({
-          creator: {
-            id: imageData.creator.userId,
-            name: imageData.creator.name,
-            profileImage: imageData.creator.profileImage,
-          },
-          desc: imageData.desc,
-          imageUrl: imageData.imageUrl,
-          location: imageData.location,
-          private: !imageData.private,
-          storageId: imageData.storageId,
-          uploadTime: imageData.uploadTime,
-        }),
+        feed: arrayUnion(toggleFeed),
       })
     })
     setPickImageData("all")
@@ -278,13 +300,13 @@ export default function FeedCard({
       <CommentModal
         isOpen={isCommentModalOpen}
         setIsOpen={setIsCommentModalOpen}
-        imageData={imageData}
+        imageData={feedData}
         windowSize={windowSize}
       />
       <FeedUploadModal
         isOpen={isImageUploadModalOpen}
         setIsOpen={setIsImageUploadModalOpen}
-        feedData={imageData}
+        feedData={feedData}
       />
       <Style.ImageCard
         style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
@@ -304,8 +326,8 @@ export default function FeedCard({
           >
             <Image
               src={
-                imageData.creator.profileImage !== "null"
-                  ? `${imageData.creator.profileImage}`
+                feedData.creator.profileImage !== "null"
+                  ? `${feedData.creator.profileImage}`
                   : "/profile.svg"
               }
               alt="creator"
@@ -313,14 +335,14 @@ export default function FeedCard({
               height={38}
               style={{ borderRadius: 38, cursor: "pointer" }}
               onClick={() => {
-                router.push(`/profile/${imageData.creator.userId}`)
+                router.push(`/profile/${feedData.creator.userId}`)
               }}
             />
             <Style.HeaderText>
               <Style.UserName>
-                {imageData.creator ? imageData.creator.name : ""}
+                {feedData.creator ? feedData.creator.name : ""}
               </Style.UserName>
-              <Style.ImageTitle>{imageData.location}</Style.ImageTitle>
+              <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
             </Style.HeaderText>
           </FlexBox>
           {isMainPage ? (
@@ -354,7 +376,7 @@ export default function FeedCard({
                   편집
                 </Style.EditButton>
                 <Style.PrivateToggleButton onClick={handlePrivateToggle}>
-                  {imageData.private ? (
+                  {feedData.private ? (
                     <Image
                       src="/unLock.svg"
                       alt="unlock"
@@ -365,7 +387,7 @@ export default function FeedCard({
                     <Image src="/lock.svg" alt="lock" width={15} height={15} />
                   )}
 
-                  {imageData.private ? "공개" : "비공개"}
+                  {feedData.private ? "공개" : "비공개"}
                 </Style.PrivateToggleButton>
                 <Style.Deletebutton onClick={handleDeleteImage}>
                   <Image
@@ -395,7 +417,7 @@ export default function FeedCard({
           )}
         </Style.ImageHeader>
         <Image
-          src={imageData.imageUrl ? imageData.imageUrl : "/empty.svg"}
+          src={feedData.imageUrl ? feedData.imageUrl : "/empty.svg"}
           width={470}
           height={600}
           alt="Image"
@@ -422,11 +444,11 @@ export default function FeedCard({
         <Margin direction="column" size={15} />
 
         <Style.CommentBox>
-          {imageData.desc.length > 20 ? (
+          {feedData.desc.length > 20 ? (
             <>
               {isShowMore ? (
                 <span>
-                  {imageData.desc}
+                  {feedData.desc}
                   <CustomH6
                     style={{
                       cursor: "pointer",
@@ -442,7 +464,7 @@ export default function FeedCard({
                 </span>
               ) : (
                 <FlexBox alignItems="flex-end">
-                  {imageData.desc.slice(0, 20)}
+                  {feedData.desc.slice(0, 20)}
                   <Margin direction="row" size={10} />
                   <CustomH6
                     style={{
@@ -461,7 +483,7 @@ export default function FeedCard({
               )}
             </>
           ) : (
-            <>{imageData.desc}</>
+            <>{feedData.desc}</>
           )}
         </Style.CommentBox>
       </Style.ImageCard>
