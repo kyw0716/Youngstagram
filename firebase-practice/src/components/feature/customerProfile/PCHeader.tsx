@@ -3,7 +3,16 @@ import ProfileEditModal from "@share/ProfileEditModal"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
-import { CustomH2, CustomH3, CustomH4, FlexBox, Margin } from "ui"
+import {
+  CustomH2,
+  CustomH2Light,
+  CustomH3,
+  CustomH3Light,
+  CustomH4,
+  CustomH4Light,
+  FlexBox,
+  Margin,
+} from "ui"
 
 type Props = {
   imageDataLength: number
@@ -82,26 +91,30 @@ export default function PCHeader({ imageDataLength }: Props) {
         <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
-            <CustomH2>{authService.currentUser?.displayName}</CustomH2>
+            <CustomH2Light>
+              {authService.currentUser?.displayName}
+            </CustomH2Light>
             <Margin direction="row" size={20} />
 
             <Style.ProfileEditButton>팔로우</Style.ProfileEditButton>
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
-            <CustomH3>이메일: {authService.currentUser?.email}</CustomH3>
+            <CustomH3Light>
+              이메일: {authService.currentUser?.email}
+            </CustomH3Light>
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox gap={40}>
-            <CustomH3>게시물: {imageDataLength}</CustomH3>
-            <CustomH3>팔로워: </CustomH3>
-            <CustomH3>팔로우: </CustomH3>
+            <CustomH3Light>게시물: {imageDataLength}</CustomH3Light>
+            <CustomH3Light>팔로워: </CustomH3Light>
+            <CustomH3Light>팔로우: </CustomH3Light>
           </FlexBox>
         </Style.ProfileInfo>
       </Style.ProfileHeader>
       <Style.SortWrapper>
         <Style.SortToAll>
-          <CustomH4>전체 게시물</CustomH4>
+          <CustomH4Light>전체 게시물</CustomH4Light>
           <Image src="/all-file.svg" alt="allFile" width={15} height={15} />
         </Style.SortToAll>
       </Style.SortWrapper>

@@ -75,6 +75,42 @@ const TextStyle = {
     padding: 0;
     color: #616161;
   `,
+  CustomH1Light: styled.h1`
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+    color: #616161;
+  `,
+  CustomH2Light: styled.h2`
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+    color: #616161;
+  `,
+  CustomH3Light: styled.h3`
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+    color: #616161;
+  `,
+  CustomH4Light: styled.h4`
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+    color: #616161;
+  `,
+  CustomH5Light: styled.h5`
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+    color: #616161;
+  `,
+  CustomH6Light: styled.h6`
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+    color: #616161;
+  `,
 }
 export const CustomH1 = TextStyle.CustomH1
 export const CustomH2 = TextStyle.CustomH2
@@ -82,6 +118,12 @@ export const CustomH3 = TextStyle.CustomH3
 export const CustomH4 = TextStyle.CustomH4
 export const CustomH5 = TextStyle.CustomH5
 export const CustomH6 = TextStyle.CustomH6
+export const CustomH1Light = TextStyle.CustomH1Light
+export const CustomH2Light = TextStyle.CustomH2Light
+export const CustomH3Light = TextStyle.CustomH3Light
+export const CustomH4Light = TextStyle.CustomH4Light
+export const CustomH5Light = TextStyle.CustomH5Light
+export const CustomH6Light = TextStyle.CustomH6Light
 
 export function HeartIcon() {
   const [isHover, setIsHover] = useState<boolean>(false)

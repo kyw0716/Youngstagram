@@ -3,7 +3,7 @@ import ProfileEditModal from "@share/ProfileEditModal"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
-import { CustomH2, CustomH4, FlexBox, Margin } from "ui"
+import { CustomH2Light, CustomH4, CustomH4Light, FlexBox, Margin } from "ui"
 
 type Props = {
   imageDataLength: number
@@ -111,18 +111,23 @@ export default function MobileHeader({
           />
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2>{authService.currentUser?.displayName}</CustomH2>
+            <CustomH2Light>
+              {authService.currentUser?.displayName}
+            </CustomH2Light>
             <Margin direction="column" size={13} />
             {isOwner ? (
               <Style.ProfileEditButton
                 onClick={() => {
                   setIsOpen(true)
                 }}
+                style={{ fontWeight: 300 }}
               >
                 프로필 편집
               </Style.ProfileEditButton>
             ) : (
-              <Style.ProfileEditButton>팔로우</Style.ProfileEditButton>
+              <Style.ProfileEditButton style={{ fontWeight: 300 }}>
+                팔로우
+              </Style.ProfileEditButton>
             )}
           </FlexBox>
         </FlexBox>
@@ -135,8 +140,8 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH4>전체 게시물</CustomH4>
-          <CustomH4>{imageDataLength}</CustomH4>
+          <CustomH4Light>전체 게시물</CustomH4Light>
+          <CustomH4Light>{imageDataLength}</CustomH4Light>
         </Style.SortToAll>
         <Style.SortToPublic
           onClick={() => {
@@ -144,8 +149,10 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH4>공개 게시물</CustomH4>
-          <CustomH4>{imageDataLength - privateImageDataLength}</CustomH4>
+          <CustomH4Light>개 게시물</CustomH4Light>
+          <CustomH4Light>
+            {imageDataLength - privateImageDataLength}
+          </CustomH4Light>
         </Style.SortToPublic>
         <Style.SortToPrivate
           onClick={() => {
@@ -153,8 +160,8 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH4>비공개 게시물</CustomH4>
-          <CustomH4>{privateImageDataLength}</CustomH4>
+          <CustomH4Light>공개 게시물</CustomH4Light>
+          <CustomH4Light>{privateImageDataLength}</CustomH4Light>
         </Style.SortToPrivate>
       </Style.ProfileInfoWrapper>
     </>

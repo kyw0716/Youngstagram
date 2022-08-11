@@ -2,7 +2,14 @@ import { authService } from "@FireBase"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
-import { CustomH2, CustomH4, FlexBox, Margin } from "ui"
+import {
+  CustomH2,
+  CustomH2Light,
+  CustomH4,
+  CustomH4Light,
+  FlexBox,
+  Margin,
+} from "ui"
 
 type Props = {
   imageDataLength: number
@@ -96,7 +103,9 @@ export default function MobileHeader({ imageDataLength }: Props) {
           />
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2>{authService.currentUser?.displayName}</CustomH2>
+            <CustomH2Light>
+              {authService.currentUser?.displayName}
+            </CustomH2Light>
             <Margin direction="column" size={13} />
             <Style.ProfileEditButton>팔로우</Style.ProfileEditButton>
           </FlexBox>
@@ -105,16 +114,16 @@ export default function MobileHeader({ imageDataLength }: Props) {
       <Margin direction="column" size={15} />
       <Style.ProfileInfoWrapper>
         <Style.SortToAll>
-          <CustomH4>게시물</CustomH4>
-          <CustomH4>{imageDataLength}</CustomH4>
+          <CustomH4Light>게시물</CustomH4Light>
+          <CustomH4Light>{imageDataLength}</CustomH4Light>
         </Style.SortToAll>
         <Style.SortToPublic>
-          <CustomH4>팔로워</CustomH4>
-          <CustomH4>{}</CustomH4>
+          <CustomH4Light>팔로워</CustomH4Light>
+          <CustomH4Light>{}</CustomH4Light>
         </Style.SortToPublic>
         <Style.SortToPrivate>
-          <CustomH4>팔로우</CustomH4>
-          <CustomH4>{}</CustomH4>
+          <CustomH4Light>팔로우</CustomH4Light>
+          <CustomH4Light>{}</CustomH4Light>
         </Style.SortToPrivate>
       </Style.ProfileInfoWrapper>
     </>
