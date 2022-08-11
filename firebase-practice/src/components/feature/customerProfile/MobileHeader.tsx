@@ -23,10 +23,10 @@ const Style = {
     width: 250px;
     height: 40px;
     -webkit-appearance: none;
-    border: 1px solid lightgrey;
+    border: 2px solid lightgrey;
     border-radius: 10px;
-    background-color: #4891ff;
-    color: white;
+    background-color: white;
+    color: black;
     display: flex;
     justify-content: center;
     align-items: center;
