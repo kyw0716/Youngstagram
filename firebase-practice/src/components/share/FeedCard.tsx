@@ -21,7 +21,7 @@ import {
   ShareIcon,
 } from "ui"
 import CommentModal from "./CommentModal"
-import ImageUploadModal from "./ImageUploadModal"
+import FeedUploadModal from "./FeedUploadModal"
 
 type Props = {
   imageData: FeedData
@@ -281,10 +281,10 @@ export default function FeedCard({
         imageData={imageData}
         windowSize={windowSize}
       />
-      <ImageUploadModal
+      <FeedUploadModal
         isOpen={isImageUploadModalOpen}
         setIsOpen={setIsImageUploadModalOpen}
-        imageData={imageData}
+        feedData={imageData}
       />
       <Style.ImageCard
         style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
