@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
-import ImageList from "@share/ImageList"
+import FeedList from "@share/FeedList"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { GetServerSideProps } from "next"
 import ProfileHeader from "@feature/customerProfile"
@@ -103,8 +103,8 @@ export default function Profile({ userId }: Props) {
           <>
             {authService.currentUser?.uid !== undefined &&
               authService.currentUser.displayName !== null && (
-                <ImageList
-                  imageData={dataToView}
+                <FeedList
+                  FeedData={dataToView}
                   isMainPage={false}
                   setPickImageData={setPickImageData}
                 />

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { Margin } from "ui"
-import ImageList from "@share/ImageList"
+import FeedList from "@share/FeedList"
 import Layout from "components/layout"
 import { FeedData } from "backend/dto"
 
@@ -12,13 +12,13 @@ const Home: NextPage = () => {
   const [imageData, setImageData] = useState<FeedData[]>([])
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "mainPage", `userImageDataAll`)
+    const userDataRef = doc(DBService, "mainPage", `userFeedDataAll`)
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })
   }, [])
   useEffect(() => {
-    if (userData !== undefined) setImageData(userData.images)
+    if (userData !== undefined) setImageData(userData.feed)
   }, [userData])
 
   const [pickImageData, setPickImageData] = useState<
@@ -28,8 +28,8 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Margin direction="column" size={30} />
-      <ImageList
-        imageData={imageData ? imageData.filter((data) => !data.private) : []}
+      <FeedList
+        FeedData={imageData ? imageData.filter((data) => !data.private) : []}
         isMainPage={true}
         setPickImageData={setPickImageData}
       />

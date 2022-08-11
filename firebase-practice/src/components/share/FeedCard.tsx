@@ -188,7 +188,7 @@ const Style = {
   `,
 }
 
-export default function ImageCard({
+export default function FeedCard({
   imageData,
   isMainPage,
   setPickImageData,

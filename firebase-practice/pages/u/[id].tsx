@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
-import ImageList from "@share/ImageList"
+import FeedList from "@share/FeedList"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { GetServerSideProps } from "next"
 import ProfileHeader from "@feature/ownerProfile"
@@ -35,36 +35,28 @@ export default function Profile({ userId }: Props) {
   const [dataToView, setDataToView] = useState<FeedData[]>([])
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "mainPage", "userImageDataAll")
+    const userDataRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })
   }, [])
   useEffect(() => {
-    if (userData !== undefined && userData.images !== undefined) {
+    if (userData !== undefined && userData.feed !== undefined) {
       setAllImageData(
-        (userData.images as FeedData[]).filter(
+        (userData.feed as FeedData[]).filter(
           (data) => data.creator.userId === authService.currentUser?.uid,
         ),
       )
-      setDataToView(
-        (userData.images as FeedData[]).filter(
-          (data) => data.creator.userId === authService.currentUser?.uid,
-        ),
-      )
+      setDataToView(userData.feed as FeedData[])
       setPrivateImageData(
-        (userData.images as FeedData[])
-          .filter(
-            (data) => data.creator.userId === authService.currentUser?.uid,
-          )
-          .filter((data) => data.private),
+        (userData.feed as FeedData[]).filter((data) => data.private),
       )
       setPublicImageData(
-        (userData.images as FeedData[])
-          .filter(
-            (data) => data.creator.userId === authService.currentUser?.uid,
-          )
-          .filter((data) => !data.private),
+        (userData.feed as FeedData[]).filter((data) => !data.private),
       )
     }
   }, [userData])
@@ -103,8 +95,8 @@ export default function Profile({ userId }: Props) {
           <>
             {authService.currentUser?.uid !== undefined &&
               authService.currentUser.displayName !== null && (
-                <ImageList
-                  imageData={dataToView}
+                <FeedList
+                  FeedData={dataToView}
                   isMainPage={false}
                   setPickImageData={setPickImageData}
                 />
