@@ -4,10 +4,12 @@ import { CustomH4, CustomH5 } from "ui"
 const Style = {
   Wrapper: styled.div`
     width: 100vw;
-    height: 100px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    bottom: 0;
   `,
 }
 
