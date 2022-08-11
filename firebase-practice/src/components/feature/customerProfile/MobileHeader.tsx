@@ -1,4 +1,5 @@
 import { authService } from "@FireBase"
+import { UserData } from "backend/dto"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
@@ -12,7 +13,7 @@ import {
 } from "ui"
 
 type Props = {
-  imageDataLength: number
+  userData: UserData
 }
 
 const Style = {
@@ -79,33 +80,31 @@ const Style = {
   `,
 }
 
-export default function MobileHeader({ imageDataLength }: Props) {
+export default function MobileHeader({ userData }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   return (
     <>
-      {/* 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
+      {/* TODO: 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
           <Image
             src={
-              authService.currentUser?.photoURL
-                ? `${authService.currentUser?.photoURL}`
+              userData.info.profileImage
+                ? `${userData.info.profileImage}`
                 : "/profile.svg"
             }
             alt="profile"
             width={90}
             height={90}
             style={
-              authService.currentUser?.photoURL
+              userData.info.profileImage
                 ? { borderRadius: "100px" }
                 : { borderRadius: "none" }
             }
           />
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2Light>
-              {authService.currentUser?.displayName}
-            </CustomH2Light>
+            <CustomH2Light>{userData.info.name}</CustomH2Light>
             <Margin direction="column" size={13} />
             <Style.ProfileEditButton>팔로우</Style.ProfileEditButton>
           </FlexBox>
@@ -115,15 +114,21 @@ export default function MobileHeader({ imageDataLength }: Props) {
       <Style.ProfileInfoWrapper>
         <Style.SortToAll>
           <CustomH4Light>게시물</CustomH4Light>
-          <CustomH4Light>{imageDataLength}</CustomH4Light>
+          <CustomH4Light>
+            {userData.feed ? userData.feed.length : 0}
+          </CustomH4Light>
         </Style.SortToAll>
         <Style.SortToPublic>
           <CustomH4Light>팔로워</CustomH4Light>
-          <CustomH4Light>{}</CustomH4Light>
+          <CustomH4Light>
+            {userData.follower ? userData.follower.length : 0}
+          </CustomH4Light>
         </Style.SortToPublic>
         <Style.SortToPrivate>
           <CustomH4Light>팔로우</CustomH4Light>
-          <CustomH4Light>{}</CustomH4Light>
+          <CustomH4Light>
+            {userData.follow ? userData.follow.length : 0}
+          </CustomH4Light>
         </Style.SortToPrivate>
       </Style.ProfileInfoWrapper>
     </>

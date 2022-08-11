@@ -7,7 +7,7 @@ import FeedCard from "./FeedCard"
 
 type Props = {
   FeedData: FeedData[]
-  isMainPage: boolean
+  isCustomer: boolean
   setPickImageData?: React.Dispatch<
     SetStateAction<"public" | "private" | "all">
   >
@@ -33,7 +33,7 @@ const Style = {
 
 export default function FeedList({
   FeedData,
-  isMainPage,
+  isCustomer: isMainPage,
   setPickImageData,
 }: Props) {
   const [windowSize, setWindowSize] = useState<number>(0)

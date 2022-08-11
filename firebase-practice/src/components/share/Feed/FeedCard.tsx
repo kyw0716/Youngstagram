@@ -20,8 +20,8 @@ import {
   Margin,
   ShareIcon,
 } from "ui"
-import CommentModal from "./CommentModal"
-import FeedUploadModal from "./FeedUploadModal"
+import CommentModal from "../CommentModal"
+import FeedUploadModal from "../FeedUploadModal"
 
 type Props = {
   feedData: FeedData

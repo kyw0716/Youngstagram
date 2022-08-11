@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
-import FeedList from "@share/FeedList"
+import FeedList from "@share/Feed/FeedList"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { GetServerSideProps } from "next"
 import ProfileHeader from "@feature/customerProfile"
@@ -34,7 +34,9 @@ export default function Profile({ userId }: Props) {
   useEffect(() => {
     const userDataRef = doc(DBService, "users", `${userId}`)
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
-      setUserData(doc.data())
+      if (doc) {
+        setUserData(doc.data())
+      }
     })
   }, [])
   useEffect(() => {
@@ -45,22 +47,27 @@ export default function Profile({ userId }: Props) {
 
   return (
     <Layout>
-      <Style.Wrapper>
-        <ProfileHeader imageDataLength={feedData.length} />
-        {feedData.length === 0 ? (
-          <FlexBox column={true} width="fit-content" alignItems="center">
-            <Image src="/empty.svg" alt="empty" width={150} height={150} />
-            <Margin direction="column" size={15} />
-            <CustomH2>게시물이 없어용</CustomH2>
-          </FlexBox>
-        ) : (
-          <FeedList
-            FeedData={feedData}
-            isMainPage={false}
-            setPickImageData={setPickImageData}
+      {userData !== undefined && (
+        <Style.Wrapper>
+          <ProfileHeader
+            imageDataLength={feedData.length}
+            userData={userData as UserData}
           />
-        )}
-      </Style.Wrapper>
+          {feedData.length === 0 ? (
+            <FlexBox column={true} width="fit-content" alignItems="center">
+              <Image src="/empty.svg" alt="empty" width={150} height={150} />
+              <Margin direction="column" size={15} />
+              <CustomH2>게시물이 없어용</CustomH2>
+            </FlexBox>
+          ) : (
+            <FeedList
+              FeedData={feedData}
+              isCustomer={true}
+              setPickImageData={setPickImageData}
+            />
+          )}
+        </Style.Wrapper>
+      )}
     </Layout>
   )
 }

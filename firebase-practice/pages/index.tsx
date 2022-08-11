@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { Margin } from "ui"
-import FeedList from "@share/FeedList"
+import FeedList from "@share/Feed/FeedList"
 import Layout from "components/layout"
 import { FeedData } from "backend/dto"
 
@@ -30,7 +30,7 @@ const Home: NextPage = () => {
       <Margin direction="column" size={30} />
       <FeedList
         FeedData={imageData ? imageData.filter((data) => !data.private) : []}
-        isMainPage={true}
+        isCustomer={true}
         setPickImageData={setPickImageData}
       />
     </Layout>

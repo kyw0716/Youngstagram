@@ -1,5 +1,6 @@
 import { authService } from "@FireBase"
 import ProfileEditModal from "@share/ProfileEditModal"
+import { UserData } from "backend/dto"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
@@ -15,7 +16,7 @@ import {
 } from "ui"
 
 type Props = {
-  imageDataLength: number
+  userData: UserData
 }
 
 const Style = {
@@ -66,23 +67,23 @@ const Style = {
   `,
 }
 
-export default function PCHeader({ imageDataLength }: Props) {
+export default function PCHeader({ userData }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   return (
     <>
-      {/* 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
+      {/*TODO: 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
         <Image
           src={
-            authService.currentUser?.photoURL
-              ? `${authService.currentUser?.photoURL}`
+            userData.info.profileImage
+              ? `${userData.info.profileImage}`
               : "/profile.svg"
           }
           width={150}
           height={150}
           style={
-            authService.currentUser?.photoURL
+            userData.info.profileImage
               ? { borderRadius: 150 }
               : { borderRadius: "none" }
           }
@@ -91,9 +92,7 @@ export default function PCHeader({ imageDataLength }: Props) {
         <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
-            <CustomH2Light>
-              {authService.currentUser?.displayName}
-            </CustomH2Light>
+            <CustomH2Light>{userData.info.name}</CustomH2Light>
             <Margin direction="row" size={20} />
 
             <Style.ProfileEditButton>팔로우</Style.ProfileEditButton>
@@ -101,14 +100,21 @@ export default function PCHeader({ imageDataLength }: Props) {
           <Margin direction="column" size={15} />
           <FlexBox>
             <CustomH3Light>
+              {/* TODO: 이거 dto 수정해서 고쳐야함 */}
               이메일: {authService.currentUser?.email}
             </CustomH3Light>
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox gap={40}>
-            <CustomH3Light>게시물: {imageDataLength}</CustomH3Light>
-            <CustomH3Light>팔로워: </CustomH3Light>
-            <CustomH3Light>팔로우: </CustomH3Light>
+            <CustomH3Light>
+              게시물: {userData.feed ? userData.feed.length : 0}
+            </CustomH3Light>
+            <CustomH3Light>
+              팔로워: {userData.follower ? userData.follower.length : 0}
+            </CustomH3Light>
+            <CustomH3Light>
+              팔로우: {userData.follow ? userData.follow.length : 0}
+            </CustomH3Light>
           </FlexBox>
         </Style.ProfileInfo>
       </Style.ProfileHeader>
