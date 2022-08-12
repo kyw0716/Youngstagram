@@ -1,8 +1,16 @@
 import { authService, DBService } from "@FireBase"
+import FollowListModal from "@share/Modal/follow/FollowListModal"
 import { UserData, UserInfo } from "backend/dto"
-import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore"
+import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH2Light, CustomH4Light, FlexBox, Margin } from "ui"
 
@@ -76,6 +84,11 @@ const Style = {
 
 export default function MobileHeader({ userData }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [modalTitle, setModalTitle] = useState<string>("")
+  const [userDataByUserId, setUserDataByUserId] = useState<UserData>()
+  const [followData, setFollowData] = useState<string[]>()
+  const [isCurrentUserFollowed, setIsCurrentUserFollowed] =
+    useState<boolean>(false)
 
   const handleFollow = async () => {
     const myFirestoreRef = doc(
@@ -103,10 +116,54 @@ export default function MobileHeader({ userData }: Props) {
         })
       }
     })
+    setIsCurrentUserFollowed(true)
   }
+  const handleUnFollow = async () => {
+    const myFirestoreRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
+    const otherFirestoreRef = doc(DBService, "users", `${userData.info.userId}`)
+
+    await updateDoc(myFirestoreRef, {
+      follow: arrayRemove(userData.info.userId),
+    })
+    await updateDoc(otherFirestoreRef, {
+      follower: arrayRemove(authService.currentUser?.uid),
+    })
+    setIsCurrentUserFollowed(false)
+  }
+
+  useEffect(() => {
+    getUserDataByUid(userData.info.userId).then((data) => {
+      if (data) {
+        setUserDataByUserId(data as UserData)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (userDataByUserId === undefined) return
+    if (authService.currentUser === null) return
+    setIsCurrentUserFollowed(
+      userDataByUserId?.follower.includes(authService.currentUser?.uid),
+    )
+  }, [userDataByUserId, authService.currentUser])
+
+  useEffect(() => {
+    if (modalTitle === "") return
+    if (modalTitle === "팔로우") setFollowData(userDataByUserId?.follow)
+    if (modalTitle === "팔로워") setFollowData(userDataByUserId?.follower)
+  }, [modalTitle])
   return (
     <>
-      {/* TODO: 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
+      <FollowListModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title={modalTitle}
+        userList={followData !== undefined ? followData : []}
+      />
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
           <Image
@@ -128,9 +185,20 @@ export default function MobileHeader({ userData }: Props) {
           <FlexBox column={true} width="fit-content">
             <CustomH2Light>{userData.info.name}</CustomH2Light>
             <Margin direction="column" size={13} />
-            <Style.ProfileEditButton onClick={handleFollow}>
-              팔로우
-            </Style.ProfileEditButton>
+            {isCurrentUserFollowed ? (
+              <Style.ProfileEditButton
+                onClick={() => {
+                  let wantToUnFollow = confirm("팔로우를 취소하시겠습니까?")
+                  if (wantToUnFollow) handleUnFollow()
+                }}
+              >
+                팔로잉중
+              </Style.ProfileEditButton>
+            ) : (
+              <Style.ProfileEditButton onClick={handleFollow}>
+                팔로우
+              </Style.ProfileEditButton>
+            )}
           </FlexBox>
         </FlexBox>
       </Style.ProfileWrapper>

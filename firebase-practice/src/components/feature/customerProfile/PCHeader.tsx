@@ -1,7 +1,13 @@
 import { authService, DBService } from "@FireBase"
 import FollowListModal from "@share/Modal/follow/FollowListModal"
 import { UserData, UserInfo } from "backend/dto"
-import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useEffect, useState } from "react"
@@ -71,6 +77,8 @@ export default function PCHeader({ userData }: Props) {
   const [modalTitle, setModalTitle] = useState<string>("")
   const [userDataByUserId, setUserDataByUserId] = useState<UserData>()
   const [followData, setFollowData] = useState<string[]>()
+  const [isCurrentUserFollowed, setIsCurrentUserFollowed] =
+    useState<boolean>(false)
 
   const handleFollow = async () => {
     const myFirestoreRef = doc(
@@ -98,6 +106,23 @@ export default function PCHeader({ userData }: Props) {
         })
       }
     })
+    setIsCurrentUserFollowed(true)
+  }
+  const handleUnFollow = async () => {
+    const myFirestoreRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
+    const otherFirestoreRef = doc(DBService, "users", `${userData.info.userId}`)
+
+    await updateDoc(myFirestoreRef, {
+      follow: arrayRemove(userData.info.userId),
+    })
+    await updateDoc(otherFirestoreRef, {
+      follower: arrayRemove(authService.currentUser?.uid),
+    })
+    setIsCurrentUserFollowed(false)
   }
   useEffect(() => {
     getUserDataByUid(userData.info.userId).then((data) => {
@@ -106,7 +131,13 @@ export default function PCHeader({ userData }: Props) {
       }
     })
   }, [])
-
+  useEffect(() => {
+    if (userDataByUserId === undefined) return
+    if (authService.currentUser === null) return
+    setIsCurrentUserFollowed(
+      userDataByUserId?.follower.includes(authService.currentUser?.uid),
+    )
+  }, [userDataByUserId, authService.currentUser])
   useEffect(() => {
     if (modalTitle === "") return
     if (modalTitle === "팔로우") setFollowData(userDataByUserId?.follow)
@@ -114,7 +145,6 @@ export default function PCHeader({ userData }: Props) {
   }, [modalTitle])
   return (
     <>
-      {/*TODO: 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
       <FollowListModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -144,13 +174,20 @@ export default function PCHeader({ userData }: Props) {
             <CustomH2Light>{userData.info.name}</CustomH2Light>
             <Margin direction="row" size={20} />
 
-            <Style.ProfileEditButton onClick={handleFollow}>
-              {userDataByUserId?.follower.includes(
-                `${authService.currentUser?.uid}`,
-              )
-                ? "팔로잉중"
-                : "팔로우"}
-            </Style.ProfileEditButton>
+            {isCurrentUserFollowed ? (
+              <Style.ProfileEditButton
+                onClick={() => {
+                  let wantToUnFollow = confirm("팔로우를 취소하시겠습니까?")
+                  if (wantToUnFollow) handleUnFollow()
+                }}
+              >
+                팔로잉중
+              </Style.ProfileEditButton>
+            ) : (
+              <Style.ProfileEditButton onClick={handleFollow}>
+                팔로우
+              </Style.ProfileEditButton>
+            )}
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
