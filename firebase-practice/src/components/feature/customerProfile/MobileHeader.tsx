@@ -85,34 +85,21 @@ export default function MobileHeader({ userData }: Props) {
     )
     const otherFirestoreRef = doc(DBService, "users", `${userData.info.userId}`)
 
-    const myUserInfo: UserInfo = {
-      userId: `${authService.currentUser?.uid}`,
-      profileImage: `${authService.currentUser?.photoURL}`,
-      name: `${authService.currentUser?.displayName}`,
-      email: `${authService.currentUser?.email}`,
-    }
-    const otherUserInfo: UserInfo = {
-      userId: `${userData.info.userId}`,
-      profileImage: `${userData.info.profileImage}`,
-      name: `${userData.info.name}`,
-      email: `${userData.info.email}`,
-    }
-
     await updateDoc(myFirestoreRef, {
-      follow: arrayUnion(otherUserInfo),
+      follow: arrayUnion(userData.info.userId),
     }).catch((error) => {
       if (error.code === "not-found") {
         setDoc(myFirestoreRef, {
-          follow: [otherUserInfo],
+          follow: [userData.info.userId],
         })
       }
     })
     await updateDoc(otherFirestoreRef, {
-      follower: arrayUnion(myUserInfo),
+      follower: arrayUnion(authService.currentUser?.uid),
     }).catch((error) => {
       if (error.code === "not-found") {
         setDoc(otherFirestoreRef, {
-          follower: [myUserInfo],
+          follower: [authService.currentUser?.uid],
         })
       }
     })

@@ -28,7 +28,7 @@ export type UserInfo = {
 }
 export type UserData = {
   info: UserInfo
-  follow: UserInfo[]
-  follower: UserInfo[]
+  follow: string[]
+  follower: string[]
   feed: FeedData[]
 }
