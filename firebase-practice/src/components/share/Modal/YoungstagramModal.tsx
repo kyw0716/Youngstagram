@@ -25,8 +25,9 @@ const Style = {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0px 15px;
+    position: relative;
   `,
 }
 
@@ -67,16 +68,27 @@ export default function YoungstagramModal({
     >
       <Style.Header>
         <CustomH4>{title}</CustomH4>
-        <Image
-          src="/x.svg"
-          alt="x"
-          onClick={() => {
-            setIsOpen(false)
-          }}
+        <FlexBox
           width={15}
           height={15}
-          style={{ cursor: "pointer" }}
-        />
+          style={{
+            cursor: "pointer",
+            position: "absolute",
+            top: "50%",
+            right: "15px",
+            transform: "translateY(-50%)",
+          }}
+        >
+          <Image
+            src="/x.svg"
+            alt="x"
+            onClick={() => {
+              setIsOpen(false)
+            }}
+            width={15}
+            height={15}
+          />
+        </FlexBox>
       </Style.Header>
       <Style.Wrapper>{children}</Style.Wrapper>
     </ReactModal>

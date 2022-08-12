@@ -2,8 +2,9 @@ import { authService, DBService } from "@FireBase"
 import FollowListModal from "@share/Modal/follow/FollowListModal"
 import { UserData, UserInfo } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
+import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import {
   CustomH2Light,
@@ -68,6 +69,8 @@ const Style = {
 export default function PCHeader({ userData }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [modalTitle, setModalTitle] = useState<string>("")
+  const [userDataByUserId, setUserDataByUserId] = useState<UserData>()
+  const [followData, setFollowData] = useState<string[]>()
 
   const handleFollow = async () => {
     const myFirestoreRef = doc(
@@ -96,14 +99,27 @@ export default function PCHeader({ userData }: Props) {
       }
     })
   }
+  useEffect(() => {
+    getUserDataByUid(userData.info.userId).then((data) => {
+      if (data) {
+        setUserDataByUserId(data as UserData)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (modalTitle === "") return
+    if (modalTitle === "팔로우") setFollowData(userDataByUserId?.follow)
+    if (modalTitle === "팔로워") setFollowData(userDataByUserId?.follower)
+  }, [modalTitle])
   return (
     <>
       {/*TODO: 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
       <FollowListModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        title={"팔로우"}
-        userList={{} as UserInfo[]}
+        title={modalTitle}
+        userList={followData !== undefined ? followData : []}
       />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />

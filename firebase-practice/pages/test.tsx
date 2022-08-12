@@ -1,5 +1,10 @@
+import FollowUserWrapper from "@share/Modal/follow/FollowUserWrapper"
 import Layout from "components/layout"
 
 export default function Test() {
-  return <Layout>테스트 페이지 입니다</Layout>
+  return (
+    <Layout>
+      <FollowUserWrapper userId="hoyG1kcftzQSPmJ39dQPj25W8Gj1" />
+    </Layout>
+  )
 }
