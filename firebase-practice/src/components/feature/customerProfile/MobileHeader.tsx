@@ -1,16 +1,10 @@
-import { authService } from "@FireBase"
-import { UserData } from "backend/dto"
+import { authService, DBService } from "@FireBase"
+import { UserData, UserInfo } from "backend/dto"
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import Image from "next/image"
-import { SetStateAction, useState } from "react"
+import { useState } from "react"
 import styled from "styled-components"
-import {
-  CustomH2,
-  CustomH2Light,
-  CustomH4,
-  CustomH4Light,
-  FlexBox,
-  Margin,
-} from "ui"
+import { CustomH2Light, CustomH4Light, FlexBox, Margin } from "ui"
 
 type Props = {
   userData: UserData
@@ -82,6 +76,47 @@ const Style = {
 
 export default function MobileHeader({ userData }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+
+  const handleFollow = async () => {
+    const myFirestoreRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
+    const otherFirestoreRef = doc(DBService, "users", `${userData.info.userId}`)
+
+    const myUserInfo: UserInfo = {
+      userId: `${authService.currentUser?.uid}`,
+      profileImage: `${authService.currentUser?.photoURL}`,
+      name: `${authService.currentUser?.displayName}`,
+      email: `${authService.currentUser?.email}`,
+    }
+    const otherUserInfo: UserInfo = {
+      userId: `${userData.info.userId}`,
+      profileImage: `${userData.info.profileImage}`,
+      name: `${userData.info.name}`,
+      email: `${userData.info.email}`,
+    }
+
+    await updateDoc(myFirestoreRef, {
+      follow: arrayUnion(otherUserInfo),
+    }).catch((error) => {
+      if (error.code === "not-found") {
+        setDoc(myFirestoreRef, {
+          follow: [otherUserInfo],
+        })
+      }
+    })
+    await updateDoc(otherFirestoreRef, {
+      follower: arrayUnion(myUserInfo),
+    }).catch((error) => {
+      if (error.code === "not-found") {
+        setDoc(otherFirestoreRef, {
+          follower: [myUserInfo],
+        })
+      }
+    })
+  }
   return (
     <>
       {/* TODO: 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
@@ -106,7 +141,9 @@ export default function MobileHeader({ userData }: Props) {
           <FlexBox column={true} width="fit-content">
             <CustomH2Light>{userData.info.name}</CustomH2Light>
             <Margin direction="column" size={13} />
-            <Style.ProfileEditButton>팔로우</Style.ProfileEditButton>
+            <Style.ProfileEditButton onClick={handleFollow}>
+              팔로우
+            </Style.ProfileEditButton>
           </FlexBox>
         </FlexBox>
       </Style.ProfileWrapper>

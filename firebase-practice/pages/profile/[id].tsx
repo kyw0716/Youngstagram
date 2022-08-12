@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { DBService } from "@FireBase"
+import { authService, DBService } from "@FireBase"
 import FeedList from "@share/Feed/FeedList"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { GetServerSideProps } from "next"
@@ -9,6 +9,7 @@ import { CustomH2, FlexBox, Margin } from "ui"
 import Layout from "components/layout"
 import Image from "next/image"
 import { FeedData, UserData } from "backend/dto"
+import { useRouter } from "next/router"
 
 const Style = {
   Wrapper: styled.div`
@@ -24,12 +25,17 @@ const Style = {
 }
 
 export default function Profile({ userId }: Props) {
+  const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>([])
 
   const [pickImageData, setPickImageData] = useState<
     "all" | "public" | "private"
   >("all")
+
+  useEffect(() => {
+    if (userId === authService.currentUser?.uid) router.push(`/u/${userId}`)
+  }, [authService.currentUser])
 
   useEffect(() => {
     const userDataRef = doc(DBService, "users", `${userId}`)

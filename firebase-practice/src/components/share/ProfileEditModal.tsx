@@ -175,6 +175,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           userId: authService.currentUser.uid,
           profileImage: authService.currentUser.photoURL,
           name: submitUserName,
+          email: authService.currentUser.email,
         }
         await updateProfile(authService.currentUser, {
           displayName: submitUserName,
@@ -188,6 +189,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           userId: authService.currentUser.uid,
           profileImage: imageUrlToAuthService,
           name: authService.currentUser.displayName,
+          email: authService.currentUser.email,
         }
         await updateProfile(authService.currentUser, {
           photoURL: imageUrlToAuthService,
