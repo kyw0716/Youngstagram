@@ -145,7 +145,11 @@ export default function PCHeader({ userData }: Props) {
             <Margin direction="row" size={20} />
 
             <Style.ProfileEditButton onClick={handleFollow}>
-              팔로우
+              {userDataByUserId?.follower.includes(
+                `${authService.currentUser?.uid}`,
+              )
+                ? "팔로잉중"
+                : "팔로우"}
             </Style.ProfileEditButton>
           </FlexBox>
           <Margin direction="column" size={15} />
