@@ -1,5 +1,6 @@
 import { authService, DBService } from "@FireBase"
-import { UserData } from "backend/dto"
+import FollowListModal from "@share/Modal/follow/FollowListModal"
+import { UserData, UserInfo } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import Image from "next/image"
 import { useState } from "react"
@@ -66,6 +67,8 @@ const Style = {
 
 export default function PCHeader({ userData }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [modalTitle, setModalTitle] = useState<string>("")
+
   const handleFollow = async () => {
     const myFirestoreRef = doc(
       DBService,
@@ -96,6 +99,12 @@ export default function PCHeader({ userData }: Props) {
   return (
     <>
       {/*TODO: 여기다 팔로워, 팔로잉 리스트 모달 추가하기 */}
+      <FollowListModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title={"팔로우"}
+        userList={{} as UserInfo[]}
+      />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
         <Image
@@ -132,10 +141,22 @@ export default function PCHeader({ userData }: Props) {
             <CustomH3Light>
               게시물: {userData.feed ? userData.feed.length : 0}
             </CustomH3Light>
-            <CustomH3Light>
+            <CustomH3Light
+              onClick={() => {
+                setModalTitle("팔로워")
+                setIsOpen(true)
+              }}
+              style={{ cursor: "pointer" }}
+            >
               팔로워: {userData.follower ? userData.follower.length : 0}
             </CustomH3Light>
-            <CustomH3Light>
+            <CustomH3Light
+              onClick={() => {
+                setModalTitle("팔로우")
+                setIsOpen(true)
+              }}
+              style={{ cursor: "pointer" }}
+            >
               팔로우: {userData.follow ? userData.follow.length : 0}
             </CustomH3Light>
           </FlexBox>

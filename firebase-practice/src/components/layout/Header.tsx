@@ -1,5 +1,5 @@
 import { authService } from "@FireBase"
-import FeedUploadModal from "@share/FeedUploadModal"
+import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
 import { signOut } from "firebase/auth"
 import Image from "next/image"
 import { useRouter } from "next/router"

@@ -14,7 +14,7 @@ import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH6, FlexBox, Margin } from "ui"
-import YoungstagramModal from "./YoungstagramModal"
+import YoungstagramModal from "../YoungstagramModal"
 
 type Props = {
   isOpen: boolean

@@ -1,5 +1,5 @@
 import { authService } from "@FireBase"
-import ProfileEditModal from "@share/ProfileEditModal"
+import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"

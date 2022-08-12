@@ -20,7 +20,7 @@ import {
   ShareIcon,
 } from "ui"
 import CommentWrapper from "./CommentWrapper"
-import YoungstagramModal from "./YoungstagramModal"
+import YoungstagramModal from "../YoungstagramModal"
 import { v4 } from "uuid"
 import getCurrentTime from "lib/getCurrentTime"
 import { useRouter } from "next/router"
