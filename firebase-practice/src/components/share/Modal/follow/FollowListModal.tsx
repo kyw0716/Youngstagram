@@ -9,6 +9,7 @@ type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   title: string
+  isPC: boolean
 }
 
 const Style = {
@@ -32,15 +33,16 @@ export default function FollowListModal({
   isOpen,
   setIsOpen,
   title,
+  isPC,
 }: Props) {
   return (
     <YoungstagramModal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={title}
-      width={"400px"}
+      width={isPC ? "400px" : "95vw"}
       height={"243px"}
-      isPC={true}
+      isPC={isPC}
     >
       <Style.Wrapper>
         {userList.map((userId) => {

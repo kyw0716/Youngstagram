@@ -89,6 +89,8 @@ export default function MobileHeader({ userData }: Props) {
   const [followData, setFollowData] = useState<string[]>()
   const [isCurrentUserFollowed, setIsCurrentUserFollowed] =
     useState<boolean>(false)
+  const [isFollowingDataModified, setIsFollowingDataModified] =
+    useState<boolean>(false)
 
   const handleFollow = async () => {
     const myFirestoreRef = doc(
@@ -117,6 +119,7 @@ export default function MobileHeader({ userData }: Props) {
       }
     })
     setIsCurrentUserFollowed(true)
+    setIsFollowingDataModified(true)
   }
   const handleUnFollow = async () => {
     const myFirestoreRef = doc(
@@ -133,6 +136,7 @@ export default function MobileHeader({ userData }: Props) {
       follower: arrayRemove(authService.currentUser?.uid),
     })
     setIsCurrentUserFollowed(false)
+    setIsFollowingDataModified(true)
   }
 
   useEffect(() => {
@@ -141,7 +145,7 @@ export default function MobileHeader({ userData }: Props) {
         setUserDataByUserId(data as UserData)
       }
     })
-  }, [])
+  }, [isFollowingDataModified])
 
   useEffect(() => {
     if (userDataByUserId === undefined) return
@@ -155,7 +159,8 @@ export default function MobileHeader({ userData }: Props) {
     if (modalTitle === "") return
     if (modalTitle === "팔로우") setFollowData(userDataByUserId?.follow)
     if (modalTitle === "팔로워") setFollowData(userDataByUserId?.follower)
-  }, [modalTitle])
+    setIsFollowingDataModified(false)
+  }, [modalTitle, userDataByUserId])
   return (
     <>
       <FollowListModal
@@ -163,6 +168,7 @@ export default function MobileHeader({ userData }: Props) {
         setIsOpen={setIsOpen}
         title={modalTitle}
         userList={followData !== undefined ? followData : []}
+        isPC={false}
       />
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
@@ -210,14 +216,26 @@ export default function MobileHeader({ userData }: Props) {
             {userData.feed ? userData.feed.length : 0}
           </CustomH4Light>
         </Style.SortToAll>
-        <Style.SortToPublic>
+        <Style.SortToPublic
+          onClick={() => {
+            setModalTitle("팔로워")
+            setIsOpen(true)
+          }}
+        >
           <CustomH4Light>팔로워</CustomH4Light>
           <CustomH4Light>
             {userData.follower ? userData.follower.length : 0}
           </CustomH4Light>
         </Style.SortToPublic>
         <Style.SortToPrivate>
-          <CustomH4Light>팔로우</CustomH4Light>
+          <CustomH4Light
+            onClick={() => {
+              setModalTitle("팔로우")
+              setIsOpen(true)
+            }}
+          >
+            팔로우
+          </CustomH4Light>
           <CustomH4Light>
             {userData.follow ? userData.follow.length : 0}
           </CustomH4Light>

@@ -79,6 +79,8 @@ export default function PCHeader({ userData }: Props) {
   const [followData, setFollowData] = useState<string[]>()
   const [isCurrentUserFollowed, setIsCurrentUserFollowed] =
     useState<boolean>(false)
+  const [isFollowingDataModified, setIsFollowingDataModified] =
+    useState<boolean>(false)
 
   const handleFollow = async () => {
     const myFirestoreRef = doc(
@@ -107,6 +109,7 @@ export default function PCHeader({ userData }: Props) {
       }
     })
     setIsCurrentUserFollowed(true)
+    setIsFollowingDataModified(true)
   }
   const handleUnFollow = async () => {
     const myFirestoreRef = doc(
@@ -123,6 +126,7 @@ export default function PCHeader({ userData }: Props) {
       follower: arrayRemove(authService.currentUser?.uid),
     })
     setIsCurrentUserFollowed(false)
+    setIsFollowingDataModified(true)
   }
   useEffect(() => {
     getUserDataByUid(userData.info.userId).then((data) => {
@@ -130,7 +134,7 @@ export default function PCHeader({ userData }: Props) {
         setUserDataByUserId(data as UserData)
       }
     })
-  }, [])
+  }, [isFollowingDataModified])
   useEffect(() => {
     if (userDataByUserId === undefined) return
     if (authService.currentUser === null) return
@@ -142,7 +146,8 @@ export default function PCHeader({ userData }: Props) {
     if (modalTitle === "") return
     if (modalTitle === "팔로우") setFollowData(userDataByUserId?.follow)
     if (modalTitle === "팔로워") setFollowData(userDataByUserId?.follower)
-  }, [modalTitle])
+    setIsFollowingDataModified(false)
+  }, [modalTitle, userDataByUserId])
   return (
     <>
       <FollowListModal
@@ -150,6 +155,7 @@ export default function PCHeader({ userData }: Props) {
         setIsOpen={setIsOpen}
         title={modalTitle}
         userList={followData !== undefined ? followData : []}
+        isPC={true}
       />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
