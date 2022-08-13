@@ -208,11 +208,7 @@ export default function FeedUploadModal({
       private: feedData.private,
       storageId: feedData.storageId,
       uploadTime: feedData.uploadTime,
-      creator: {
-        name: feedData.creator.name,
-        userId: feedData.creator.userId,
-        profileImage: feedData.creator.profileImage,
-      },
+      creator: feedData.creator,
     }
     await updateDoc(firestorePersonalRef, {
       feed: arrayRemove(feed),
@@ -234,11 +230,7 @@ export default function FeedUploadModal({
       private: isPrivate,
       storageId: feedData?.storageId ? feedData.storageId : randomId,
       uploadTime: feedData?.uploadTime ? feedData.uploadTime : getCurrentTime(),
-      creator: {
-        name: `${authService.currentUser?.displayName}`,
-        userId: `${authService.currentUser?.uid}`,
-        profileImage: `${authService.currentUser?.photoURL}`,
-      },
+      creator: `${authService.currentUser?.uid}`,
     }
     const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
     const firestorePersonalRef = doc(

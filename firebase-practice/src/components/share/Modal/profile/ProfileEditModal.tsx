@@ -89,10 +89,14 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
 
   const [userData, setUserData] = useState<DocumentData>()
   const [imageData, setImageData] = useState<FeedData[]>([])
-  const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
+  const updateFirestoreRef = doc(DBService, "mainPage", "userFeedDataAll")
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "mainPage", `userImageDataAll`)
+    const userDataRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })
@@ -123,6 +127,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
       uploadBytes(imageSubmitRef, imageFile).then(() => {
         getDownloadURL(imageSubmitRef).then((response) => {
           setImageUrlToAuthService(response)
+          console.log(response)
           setIsSubmit(true)
         })
       })
@@ -134,42 +139,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const updateProfileNameAndImage = async () => {
     if (authService.currentUser !== null && imageData !== undefined) {
       const profileRef = doc(DBService, "users", authService.currentUser.uid)
-      await setDoc(updateFirestoreRef, {
-        images: [
-          ...imageData.map((data) => {
-            if (data.creator.userId === authService.currentUser?.uid) {
-              return {
-                creator: {
-                  id: data.creator.userId,
-                  name:
-                    submitUserName !== "" ? submitUserName : data.creator.name,
-                  profileImage:
-                    imageUrlToAuthService !== ""
-                      ? imageUrlToAuthService
-                      : data.creator.profileImage,
-                },
-                desc: data.desc,
-                imageUrl: data.imageUrl,
-                location: data.location,
-                private: data.private,
-                storageId: data.storageId,
-              }
-            }
-            return {
-              creator: {
-                id: data.creator.userId,
-                name: data.creator.name,
-                profileImage: data.creator.profileImage,
-              },
-              desc: data.desc,
-              imageUrl: data.imageUrl,
-              location: data.location,
-              private: data.private,
-              storageId: data.storageId,
-            }
-          }),
-        ],
-      })
       if (submitUserName !== "") {
         const profileForm: UserInfo = {
           userId: authService.currentUser.uid,
@@ -180,9 +149,9 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         await updateProfile(authService.currentUser, {
           displayName: submitUserName,
         })
-        await updateDoc(profileRef, profileForm).catch((error) =>
-          console.log(error.code),
-        )
+        await updateDoc(profileRef, {
+          info: profileForm,
+        }).catch((error) => console.log(error.code))
       }
       if (imageUrlToAuthService !== "") {
         const profileForm: UserInfo = {
@@ -194,7 +163,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         await updateProfile(authService.currentUser, {
           photoURL: imageUrlToAuthService,
         })
-        await updateDoc(profileRef, profileForm).catch((error) =>
+        await updateDoc(profileRef, { info: profileForm }).catch((error) =>
           console.log(error.code),
         )
       }
