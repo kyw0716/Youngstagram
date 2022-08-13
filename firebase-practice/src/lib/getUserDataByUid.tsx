@@ -1,7 +1,7 @@
 import { DBService } from "@FireBase"
 import { doc, DocumentData, getDoc } from "firebase/firestore"
 
-export default async function getUserByUid(
+export default async function getUserDataByUid(
   uid: string,
 ): Promise<DocumentData | void> {
   const profileRef = doc(DBService, "users", uid)

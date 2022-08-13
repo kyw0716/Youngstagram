@@ -1,9 +1,16 @@
 import { authService } from "@FireBase"
-import ProfileEditModal from "@share/ProfileEditModal"
+import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
-import { CustomH2, CustomH3, CustomH4, FlexBox, Margin } from "ui"
+import {
+  CustomH2Light,
+  CustomH3Light,
+  CustomH4,
+  CustomH4Light,
+  FlexBox,
+  Margin,
+} from "ui"
 
 type Props = {
   imageDataLength: number
@@ -33,10 +40,10 @@ const Style = {
     width: 107px;
     height: 30px;
     -webkit-appearance: none;
-    border: 1px solid lightgrey;
+    border: 2px solid lightgrey;
     border-radius: 10px;
-    background-color: #4891ff;
-    color: white;
+    background-color: white;
+    color: black;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -111,7 +118,9 @@ export default function PCHeader({
         <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
-            <CustomH2>{authService.currentUser?.displayName}</CustomH2>
+            <CustomH2Light>
+              {authService.currentUser?.displayName}
+            </CustomH2Light>
             <Margin direction="row" size={20} />
             <Style.ProfileEditButton
               onClick={() => {
@@ -123,19 +132,23 @@ export default function PCHeader({
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
-            <CustomH3>이메일: {authService.currentUser?.email}</CustomH3>
+            <CustomH3Light>
+              이메일: {authService.currentUser?.email}
+            </CustomH3Light>
           </FlexBox>
           <Margin direction="column" size={15} />
           {pickImageData === "all" && (
-            <CustomH3>게시물: {imageDataLength}</CustomH3>
+            <CustomH3Light>게시물: {imageDataLength}</CustomH3Light>
           )}
           {pickImageData === "public" && (
-            <CustomH3>
+            <CustomH3Light>
               공개 게시물: {imageDataLength - privateImageDataLength}
-            </CustomH3>
+            </CustomH3Light>
           )}
           {pickImageData === "private" && (
-            <CustomH3>비공개 게시물: {privateImageDataLength}</CustomH3>
+            <CustomH3Light>
+              비공개 게시물: {privateImageDataLength}
+            </CustomH3Light>
           )}
         </Style.ProfileInfo>
       </Style.ProfileHeader>
@@ -146,7 +159,7 @@ export default function PCHeader({
             setPickImageData("all")
           }}
         >
-          <CustomH4>전체 게시물</CustomH4>
+          <CustomH4Light>전체 게시물</CustomH4Light>
           <Image src="/all-file.svg" alt="allFile" width={15} height={15} />
         </Style.SortToAll>
         <Style.SortToPublic
@@ -155,7 +168,7 @@ export default function PCHeader({
             setPickImageData("public")
           }}
         >
-          <CustomH4>공개 게시물</CustomH4>
+          <CustomH4Light>공개 게시물</CustomH4Light>
           <Image src="/unLock.svg" alt="publicFile" width={15} height={15} />
         </Style.SortToPublic>
         <Style.SortToPrivate
@@ -164,7 +177,7 @@ export default function PCHeader({
             setPickImageData("private")
           }}
         >
-          <CustomH4>비공개 게시물</CustomH4>
+          <CustomH4Light>비공개 게시물</CustomH4Light>
           <Image src="/lock.svg" alt="privateFile" width={15} height={15} />
         </Style.SortToPrivate>
       </Style.SortWrapper>

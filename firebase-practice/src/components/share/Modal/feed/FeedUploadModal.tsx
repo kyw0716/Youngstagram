@@ -2,12 +2,12 @@ import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH3, CustomH5, FlexBox, Margin } from "ui"
 import { useDropzone } from "react-dropzone"
-import ModalForImageUpload from "./ModalForImageUpload"
+import ModalForImageUpload from "./ModalForFeedUpload"
 import { authService, DBService, storageService } from "@FireBase"
 import Image from "next/image"
 import { v4 } from "uuid"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { UserImageDataAll } from "backend/dto"
+import { FeedData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -20,7 +20,7 @@ import getCurrentTime from "lib/getCurrentTime"
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
-  imageData?: UserImageDataAll
+  feedData?: FeedData
 }
 
 const Style = {
@@ -111,10 +111,10 @@ const Style = {
   `,
 }
 
-export default function ImageUploadModal({
+export default function FeedUploadModal({
   setIsOpen,
   isOpen,
-  imageData,
+  feedData,
 }: Props) {
   const {
     getRootProps,
@@ -131,16 +131,16 @@ export default function ImageUploadModal({
   const [windowSize, setWindowSize] = useState<number>(0)
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
 
-  const [desc, setDesc] = useState<string>(imageData ? imageData.desc : "")
+  const [desc, setDesc] = useState<string>(feedData ? feedData.desc : "")
   const [location, setLocation] = useState<string>(
-    imageData ? imageData.location : "",
+    feedData ? feedData.location : "",
   )
   const [isPrivate, setIsPrivate] = useState<boolean>(
-    imageData ? imageData.private : false,
+    feedData ? feedData.private : false,
   )
   const [imageFile, setImageFile] = useState<File>()
   const [randomId, setRandomId] = useState<string>(
-    imageData ? imageData.storageId : "",
+    feedData ? feedData.storageId : "",
   )
 
   useEffect(() => {
@@ -155,7 +155,7 @@ export default function ImageUploadModal({
   }, [])
 
   useEffect(() => {
-    if (acceptedFiles.length === 0 && imageData === undefined) {
+    if (acceptedFiles.length === 0 && feedData === undefined) {
       setIsFileExist(false)
       return
     }
@@ -194,61 +194,72 @@ export default function ImageUploadModal({
         })
   }
   const EditToFireStore = async () => {
-    if (imageData === undefined) return
-    const firestoreAllRef = doc(DBService, "mainPage", `userImageDataAll`)
-    const dataAll: UserImageDataAll = {
-      imageUrl: imageData.imageUrl,
-      desc: imageData.desc,
-      location: imageData.location,
-      private: imageData.private,
-      storageId: imageData.storageId,
-      uploadTime: imageData.uploadTime,
+    if (feedData === undefined) return
+    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
+    const firestorePersonalRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
+    const feed: FeedData = {
+      imageUrl: feedData.imageUrl,
+      desc: feedData.desc,
+      location: feedData.location,
+      private: feedData.private,
+      storageId: feedData.storageId,
+      uploadTime: feedData.uploadTime,
       creator: {
-        name: imageData.creator.name,
-        id: imageData.creator.id,
-        profileImage: imageData.creator.profileImage,
+        name: feedData.creator.name,
+        userId: feedData.creator.userId,
+        profileImage: feedData.creator.profileImage,
       },
     }
+    await updateDoc(firestorePersonalRef, {
+      feed: arrayRemove(feed),
+    }).catch((error) => console.log(error.code))
     await updateDoc(firestoreAllRef, {
-      images: arrayRemove(dataAll),
+      feed: arrayRemove(feed),
     })
       .then(() => {
-        uploadToFirestore(imageData.imageUrl)
+        uploadToFirestore(feedData.imageUrl)
       })
       .catch((error) => console.log(error.code))
   }
 
   const uploadToFirestore = async (downloadUrl: string) => {
-    const dataAll: UserImageDataAll = {
+    const feed: FeedData = {
       imageUrl: downloadUrl,
       desc: desc,
       location: location,
       private: isPrivate,
-      storageId: imageData?.storageId ? imageData.storageId : randomId,
-      uploadTime: imageData?.uploadTime
-        ? imageData.uploadTime
-        : getCurrentTime(),
+      storageId: feedData?.storageId ? feedData.storageId : randomId,
+      uploadTime: feedData?.uploadTime ? feedData.uploadTime : getCurrentTime(),
       creator: {
         name: `${authService.currentUser?.displayName}`,
-        id: `${authService.currentUser?.uid}`,
+        userId: `${authService.currentUser?.uid}`,
         profileImage: `${authService.currentUser?.photoURL}`,
       },
     }
-    const firestoreAllRef = doc(DBService, "mainPage", `userImageDataAll`)
+    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
+    const firestorePersonalRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
     await updateDoc(firestoreAllRef, {
-      images: arrayUnion(dataAll),
+      feed: arrayUnion(feed),
     })
       .catch(async (error) => {
         if (error.code === "not-found") {
           await setDoc(firestoreAllRef, {
-            images: [dataAll],
+            feed: [feed],
           })
         }
       })
       .then(() => {
         setIsOpen(false)
         setIsSubmit(false)
-        if (imageData) return
+        if (feedData) return
         setDesc("")
         setIsPrivate(false)
         setLocation("")
@@ -256,6 +267,15 @@ export default function ImageUploadModal({
         setImageFile(undefined)
         setIsFileExist(false)
       })
+    await updateDoc(firestorePersonalRef, {
+      feed: arrayUnion(feed),
+    }).catch(async (error) => {
+      if (error.code === "not-found") {
+        await setDoc(firestorePersonalRef, {
+          feed: [feed],
+        })
+      }
+    })
   }
 
   return (
@@ -265,20 +285,20 @@ export default function ImageUploadModal({
           ? "95%"
           : isFileExist
           ? "835px"
-          : imageData
+          : feedData
           ? "835px"
           : "495px"
       }
       height={windowSize < 784 && isFileExist ? "550px" : "537px"}
-      title={imageData ? "게시글 편집하기" : "새 게시물 만들기"}
+      title={feedData ? "게시글 편집하기" : "새 게시물 만들기"}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       isPC={true}
-      isFileExist={imageData?.imageUrl ? true : isFileExist}
+      isFileExist={feedData?.imageUrl ? true : isFileExist}
       setIsFileExist={setIsFileExist}
-      isModifyMode={imageData ? true : false}
+      isModifyMode={feedData ? true : false}
     >
-      {isFileExist || imageData !== undefined ? (
+      {isFileExist || feedData !== undefined ? (
         <FlexBox
           column={windowSize < 784 ? true : false}
           height={"fit-content"}
@@ -292,8 +312,8 @@ export default function ImageUploadModal({
               maxWidth: 495,
             }}
             src={
-              imageData
-                ? imageData.imageUrl
+              feedData
+                ? feedData.imageUrl
                 : imagePreviewSrc
                 ? imagePreviewSrc
                 : "/empty.svg"
@@ -314,7 +334,7 @@ export default function ImageUploadModal({
             onSubmit={(event) => {
               event.preventDefault()
               setIsSubmit(true)
-              if (imageData) {
+              if (feedData) {
                 EditToFireStore()
                 return
               }
@@ -394,7 +414,7 @@ export default function ImageUploadModal({
           <Style.SubmitButton
             onClick={() => {
               setIsSubmit(true)
-              if (imageData) {
+              if (feedData) {
                 EditToFireStore()
                 return
               }

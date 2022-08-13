@@ -1,9 +1,9 @@
 import { authService } from "@FireBase"
-import ProfileEditModal from "@share/ProfileEditModal"
+import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
 import Image from "next/image"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
-import { CustomH2, CustomH4, FlexBox, Margin } from "ui"
+import { CustomH2Light, CustomH4, CustomH4Light, FlexBox, Margin } from "ui"
 
 type Props = {
   imageDataLength: number
@@ -27,10 +27,10 @@ const Style = {
     width: 250px;
     height: 40px;
     -webkit-appearance: none;
-    border: 1px solid lightgrey;
+    border: 2px solid lightgrey;
     border-radius: 10px;
-    background-color: #4891ff;
-    color: white;
+    background-color: withe;
+    color: black;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,6 +86,7 @@ export default function MobileHeader({
   return (
     <>
       <ProfileEditModal isPC={false} isOpen={isOpen} setIsOpen={setIsOpen} />
+
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
           <Image
@@ -105,8 +106,11 @@ export default function MobileHeader({
           />
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2>{authService.currentUser?.displayName}</CustomH2>
+            <CustomH2Light>
+              {authService.currentUser?.displayName}
+            </CustomH2Light>
             <Margin direction="column" size={13} />
+
             <Style.ProfileEditButton
               onClick={() => {
                 setIsOpen(true)
@@ -125,8 +129,8 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH4>전체 게시물</CustomH4>
-          <CustomH4>{imageDataLength}</CustomH4>
+          <CustomH4Light>전체 게시물</CustomH4Light>
+          <CustomH4Light>{imageDataLength}</CustomH4Light>
         </Style.SortToAll>
         <Style.SortToPublic
           onClick={() => {
@@ -134,8 +138,10 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH4>공개 게시물</CustomH4>
-          <CustomH4>{imageDataLength - privateImageDataLength}</CustomH4>
+          <CustomH4Light>개 게시물</CustomH4Light>
+          <CustomH4Light>
+            {imageDataLength - privateImageDataLength}
+          </CustomH4Light>
         </Style.SortToPublic>
         <Style.SortToPrivate
           onClick={() => {
@@ -143,8 +149,8 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH4>비공개 게시물</CustomH4>
-          <CustomH4>{privateImageDataLength}</CustomH4>
+          <CustomH4Light>공개 게시물</CustomH4Light>
+          <CustomH4Light>{privateImageDataLength}</CustomH4Light>
         </Style.SortToPrivate>
       </Style.ProfileInfoWrapper>
     </>

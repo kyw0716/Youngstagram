@@ -1,13 +1,13 @@
-import { UserImageDataAll } from "backend/dto"
+import { FeedData } from "backend/dto"
 import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH2, Margin } from "ui"
-import ImageCard from "./ImageCard"
+import FeedCard from "./FeedCard"
 
 type Props = {
-  imageData: UserImageDataAll[]
-  isMainPage: boolean
+  FeedData: FeedData[]
+  isCustomer: boolean
   setPickImageData?: React.Dispatch<
     SetStateAction<"public" | "private" | "all">
   >
@@ -31,9 +31,9 @@ const Style = {
   `,
 }
 
-export default function ImageList({
-  imageData,
-  isMainPage,
+export default function FeedList({
+  FeedData,
+  isCustomer: isMainPage,
   setPickImageData,
 }: Props) {
   const [windowSize, setWindowSize] = useState<number>(0)
@@ -46,22 +46,20 @@ export default function ImageList({
   return (
     <Style.ImageContainer>
       {setPickImageData !== undefined &&
-        (imageData.length !== 0 ? (
-          imageData
-            .sort(function (a, b) {
-              return Number(a.uploadTime) - Number(b.uploadTime)
-            })
-            .map((data, index) => {
-              return (
-                <ImageCard
-                  key={index}
-                  imageData={data}
-                  isMainPage={isMainPage}
-                  setPickImageData={setPickImageData}
-                  windowSize={windowSize}
-                />
-              )
-            })
+        (FeedData.length !== 0 ? (
+          FeedData.sort(function (a, b) {
+            return Number(a.uploadTime) - Number(b.uploadTime)
+          }).map((data, index) => {
+            return (
+              <FeedCard
+                key={index}
+                feedData={data}
+                isMainPage={isMainPage}
+                setPickImageData={setPickImageData}
+                windowSize={windowSize}
+              />
+            )
+          })
         ) : (
           <>
             <Image src={"/empty.svg"} width={150} height={150} alt="empty" />

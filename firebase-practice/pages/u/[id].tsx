@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
-import ImageList from "@share/ImageList"
+import FeedList from "@share/Feed/FeedList"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { GetServerSideProps } from "next"
 import ProfileHeader from "@feature/ownerProfile"
@@ -8,7 +8,7 @@ import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
 import Layout from "components/layout"
 import Image from "next/image"
-import { UserImageDataAll } from "backend/dto"
+import { FeedData, UserData } from "backend/dto"
 
 const Style = {
   Wrapper: styled.div`
@@ -25,44 +25,34 @@ const Style = {
 
 export default function Profile({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
-  const [allImageData, setAllImageData] = useState<UserImageDataAll[]>([])
-  const [privateImageData, setPrivateImageData] = useState<UserImageDataAll[]>(
-    [],
-  )
-  const [publicImageData, setPublicImageData] = useState<UserImageDataAll[]>([])
+  const [allImageData, setAllImageData] = useState<FeedData[]>([])
+  const [privateImageData, setPrivateImageData] = useState<FeedData[]>([])
+  const [publicImageData, setPublicImageData] = useState<FeedData[]>([])
 
   const [pickImageData, setPickImageData] = useState<
     "all" | "public" | "private"
   >("all")
-  const [dataToView, setDataToView] = useState<UserImageDataAll[]>([])
+  const [dataToView, setDataToView] = useState<FeedData[]>([])
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "mainPage", "userImageDataAll")
+    const userDataRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })
   }, [])
   useEffect(() => {
-    if (userData !== undefined && userData.images !== undefined) {
-      setAllImageData(
-        (userData.images as UserImageDataAll[]).filter(
-          (data) => data.creator.id === authService.currentUser?.uid,
-        ),
-      )
-      setDataToView(
-        (userData.images as UserImageDataAll[]).filter(
-          (data) => data.creator.id === authService.currentUser?.uid,
-        ),
-      )
+    if (userData !== undefined && userData.feed !== undefined) {
+      setAllImageData((userData as UserData).feed)
+      setDataToView((userData as UserData).feed)
       setPrivateImageData(
-        (userData.images as UserImageDataAll[])
-          .filter((data) => data.creator.id === authService.currentUser?.uid)
-          .filter((data) => data.private),
+        (userData as UserData).feed.filter((data) => data.private),
       )
       setPublicImageData(
-        (userData.images as UserImageDataAll[])
-          .filter((data) => data.creator.id === authService.currentUser?.uid)
-          .filter((data) => !data.private),
+        (userData as UserData).feed.filter((data) => !data.private),
       )
     }
   }, [userData])
@@ -100,9 +90,9 @@ export default function Profile({ userId }: Props) {
           <>
             {authService.currentUser?.uid !== undefined &&
               authService.currentUser.displayName !== null && (
-                <ImageList
-                  imageData={dataToView}
-                  isMainPage={false}
+                <FeedList
+                  FeedData={dataToView}
+                  isCustomer={false}
                   setPickImageData={setPickImageData}
                 />
               )}

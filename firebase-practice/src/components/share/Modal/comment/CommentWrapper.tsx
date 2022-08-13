@@ -1,7 +1,7 @@
 import { authService, DBService } from "@FireBase"
-import { Comment, UserData } from "backend/dto"
+import { Comment, UserInfo } from "backend/dto"
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
-import getUserByUid from "lib/getUserByUid"
+import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -47,9 +47,9 @@ export default function CommentWrapper({
 
   useEffect(() => {
     const commentRef = doc(DBService, "Comments", storageId)
-    getUserByUid(commentData.userId).then(async (data) => {
+    getUserDataByUid(commentData.userId).then(async (data) => {
       if (data) {
-        if (commentData.profileImage !== (data as UserData).profileImage) {
+        if (commentData.profileImage !== (data as UserInfo).profileImage) {
           await updateDoc(commentRef, {
             AllComments: arrayRemove({
               comment: commentData.comment,
@@ -65,14 +65,14 @@ export default function CommentWrapper({
                 comment: commentData.comment,
                 commentId: commentData.commentId,
                 name: commentData.name,
-                profileImage: (data as UserData).profileImage,
+                profileImage: (data as UserInfo).profileImage,
                 userId: commentData.userId,
                 uploadTime: commentData.uploadTime,
               }),
             })
           })
         }
-        if (commentData.name !== (data as UserData).name) {
+        if (commentData.name !== (data as UserInfo).name) {
           await updateDoc(commentRef, {
             AllComments: arrayRemove({
               comment: commentData.comment,
@@ -87,8 +87,8 @@ export default function CommentWrapper({
               AllComments: arrayUnion({
                 comment: commentData.comment,
                 commentId: commentData.commentId,
-                name: (data as UserData).name,
-                profileImage: (data as UserData).profileImage,
+                name: (data as UserInfo).name,
+                profileImage: (data as UserInfo).profileImage,
                 userId: commentData.userId,
                 uploadTime: commentData.uploadTime,
               }),

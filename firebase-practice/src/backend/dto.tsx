@@ -1,15 +1,15 @@
-export type Creator = {
+export type ImageCreator = {
   name: string | null
-  id: string
+  userId: string
   profileImage: string | null
 }
-export type UserImageDataAll = {
+export type FeedData = {
   imageUrl: string
   desc: string
   location: string
   private: boolean
   storageId: string
-  creator: Creator
+  creator: ImageCreator
   uploadTime: string
 }
 export type Comment = {
@@ -20,8 +20,15 @@ export type Comment = {
   profileImage: string
   uploadTime: string
 }
-export type UserData = {
+export type UserInfo = {
   userId: string
   profileImage: string | null
   name: string | null
+  email: string | null
+}
+export type UserData = {
+  info: UserInfo
+  follow: string[]
+  follower: string[]
+  feed: FeedData[]
 }

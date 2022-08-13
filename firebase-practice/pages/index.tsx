@@ -3,22 +3,22 @@ import { useEffect, useState } from "react"
 import { DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { Margin } from "ui"
-import ImageList from "@share/ImageList"
+import FeedList from "@share/Feed/FeedList"
 import Layout from "components/layout"
-import { UserImageDataAll } from "backend/dto"
+import { FeedData } from "backend/dto"
 
 const Home: NextPage = () => {
   const [userData, setUserData] = useState<DocumentData>()
-  const [imageData, setImageData] = useState<UserImageDataAll[]>([])
+  const [imageData, setImageData] = useState<FeedData[]>([])
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "mainPage", `userImageDataAll`)
+    const userDataRef = doc(DBService, "mainPage", `userFeedDataAll`)
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })
   }, [])
   useEffect(() => {
-    if (userData !== undefined) setImageData(userData.images)
+    if (userData !== undefined) setImageData(userData.feed)
   }, [userData])
 
   const [pickImageData, setPickImageData] = useState<
@@ -28,9 +28,9 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Margin direction="column" size={30} />
-      <ImageList
-        imageData={imageData ? imageData.filter((data) => !data.private) : []}
-        isMainPage={true}
+      <FeedList
+        FeedData={imageData ? imageData.filter((data) => !data.private) : []}
+        isCustomer={true}
         setPickImageData={setPickImageData}
       />
     </Layout>
