@@ -99,7 +99,7 @@ export default function CommentWrapper({
   return (
     <>
       <Style.Wrapper about={windowSize < 900 ? "85vw" : "499px"}>
-        <FlexBox width={32} height={32}>
+        <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
           <Image
             width={32}
             height={32}
@@ -119,7 +119,6 @@ export default function CommentWrapper({
         <Margin direction="row" size={10} />
         <FlexBox
           column={true}
-          width="fit-content"
           style={{
             width: windowSize < 900 ? "85vw" : "325px",
             position: "relative",
@@ -127,7 +126,9 @@ export default function CommentWrapper({
           }}
         >
           <Margin direction="column" size={5} />
-          <CustomH4>{`${userData?.info.name}`}</CustomH4>
+          <FlexBox width={"fit-content"}>
+            <CustomH4>{`${userData?.info.name}`}</CustomH4>
+          </FlexBox>
           {isModifyMode ? (
             <FlexBox>
               <Style.ModifyCommentInput
@@ -158,7 +159,7 @@ export default function CommentWrapper({
             <>
               {isShowAllComment ? (
                 <>
-                  {commentData.comment}
+                  <FlexBox width={"fit-content"}>{commentData.comment}</FlexBox>
                   <Margin direction="row" size={10} />
                   <CustomH6
                     style={{
