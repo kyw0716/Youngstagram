@@ -34,7 +34,11 @@ export default function Profile({ userId }: Props) {
   >("all")
 
   useEffect(() => {
-    if (userId === authService.currentUser?.uid) router.push(`/u/${userId}`)
+    if (
+      authService.currentUser?.uid !== undefined &&
+      userId === authService.currentUser?.uid
+    )
+      router.push(`/u/${userId}`)
   }, [authService.currentUser])
 
   useEffect(() => {

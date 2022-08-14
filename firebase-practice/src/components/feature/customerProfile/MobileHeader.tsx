@@ -150,6 +150,7 @@ export default function MobileHeader({ userData }: Props) {
   useEffect(() => {
     if (userDataByUserId === undefined) return
     if (authService.currentUser === null) return
+    if (userDataByUserId.follower === undefined) return
     setIsCurrentUserFollowed(
       userDataByUserId?.follower.includes(authService.currentUser?.uid),
     )
