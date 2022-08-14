@@ -205,7 +205,6 @@ export default function FeedCard({
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
       setUserData(data.data() as UserData)
-      console.log(data.data())
     })
   }, [])
 
