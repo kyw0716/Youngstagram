@@ -1,5 +1,5 @@
 import { authService, DBService } from "@FireBase"
-import { Comment, FeedData } from "backend/dto"
+import { Comment, FeedData, UserInfo, UserData } from "backend/dto"
 import {
   arrayUnion,
   doc,
@@ -28,7 +28,7 @@ import { useRouter } from "next/router"
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
-  imageData: FeedData
+  feedData: FeedData
   windowSize: number
 }
 
@@ -107,7 +107,7 @@ const Style = {
 export default function CommentModal({
   isOpen,
   setIsOpen,
-  imageData,
+  feedData,
   windowSize,
 }: Props) {
   const router = useRouter()
@@ -117,6 +117,7 @@ export default function CommentModal({
   const inputRef = useRef<HTMLInputElement>(null)
   const commentAreaRef = useRef<HTMLDivElement>(null)
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
+  const [userData, setUserData] = useState<UserData>()
 
   const handleCommentSubmit = async () => {
     setIsSubmit(true)
@@ -126,14 +127,12 @@ export default function CommentModal({
       return
     }
     const commentToFirestore: Comment = {
-      name: `${authService.currentUser?.displayName}`,
       userId: `${authService.currentUser?.uid}`,
       commentId: randomId,
       comment: comment,
-      profileImage: `${authService.currentUser?.photoURL}`,
       uploadTime: getCurrentTime(),
     }
-    const commentRef = doc(DBService, "Comments", imageData.storageId)
+    const commentRef = doc(DBService, "Comments", feedData.storageId)
     await updateDoc(commentRef, {
       AllComments: arrayUnion(commentToFirestore),
     })
@@ -155,10 +154,15 @@ export default function CommentModal({
     setIsSubmit(false)
   }
   useEffect(() => {
-    onSnapshot(doc(DBService, "Comments", imageData.storageId), (doc) => {
+    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
       setCommentData(doc.data()?.AllComments)
     })
-  }, [])
+    onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
+      if (data) {
+        setUserData(data.data() as UserData)
+      }
+    })
+  }, [feedData.storageId, feedData.creator])
   return (
     <YoungstagramModal
       width={windowSize < 900 ? "95vw" : "70vw"}
@@ -178,7 +182,7 @@ export default function CommentModal({
           width={windowSize < 900 ? "100%" : 611}
           height={windowSize < 900 ? "30vh" : "100%"}
         >
-          <Style.Img src={imageData.imageUrl} alt="image" />
+          <Style.Img src={feedData.imageUrl} alt="image" />
         </FlexBox>
         <FlexBox
           column={true}
@@ -191,21 +195,21 @@ export default function CommentModal({
               height={32}
               style={{ borderRadius: "32px", cursor: "pointer" }}
               src={
-                imageData.creator.profileImage
-                  ? imageData.creator.profileImage
+                userData?.info.profileImage
+                  ? userData.info.profileImage
                   : "/profile.svg"
               }
               onClick={() => {
-                router.push(`/profile/${imageData.creator.userId}`)
+                router.push(`/profile/${userData?.info.userId}`)
               }}
               alt="profile"
             />
             <Margin direction="row" size={14} />
             <FlexBox column={true}>
               <CustomH4 style={{ color: "black" }}>
-                {imageData.creator.name}
+                {userData?.info.name}
               </CustomH4>
-              <CustomH6>{imageData.location}</CustomH6>
+              <CustomH6>{feedData.location}</CustomH6>
             </FlexBox>
           </Style.Header>
           <Margin direction="column" size={10} />
@@ -220,13 +224,13 @@ export default function CommentModal({
                   width={32}
                   height={32}
                   src={
-                    imageData.creator.profileImage
-                      ? imageData.creator.profileImage
+                    userData?.info.profileImage
+                      ? userData?.info.profileImage
                       : "/profile.svg"
                   }
                   alt="profile"
                   onClick={() => {
-                    router.push(`/profile/${imageData.creator.userId}`)
+                    router.push(`/profile/${userData?.info.userId}`)
                   }}
                   style={{ borderRadius: "32px", cursor: "pointer" }}
                 />
@@ -238,8 +242,8 @@ export default function CommentModal({
                 style={{ paddingRight: "20px" }}
               >
                 <Margin direction="column" size={5} />
-                <CustomH4>{imageData.creator.name}</CustomH4>
-                {imageData.desc}
+                <CustomH4>{userData?.info.name}</CustomH4>
+                {feedData.desc}
               </FlexBox>
             </FlexBox>
             <Margin direction="column" size={25} style={{ flexShrink: 0 }} />
@@ -257,7 +261,7 @@ export default function CommentModal({
                       <CommentWrapper
                         key={v4()}
                         commentData={data}
-                        storageId={imageData.storageId}
+                        storageId={feedData.storageId}
                         windowSize={windowSize}
                       />
                     </>

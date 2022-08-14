@@ -1,16 +1,17 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { FeedData } from "backend/dto"
+import { FeedData, UserData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
   deleteDoc,
   doc,
+  onSnapshot,
   updateDoc,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { SetStateAction, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -200,14 +201,16 @@ export default function FeedCard({
   const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
     useState<boolean>(false)
   const [isShowMore, setIsShowMore] = useState<boolean>(false)
+  const [userData, setUserData] = useState<UserData>()
+  useEffect(() => {
+    onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
+      setUserData(data.data() as UserData)
+    })
+  }, [])
 
   const handleDeleteImage = async () => {
     const feed: FeedData = {
-      creator: {
-        userId: feedData.creator.userId,
-        name: feedData.creator.name,
-        profileImage: feedData.creator.profileImage,
-      },
+      creator: feedData.creator,
       desc: feedData.desc,
       imageUrl: feedData.imageUrl,
       location: feedData.location,
@@ -217,15 +220,11 @@ export default function FeedCard({
     }
     const storageImageRef = ref(
       storageService,
-      `images/${feedData.creator.userId}/${feedData.storageId}`,
+      `images/${feedData.creator}/${feedData.storageId}`,
     )
     const firestoreAllRef = doc(DBService, "mainPage", "userFeedDataAll")
     const firestoreCommentRef = doc(DBService, "Comments", feedData.storageId)
-    const firestorePersonalRef = doc(
-      DBService,
-      `users`,
-      `${feedData.creator.userId}`,
-    )
+    const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
 
     handleThreeDotMenuClick()
 
@@ -242,17 +241,9 @@ export default function FeedCard({
   }
   const handlePrivateToggle = async () => {
     const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
-    const firestorePersonalRef = doc(
-      DBService,
-      `users`,
-      `${feedData.creator.userId}`,
-    )
+    const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
     const feed: FeedData = {
-      creator: {
-        userId: feedData.creator.userId,
-        name: feedData.creator.name,
-        profileImage: feedData.creator.profileImage,
-      },
+      creator: feedData.creator,
       desc: feedData.desc,
       imageUrl: feedData.imageUrl,
       location: feedData.location,
@@ -261,11 +252,7 @@ export default function FeedCard({
       uploadTime: feedData.uploadTime,
     }
     const toggleFeed: FeedData = {
-      creator: {
-        userId: feedData.creator.userId,
-        name: feedData.creator.name,
-        profileImage: feedData.creator.profileImage,
-      },
+      creator: feedData.creator,
       desc: feedData.desc,
       imageUrl: feedData.imageUrl,
       location: feedData.location,
@@ -297,196 +284,203 @@ export default function FeedCard({
 
   return (
     <>
-      <CommentModal
-        isOpen={isCommentModalOpen}
-        setIsOpen={setIsCommentModalOpen}
-        imageData={feedData}
-        windowSize={windowSize}
-      />
-      <FeedUploadModal
-        isOpen={isImageUploadModalOpen}
-        setIsOpen={setIsImageUploadModalOpen}
-        feedData={feedData}
-      />
-      <Style.ImageCard
-        style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
-      >
-        <Style.ImageHeader
-          style={
-            windowSize < 900
-              ? { width: "95%", padding: "0px 5px" }
-              : { width: 470 }
-          }
-        >
-          <FlexBox
-            width={"fit-content"}
-            height={58}
-            gap={15}
-            alignItems={"center"}
-          >
-            <Image
-              src={
-                feedData.creator.profileImage !== "null"
-                  ? `${feedData.creator.profileImage}`
-                  : "/profile.svg"
-              }
-              alt="creator"
-              width={38}
-              height={38}
-              style={{ borderRadius: 38, cursor: "pointer" }}
-              onClick={() => {
-                router.push(`/profile/${feedData.creator.userId}`)
-              }}
-            />
-            <Style.HeaderText>
-              <Style.UserName>
-                {feedData.creator ? feedData.creator.name : ""}
-              </Style.UserName>
-              <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
-            </Style.HeaderText>
-          </FlexBox>
-          {isMainPage ? (
-            <></>
-          ) : (
-            <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
-              <Image
-                src="/dot-menu.svg"
-                alt="menu"
-                width={20}
-                height={15}
-                style={{ cursor: "pointer" }}
-              />
-            </Style.ThreeDotMenu>
-          )}
-          {isMenuOpen ? (
-            <>
-              <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
-                <Style.EditButton
-                  onClick={() => {
-                    setIsImageUploadModalOpen(true)
-                  }}
-                >
-                  <Image
-                    src="/edit.svg"
-                    alt="edit"
-                    width={15}
-                    height={15}
-                    priority
-                  />
-                  편집
-                </Style.EditButton>
-                <Style.PrivateToggleButton onClick={handlePrivateToggle}>
-                  {feedData.private ? (
-                    <Image
-                      src="/unLock.svg"
-                      alt="unlock"
-                      width={15}
-                      height={15}
-                    />
-                  ) : (
-                    <Image src="/lock.svg" alt="lock" width={15} height={15} />
-                  )}
-
-                  {feedData.private ? "공개" : "비공개"}
-                </Style.PrivateToggleButton>
-                <Style.Deletebutton onClick={handleDeleteImage}>
-                  <Image
-                    src="/delete.svg"
-                    alt="delete"
-                    width={15}
-                    height={15}
-                    priority
-                  />
-                  삭제
-                </Style.Deletebutton>
-                <Style.ExitButton onClick={handleThreeDotMenuClick}>
-                  <Image
-                    src="/logout.svg"
-                    alt="cancle"
-                    width={15}
-                    height={15}
-                    priority
-                  />
-                  취소
-                </Style.ExitButton>
-              </Style.ButtonBox>
-              <Style.ChatBalloon />
-            </>
-          ) : (
-            <></>
-          )}
-        </Style.ImageHeader>
-        <Image
-          src={feedData.imageUrl ? feedData.imageUrl : "/empty.svg"}
-          width={470}
-          height={600}
-          alt="Image"
-          priority
-        />
-        <Margin direction="column" size={10} />
-        <FlexBox
-          width={"100%"}
-          height={"fit-content"}
-          justifyContents="flex-start"
-          alignItems="center"
-        >
-          <Margin direction="row" size={10} />
-          <HeartIcon />
-          <Margin direction="row" size={15} />
-          <CommentIcon
-            onClick={() => {
-              setIsCommentModalOpen(true)
-            }}
+      {userData && (
+        <>
+          <CommentModal
+            isOpen={isCommentModalOpen}
+            setIsOpen={setIsCommentModalOpen}
+            feedData={feedData}
+            windowSize={windowSize}
           />
-          <Margin direction="row" size={15} />
-          <ShareIcon />
-        </FlexBox>
-        <Margin direction="column" size={15} />
-
-        <Style.CommentBox>
-          {feedData.desc.length > 20 ? (
-            <>
-              {isShowMore ? (
-                <span>
-                  {feedData.desc}
-                  <CustomH6
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "bolder",
-                      color: "black",
-                    }}
-                    onClick={() => {
-                      setIsShowMore(false)
-                    }}
-                  >
-                    접기
-                  </CustomH6>
-                </span>
+          <FeedUploadModal
+            isOpen={isImageUploadModalOpen}
+            setIsOpen={setIsImageUploadModalOpen}
+            feedData={feedData}
+          />
+          <Style.ImageCard
+            style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
+          >
+            <Style.ImageHeader
+              style={
+                windowSize < 900
+                  ? { width: "95%", padding: "0px 5px" }
+                  : { width: 470 }
+              }
+            >
+              <FlexBox
+                width={"fit-content"}
+                height={58}
+                gap={15}
+                alignItems={"center"}
+              >
+                <Image
+                  src={
+                    userData?.info.profileImage
+                      ? `${userData?.info.profileImage}`
+                      : "/profile.svg"
+                  }
+                  alt="creator"
+                  width={38}
+                  height={38}
+                  style={{ borderRadius: 38, cursor: "pointer" }}
+                  onClick={() => {
+                    router.push(`/profile/${feedData.creator}`)
+                  }}
+                />
+                <Style.HeaderText>
+                  <Style.UserName>{userData?.info.name}</Style.UserName>
+                  <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
+                </Style.HeaderText>
+              </FlexBox>
+              {isMainPage ? (
+                <></>
               ) : (
-                <FlexBox alignItems="flex-end">
-                  {feedData.desc.slice(0, 20)}
-                  <Margin direction="row" size={10} />
-                  <CustomH6
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "bolder",
-                      color: "black",
-                      flexShrink: 0,
-                    }}
-                    onClick={() => {
-                      setIsShowMore(true)
-                    }}
-                  >
-                    더보기...
-                  </CustomH6>
-                </FlexBox>
+                <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
+                  <Image
+                    src="/dot-menu.svg"
+                    alt="menu"
+                    width={20}
+                    height={15}
+                    style={{ cursor: "pointer" }}
+                  />
+                </Style.ThreeDotMenu>
               )}
-            </>
-          ) : (
-            <>{feedData.desc}</>
-          )}
-        </Style.CommentBox>
-      </Style.ImageCard>
+              {isMenuOpen ? (
+                <>
+                  <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
+                    <Style.EditButton
+                      onClick={() => {
+                        setIsImageUploadModalOpen(true)
+                      }}
+                    >
+                      <Image
+                        src="/edit.svg"
+                        alt="edit"
+                        width={15}
+                        height={15}
+                        priority
+                      />
+                      편집
+                    </Style.EditButton>
+                    <Style.PrivateToggleButton onClick={handlePrivateToggle}>
+                      {feedData.private ? (
+                        <Image
+                          src="/unLock.svg"
+                          alt="unlock"
+                          width={15}
+                          height={15}
+                        />
+                      ) : (
+                        <Image
+                          src="/lock.svg"
+                          alt="lock"
+                          width={15}
+                          height={15}
+                        />
+                      )}
+
+                      {feedData.private ? "공개" : "비공개"}
+                    </Style.PrivateToggleButton>
+                    <Style.Deletebutton onClick={handleDeleteImage}>
+                      <Image
+                        src="/delete.svg"
+                        alt="delete"
+                        width={15}
+                        height={15}
+                        priority
+                      />
+                      삭제
+                    </Style.Deletebutton>
+                    <Style.ExitButton onClick={handleThreeDotMenuClick}>
+                      <Image
+                        src="/logout.svg"
+                        alt="cancle"
+                        width={15}
+                        height={15}
+                        priority
+                      />
+                      취소
+                    </Style.ExitButton>
+                  </Style.ButtonBox>
+                  <Style.ChatBalloon />
+                </>
+              ) : (
+                <></>
+              )}
+            </Style.ImageHeader>
+            <Image
+              src={feedData.imageUrl ? feedData.imageUrl : "/empty.svg"}
+              width={470}
+              height={600}
+              alt="Image"
+              priority
+            />
+            <Margin direction="column" size={10} />
+            <FlexBox
+              width={"100%"}
+              height={"fit-content"}
+              justifyContents="flex-start"
+              alignItems="center"
+            >
+              <Margin direction="row" size={10} />
+              <HeartIcon />
+              <Margin direction="row" size={15} />
+              <CommentIcon
+                onClick={() => {
+                  setIsCommentModalOpen(true)
+                }}
+              />
+              <Margin direction="row" size={15} />
+              <ShareIcon />
+            </FlexBox>
+            <Margin direction="column" size={15} />
+
+            <Style.CommentBox>
+              {feedData.desc.length > 20 ? (
+                <>
+                  {isShowMore ? (
+                    <span>
+                      {feedData.desc}
+                      <CustomH6
+                        style={{
+                          cursor: "pointer",
+                          fontWeight: "bolder",
+                          color: "black",
+                        }}
+                        onClick={() => {
+                          setIsShowMore(false)
+                        }}
+                      >
+                        접기
+                      </CustomH6>
+                    </span>
+                  ) : (
+                    <FlexBox alignItems="flex-end">
+                      {feedData.desc.slice(0, 20)}
+                      <Margin direction="row" size={10} />
+                      <CustomH6
+                        style={{
+                          cursor: "pointer",
+                          fontWeight: "bolder",
+                          color: "black",
+                          flexShrink: 0,
+                        }}
+                        onClick={() => {
+                          setIsShowMore(true)
+                        }}
+                      >
+                        더보기...
+                      </CustomH6>
+                    </FlexBox>
+                  )}
+                </>
+              ) : (
+                <>{feedData.desc}</>
+              )}
+            </Style.CommentBox>
+          </Style.ImageCard>
+        </>
+      )}
     </>
   )
 }

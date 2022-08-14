@@ -1,13 +1,7 @@
 import { authService, DBService, storageService } from "@FireBase"
 import { UserInfo, FeedData } from "backend/dto"
 import { updateProfile } from "firebase/auth"
-import {
-  doc,
-  DocumentData,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore"
+import { doc, DocumentData, onSnapshot, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import Image from "next/image"
 import { useRouter } from "next/router"
@@ -88,18 +82,17 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const [imageUrlToAuthService, setImageUrlToAuthService] = useState<string>("")
 
   const [userData, setUserData] = useState<DocumentData>()
-  const [imageData, setImageData] = useState<FeedData[]>([])
-  const updateFirestoreRef = doc(DBService, "mainPage", "userImageDataAll")
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "mainPage", `userImageDataAll`)
+    const userDataRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       setUserData(doc.data())
     })
   }, [])
-  useEffect(() => {
-    if (userData !== undefined && userData !== {}) setImageData(userData.images)
-  }, [userData])
 
   const encodeFileToBase64 = (fileblob: File) => {
     const reader = new FileReader()
@@ -123,6 +116,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
       uploadBytes(imageSubmitRef, imageFile).then(() => {
         getDownloadURL(imageSubmitRef).then((response) => {
           setImageUrlToAuthService(response)
+          console.log(response)
           setIsSubmit(true)
         })
       })
@@ -132,44 +126,9 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   }
 
   const updateProfileNameAndImage = async () => {
-    if (authService.currentUser !== null && imageData !== undefined) {
+    if (authService.currentUser !== null) {
+      console.log("update 함수 호출")
       const profileRef = doc(DBService, "users", authService.currentUser.uid)
-      await setDoc(updateFirestoreRef, {
-        images: [
-          ...imageData.map((data) => {
-            if (data.creator.userId === authService.currentUser?.uid) {
-              return {
-                creator: {
-                  id: data.creator.userId,
-                  name:
-                    submitUserName !== "" ? submitUserName : data.creator.name,
-                  profileImage:
-                    imageUrlToAuthService !== ""
-                      ? imageUrlToAuthService
-                      : data.creator.profileImage,
-                },
-                desc: data.desc,
-                imageUrl: data.imageUrl,
-                location: data.location,
-                private: data.private,
-                storageId: data.storageId,
-              }
-            }
-            return {
-              creator: {
-                id: data.creator.userId,
-                name: data.creator.name,
-                profileImage: data.creator.profileImage,
-              },
-              desc: data.desc,
-              imageUrl: data.imageUrl,
-              location: data.location,
-              private: data.private,
-              storageId: data.storageId,
-            }
-          }),
-        ],
-      })
       if (submitUserName !== "") {
         const profileForm: UserInfo = {
           userId: authService.currentUser.uid,
@@ -177,12 +136,13 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           name: submitUserName,
           email: authService.currentUser.email,
         }
+        console.log("이름 바뀜, 정보: ", profileForm)
         await updateProfile(authService.currentUser, {
           displayName: submitUserName,
         })
-        await updateDoc(profileRef, profileForm).catch((error) =>
-          console.log(error.code),
-        )
+        await updateDoc(profileRef, {
+          info: profileForm,
+        }).catch((error) => console.log(error.code))
       }
       if (imageUrlToAuthService !== "") {
         const profileForm: UserInfo = {
@@ -191,10 +151,11 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           name: authService.currentUser.displayName,
           email: authService.currentUser.email,
         }
+        console.log("이미지 바뀜, 정보: ", profileForm)
         await updateProfile(authService.currentUser, {
           photoURL: imageUrlToAuthService,
         })
-        await updateDoc(profileRef, profileForm).catch((error) =>
+        await updateDoc(profileRef, { info: profileForm }).catch((error) =>
           console.log(error.code),
         )
       }

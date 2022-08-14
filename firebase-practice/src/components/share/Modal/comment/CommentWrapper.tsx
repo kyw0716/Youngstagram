@@ -1,6 +1,12 @@
 import { authService, DBService } from "@FireBase"
-import { Comment, UserInfo } from "backend/dto"
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
+import { Comment, UserData, UserInfo } from "backend/dto"
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useRouter } from "next/router"
@@ -44,60 +50,23 @@ export default function CommentWrapper({
   const [isModifyMode, setIsModifyMode] = useState<boolean>(false)
   const [newComment, setNewComment] = useState<string>(commentData.comment)
   const [isShowAllComment, setIsShowAllComment] = useState<boolean>(false)
+  const [userData, setUserData] = useState<UserData>()
 
   useEffect(() => {
-    const commentRef = doc(DBService, "Comments", storageId)
-    getUserDataByUid(commentData.userId).then(async (data) => {
+    getUserDataByUid(commentData.userId).then((data) => {
       if (data) {
-        if (commentData.profileImage !== (data as UserInfo).profileImage) {
-          await updateDoc(commentRef, {
-            AllComments: arrayRemove({
-              comment: commentData.comment,
-              commentId: commentData.commentId,
-              name: commentData.name,
-              profileImage: commentData.profileImage,
-              userId: commentData.userId,
-              uploadTime: commentData.uploadTime,
-            }),
-          }).then(async () => {
-            await updateDoc(commentRef, {
-              AllComments: arrayUnion({
-                comment: commentData.comment,
-                commentId: commentData.commentId,
-                name: commentData.name,
-                profileImage: (data as UserInfo).profileImage,
-                userId: commentData.userId,
-                uploadTime: commentData.uploadTime,
-              }),
-            })
-          })
-        }
-        if (commentData.name !== (data as UserInfo).name) {
-          await updateDoc(commentRef, {
-            AllComments: arrayRemove({
-              comment: commentData.comment,
-              commentId: commentData.commentId,
-              name: commentData.name,
-              profileImage: commentData.profileImage,
-              userId: commentData.userId,
-              uploadTime: commentData.uploadTime,
-            }),
-          }).then(async () => {
-            await updateDoc(commentRef, {
-              AllComments: arrayUnion({
-                comment: commentData.comment,
-                commentId: commentData.commentId,
-                name: (data as UserInfo).name,
-                profileImage: (data as UserInfo).profileImage,
-                userId: commentData.userId,
-                uploadTime: commentData.uploadTime,
-              }),
-            })
-          })
-        }
+        setUserData(data as UserData)
       }
     })
   }, [])
+  useEffect(() => {
+    const userInfoRef = doc(DBService, "users", commentData.userId)
+    onSnapshot(userInfoRef, (docData) => {
+      if (docData) {
+        setUserData(docData.data() as UserData)
+      }
+    })
+  })
 
   const handleRemoveComment = async () => {
     const commentRef = doc(DBService, "Comments", storageId)
@@ -105,8 +74,6 @@ export default function CommentWrapper({
       AllComments: arrayRemove({
         comment: commentData.comment,
         commentId: commentData.commentId,
-        name: commentData.name,
-        profileImage: commentData.profileImage,
         userId: commentData.userId,
         uploadTime: commentData.uploadTime,
       }),
@@ -123,8 +90,6 @@ export default function CommentWrapper({
         AllComments: arrayUnion({
           comment: newComment,
           commentId: commentData.commentId,
-          name: commentData.name,
-          profileImage: commentData.profileImage,
           userId: commentData.userId,
           uploadTime: commentData.uploadTime,
         }),
@@ -134,12 +99,16 @@ export default function CommentWrapper({
   return (
     <>
       <Style.Wrapper about={windowSize < 900 ? "85vw" : "499px"}>
-        <FlexBox width={32} height={32}>
+        <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
           <Image
             width={32}
             height={32}
             style={{ borderRadius: "32px", cursor: "pointer" }}
-            src={commentData.profileImage}
+            src={
+              userData?.info.profileImage
+                ? `${userData?.info.profileImage}`
+                : "/empty.svg"
+            }
             alt="profile"
             onClick={() => {
               router.push(`/profile/${commentData.userId}`)
@@ -150,7 +119,6 @@ export default function CommentWrapper({
         <Margin direction="row" size={10} />
         <FlexBox
           column={true}
-          width="fit-content"
           style={{
             width: windowSize < 900 ? "85vw" : "325px",
             position: "relative",
@@ -158,7 +126,9 @@ export default function CommentWrapper({
           }}
         >
           <Margin direction="column" size={5} />
-          <CustomH4>{commentData.name}</CustomH4>
+          <FlexBox width={"fit-content"}>
+            <CustomH4>{`${userData?.info.name}`}</CustomH4>
+          </FlexBox>
           {isModifyMode ? (
             <FlexBox>
               <Style.ModifyCommentInput
@@ -189,7 +159,7 @@ export default function CommentWrapper({
             <>
               {isShowAllComment ? (
                 <>
-                  {commentData.comment}
+                  <FlexBox width={"fit-content"}>{commentData.comment}</FlexBox>
                   <Margin direction="row" size={10} />
                   <CustomH6
                     style={{
