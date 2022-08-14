@@ -136,7 +136,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           name: submitUserName,
           email: authService.currentUser.email,
         }
-        console.log("이름 바뀜, 정보: ", profileForm)
         await updateProfile(authService.currentUser, {
           displayName: submitUserName,
         })
@@ -151,7 +150,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
           name: authService.currentUser.displayName,
           email: authService.currentUser.email,
         }
-        console.log("이미지 바뀜, 정보: ", profileForm)
         await updateProfile(authService.currentUser, {
           photoURL: imageUrlToAuthService,
         })
