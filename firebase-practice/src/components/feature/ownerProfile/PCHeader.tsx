@@ -6,7 +6,6 @@ import styled from "styled-components"
 import {
   CustomH2Light,
   CustomH3Light,
-  CustomH4,
   CustomH4Light,
   FlexBox,
   Margin,

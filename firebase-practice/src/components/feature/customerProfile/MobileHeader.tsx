@@ -145,7 +145,8 @@ export default function MobileHeader({ userData }: Props) {
         setUserDataByUserId(data as UserData)
       }
     })
-  }, [isFollowingDataModified])
+    setIsOpen(false)
+  }, [isFollowingDataModified, userData])
 
   useEffect(() => {
     if (userDataByUserId === undefined) return

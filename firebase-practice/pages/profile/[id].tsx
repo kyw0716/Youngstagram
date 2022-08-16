@@ -28,7 +28,6 @@ export default function Profile({ userId }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>([])
-
   const [pickImageData, setPickImageData] = useState<
     "all" | "public" | "private"
   >("all")
@@ -39,21 +38,27 @@ export default function Profile({ userId }: Props) {
       userId === authService.currentUser?.uid
     )
       router.push(`/u/${userId}`)
-  }, [authService.currentUser])
+    if (router.query.id === authService.currentUser?.uid)
+      router.push(`/u/${authService.currentUser?.uid}`)
+  }, [authService.currentUser, router.query])
 
   useEffect(() => {
+    if (router.query !== undefined && router.query.id !== userId)
+      router.push(`/profile/${router.query.id}`)
     const userDataRef = doc(DBService, "users", `${userId}`)
     onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
       if (doc) {
         setUserData(doc.data())
       }
     })
-  }, [])
+  }, [router.query, userId])
   useEffect(() => {
-    if (userData !== undefined && userData.feed !== undefined) {
-      setFeedData((userData as UserData).feed)
+    if (userData !== undefined) {
+      setFeedData(
+        userData.feed === undefined ? [] : (userData as UserData).feed,
+      )
     }
-  }, [userData])
+  }, [userData, router.query])
 
   return (
     <Layout>

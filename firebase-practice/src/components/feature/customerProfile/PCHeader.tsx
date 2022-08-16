@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import {
@@ -134,7 +135,8 @@ export default function PCHeader({ userData }: Props) {
         setUserDataByUserId(data as UserData)
       }
     })
-  }, [isFollowingDataModified])
+    setIsOpen(false)
+  }, [isFollowingDataModified, userData])
   useEffect(() => {
     if (userDataByUserId === undefined) return
     if (authService.currentUser === null) return

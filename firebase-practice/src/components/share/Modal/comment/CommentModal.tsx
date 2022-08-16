@@ -8,7 +8,13 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import Image from "next/image"
-import React, { SetStateAction, useEffect, useRef, useState } from "react"
+import React, {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -24,6 +30,8 @@ import YoungstagramModal from "../YoungstagramModal"
 import { v4 } from "uuid"
 import getCurrentTime from "lib/getCurrentTime"
 import { useRouter } from "next/router"
+import { async } from "@firebase/util"
+import CommentInput from "./CommentInput"
 
 type Props = {
   isOpen: boolean
@@ -111,48 +119,11 @@ export default function CommentModal({
   windowSize,
 }: Props) {
   const router = useRouter()
-  const [comment, setComment] = useState<string>("")
   const [commentData, setCommentData] = useState<Comment[]>([])
-  const [randomId, setRandomId] = useState<string>(v4())
   const inputRef = useRef<HTMLInputElement>(null)
   const commentAreaRef = useRef<HTMLDivElement>(null)
-  const [isSubmit, setIsSubmit] = useState<boolean>(false)
   const [userData, setUserData] = useState<UserData>()
 
-  const handleCommentSubmit = async () => {
-    setIsSubmit(true)
-    if (comment.length === 0) {
-      alert("댓글은 한글자 이상 작성해야합니다.")
-      setIsSubmit(false)
-      return
-    }
-    const commentToFirestore: Comment = {
-      userId: `${authService.currentUser?.uid}`,
-      commentId: randomId,
-      comment: comment,
-      uploadTime: getCurrentTime(),
-    }
-    const commentRef = doc(DBService, "Comments", feedData.storageId)
-    await updateDoc(commentRef, {
-      AllComments: arrayUnion(commentToFirestore),
-    })
-      .catch(async (error) => {
-        if (error.code === "not-found") {
-          await setDoc(commentRef, {
-            AllComments: [commentToFirestore],
-          })
-        }
-      })
-      .then(() => {
-        setComment("")
-        setRandomId(v4())
-      })
-    commentAreaRef.current?.scrollIntoView({
-      block: "start",
-      behavior: "smooth",
-    })
-    setIsSubmit(false)
-  }
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
       setCommentData(doc.data()?.AllComments)
@@ -288,32 +259,12 @@ export default function CommentModal({
           </FlexBox>
         </FlexBox>
       </FlexBox>
-      <Style.CommentInputArea
-        about={windowSize < 900 ? "95vw" : "499px"}
-        onSubmit={(event) => {
-          event.preventDefault()
-          handleCommentSubmit()
-        }}
-      >
-        <Style.CommentInput
-          value={comment}
-          onChange={(event) => {
-            setComment(event.target.value)
-          }}
-          about={windowSize < 900 ? "80vw" : "429px"}
-          placeholder="댓글 달기..."
-          ref={inputRef}
-        />
-        {isSubmit || (
-          <Style.SubmitButton
-            onClick={handleCommentSubmit}
-            about={windowSize < 900 ? "15vw" : "70px"}
-            color={comment.length > 0 ? "#4891ff" : "#d1e3ff"}
-          >
-            게시
-          </Style.SubmitButton>
-        )}
-      </Style.CommentInputArea>
+      <CommentInput
+        feedData={feedData}
+        windowSize={windowSize}
+        inputRef={inputRef}
+        commentAreaRef={commentAreaRef}
+      />
     </YoungstagramModal>
   )
 }

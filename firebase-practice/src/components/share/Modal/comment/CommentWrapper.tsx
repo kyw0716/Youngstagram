@@ -7,7 +7,6 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore"
-import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -53,20 +52,13 @@ export default function CommentWrapper({
   const [userData, setUserData] = useState<UserData>()
 
   useEffect(() => {
-    getUserDataByUid(commentData.userId).then((data) => {
-      if (data) {
-        setUserData(data as UserData)
-      }
-    })
-  }, [])
-  useEffect(() => {
     const userInfoRef = doc(DBService, "users", commentData.userId)
     onSnapshot(userInfoRef, (docData) => {
       if (docData) {
         setUserData(docData.data() as UserData)
       }
     })
-  })
+  }, [])
 
   const handleRemoveComment = async () => {
     const commentRef = doc(DBService, "Comments", storageId)

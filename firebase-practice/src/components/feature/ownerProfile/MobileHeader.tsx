@@ -138,7 +138,7 @@ export default function MobileHeader({
           }}
           about={pickImageData}
         >
-          <CustomH4Light>개 게시물</CustomH4Light>
+          <CustomH4Light>비공개 게시물</CustomH4Light>
           <CustomH4Light>
             {imageDataLength - privateImageDataLength}
           </CustomH4Light>
