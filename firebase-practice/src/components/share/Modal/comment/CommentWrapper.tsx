@@ -27,7 +27,7 @@ const Style = {
     display: flex;
   `,
   ModifyCommentInput: styled.input`
-    width: 325px;
+    width: 200px;
     height: 30px;
     border: none;
     border-bottom: 1px solid lightgrey;
@@ -90,7 +90,7 @@ export default function CommentWrapper({
   }
   return (
     <>
-      <Style.Wrapper about={windowSize < 900 ? "85vw" : "499px"}>
+      <Style.Wrapper about={windowSize < 900 ? "85vw" : "50%"}>
         <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
           <Image
             width={32}
@@ -112,7 +112,7 @@ export default function CommentWrapper({
         <FlexBox
           column={true}
           style={{
-            width: windowSize < 900 ? "85vw" : "325px",
+            width: windowSize < 900 ? "85vw" : "fit-content",
             position: "relative",
             wordBreak: "break-all",
           }}
@@ -141,6 +141,7 @@ export default function CommentWrapper({
                   fontSize: "13px",
                   fontWeight: "bold",
                   cursor: "pointer",
+                  flexShrink: 0,
                 }}
                 onClick={handleModifyComment}
               >
@@ -167,7 +168,7 @@ export default function CommentWrapper({
                   </CustomH6>
                 </>
               ) : commentData.comment.length > 12 ? (
-                <FlexBox alignItems="center">
+                <FlexBox alignItems="center" width={"fit-content"}>
                   {commentData.comment.slice(0, 12)}
                   <Margin direction="row" size={5} />
                   <CustomH6
@@ -196,7 +197,7 @@ export default function CommentWrapper({
               style={{
                 position: "absolute",
                 bottom: "-20px",
-                right: windowSize < 900 ? "0px" : "-80px",
+                left: "0px",
                 cursor: "pointer",
               }}
             >

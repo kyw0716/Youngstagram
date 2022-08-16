@@ -21,6 +21,7 @@ import {
   CustomH4,
   CustomH6,
   FlexBox,
+  FullHeart,
   HeartIcon,
   Margin,
   ShareIcon,
@@ -44,13 +45,13 @@ const Style = {
   Header: styled.div`
     display: flex;
     height: ${(props) => (props.about ? "50px" : "70px")};
-    width: ${(props) => (props.about ? "95vw" : "499px")};
+    width: ${(props) => (props.about ? "95vw" : "100%")};
     border-bottom: 1px solid lightgrey;
     align-items: center;
     padding-left: 15px;
   `,
   CommentsWrapper: styled.div`
-    width: ${(props) => (props.about ? "95vw" : "499px")};
+    width: ${(props) => (props.about ? "95vw" : "50%")};
     height: ${(props) => (props.about ? props.about : "423px")};
     display: flex;
     flex-direction: column;
@@ -123,15 +124,17 @@ export default function CommentModal({
   const inputRef = useRef<HTMLInputElement>(null)
   const commentAreaRef = useRef<HTMLDivElement>(null)
   const [userData, setUserData] = useState<UserData>()
+  const [likerList, setLikerList] = useState<string[]>([])
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
-      setCommentData(doc.data()?.AllComments)
+    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (data) => {
+      if (data) setCommentData(data.data()?.AllComments)
     })
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
-      if (data) {
-        setUserData(data.data() as UserData)
-      }
+      if (data) setUserData(data.data() as UserData)
+    })
+    onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (data) => {
+      if (data) setLikerList(data.data()?.likerList)
     })
   }, [feedData.storageId, feedData.creator])
   return (
@@ -150,14 +153,14 @@ export default function CommentModal({
         column={windowSize < 900 ? true : false}
       >
         <FlexBox
-          width={windowSize < 900 ? "100%" : 611}
+          width={windowSize < 900 ? "100%" : "50%"}
           height={windowSize < 900 ? "30vh" : "100%"}
         >
           <Style.Img src={feedData.imageUrl} alt="image" />
         </FlexBox>
         <FlexBox
           column={true}
-          width={windowSize < 900 ? "95vw" : 499}
+          width={windowSize < 900 ? "95vw" : "50%"}
           height={"auto"}
         >
           <Style.Header about={windowSize < 900 ? "window" : ""}>
@@ -184,9 +187,9 @@ export default function CommentModal({
             </FlexBox>
           </Style.Header>
           <Margin direction="column" size={10} />
-          <Style.CommentsWrapper about={windowSize < 900 ? "30vh" : "423px"}>
+          <Style.CommentsWrapper about={windowSize < 900 ? "27vh" : "60vh"}>
             <FlexBox
-              width={windowSize < 900 ? "90vw" : 499}
+              width={windowSize < 900 ? "90vw" : "50%"}
               height="fit-content"
               style={{ paddingLeft: "15px", flexShrink: 0 }}
             >
@@ -247,7 +250,13 @@ export default function CommentModal({
             alignItems="center"
           >
             <Margin direction="row" size={10} />
-            <HeartIcon />
+            {authService.currentUser !== null &&
+            likerList.includes(authService.currentUser.uid) ? (
+              <FullHeart storgateId={feedData.storageId} />
+            ) : (
+              <HeartIcon storgateId={feedData.storageId} />
+            )}
+
             <Margin direction="row" size={15} />
             <CommentIcon
               onClick={() => {
@@ -256,6 +265,11 @@ export default function CommentModal({
             />
             <Margin direction="row" size={15} />
             <ShareIcon />
+          </FlexBox>
+          <Margin direction="column" size={10} />
+          <FlexBox style={{ paddingLeft: "10px" }} gap={15}>
+            <CustomH6>좋아요 {likerList.length}개</CustomH6>
+            <CustomH6>댓글 {commentData.length}개</CustomH6>
           </FlexBox>
         </FlexBox>
       </FlexBox>
