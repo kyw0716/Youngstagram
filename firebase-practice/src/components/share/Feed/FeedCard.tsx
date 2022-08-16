@@ -487,7 +487,6 @@ export default function FeedCard({
               style={{ paddingLeft: "10px", marginTop: "-10px" }}
               gap={10}
             >
-              <CustomH6>좋아요 {0}개</CustomH6>
               <CustomH6>댓글 {commentData.length}개</CustomH6>
             </FlexBox>
           </Style.ImageCard>

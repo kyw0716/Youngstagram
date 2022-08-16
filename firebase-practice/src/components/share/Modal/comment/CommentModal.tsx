@@ -184,7 +184,7 @@ export default function CommentModal({
             </FlexBox>
           </Style.Header>
           <Margin direction="column" size={10} />
-          <Style.CommentsWrapper about={windowSize < 900 ? "30vh" : "60vh"}>
+          <Style.CommentsWrapper about={windowSize < 900 ? "27vh" : "60vh"}>
             <FlexBox
               width={windowSize < 900 ? "90vw" : "50%"}
               height="fit-content"
@@ -259,7 +259,6 @@ export default function CommentModal({
           </FlexBox>
           <Margin direction="column" size={10} />
           <FlexBox style={{ paddingLeft: "10px" }} gap={15}>
-            <CustomH6>좋아요 {0}개</CustomH6>
             <CustomH6>댓글 {commentData.length}개</CustomH6>
           </FlexBox>
         </FlexBox>
