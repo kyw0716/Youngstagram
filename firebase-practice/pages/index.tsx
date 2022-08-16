@@ -6,8 +6,10 @@ import { Margin } from "ui"
 import FeedList from "@share/Feed/FeedList"
 import Layout from "components/layout"
 import { FeedData } from "backend/dto"
+import { useRouter } from "next/router"
 
 const Home: NextPage = () => {
+  const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
   const [imageData, setImageData] = useState<FeedData[]>([])
 
