@@ -250,7 +250,8 @@ export default function CommentModal({
             alignItems="center"
           >
             <Margin direction="row" size={10} />
-            {authService.currentUser !== null &&
+            {likerList !== undefined &&
+            authService.currentUser !== null &&
             likerList.includes(authService.currentUser.uid) ? (
               <FullHeart storgateId={feedData.storageId} />
             ) : (
@@ -268,8 +269,16 @@ export default function CommentModal({
           </FlexBox>
           <Margin direction="column" size={10} />
           <FlexBox style={{ paddingLeft: "10px" }} gap={15}>
-            <CustomH6>좋아요 {likerList.length}개</CustomH6>
-            <CustomH6>댓글 {commentData.length}개</CustomH6>
+            {likerList !== undefined ? (
+              <CustomH6>좋아요 {likerList.length}개</CustomH6>
+            ) : (
+              <CustomH6>좋아요 0개</CustomH6>
+            )}
+            {commentData !== undefined ? (
+              <CustomH6>댓글 {commentData.length}개</CustomH6>
+            ) : (
+              <CustomH6>댓글 0개</CustomH6>
+            )}
           </FlexBox>
         </FlexBox>
       </FlexBox>
