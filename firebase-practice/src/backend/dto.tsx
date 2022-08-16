@@ -25,3 +25,6 @@ export type UserData = {
   follower: string[]
   feed: FeedData[]
 }
+export type LikeData = {
+  likerList: string[]
+}
