@@ -174,24 +174,33 @@ export default function MobileHeader({ userData }: Props) {
       />
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
-          <Image
-            src={
-              userData.info.profileImage
-                ? `${userData.info.profileImage}`
-                : "/profile.svg"
-            }
-            alt="profile"
-            width={90}
-            height={90}
-            style={
-              userData.info.profileImage
-                ? { borderRadius: "100px" }
-                : { borderRadius: "none" }
-            }
-          />
+          <FlexBox width={90} height={90} style={{ flexShrink: 0 }}>
+            <Image
+              src={
+                userData.info.profileImage
+                  ? `${userData.info.profileImage}`
+                  : "/profile.svg"
+              }
+              alt="profile"
+              width={90}
+              height={90}
+              style={
+                userData.info.profileImage
+                  ? {
+                      borderRadius: "100px",
+                    }
+                  : {
+                      borderRadius: "none",
+                    }
+              }
+            />
+          </FlexBox>
+
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2Light>{userData.info.name}</CustomH2Light>
+            <CustomH2Light style={{ fontSize: "20px" }}>
+              {userData.info.name}
+            </CustomH2Light>
             <Margin direction="column" size={13} />
             {isCurrentUserFollowed ? (
               <Style.ProfileEditButton
