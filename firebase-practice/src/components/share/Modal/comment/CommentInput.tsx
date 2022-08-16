@@ -57,6 +57,7 @@ const Style = {
     right: 0;
     border-top: 1px solid lightgrey;
     display: flex;
+    justify-content: space-between;
     width: ${(props) => props.about};
   `,
 }
@@ -112,7 +113,7 @@ export default function CommentInput({
 
   return (
     <Style.CommentInputArea
-      about={windowSize < 900 ? "95vw" : "499px"}
+      about={windowSize < 900 ? "95vw" : "50%"}
       onSubmit={(event) => {
         event.preventDefault()
         handleCommentSubmit()
@@ -121,14 +122,14 @@ export default function CommentInput({
       <Style.CommentInput
         value={comment}
         onChange={handleInputOnChange}
-        about={windowSize < 900 ? "80vw" : "429px"}
+        about={windowSize < 900 ? "80vw" : "80%"}
         placeholder="댓글 달기..."
         ref={inputRef}
       />
       {isSubmit || (
         <Style.SubmitButton
           onClick={handleCommentSubmit}
-          about={windowSize < 900 ? "15vw" : "70px"}
+          about={windowSize < 900 ? "15vw" : "20%"}
           color={comment.length > 0 ? "#4891ff" : "#d1e3ff"}
         >
           게시

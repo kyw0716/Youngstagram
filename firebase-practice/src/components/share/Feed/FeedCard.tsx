@@ -202,9 +202,14 @@ export default function FeedCard({
     useState<boolean>(false)
   const [isShowMore, setIsShowMore] = useState<boolean>(false)
   const [userData, setUserData] = useState<UserData>()
+  const [commentData, setCommentData] = useState<Comment[]>([])
+
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
       setUserData(data.data() as UserData)
+    })
+    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
+      setCommentData(doc.data()?.AllComments)
     })
   }, [])
 
@@ -478,6 +483,13 @@ export default function FeedCard({
                 <>{feedData.desc}</>
               )}
             </Style.CommentBox>
+            <FlexBox
+              style={{ paddingLeft: "10px", marginTop: "-10px" }}
+              gap={10}
+            >
+              <CustomH6>좋아요 {0}개</CustomH6>
+              <CustomH6>댓글 {commentData.length}개</CustomH6>
+            </FlexBox>
           </Style.ImageCard>
         </>
       )}
