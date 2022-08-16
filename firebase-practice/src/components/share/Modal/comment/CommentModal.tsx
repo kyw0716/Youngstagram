@@ -21,6 +21,7 @@ import {
   CustomH4,
   CustomH6,
   FlexBox,
+  FullHeart,
   HeartIcon,
   Margin,
   ShareIcon,
@@ -123,15 +124,17 @@ export default function CommentModal({
   const inputRef = useRef<HTMLInputElement>(null)
   const commentAreaRef = useRef<HTMLDivElement>(null)
   const [userData, setUserData] = useState<UserData>()
+  const [likerList, setLikerList] = useState<string[]>([])
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
-      setCommentData(doc.data()?.AllComments)
+    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (data) => {
+      if (data) setCommentData(data.data()?.AllComments)
     })
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
-      if (data) {
-        setUserData(data.data() as UserData)
-      }
+      if (data) setUserData(data.data() as UserData)
+    })
+    onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (data) => {
+      if (data) setLikerList(data.data()?.likerList)
     })
   }, [feedData.storageId, feedData.creator])
   return (
@@ -247,7 +250,13 @@ export default function CommentModal({
             alignItems="center"
           >
             <Margin direction="row" size={10} />
-            <HeartIcon />
+            {authService.currentUser !== null &&
+            likerList.includes(authService.currentUser.uid) ? (
+              <FullHeart storgateId={feedData.storageId} />
+            ) : (
+              <HeartIcon storgateId={feedData.storageId} />
+            )}
+
             <Margin direction="row" size={15} />
             <CommentIcon
               onClick={() => {
@@ -259,6 +268,7 @@ export default function CommentModal({
           </FlexBox>
           <Margin direction="column" size={10} />
           <FlexBox style={{ paddingLeft: "10px" }} gap={15}>
+            <CustomH6>좋아요 {likerList.length}개</CustomH6>
             <CustomH6>댓글 {commentData.length}개</CustomH6>
           </FlexBox>
         </FlexBox>

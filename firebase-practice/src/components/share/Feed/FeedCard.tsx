@@ -17,6 +17,7 @@ import {
   CommentIcon,
   CustomH6,
   FlexBox,
+  FullHeart,
   HeartIcon,
   Margin,
   ShareIcon,
@@ -203,6 +204,7 @@ export default function FeedCard({
   const [isShowMore, setIsShowMore] = useState<boolean>(false)
   const [userData, setUserData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
+  const [likerList, setLikerList] = useState<string[]>([])
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -210,6 +212,9 @@ export default function FeedCard({
     })
     onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
       setCommentData(doc.data()?.AllComments)
+    })
+    onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (doc) => {
+      setLikerList(doc.data()?.likerList)
     })
   }, [])
 
@@ -428,7 +433,12 @@ export default function FeedCard({
               alignItems="center"
             >
               <Margin direction="row" size={10} />
-              <HeartIcon />
+              {authService.currentUser !== null &&
+              likerList.includes(authService.currentUser.uid) ? (
+                <FullHeart storgateId={feedData.storageId} />
+              ) : (
+                <HeartIcon storgateId={feedData.storageId} />
+              )}
               <Margin direction="row" size={15} />
               <CommentIcon
                 onClick={() => {
@@ -487,6 +497,7 @@ export default function FeedCard({
               style={{ paddingLeft: "10px", marginTop: "-10px" }}
               gap={10}
             >
+              <CustomH6>좋아요 {likerList.length}개</CustomH6>
               <CustomH6>댓글 {commentData.length}개</CustomH6>
             </FlexBox>
           </Style.ImageCard>
