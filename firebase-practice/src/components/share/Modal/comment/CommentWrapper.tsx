@@ -192,13 +192,14 @@ export default function CommentWrapper({
           )}
           {authService.currentUser?.uid === commentData.userId && (
             <FlexBox
-              width={"fit-content"}
+              width={"max-content"}
               height={"fit-content"}
               style={{
                 position: "absolute",
                 bottom: "-20px",
                 left: "0px",
                 cursor: "pointer",
+                flexShrink: 0,
               }}
             >
               <CustomH5
