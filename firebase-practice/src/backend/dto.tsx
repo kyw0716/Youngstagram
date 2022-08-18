@@ -13,6 +13,12 @@ export type Comment = {
   comment: string
   uploadTime: string
 }
+export type Message = {
+  userId: string
+  message: string
+  messageId: string
+  uploadTime: string
+}
 export type UserInfo = {
   userId: string
   profileImage: string | null

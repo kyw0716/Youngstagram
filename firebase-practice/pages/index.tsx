@@ -30,6 +30,13 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Margin direction="column" size={30} />
+      <button
+        onClick={() => {
+          router.push("/test")
+        }}
+      >
+        테스트 페이지
+      </button>
       <FeedList
         FeedData={imageData ? imageData.filter((data) => !data.private) : []}
         isCustomer={true}
