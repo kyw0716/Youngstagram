@@ -6,6 +6,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore"
+import { useRouter } from "next/router"
 import { SetStateAction, useState } from "react"
 import styled from "styled-components"
 
@@ -206,6 +207,43 @@ export function CommentIcon({ onClick }: CommentProps) {
     </svg>
   )
 }
+export function DMIcon() {
+  const router = useRouter()
+  return (
+    <svg
+      aria-label="게시물 공유"
+      color="#262626"
+      fill="#262626"
+      height="24"
+      role="img"
+      viewBox="0 0 24 24"
+      width="24"
+      style={{ cursor: "pointer" }}
+      onClick={() => {
+        router.push("/dm")
+      }}
+    >
+      <line
+        fill="none"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        x1="22"
+        x2="9.218"
+        y1="3"
+        y2="10.083"
+      ></line>
+      <polygon
+        fill="none"
+        points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      ></polygon>
+    </svg>
+  )
+}
+
 export function ShareIcon() {
   const [isHover, setIsHover] = useState<boolean>(false)
 

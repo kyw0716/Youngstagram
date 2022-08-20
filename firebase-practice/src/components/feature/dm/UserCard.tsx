@@ -2,6 +2,7 @@ import { DBService } from "@FireBase"
 import { UserData, UserInfo } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 
@@ -22,6 +23,7 @@ const Style = {
 
 export default function UserCard({ userId }: Props) {
   const [userData, setUserData] = useState<UserData>()
+  const router = useRouter()
   useEffect(() => {
     onSnapshot(doc(DBService, "users", userId), (data) => {
       if (data) {
@@ -38,7 +40,10 @@ export default function UserCard({ userId }: Props) {
             height={40}
             src={`${userData?.info.profileImage}`}
             alt={"profile"}
-            style={{ borderRadius: "40px" }}
+            style={{ borderRadius: "40px", cursor: "pointer" }}
+            onClick={() => {
+              router.push(`/profile/${userData.info.userId}`)
+            }}
           />
           {userData?.info.name}
         </>

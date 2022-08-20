@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import styled from "styled-components"
-import { FlexBox, Margin } from "ui"
+import { DMIcon, FlexBox, Margin } from "ui"
 
 const Style = {
   Container: styled.div`
@@ -150,6 +150,7 @@ export default function Header() {
               }}
               style={{ cursor: "pointer" }}
             />
+            <DMIcon />
             {authService.currentUser ? (
               <Image
                 src={
