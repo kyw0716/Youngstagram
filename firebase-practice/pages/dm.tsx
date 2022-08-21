@@ -146,57 +146,65 @@ export default function Dm() {
             <Margin direction="column" size={10} />
             {isFollowerList ? (
               <>
-                {currentUserFollowerList.map((data) => {
-                  return (
-                    <FlexBox
-                      width={"100%"}
-                      height={60}
-                      key={v4()}
-                      alignItems="center"
-                      onClick={() => {
-                        if (selectedUserId === data) {
-                          setSelectedUserId("")
-                          return
-                        }
-                        setSelectedUserId(data)
-                      }}
-                      style={{
-                        backgroundColor:
-                          data === selectedUserId ? "lightgrey" : "white",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <UserCard userId={data} />
-                    </FlexBox>
-                  )
-                })}
+                {currentUserFollowerList && (
+                  <>
+                    {currentUserFollowerList.map((data) => {
+                      return (
+                        <FlexBox
+                          width={"100%"}
+                          height={60}
+                          key={v4()}
+                          alignItems="center"
+                          onClick={() => {
+                            if (selectedUserId === data) {
+                              setSelectedUserId("")
+                              return
+                            }
+                            setSelectedUserId(data)
+                          }}
+                          style={{
+                            backgroundColor:
+                              data === selectedUserId ? "lightgrey" : "white",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <UserCard userId={data} />
+                        </FlexBox>
+                      )
+                    })}
+                  </>
+                )}
               </>
             ) : (
               <>
-                {currentUserFollowList.map((data) => {
-                  return (
-                    <FlexBox
-                      width={"100%"}
-                      height={60}
-                      key={v4()}
-                      alignItems="center"
-                      onClick={() => {
-                        if (selectedUserId === data) {
-                          setSelectedUserId("")
-                          return
-                        }
-                        setSelectedUserId(data)
-                      }}
-                      style={{
-                        backgroundColor:
-                          data === selectedUserId ? "lightgrey" : "white",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <UserCard userId={data} />
-                    </FlexBox>
-                  )
-                })}
+                {currentUserFollowList && (
+                  <>
+                    {currentUserFollowList.map((data) => {
+                      return (
+                        <FlexBox
+                          width={"100%"}
+                          height={60}
+                          key={v4()}
+                          alignItems="center"
+                          onClick={() => {
+                            if (selectedUserId === data) {
+                              setSelectedUserId("")
+                              return
+                            }
+                            setSelectedUserId(data)
+                          }}
+                          style={{
+                            backgroundColor:
+                              data === selectedUserId ? "lightgrey" : "white",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <UserCard userId={data} />
+                        </FlexBox>
+                      )
+                    })}
+                  </>
+                )}
               </>
             )}
           </Style.FollowListSection>

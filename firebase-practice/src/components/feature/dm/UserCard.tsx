@@ -38,7 +38,11 @@ export default function UserCard({ userId }: Props) {
           <Image
             width={40}
             height={40}
-            src={`${userData?.info.profileImage}`}
+            src={
+              userData.info.profileImage
+                ? `${userData?.info.profileImage}`
+                : "/profile.svg"
+            }
             alt={"profile"}
             style={{ borderRadius: "40px", cursor: "pointer" }}
             onClick={() => {
