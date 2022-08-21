@@ -123,7 +123,7 @@ export default function Header() {
           >
             youngstagram
           </Style.Logo>
-          <FlexBox width={"fit-content"} gap={30} alignItems="center">
+          <FlexBox width={"fit-content"} gap={20} alignItems="center">
             <Image
               width={30}
               height={30}

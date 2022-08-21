@@ -69,7 +69,7 @@ const Style = {
   `,
 }
 
-export default function Test() {
+export default function Dm() {
   const [currentUserFollowList, setCurrentUserFollowList] = useState<string[]>(
     [],
   )
@@ -237,7 +237,6 @@ export default function Test() {
                 <div ref={DMRef}></div>
               </Style.MessageList>
             )}
-
             {selectedUserId && <MessageInput selectedUserId={selectedUserId} />}
           </Style.MessageSection>
         </FlexBox>
