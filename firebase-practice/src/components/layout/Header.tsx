@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import styled from "styled-components"
-import { FlexBox, Margin } from "ui"
+import { DMIcon, FlexBox, Margin } from "ui"
 
 const Style = {
   Container: styled.div`
@@ -123,7 +123,7 @@ export default function Header() {
           >
             youngstagram
           </Style.Logo>
-          <FlexBox width={"fit-content"} gap={30} alignItems="center">
+          <FlexBox width={"fit-content"} gap={20} alignItems="center">
             <Image
               width={30}
               height={30}
@@ -150,6 +150,7 @@ export default function Header() {
               }}
               style={{ cursor: "pointer" }}
             />
+            <DMIcon />
             {authService.currentUser ? (
               <Image
                 src={
