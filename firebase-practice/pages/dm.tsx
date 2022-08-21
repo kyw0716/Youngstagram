@@ -4,12 +4,13 @@ import { Message, UserData, UserInfo } from "backend/dto"
 import { CustomH4, FlexBox, Margin } from "ui"
 import MyMessageWrapper from "@feature/dm/MyMessageWrapper"
 import styled from "styled-components"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import getUserDataByUid from "lib/getUserDataByUid"
 import { authService, DBService } from "@FireBase"
 import UserCard from "@feature/dm/UserCard"
 import { v4 } from "uuid"
 import { doc, onSnapshot } from "firebase/firestore"
+import MessageInput from "@feature/dm/MessageInput"
 
 const Style = {
   Wrapper: styled.div`
@@ -49,13 +50,25 @@ const Style = {
     gap: 15;
     border: 1px solid lightgrey;
     overflow: auto;
-    padding-bottom: 15px;
     ::-webkit-scrollbar {
       display: none;
     }
     background-color: white;
+    position: relative;
+  `,
+  MessageList: styled.div`
+    width: 100%;
+    height: calc(70vh - 120px);
+    padding: 10px 0px;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    ::-webkit-scrollbar {
+      display: none;
+    }
   `,
 }
+
 export default function Test() {
   const [currentUserFollowList, setCurrentUserFollowList] = useState<string[]>(
     [],
@@ -66,6 +79,15 @@ export default function Test() {
   const [isFollowerList, setIsFollowerList] = useState<boolean>(false)
   const [selectedUserId, setSelectedUserId] = useState<string>("")
   const [messageData, setMessageData] = useState<Message[]>([])
+
+  const DMRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (DMRef.current === null) return
+    DMRef.current.scrollIntoView({
+      block: "start",
+      behavior: "auto",
+    })
+  }, [messageData.length])
   useEffect(() => {
     getUserDataByUid(`${authService.currentUser?.uid}`).then((data) => {
       if (data) {
@@ -190,13 +212,12 @@ export default function Test() {
                 flexShrink: 0,
                 zIndex: 2,
                 backgroundColor: "white",
-                marginBottom: 15,
               }}
             >
               {selectedUserId && <UserCard userId={`${selectedUserId}`} />}
             </FlexBox>
             {selectedUserId && (
-              <>
+              <Style.MessageList>
                 {messageData.map((message) => {
                   return (
                     <>
@@ -205,12 +226,19 @@ export default function Test() {
                       ) : (
                         <OtherMessageWrapper messageData={message} />
                       )}
-                      <Margin direction="column" size={15} />
+                      <Margin
+                        direction="column"
+                        size={15}
+                        style={{ flexShrink: 0 }}
+                      />
                     </>
                   )
                 })}
-              </>
+                <div ref={DMRef}></div>
+              </Style.MessageList>
             )}
+
+            {selectedUserId && <MessageInput selectedUserId={selectedUserId} />}
           </Style.MessageSection>
         </FlexBox>
       </Style.Wrapper>

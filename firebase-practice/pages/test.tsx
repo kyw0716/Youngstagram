@@ -1,3 +1,4 @@
+import MessageInput from "@feature/dm/MessageInput"
 import { authService, DBService } from "@FireBase"
 import { Message } from "backend/dto"
 import Layout from "components/layout"
@@ -64,6 +65,7 @@ export default function Test() {
         />
         <button>제출</button>
       </form>
+      <MessageInput selectedUserId="" />
     </Layout>
   )
 }
