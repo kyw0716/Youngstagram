@@ -220,7 +220,7 @@ export function DMIcon() {
       width="24"
       style={{ cursor: "pointer" }}
       onClick={() => {
-        router.push("/dm")
+        if (authService.currentUser) router.push("/dm")
       }}
     >
       <line
