@@ -20,6 +20,9 @@ const Style = {
     align-items: center;
     position: relative;
     padding-left: 20px;
+    @media (max-width: 470px) {
+      border-radius: 0;
+    }
   `,
   FollowCardWrapper: styled.div`
     width: fit-content;
