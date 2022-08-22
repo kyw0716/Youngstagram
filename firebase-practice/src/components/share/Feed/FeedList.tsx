@@ -23,7 +23,6 @@ const Style = {
   `,
   ImageContainer: styled.div`
     display: flex;
-    width: 100vw;
     align-items: center;
     flex-direction: column;
     gap: 20px;

@@ -2,11 +2,12 @@ import type { NextPage } from "next"
 import { useEffect, useState } from "react"
 import { DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
-import { Margin } from "ui"
+import { FlexBox, Margin } from "ui"
 import FeedList from "@share/Feed/FeedList"
 import Layout from "components/layout"
 import { FeedData } from "backend/dto"
 import { useRouter } from "next/router"
+import FollowListAtMainPage from "@feature/followListAtMainPage"
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -30,6 +31,10 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Margin direction="column" size={30} />
+      <FlexBox justifyContents="center">
+        <FollowListAtMainPage />
+      </FlexBox>
+      <Margin direction="column" size={15} />
       <FeedList
         FeedData={imageData ? imageData.filter((data) => !data.private) : []}
         isCustomer={true}
