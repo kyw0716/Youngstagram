@@ -1,27 +1,40 @@
 import type { NextPage } from "next"
 import { useEffect, useState } from "react"
-import { DBService } from "@FireBase"
+import { authService, DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
-import { Margin } from "ui"
+import { FlexBox, Margin } from "ui"
 import FeedList from "@share/Feed/FeedList"
 import Layout from "components/layout"
-import { FeedData } from "backend/dto"
+import { FeedData, UserData } from "backend/dto"
 import { useRouter } from "next/router"
+import FollowListAtMainPage from "@feature/followListAtMainPage"
 
 const Home: NextPage = () => {
   const router = useRouter()
-  const [userData, setUserData] = useState<DocumentData>()
-  const [imageData, setImageData] = useState<FeedData[]>([])
+  const [dataFromFirestore, setDataFromFirestore] = useState<DocumentData>()
+  const [feedData, setFeedData] = useState<FeedData[]>([])
+  const [currentUserData, setCurrentUserData] = useState<UserData>()
 
   useEffect(() => {
-    const userDataRef = doc(DBService, "mainPage", `userFeedDataAll`)
-    onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
-      setUserData(doc.data())
+    const AllFeedRef = doc(DBService, "mainPage", `userFeedDataAll`)
+
+    onSnapshot(AllFeedRef, { includeMetadataChanges: true }, (doc) => {
+      setDataFromFirestore(doc.data())
     })
   }, [])
   useEffect(() => {
-    if (userData !== undefined) setImageData(userData.feed)
-  }, [userData])
+    const currentUserDataRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
+    onSnapshot(currentUserDataRef, { includeMetadataChanges: true }, (doc) => {
+      setCurrentUserData(doc.data() as UserData)
+    })
+  }, [authService.currentUser])
+  useEffect(() => {
+    if (dataFromFirestore !== undefined) setFeedData(dataFromFirestore.feed)
+  }, [dataFromFirestore])
 
   const [pickImageData, setPickImageData] = useState<
     "public" | "private" | "all"
@@ -30,8 +43,16 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Margin direction="column" size={30} />
+      {currentUserData?.follow !== undefined &&
+        currentUserData?.follow.length !== 0 && (
+          <FlexBox justifyContents="center">
+            <FollowListAtMainPage />
+          </FlexBox>
+        )}
+
+      <Margin direction="column" size={15} />
       <FeedList
-        FeedData={imageData ? imageData.filter((data) => !data.private) : []}
+        FeedData={feedData ? feedData.filter((data) => !data.private) : []}
         isCustomer={true}
         setPickImageData={setPickImageData}
       />

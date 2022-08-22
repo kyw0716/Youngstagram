@@ -312,7 +312,7 @@ export default function FeedCard({
           >
             <Style.ImageHeader
               style={
-                windowSize < 900
+                windowSize < 500
                   ? { width: "95%", padding: "0px 5px" }
                   : { width: 470 }
               }
