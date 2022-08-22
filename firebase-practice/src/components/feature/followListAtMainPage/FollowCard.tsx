@@ -2,6 +2,7 @@ import { DBService } from "@FireBase"
 import { UserData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH6Light, FlexBox, Margin } from "ui"
@@ -16,9 +17,11 @@ const Style = {
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: pointer;
   `,
 }
 export default function FollowCard({ userId }: Props) {
+  const router = useRouter()
   const [userData, setUserData] = useState<UserData>()
   useEffect(() => {
     onSnapshot(doc(DBService, "users", userId), (data) => {
@@ -28,7 +31,11 @@ export default function FollowCard({ userId }: Props) {
   return (
     <>
       {userData && (
-        <Style.Wrapper>
+        <Style.Wrapper
+          onClick={() => {
+            router.push(`profile/${userId}`)
+          }}
+        >
           <FlexBox width={56} height={56}>
             <Image
               width={56}
