@@ -12,7 +12,7 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { authService, DBService } from "@FireBase"
 import styled from "styled-components"
-import { FlexBox, Margin } from "ui"
+import { CustomH6Light, FlexBox, Margin } from "ui"
 import { addDoc, doc, setDoc, updateDoc } from "firebase/firestore"
 import Layout from "components/layout"
 import Image from "next/image"
@@ -106,6 +106,7 @@ export default function Auth() {
   const router = useRouter()
   const [Email, setEmail] = useState<string>("")
   const [Password, setPassword] = useState<string>("")
+  const [confirmPassword, setConfirmPassword] = useState<string>("")
   const [isNewAccount, setIsNewAccount] = useState<boolean>(false)
   const [name, setName] = useState<string>("")
   const githubProvider = new GithubAuthProvider()
@@ -150,10 +151,15 @@ export default function Auth() {
         .catch((error) => {
           if (error.code === "auth/weak-password") {
             alert("비밀번호는 최소 6자리 이상이어야 합니다.")
+            setConfirmPassword("")
             setPassword("")
           } else if (error.code === "auth/email-already-in-use") {
             alert("이미 사용중인 이메일 입니다.")
             setPassword("")
+            setConfirmPassword("")
+            setEmail("")
+          } else if (error.code === "auth/invalid-email") {
+            alert("올바른 이메일 형식을 입력해주세요")
             setEmail("")
           }
         })
@@ -259,9 +265,42 @@ export default function Auth() {
             onChange={handleOnInputChange}
             name="Password"
             value={Password}
+            style={
+              Password !== confirmPassword &&
+              confirmPassword !== "" &&
+              Password !== ""
+                ? { backgroundColor: "red" }
+                : { backgroundColor: "white" }
+            }
           />
           {isNewAccount ? (
             <>
+              <Margin direction="column" size={6} />
+              <Style.InputBox
+                placeholder="Password Again"
+                required
+                minLength={3}
+                onChange={(event) => {
+                  setConfirmPassword(event.target.value)
+                }}
+                type="password"
+                style={
+                  Password !== confirmPassword &&
+                  confirmPassword !== "" &&
+                  Password !== ""
+                    ? { backgroundColor: "red" }
+                    : { backgroundColor: "white" }
+                }
+              />
+              {Password !== confirmPassword &&
+              confirmPassword !== "" &&
+              Password !== "" ? (
+                <CustomH6Light style={{ color: "red" }}>
+                  비밀번호가 일치하지 않습니다
+                </CustomH6Light>
+              ) : (
+                <></>
+              )}
               <Margin direction="column" size={6} />
               <Style.InputBox
                 placeholder="Name"
@@ -277,7 +316,23 @@ export default function Auth() {
           <Style.SubmitButton
             type={"submit"}
             value={isNewAccount ? "Create Account" : "Log in"}
-            color={Email.length !== 0 && Password.length >= 6 ? "" : "fail"}
+            color={
+              Email.length !== 0 &&
+              Password.length >= 6 &&
+              Password === confirmPassword &&
+              name !== ""
+                ? ""
+                : "fail"
+            }
+            disabled={
+              !(
+                Email.length !== 0 &&
+                Password.length >= 6 &&
+                Password === confirmPassword &&
+                confirmPassword !== "" &&
+                name !== ""
+              )
+            }
           />
           <Margin direction="column" size={15} />
           <FlexBox width={350} justifyContents="center" alignItems="center">
@@ -325,6 +380,7 @@ export default function Auth() {
           </Style.SignUpButton>
         </Style.SignUpContainer>
       </Style.Wrapper>
+      <Margin direction="column" size={20} />
     </Layout>
   )
 }
