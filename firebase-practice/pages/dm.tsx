@@ -124,6 +124,7 @@ export default function Dm() {
                 position: "sticky",
                 top: 0,
                 marginBottom: 15,
+                flexShrink: 0,
               }}
             >
               <UserCard userId={`${authService.currentUser?.uid}`} />
