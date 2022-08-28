@@ -3,6 +3,7 @@ import styled from "styled-components"
 import FeedGridCard from "./FeedGridCard"
 import { v4 } from "uuid"
 import { useEffect, useState } from "react"
+import useWindowSize from "lib/useWindowSize"
 
 type Props = {
   feedDatas: FeedData[]
@@ -21,13 +22,7 @@ const Style = {
 }
 
 export default function FeedGrid({ feedDatas }: Props) {
-  const [windowSize, setWindowSize] = useState<number>(0)
-  useEffect(() => {
-    setWindowSize(window.innerWidth)
-    window.addEventListener("resize", () => {
-      setWindowSize(window.innerWidth)
-    })
-  }, [])
+  const windowSize = useWindowSize()
   return (
     <Style.Wrapper
       style={{

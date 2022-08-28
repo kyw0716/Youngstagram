@@ -9,6 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
+import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
@@ -29,7 +30,6 @@ type Props = {
   feedData: FeedData
   isMainPage: boolean
   setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
-  windowSize: number
 }
 
 const Style = {
@@ -194,7 +194,6 @@ export default function FeedSortingCard({
   feedData,
   isMainPage,
   setPickImageData,
-  windowSize,
 }: Props) {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
@@ -205,6 +204,7 @@ export default function FeedSortingCard({
   const [userData, setUserData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
+  const windowSize = useWindowSize()
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -300,7 +300,6 @@ export default function FeedSortingCard({
             isOpen={isCommentModalOpen}
             setIsOpen={setIsCommentModalOpen}
             feedData={feedData}
-            windowSize={windowSize}
           />
           <FeedUploadModal
             isOpen={isImageUploadModalOpen}

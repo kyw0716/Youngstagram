@@ -8,7 +8,6 @@ import { Margin } from "ui"
 
 type Props = {
   feedData: FeedData
-  windowSize: number
 }
 
 const Style = {
@@ -43,7 +42,7 @@ const Style = {
   `,
 }
 
-export default function FeedGridCard({ feedData, windowSize }: Props) {
+export default function FeedGridCard({ feedData }: Props) {
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likeData, setLikeData] = useState<string[]>()
   const [isHover, setIsHover] = useState<boolean>(false)
@@ -60,12 +59,7 @@ export default function FeedGridCard({ feedData, windowSize }: Props) {
 
   return (
     <>
-      <CommentModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        feedData={feedData}
-        windowSize={windowSize}
-      />
+      <CommentModal isOpen={isOpen} setIsOpen={setIsOpen} feedData={feedData} />
       <Style.GridItem
         about={feedData.imageUrl}
         onMouseEnter={() => {

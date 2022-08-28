@@ -3,6 +3,7 @@ import PCHeader from "./PCHeader"
 import { useEffect, useState } from "react"
 import { Margin } from "ui"
 import { UserData } from "backend/dto"
+import useWindowSize from "lib/useWindowSize"
 
 type Props = {
   imageDataLength: number
@@ -10,13 +11,7 @@ type Props = {
 }
 
 export default function ProfileHeader({ userData }: Props) {
-  const [windowSize, setWindowSize] = useState<number>(0)
-  useEffect(() => {
-    setWindowSize(window.innerWidth)
-    window.addEventListener("resize", () => {
-      setWindowSize(window.innerWidth)
-    })
-  }, [])
+  const windowSize = useWindowSize()
   return (
     <>
       <Margin direction="column" size={30} />

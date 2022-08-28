@@ -1,5 +1,5 @@
 import { authService, DBService } from "@FireBase"
-import { Comment, UserData, UserInfo } from "backend/dto"
+import { Comment, UserData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -7,6 +7,7 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore"
+import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -16,7 +17,6 @@ import { CustomH4, CustomH5, CustomH6, FlexBox, Margin } from "ui"
 type Props = {
   commentData: Comment
   storageId: string
-  windowSize: number
 }
 const Style = {
   Wrapper: styled.div`
@@ -40,16 +40,13 @@ const Style = {
   `,
 }
 
-export default function CommentWrapper({
-  commentData,
-  storageId,
-  windowSize,
-}: Props) {
+export default function CommentWrapper({ commentData, storageId }: Props) {
   const router = useRouter()
   const [isModifyMode, setIsModifyMode] = useState<boolean>(false)
   const [newComment, setNewComment] = useState<string>(commentData.comment)
   const [isShowAllComment, setIsShowAllComment] = useState<boolean>(false)
   const [userData, setUserData] = useState<UserData>()
+  const windowSize = useWindowSize()
 
   useEffect(() => {
     const userInfoRef = doc(DBService, "users", commentData.userId)
@@ -90,7 +87,7 @@ export default function CommentWrapper({
   }
   return (
     <>
-      <Style.Wrapper about={windowSize < 900 ? "85vw" : "50%"}>
+      <Style.Wrapper about={windowSize < 900 ? "85vw" : "100%"}>
         <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
           <Image
             width={32}

@@ -16,6 +16,7 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import getCurrentTime from "lib/getCurrentTime"
+import useWindowSize from "lib/useWindowSize"
 
 type Props = {
   isOpen: boolean
@@ -128,8 +129,8 @@ export default function FeedUploadModal({
   })
   const [isFileExist, setIsFileExist] = useState<boolean>(false)
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
-  const [windowSize, setWindowSize] = useState<number>(0)
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
+  const windowSize = useWindowSize()
 
   const [desc, setDesc] = useState<string>(feedData ? feedData.desc : "")
   const [location, setLocation] = useState<string>(
@@ -145,13 +146,6 @@ export default function FeedUploadModal({
 
   useEffect(() => {
     setRandomId(v4())
-  }, [])
-
-  useEffect(() => {
-    setWindowSize(window.innerWidth)
-    window.addEventListener("resize", () => {
-      setWindowSize(window.innerWidth)
-    })
   }, [])
 
   useEffect(() => {

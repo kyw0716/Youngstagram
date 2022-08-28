@@ -2,13 +2,13 @@ import { authService, DBService } from "@FireBase"
 import { Comment, FeedData, UserData } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import getCurrentTime from "lib/getCurrentTime"
+import useWindowSize from "lib/useWindowSize"
 import { useCallback, useRef, useState } from "react"
 import styled from "styled-components"
 import { v4 } from "uuid"
 
 type Props = {
   feedData: FeedData
-  windowSize: number
   inputRef: React.RefObject<HTMLInputElement>
   commentAreaRef: React.RefObject<HTMLDivElement>
 }
@@ -64,13 +64,13 @@ const Style = {
 
 export default function CommentInput({
   feedData,
-  windowSize,
   inputRef,
   commentAreaRef,
 }: Props) {
   const [comment, setComment] = useState<string>("")
   const [randomId, setRandomId] = useState<string>(v4())
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
+  const windowSize = useWindowSize()
 
   const handleCommentSubmit = async () => {
     setIsSubmit(true)

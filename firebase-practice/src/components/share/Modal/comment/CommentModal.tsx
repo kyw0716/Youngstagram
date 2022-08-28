@@ -1,20 +1,8 @@
 import { authService, DBService } from "@FireBase"
 import { Comment, FeedData, UserInfo, UserData } from "backend/dto"
-import {
-  arrayUnion,
-  doc,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore"
+import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
-import React, {
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { SetStateAction, useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -29,16 +17,15 @@ import {
 import CommentWrapper from "./CommentWrapper"
 import YoungstagramModal from "../YoungstagramModal"
 import { v4 } from "uuid"
-import getCurrentTime from "lib/getCurrentTime"
 import { useRouter } from "next/router"
-import { async } from "@firebase/util"
 import CommentInput from "./CommentInput"
+import useWindowSize from "lib/useWindowSize"
+import CommentList from "./CommentList"
 
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   feedData: FeedData
-  windowSize: number
 }
 
 const Style = {
@@ -113,26 +100,14 @@ const Style = {
   `,
 }
 
-export default function CommentModal({
-  isOpen,
-  setIsOpen,
-  feedData,
-  windowSize,
-}: Props) {
-  const router = useRouter()
+export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
   const [commentData, setCommentData] = useState<Comment[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const commentAreaRef = useRef<HTMLDivElement>(null)
-  const [userData, setUserData] = useState<UserData>()
   const [likerList, setLikerList] = useState<string[]>([])
+  const windowSize = useWindowSize()
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (data) => {
-      if (data) setCommentData(data.data()?.AllComments)
-    })
-    onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
-      if (data) setUserData(data.data() as UserData)
-    })
     onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (data) => {
       if (data) setLikerList(data.data()?.likerList)
     })
@@ -163,86 +138,7 @@ export default function CommentModal({
           width={windowSize < 900 ? "95vw" : "50%"}
           height={"auto"}
         >
-          <Style.Header about={windowSize < 900 ? "window" : ""}>
-            <Image
-              width={32}
-              height={32}
-              style={{ borderRadius: "32px", cursor: "pointer" }}
-              src={
-                userData?.info.profileImage
-                  ? userData.info.profileImage
-                  : "/profile.svg"
-              }
-              onClick={() => {
-                router.push(`/profile/${userData?.info.userId}`)
-              }}
-              alt="profile"
-            />
-            <Margin direction="row" size={14} />
-            <FlexBox column={true}>
-              <CustomH4 style={{ color: "black" }}>
-                {userData?.info.name}
-              </CustomH4>
-              <CustomH6>{feedData.location}</CustomH6>
-            </FlexBox>
-          </Style.Header>
-          <Margin direction="column" size={10} />
-          <Style.CommentsWrapper about={windowSize < 900 ? "27vh" : "60vh"}>
-            <FlexBox
-              width={windowSize < 900 ? "90vw" : "50%"}
-              height="fit-content"
-              style={{ paddingLeft: "15px", flexShrink: 0 }}
-            >
-              <FlexBox height={32} width={32}>
-                <Image
-                  width={32}
-                  height={32}
-                  src={
-                    userData?.info.profileImage
-                      ? userData?.info.profileImage
-                      : "/profile.svg"
-                  }
-                  alt="profile"
-                  onClick={() => {
-                    router.push(`/profile/${userData?.info.userId}`)
-                  }}
-                  style={{ borderRadius: "32px", cursor: "pointer" }}
-                />
-              </FlexBox>
-              <Margin direction="row" size={10} />
-              <FlexBox
-                column={true}
-                width={"fit-content"}
-                style={{ paddingRight: "20px" }}
-              >
-                <Margin direction="column" size={5} />
-                <CustomH4>{userData?.info.name}</CustomH4>
-                {feedData.desc}
-              </FlexBox>
-            </FlexBox>
-            <Margin direction="column" size={25} style={{ flexShrink: 0 }} />
-            {commentData !== undefined &&
-              commentData
-                .sort(function (a, b) {
-                  return Number(a.uploadTime) - Number(b.uploadTime)
-                })
-                .map((data, index) => {
-                  return (
-                    <>
-                      {index === commentData.length - 1 && (
-                        <div ref={commentAreaRef}></div>
-                      )}
-                      <CommentWrapper
-                        key={v4()}
-                        commentData={data}
-                        storageId={feedData.storageId}
-                        windowSize={windowSize}
-                      />
-                    </>
-                  )
-                })}
-          </Style.CommentsWrapper>
-          <Margin direction="column" size={10} />
+          <CommentList feedData={feedData} commentAreaRef={commentAreaRef} />
           <FlexBox
             width={"100%"}
             height={"fit-content"}
@@ -284,7 +180,6 @@ export default function CommentModal({
       </FlexBox>
       <CommentInput
         feedData={feedData}
-        windowSize={windowSize}
         inputRef={inputRef}
         commentAreaRef={commentAreaRef}
       />
