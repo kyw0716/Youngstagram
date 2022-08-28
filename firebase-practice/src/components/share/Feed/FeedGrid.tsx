@@ -2,7 +2,6 @@ import { FeedData } from "backend/dto"
 import styled from "styled-components"
 import FeedGridCard from "./FeedGridCard"
 import { v4 } from "uuid"
-import { useEffect, useState } from "react"
 import useWindowSize from "lib/useWindowSize"
 
 type Props = {
@@ -33,13 +32,7 @@ export default function FeedGrid({ feedDatas }: Props) {
       {feedDatas !== undefined && (
         <>
           {feedDatas.map((feedData) => {
-            return (
-              <FeedGridCard
-                feedData={feedData}
-                key={v4()}
-                windowSize={windowSize}
-              />
-            )
+            return <FeedGridCard feedData={feedData} key={v4()} />
           })}
         </>
       )}
