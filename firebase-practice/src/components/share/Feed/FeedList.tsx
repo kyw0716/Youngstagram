@@ -1,4 +1,5 @@
 import { FeedData } from "backend/dto"
+import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
@@ -28,13 +29,6 @@ const Style = {
 }
 
 export default function FeedList({ FeedData, isCustomer: isMainPage }: Props) {
-  const [windowSize, setWindowSize] = useState<number>(0)
-  useEffect(() => {
-    setWindowSize(window.innerWidth)
-    window.addEventListener("resize", () => {
-      setWindowSize(window.innerWidth)
-    })
-  }, [])
   return (
     <Style.ImageContainer>
       {FeedData.length !== 0 ? (
@@ -42,12 +36,7 @@ export default function FeedList({ FeedData, isCustomer: isMainPage }: Props) {
           return Number(b.uploadTime) - Number(a.uploadTime)
         }).map((data, index) => {
           return (
-            <FeedCard
-              key={index}
-              feedData={data}
-              isMainPage={isMainPage}
-              windowSize={windowSize}
-            />
+            <FeedCard key={index} feedData={data} isMainPage={isMainPage} />
           )
         })
       ) : (

@@ -35,13 +35,6 @@ export default function FeedList({
   isCustomer: isMainPage,
   setPickImageData,
 }: Props) {
-  const [windowSize, setWindowSize] = useState<number>(0)
-  useEffect(() => {
-    setWindowSize(window.innerWidth)
-    window.addEventListener("resize", () => {
-      setWindowSize(window.innerWidth)
-    })
-  }, [])
   return (
     <Style.ImageContainer>
       {setPickImageData !== undefined &&
@@ -55,7 +48,6 @@ export default function FeedList({
                 feedData={data}
                 isMainPage={isMainPage}
                 setPickImageData={setPickImageData}
-                windowSize={windowSize}
               />
             )
           })

@@ -9,6 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
+import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
@@ -28,7 +29,6 @@ import FeedUploadModal from "../Modal/feed/FeedUploadModal"
 type Props = {
   feedData: FeedData
   isMainPage: boolean
-  windowSize: number
 }
 
 const Style = {
@@ -189,7 +189,7 @@ const Style = {
   `,
 }
 
-export default function FeedCard({ feedData, isMainPage, windowSize }: Props) {
+export default function FeedCard({ feedData, isMainPage }: Props) {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
@@ -199,6 +199,7 @@ export default function FeedCard({ feedData, isMainPage, windowSize }: Props) {
   const [userData, setUserData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
+  const windowSize = useWindowSize()
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -292,7 +293,6 @@ export default function FeedCard({ feedData, isMainPage, windowSize }: Props) {
             isOpen={isCommentModalOpen}
             setIsOpen={setIsCommentModalOpen}
             feedData={feedData}
-            windowSize={windowSize}
           />
           <FeedUploadModal
             isOpen={isImageUploadModalOpen}

@@ -1,3 +1,4 @@
+import useWindowSize from "lib/useWindowSize"
 import { SetStateAction, useEffect, useState } from "react"
 import { Margin } from "ui"
 import MobileHeader from "./MobileHeader"
@@ -16,13 +17,7 @@ export default function ProfileHeader({
   setPickImageData,
   pickImageData,
 }: Props) {
-  const [windowSize, setWindowSize] = useState<number>(0)
-  useEffect(() => {
-    setWindowSize(window.innerWidth)
-    window.addEventListener("resize", () => {
-      setWindowSize(window.innerWidth)
-    })
-  }, [])
+  const windowSize = useWindowSize()
   return (
     <>
       <Margin direction="column" size={30} />

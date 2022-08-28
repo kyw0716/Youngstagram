@@ -6,7 +6,6 @@ import { FlexBox, Margin } from "ui"
 import FeedList from "@share/Feed/FeedList"
 import Layout from "components/layout"
 import { FeedData, UserData } from "backend/dto"
-import { useRouter } from "next/router"
 import FollowListAtMainPage from "@feature/followListAtMainPage"
 
 const Home: NextPage = () => {
