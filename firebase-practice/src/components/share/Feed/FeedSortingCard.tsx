@@ -28,6 +28,7 @@ import FeedUploadModal from "../Modal/feed/FeedUploadModal"
 type Props = {
   feedData: FeedData
   isMainPage: boolean
+  setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
   windowSize: number
 }
 
@@ -189,7 +190,12 @@ const Style = {
   `,
 }
 
-export default function FeedCard({ feedData, isMainPage, windowSize }: Props) {
+export default function FeedSortingCard({
+  feedData,
+  isMainPage,
+  setPickImageData,
+  windowSize,
+}: Props) {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
@@ -241,6 +247,7 @@ export default function FeedCard({ feedData, isMainPage, windowSize }: Props) {
     await updateDoc(firestoreAllRef, {
       feed: arrayRemove(feed),
     })
+    setPickImageData("all")
   }
   const handlePrivateToggle = async () => {
     const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
@@ -279,6 +286,7 @@ export default function FeedCard({ feedData, isMainPage, windowSize }: Props) {
         feed: arrayUnion(toggleFeed),
       })
     })
+    setPickImageData("all")
   }
   const handleThreeDotMenuClick = () => {
     setIsMenuOpen((current) => !current)

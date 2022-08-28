@@ -49,7 +49,7 @@ export default function FollowListAtMainPage() {
     if (userData === undefined) return
     if (userData.follow === undefined) return
     if (window.innerWidth < 470) {
-      setFollowNumber(userData.follow.length - 4)
+      setFollowNumber(userData.follow.length - 5)
       return
     }
     setFollowNumber(userData.follow.length - 6)
