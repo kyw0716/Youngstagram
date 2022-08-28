@@ -10,7 +10,6 @@ import { useRouter } from "next/router"
 import FollowListAtMainPage from "@feature/followListAtMainPage"
 
 const Home: NextPage = () => {
-  const router = useRouter()
   const [dataFromFirestore, setDataFromFirestore] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>([])
   const [currentUserData, setCurrentUserData] = useState<UserData>()
@@ -36,10 +35,6 @@ const Home: NextPage = () => {
     if (dataFromFirestore !== undefined) setFeedData(dataFromFirestore.feed)
   }, [dataFromFirestore])
 
-  const [pickImageData, setPickImageData] = useState<
-    "public" | "private" | "all"
-  >("all")
-
   return (
     <Layout>
       <Margin direction="column" size={30} />
@@ -54,7 +49,6 @@ const Home: NextPage = () => {
       <FeedList
         FeedData={feedData ? feedData.filter((data) => !data.private) : []}
         isCustomer={true}
-        setPickImageData={setPickImageData}
       />
     </Layout>
   )

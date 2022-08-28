@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
-import FeedList from "@share/Feed/FeedList"
+import FeedList from "@share/Feed/FeedSortList"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { GetServerSideProps } from "next"
 import ProfileHeader from "@feature/customerProfile"
