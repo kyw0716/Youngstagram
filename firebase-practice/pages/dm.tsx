@@ -1,6 +1,6 @@
 import OtherMessageWrapper from "@feature/dm/OtherMessageWrapper"
 import Layout from "components/layout"
-import { Message, UserData, UserInfo } from "backend/dto"
+import { Message, UserData } from "backend/dto"
 import { CustomH4, FlexBox, Margin } from "ui"
 import MyMessageWrapper from "@feature/dm/MyMessageWrapper"
 import styled from "styled-components"

@@ -7,10 +7,6 @@ import FeedSortingCard from "./FeedSortingCard"
 
 type Props = {
   FeedData: FeedData[]
-  isCustomer: boolean
-  setPickImageData?: React.Dispatch<
-    SetStateAction<"public" | "private" | "all">
-  >
 }
 
 const Style = {
@@ -30,34 +26,20 @@ const Style = {
   `,
 }
 
-export default function FeedList({
-  FeedData,
-  isCustomer: isMainPage,
-  setPickImageData,
-}: Props) {
+export default function FeedSortList({ FeedData }: Props) {
   return (
     <Style.ImageContainer>
-      {setPickImageData !== undefined &&
-        (FeedData.length !== 0 ? (
-          FeedData.sort(function (a, b) {
-            return Number(a.uploadTime) - Number(b.uploadTime)
-          }).map((data, index) => {
-            return (
-              <FeedSortingCard
-                key={index}
-                feedData={data}
-                isMainPage={isMainPage}
-                setPickImageData={setPickImageData}
-              />
-            )
-          })
-        ) : (
-          <>
-            <Image src={"/empty.svg"} width={150} height={150} alt="empty" />
-            <Margin direction="column" size={15} />
-            <CustomH2>게시물이 없어용</CustomH2>
-          </>
-        ))}
+      {FeedData.length !== 0 ? (
+        FeedData.map((data, index) => {
+          return <FeedSortingCard key={index} feedData={data} />
+        })
+      ) : (
+        <>
+          <Image src={"/empty.svg"} width={150} height={150} alt="empty" />
+          <Margin direction="column" size={15} />
+          <CustomH2>게시물이 없어용</CustomH2>
+        </>
+      )}
     </Style.ImageContainer>
   )
 }

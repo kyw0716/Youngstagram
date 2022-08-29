@@ -7,11 +7,13 @@ import FeedList from "@share/Feed/FeedList"
 import Layout from "components/layout"
 import { FeedData, UserData } from "backend/dto"
 import FollowListAtMainPage from "@feature/followListAtMainPage"
+import { useRecoilState } from "recoil"
+import { userDataState } from "@share/recoil/recoilList"
 
 const Home: NextPage = () => {
   const [dataFromFirestore, setDataFromFirestore] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>([])
-  const [currentUserData, setCurrentUserData] = useState<UserData>()
+  const [userData, setUserData] = useRecoilState(userDataState)
 
   useEffect(() => {
     const AllFeedRef = doc(DBService, "mainPage", `userFeedDataAll`)
@@ -27,7 +29,9 @@ const Home: NextPage = () => {
       `${authService.currentUser?.uid}`,
     )
     onSnapshot(currentUserDataRef, { includeMetadataChanges: true }, (doc) => {
-      setCurrentUserData(doc.data() as UserData)
+      if (doc) {
+        setUserData(doc.data() as UserData)
+      }
     })
   }, [authService.currentUser])
   useEffect(() => {
@@ -37,12 +41,11 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Margin direction="column" size={30} />
-      {currentUserData?.follow !== undefined &&
-        currentUserData?.follow.length !== 0 && (
-          <FlexBox justifyContents="center">
-            <FollowListAtMainPage />
-          </FlexBox>
-        )}
+      {userData?.follow !== undefined && userData?.follow.length !== 0 && (
+        <FlexBox justifyContents="center">
+          <FollowListAtMainPage />
+        </FlexBox>
+      )}
 
       <Margin direction="column" size={15} />
       <FeedList

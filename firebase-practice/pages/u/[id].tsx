@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react"
-import { authService, DBService } from "@FireBase"
-import FeedList from "@share/Feed/FeedSortList"
-import { doc, DocumentData, onSnapshot } from "firebase/firestore"
-import { GetServerSideProps } from "next"
+import FeedSortList from "@share/Feed/FeedSortList"
 import ProfileHeader from "@feature/ownerProfile"
 import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
 import Layout from "components/layout"
 import Image from "next/image"
-import { FeedData, UserData } from "backend/dto"
+import { FeedData } from "backend/dto"
+import { useRecoilValue } from "recoil"
+import { pickFeedDataType, userDataState } from "@share/recoil/recoilList"
 
 const Style = {
   Wrapper: styled.div`
@@ -23,97 +22,37 @@ const Style = {
   `,
 }
 
-export default function Profile({ userId }: Props) {
-  const [userData, setUserData] = useState<DocumentData>()
-  const [allImageData, setAllImageData] = useState<FeedData[]>([])
-  const [privateImageData, setPrivateImageData] = useState<FeedData[]>([])
-  const [publicImageData, setPublicImageData] = useState<FeedData[]>([])
-
-  const [pickImageData, setPickImageData] = useState<
-    "all" | "public" | "private"
-  >("all")
-  const [dataToView, setDataToView] = useState<FeedData[]>([])
+export default function Profile() {
+  const userData = useRecoilValue(userDataState)
+  const feedDataType = useRecoilValue(pickFeedDataType)
+  const [feedData, setFeedData] = useState<FeedData[]>([])
 
   useEffect(() => {
-    const userDataRef = doc(
-      DBService,
-      "users",
-      `${authService.currentUser?.uid}`,
-    )
-    onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
-      setUserData(doc.data())
-    })
-  }, [])
-  useEffect(() => {
-    if (userData !== undefined && userData.feed !== undefined) {
-      setAllImageData((userData as UserData).feed)
-      setDataToView((userData as UserData).feed)
-      setPrivateImageData(
-        (userData as UserData).feed.filter((data) => data.private),
-      )
-      setPublicImageData(
-        (userData as UserData).feed.filter((data) => !data.private),
-      )
-    }
-  }, [userData])
-
-  useEffect(() => {
-    if (pickImageData === "all") {
-      setDataToView(allImageData)
+    if (feedDataType === "public") {
+      setFeedData(userData.feed.filter((eachFeed) => !eachFeed.private))
       return
     }
-    if (pickImageData === "public") {
-      setDataToView(publicImageData)
+    if (feedDataType === "private") {
+      setFeedData(userData.feed.filter((eachFeed) => eachFeed.private))
       return
     }
-    if (pickImageData === "private") {
-      setDataToView(privateImageData)
-    }
-  }, [pickImageData])
+    setFeedData(userData.feed)
+  }, [feedDataType])
 
   return (
     <Layout>
       <Style.Wrapper>
-        <ProfileHeader
-          imageDataLength={allImageData.length}
-          privateImageDataLength={privateImageData.length}
-          setPickImageData={setPickImageData}
-          pickImageData={pickImageData}
-        />
-        {allImageData.length === 0 ? (
+        <ProfileHeader />
+        {feedData.length === 0 ? (
           <FlexBox column={true} width="fit-content" alignItems="center">
             <Image src="/empty.svg" alt="empty" width={150} height={150} />
             <Margin direction="column" size={15} />
             <CustomH2>게시물이 없어용</CustomH2>
           </FlexBox>
         ) : (
-          <>
-            {authService.currentUser?.uid !== undefined &&
-              authService.currentUser.displayName !== null && (
-                <FeedList
-                  FeedData={dataToView}
-                  isCustomer={false}
-                  setPickImageData={setPickImageData}
-                />
-              )}
-          </>
+          <FeedSortList FeedData={feedData} />
         )}
       </Style.Wrapper>
     </Layout>
   )
-}
-
-type Props = {
-  userId: string
-}
-
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context,
-) => {
-  const userId = context.params?.id as string
-  return {
-    props: {
-      userId,
-    },
-  }
 }

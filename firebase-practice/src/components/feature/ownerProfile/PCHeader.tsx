@@ -1,7 +1,9 @@
 import { authService } from "@FireBase"
 import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
+import { pickFeedDataType, userDataState } from "@share/recoil/recoilList"
 import Image from "next/image"
-import { SetStateAction, useState } from "react"
+import { useState } from "react"
+import { useRecoilState, useRecoilValue } from "recoil"
 import styled from "styled-components"
 import {
   CustomH2Light,
@@ -10,13 +12,6 @@ import {
   FlexBox,
   Margin,
 } from "ui"
-
-type Props = {
-  imageDataLength: number
-  privateImageDataLength: number
-  setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
-  pickImageData: "all" | "public" | "private"
-}
 
 const Style = {
   ProfileHeader: styled.div`
@@ -87,13 +82,10 @@ const Style = {
   `,
 }
 
-export default function PCHeader({
-  imageDataLength,
-  setPickImageData,
-  pickImageData,
-  privateImageDataLength,
-}: Props) {
+export default function PCHeader() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [feedDataType, setFeedDataType] = useRecoilState(pickFeedDataType)
+  const userData = useRecoilValue(userDataState)
   return (
     <>
       <ProfileEditModal isOpen={isOpen} setIsOpen={setIsOpen} isPC={true} />
@@ -136,44 +128,47 @@ export default function PCHeader({
             </CustomH3Light>
           </FlexBox>
           <Margin direction="column" size={15} />
-          {pickImageData === "all" && (
-            <CustomH3Light>게시물: {imageDataLength}</CustomH3Light>
+          {feedDataType === "all" && (
+            <CustomH3Light>게시물: {userData.feed.length}</CustomH3Light>
           )}
-          {pickImageData === "public" && (
+          {feedDataType === "public" && (
             <CustomH3Light>
-              공개 게시물: {imageDataLength - privateImageDataLength}
+              공개 게시물:{" "}
+              {userData.feed.length -
+                userData.feed.filter((eachFeed) => eachFeed.private).length}
             </CustomH3Light>
           )}
-          {pickImageData === "private" && (
+          {feedDataType === "private" && (
             <CustomH3Light>
-              비공개 게시물: {privateImageDataLength}
+              비공개 게시물:{" "}
+              {userData.feed.filter((eachFeed) => eachFeed.private).length}
             </CustomH3Light>
           )}
         </Style.ProfileInfo>
       </Style.ProfileHeader>
       <Style.SortWrapper>
         <Style.SortToAll
-          about={pickImageData}
+          about={feedDataType}
           onClick={() => {
-            setPickImageData("all")
+            setFeedDataType("all")
           }}
         >
           <CustomH4Light>전체 게시물</CustomH4Light>
           <Image src="/all-file.svg" alt="allFile" width={15} height={15} />
         </Style.SortToAll>
         <Style.SortToPublic
-          about={pickImageData}
+          about={feedDataType}
           onClick={() => {
-            setPickImageData("public")
+            setFeedDataType("public")
           }}
         >
           <CustomH4Light>공개 게시물</CustomH4Light>
           <Image src="/unLock.svg" alt="publicFile" width={15} height={15} />
         </Style.SortToPublic>
         <Style.SortToPrivate
-          about={pickImageData}
+          about={feedDataType}
           onClick={() => {
-            setPickImageData("private")
+            setFeedDataType("private")
           }}
         >
           <CustomH4Light>비공개 게시물</CustomH4Light>

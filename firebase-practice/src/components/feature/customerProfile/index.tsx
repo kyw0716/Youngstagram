@@ -1,6 +1,5 @@
 import MobileHeader from "./MobileHeader"
 import PCHeader from "./PCHeader"
-import { useEffect, useState } from "react"
 import { Margin } from "ui"
 import { UserData } from "backend/dto"
 import useWindowSize from "lib/useWindowSize"
