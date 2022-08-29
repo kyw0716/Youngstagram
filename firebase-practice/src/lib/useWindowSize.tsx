@@ -9,7 +9,6 @@ export default function useWindowSize() {
       "resize",
       debounce(() => {
         setWindowSize(window.innerWidth)
-        console.log("호출")
       }),
     )
   }, [])
