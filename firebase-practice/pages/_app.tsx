@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { onAuthStateChanged } from "firebase/auth"
 import { authService } from "@FireBase"
+import { RecoilRoot } from "recoil"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -20,7 +21,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       }
     })
   }, [])
-  return <Component {...pageProps} />
+  return (
+    <RecoilRoot>
+      <Component {...pageProps} />
+    </RecoilRoot>
+  )
 }
 
 export default MyApp

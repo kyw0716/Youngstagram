@@ -17,6 +17,7 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.2",
     "react-modal": "^3.15.1",
+    "recoil": "^0.7.5",
     "styled-components": "^5.3.5",
     "uuidv4": "^6.2.13"
   },
