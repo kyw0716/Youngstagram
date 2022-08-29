@@ -1,7 +1,6 @@
 import { authService, DBService } from "@FireBase"
-import { Comment, FeedData, UserInfo, UserData } from "backend/dto"
+import { Comment, FeedData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
-import Image from "next/image"
 import React, { SetStateAction, useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import {
@@ -14,10 +13,7 @@ import {
   Margin,
   ShareIcon,
 } from "ui"
-import CommentWrapper from "./CommentWrapper"
 import YoungstagramModal from "../YoungstagramModal"
-import { v4 } from "uuid"
-import { useRouter } from "next/router"
 import CommentInput from "./CommentInput"
 import useWindowSize from "lib/useWindowSize"
 import CommentList from "./CommentList"

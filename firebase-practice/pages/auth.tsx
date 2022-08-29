@@ -1,7 +1,9 @@
 import {
+  browserSessionPersistence,
   createUserWithEmailAndPassword,
   GithubAuthProvider,
   GoogleAuthProvider,
+  setPersistence,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -165,27 +167,31 @@ export default function Auth() {
         })
       return
     }
-    signInWithEmailAndPassword(authService, Email, Password)
-      .then(async (response) => {
-        if (response) {
-          CreateNewUserToFirestore(response)
-          router.push("/")
-        }
+    setPersistence(authService, browserSessionPersistence)
+      .then(async () => {
+        return signInWithEmailAndPassword(authService, Email, Password)
+          .then(async (response) => {
+            if (response) {
+              CreateNewUserToFirestore(response)
+              router.push("/")
+            }
+          })
+          .catch((error) => {
+            if (error.code === "auth/wrong-password") {
+              alert("비밀번호가 잘못되었습니다")
+              setPassword("")
+              return
+            }
+            if (error.code === "auth/invalid-email") {
+              alert("이메일 똑바로 쓰세요")
+            } else if (error.code === "auth/user-not-found") {
+              alert("등록되지 않은 사용자 입니다")
+            }
+            setEmail("")
+            setPassword("")
+          })
       })
-      .catch((error) => {
-        if (error.code === "auth/wrong-password") {
-          alert("비밀번호가 잘못되었습니다")
-          setPassword("")
-          return
-        }
-        if (error.code === "auth/invalid-email") {
-          alert("이메일 똑바로 쓰세요")
-        } else if (error.code === "auth/user-not-found") {
-          alert("등록되지 않은 사용자 입니다")
-        }
-        setEmail("")
-        setPassword("")
-      })
+      .catch((error) => console.log(error.code))
   }
 
   const handleGoogleAuth = async () => {
@@ -317,21 +323,27 @@ export default function Auth() {
             type={"submit"}
             value={isNewAccount ? "Create Account" : "Log in"}
             color={
-              Email.length !== 0 &&
-              Password.length >= 6 &&
-              Password === confirmPassword &&
-              name !== ""
+              isNewAccount
+                ? Email.length !== 0 &&
+                  Password.length >= 6 &&
+                  Password === confirmPassword &&
+                  name !== ""
+                  ? ""
+                  : "fail"
+                : Email.length !== 0 && Password.length >= 6
                 ? ""
                 : "fail"
             }
             disabled={
-              !(
-                Email.length !== 0 &&
-                Password.length >= 6 &&
-                Password === confirmPassword &&
-                confirmPassword !== "" &&
-                name !== ""
-              )
+              isNewAccount
+                ? !(
+                    Email.length !== 0 &&
+                    Password.length >= 6 &&
+                    Password === confirmPassword &&
+                    confirmPassword !== "" &&
+                    name !== ""
+                  )
+                : !(Email.length !== 0 && Password.length >= 6)
             }
           />
           <Margin direction="column" size={15} />
@@ -347,7 +359,13 @@ export default function Auth() {
             <Image
               src={"/GoogleIcon.png"}
               alt="googleLogin"
-              onClick={handleGoogleAuth}
+              onClick={() => {
+                setPersistence(authService, browserSessionPersistence).then(
+                  async () => {
+                    handleGoogleAuth()
+                  },
+                )
+              }}
               width={40}
               height={40}
               style={{ cursor: "pointer" }}
@@ -357,7 +375,13 @@ export default function Auth() {
             <Image
               src={"/GitHubIcon.png"}
               alt="githubLogin"
-              onClick={handleGitHubAuth}
+              onClick={() => {
+                setPersistence(authService, browserSessionPersistence).then(
+                  async () => {
+                    handleGitHubAuth()
+                  },
+                )
+              }}
               width={40}
               height={40}
               style={{ cursor: "pointer" }}

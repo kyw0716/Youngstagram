@@ -12,7 +12,7 @@ import { deleteObject, ref } from "firebase/storage"
 import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import {
   CommentIcon,
