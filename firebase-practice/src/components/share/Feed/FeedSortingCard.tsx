@@ -1,5 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserData } from "backend/dto"
 import {
   arrayRemove,
@@ -13,8 +13,8 @@ import { deleteObject, ref } from "firebase/storage"
 import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { SetStateAction, useEffect, useState } from "react"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { useEffect, useState } from "react"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -197,7 +197,7 @@ export default function FeedSortingCard({ feedData }: Props) {
   const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
     useState<boolean>(false)
   const [isShowMore, setIsShowMore] = useState<boolean>(false)
-  const [userData, setUserData] = useRecoilState(userDataState)
+  const userData = useRecoilValue(userDataState)
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
   const windowSize = useWindowSize()
@@ -211,7 +211,7 @@ export default function FeedSortingCard({ feedData }: Props) {
     })
   }, [])
 
-  const handleDeleteImage = async () => {
+  const handleDeleteFeed = async () => {
     const feed: FeedData = {
       creator: feedData.creator,
       desc: feedData.desc,
@@ -231,15 +231,19 @@ export default function FeedSortingCard({ feedData }: Props) {
 
     handleThreeDotMenuClick()
 
-    await deleteObject(storageImageRef)
-    await deleteDoc(firestoreCommentRef)
+    await deleteObject(storageImageRef).catch((error) =>
+      console.log(error.code),
+    )
+    await deleteDoc(firestoreCommentRef).catch((error) =>
+      console.log(error.code),
+    )
 
     await updateDoc(firestorePersonalRef, {
       feed: arrayRemove(feed),
-    })
+    }).catch((error) => console.log(error.code))
     await updateDoc(firestoreAllRef, {
       feed: arrayRemove(feed),
-    })
+    }).catch((error) => console.log(error.code))
   }
   const handlePrivateToggle = async () => {
     const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
@@ -377,7 +381,7 @@ export default function FeedSortingCard({ feedData }: Props) {
 
                       {feedData.private ? "공개" : "비공개"}
                     </Style.PrivateToggleButton>
-                    <Style.Deletebutton onClick={handleDeleteImage}>
+                    <Style.Deletebutton onClick={handleDeleteFeed}>
                       <Image
                         src="/delete.svg"
                         alt="delete"
