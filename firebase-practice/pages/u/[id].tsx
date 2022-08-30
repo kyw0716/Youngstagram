@@ -7,7 +7,7 @@ import Layout from "components/layout"
 import Image from "next/image"
 import { FeedData } from "backend/dto"
 import { useRecoilValue } from "recoil"
-import { pickFeedDataType, userDataState } from "@share/recoil/recoilList"
+import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
 
 const Style = {
   Wrapper: styled.div`
@@ -24,7 +24,7 @@ const Style = {
 
 export default function Profile() {
   const userData = useRecoilValue(userDataState)
-  const feedDataType = useRecoilValue(pickFeedDataType)
+  const feedDataType = useRecoilValue(FeedDataFilter)
   const [feedData, setFeedData] = useState<FeedData[]>([])
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Profile() {
       return
     }
     setFeedData(userData.feed)
-  }, [feedDataType])
+  }, [feedDataType, userData])
 
   return (
     <Layout>

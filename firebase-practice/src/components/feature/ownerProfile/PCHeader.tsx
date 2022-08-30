@@ -1,6 +1,5 @@
-import { authService } from "@FireBase"
 import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
-import { pickFeedDataType, userDataState } from "@share/recoil/recoilList"
+import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
 import Image from "next/image"
 import { useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
@@ -84,7 +83,7 @@ const Style = {
 
 export default function PCHeader() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [feedDataType, setFeedDataType] = useRecoilState(pickFeedDataType)
+  const [feedDataType, setFeedDataType] = useRecoilState(FeedDataFilter)
   const userData = useRecoilValue(userDataState)
   return (
     <>
@@ -93,14 +92,14 @@ export default function PCHeader() {
         <Margin direction="row" size={80} />
         <Image
           src={
-            authService.currentUser?.photoURL
-              ? `${authService.currentUser?.photoURL}`
+            userData.info.profileImage
+              ? `${userData.info.profileImage}`
               : "/profile.svg"
           }
           width={150}
           height={150}
           style={
-            authService.currentUser?.photoURL
+            userData.info.profileImage
               ? { borderRadius: 150 }
               : { borderRadius: "none" }
           }
@@ -109,9 +108,7 @@ export default function PCHeader() {
         <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
-            <CustomH2Light>
-              {authService.currentUser?.displayName}
-            </CustomH2Light>
+            <CustomH2Light>{userData.info.name}</CustomH2Light>
             <Margin direction="row" size={20} />
             <Style.ProfileEditButton
               onClick={() => {
@@ -123,9 +120,7 @@ export default function PCHeader() {
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
-            <CustomH3Light>
-              이메일: {authService.currentUser?.email}
-            </CustomH3Light>
+            <CustomH3Light>이메일: {userData.info.email}</CustomH3Light>
           </FlexBox>
           <Margin direction="column" size={15} />
           {feedDataType === "all" && (
