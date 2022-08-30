@@ -1,4 +1,4 @@
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
 import { userDataState } from "@share/recoil/recoilList"
 import { Message } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"

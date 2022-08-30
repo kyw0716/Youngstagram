@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { CustomH4, CustomH5 } from "ui"
+import { CustomH4 } from "ui"
 
 const Style = {
   Wrapper: styled.div`

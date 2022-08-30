@@ -1,7 +1,7 @@
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
 import FollowListModal from "@share/Modal/follow/FollowListModal"
 import { userDataState } from "@share/recoil/recoilList"
-import { UserData, UserInfo } from "backend/dto"
+import { UserData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,

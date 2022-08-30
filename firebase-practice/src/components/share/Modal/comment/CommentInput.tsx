@@ -1,9 +1,9 @@
 import { authService, DBService } from "@FireBase"
-import { Comment, FeedData, UserData } from "backend/dto"
+import { Comment, FeedData } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import getCurrentTime from "lib/getCurrentTime"
 import useWindowSize from "lib/useWindowSize"
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useState } from "react"
 import styled from "styled-components"
 import { v4 } from "uuid"
 

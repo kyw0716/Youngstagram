@@ -1,7 +1,7 @@
 import { userDataState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import Image from "next/image"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH2, Margin } from "ui"

@@ -1,4 +1,3 @@
-import { authService } from "@FireBase"
 import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
 import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
 import Image from "next/image"

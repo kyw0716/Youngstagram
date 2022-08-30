@@ -1,4 +1,4 @@
-import { Message, UserData, UserInfo } from "backend/dto"
+import { Message } from "backend/dto"
 import styled from "styled-components"
 import { Margin } from "ui"
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { GetServerSideProps } from "next"
 import ProfileHeader from "@feature/customerProfile"

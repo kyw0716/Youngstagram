@@ -1,9 +1,11 @@
 import { authService } from "@FireBase"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
+import { userDataState } from "@share/recoil/recoilList"
 import { signOut } from "firebase/auth"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { DMIcon, FlexBox, Margin } from "ui"
 
@@ -111,6 +113,7 @@ export default function Header() {
     setIsMenuOpen((current) => !current)
   }
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const userData = useRecoilValue(userDataState)
   return (
     <>
       <FeedUploadModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
@@ -142,7 +145,7 @@ export default function Header() {
               alt="plus"
               priority
               onClick={() => {
-                if (authService.currentUser) {
+                if (userData.info.userId !== "") {
                   setIsModalOpen(true)
                   return
                 }
@@ -151,11 +154,11 @@ export default function Header() {
               style={{ cursor: "pointer" }}
             />
             <DMIcon />
-            {authService.currentUser ? (
+            {userData.info.userId !== "" ? (
               <Image
                 src={
-                  authService.currentUser.photoURL
-                    ? `${authService.currentUser.photoURL}`
+                  userData.info.profileImage
+                    ? userData.info.profileImage
                     : "/profile.svg"
                 }
                 priority
@@ -188,11 +191,8 @@ export default function Header() {
               >
                 <Style.ProfileButton
                   onClick={() => {
-                    if (
-                      authService.currentUser?.uid !== null &&
-                      authService.currentUser?.uid !== undefined
-                    ) {
-                      router.push(`/u/${authService.currentUser?.uid}`)
+                    if (userData.info.userId !== "") {
+                      router.push(`/u/${userData.info.userId}`)
                     }
                   }}
                 >

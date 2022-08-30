@@ -1,6 +1,6 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
-import { FeedData, UserData } from "backend/dto"
+import { userDataState } from "@share/recoil/recoilList"
+import { FeedData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -14,7 +14,7 @@ import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
