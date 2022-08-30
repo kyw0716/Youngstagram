@@ -1,8 +1,10 @@
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
+import { userDataState } from "@share/recoil/recoilList"
 import { Message } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import getCurrentTime from "lib/getCurrentTime"
 import { useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { v4 } from "uuid"
 
@@ -50,20 +52,22 @@ const Style = {
 export default function MessageInput({ selectedUserId }: Props) {
   const [message, setMessage] = useState<string>("")
   const [randomId, setRandomId] = useState<string>(v4())
+  const userData = useRecoilValue(userDataState)
+
   const handleSendMessage = async () => {
     const uploadTime = getCurrentTime()
     const myMessageRef = doc(
       DBService,
-      `${authService.currentUser?.uid}`,
+      `${userData.info.userId}`,
       `${selectedUserId}`,
     )
     const otherMessageRef = doc(
       DBService,
       `${selectedUserId}`,
-      `${authService.currentUser?.uid}`,
+      `${userData.info.userId}`,
     )
     const messageData: Message = {
-      userId: `${authService.currentUser?.uid}`,
+      userId: `${userData.info.userId}`,
       message: message,
       messageId: randomId,
       uploadTime: uploadTime,

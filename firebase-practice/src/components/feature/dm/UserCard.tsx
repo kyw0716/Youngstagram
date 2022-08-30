@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { UserData, UserInfo } from "backend/dto"
+import { UserData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
 import { useRouter } from "next/router"

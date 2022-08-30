@@ -15,13 +15,14 @@ type Props = {
 const Style = {
   Wrapper: styled.div`
     width: 100%;
-    height: 100%;
+    height: calc(100% - 40px);
     display: flex;
     flex-direction: column;
     gap: 10px;
     overflow-y: scroll;
     padding-top: 10px;
     padding-left: 10px;
+    padding-bottom: 10px;
     ::-webkit-scrollbar {
       display: none;
     }

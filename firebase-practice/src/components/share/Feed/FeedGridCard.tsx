@@ -1,6 +1,6 @@
 import { DBService } from "@FireBase"
 import CommentModal from "@share/Modal/comment/CommentModal"
-import { Comment, FeedData, LikeData } from "backend/dto"
+import { Comment, FeedData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import styled from "styled-components"

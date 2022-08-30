@@ -1,16 +1,10 @@
-import { authService } from "@FireBase"
 import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
+import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
 import Image from "next/image"
-import { SetStateAction, useState } from "react"
+import { useState } from "react"
+import { useRecoilState, useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { CustomH2Light, CustomH4, CustomH4Light, FlexBox, Margin } from "ui"
-
-type Props = {
-  imageDataLength: number
-  privateImageDataLength: number
-  setPickImageData: React.Dispatch<SetStateAction<"all" | "public" | "private">>
-  pickImageData: "all" | "public" | "private"
-}
+import { CustomH2Light, CustomH4Light, FlexBox, Margin } from "ui"
 
 const Style = {
   ProfileWrapper: styled.div`
@@ -76,13 +70,10 @@ const Style = {
   `,
 }
 
-export default function MobileHeader({
-  imageDataLength,
-  privateImageDataLength,
-  setPickImageData,
-  pickImageData,
-}: Props) {
+export default function MobileHeader() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [feedDataType, setFeedDataType] = useRecoilState(FeedDataFilter)
+  const userData = useRecoilValue(userDataState)
   return (
     <>
       <ProfileEditModal isPC={false} isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -91,24 +82,22 @@ export default function MobileHeader({
         <FlexBox width={"100%"}>
           <Image
             src={
-              authService.currentUser?.photoURL
-                ? `${authService.currentUser?.photoURL}`
+              userData.info.profileImage
+                ? userData.info.profileImage
                 : "/profile.svg"
             }
             alt="profile"
             width={90}
             height={90}
             style={
-              authService.currentUser?.photoURL
+              userData.info.profileImage
                 ? { borderRadius: "100px" }
                 : { borderRadius: "none" }
             }
           />
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2Light>
-              {authService.currentUser?.displayName}
-            </CustomH2Light>
+            <CustomH2Light>{userData.info.name}</CustomH2Light>
             <Margin direction="column" size={13} />
 
             <Style.ProfileEditButton
@@ -125,32 +114,35 @@ export default function MobileHeader({
       <Style.ProfileInfoWrapper>
         <Style.SortToAll
           onClick={() => {
-            setPickImageData("all")
+            setFeedDataType("all")
           }}
-          about={pickImageData}
+          about={feedDataType}
         >
           <CustomH4Light>전체 게시물</CustomH4Light>
-          <CustomH4Light>{imageDataLength}</CustomH4Light>
+          <CustomH4Light>{userData.feed.length}</CustomH4Light>
         </Style.SortToAll>
         <Style.SortToPublic
           onClick={() => {
-            setPickImageData("public")
+            setFeedDataType("public")
           }}
-          about={pickImageData}
+          about={feedDataType}
         >
           <CustomH4Light>공개 게시물</CustomH4Light>
           <CustomH4Light>
-            {imageDataLength - privateImageDataLength}
+            {userData.feed.length -
+              userData.feed.filter((eachFeed) => eachFeed.private).length}
           </CustomH4Light>
         </Style.SortToPublic>
         <Style.SortToPrivate
           onClick={() => {
-            setPickImageData("private")
+            setFeedDataType("private")
           }}
-          about={pickImageData}
+          about={feedDataType}
         >
           <CustomH4Light>비공개 게시물</CustomH4Light>
-          <CustomH4Light>{privateImageDataLength}</CustomH4Light>
+          <CustomH4Light>
+            {userData.feed.filter((eachFeed) => eachFeed.private).length}
+          </CustomH4Light>
         </Style.SortToPrivate>
       </Style.ProfileInfoWrapper>
     </>

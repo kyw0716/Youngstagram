@@ -7,7 +7,7 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import { useRouter } from "next/router"
-import { SetStateAction, useState } from "react"
+import { useState } from "react"
 import styled from "styled-components"
 
 type FlexBoxProperty = {

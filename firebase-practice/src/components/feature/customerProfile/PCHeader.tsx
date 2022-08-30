@@ -1,6 +1,7 @@
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
 import FollowListModal from "@share/Modal/follow/FollowListModal"
-import { UserData, UserInfo } from "backend/dto"
+import { userDataState } from "@share/recoil/recoilList"
+import { UserData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -10,8 +11,8 @@ import {
 } from "firebase/firestore"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import {
   CustomH2Light,
@@ -82,12 +83,13 @@ export default function PCHeader({ userData }: Props) {
     useState<boolean>(false)
   const [isFollowingDataModified, setIsFollowingDataModified] =
     useState<boolean>(false)
+  const currentUserData = useRecoilValue(userDataState)
 
   const handleFollow = async () => {
     const myFirestoreRef = doc(
       DBService,
       "users",
-      `${authService.currentUser?.uid}`,
+      `${currentUserData.info.userId}`,
     )
     const otherFirestoreRef = doc(DBService, "users", `${userData.info.userId}`)
 
@@ -101,11 +103,11 @@ export default function PCHeader({ userData }: Props) {
       }
     })
     await updateDoc(otherFirestoreRef, {
-      follower: arrayUnion(authService.currentUser?.uid),
+      follower: arrayUnion(currentUserData.info.userId),
     }).catch((error) => {
       if (error.code === "not-found") {
         setDoc(otherFirestoreRef, {
-          follower: [authService.currentUser?.uid],
+          follower: [currentUserData.info.userId],
         })
       }
     })
@@ -116,7 +118,7 @@ export default function PCHeader({ userData }: Props) {
     const myFirestoreRef = doc(
       DBService,
       "users",
-      `${authService.currentUser?.uid}`,
+      `${currentUserData.info.userId}`,
     )
     const otherFirestoreRef = doc(DBService, "users", `${userData.info.userId}`)
 
@@ -124,7 +126,7 @@ export default function PCHeader({ userData }: Props) {
       follow: arrayRemove(userData.info.userId),
     })
     await updateDoc(otherFirestoreRef, {
-      follower: arrayRemove(authService.currentUser?.uid),
+      follower: arrayRemove(currentUserData.info.userId),
     })
     setIsCurrentUserFollowed(false)
     setIsFollowingDataModified(true)
@@ -139,12 +141,11 @@ export default function PCHeader({ userData }: Props) {
   }, [isFollowingDataModified, userData])
   useEffect(() => {
     if (userDataByUserId === undefined) return
-    if (authService.currentUser === null) return
     if (userDataByUserId.follower === undefined) return
     setIsCurrentUserFollowed(
-      userDataByUserId?.follower.includes(authService.currentUser?.uid),
+      userDataByUserId?.follower.includes(currentUserData.info.userId),
     )
-  }, [userDataByUserId, authService.currentUser])
+  }, [userDataByUserId])
   useEffect(() => {
     if (modalTitle === "") return
     if (modalTitle === "팔로우") setFollowData(userDataByUserId?.follow)

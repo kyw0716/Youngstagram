@@ -1,5 +1,6 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { FeedData, UserData } from "backend/dto"
+import { userDataState } from "@share/recoil/recoilList"
+import { FeedData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -12,7 +13,8 @@ import { deleteObject, ref } from "firebase/storage"
 import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -28,8 +30,6 @@ import FeedUploadModal from "../Modal/feed/FeedUploadModal"
 
 type Props = {
   feedData: FeedData
-  isMainPage: boolean
-  setPickImageData: React.Dispatch<SetStateAction<"public" | "private" | "all">>
 }
 
 const Style = {
@@ -190,26 +190,19 @@ const Style = {
   `,
 }
 
-export default function FeedSortingCard({
-  feedData,
-  isMainPage,
-  setPickImageData,
-}: Props) {
+export default function FeedSortingCard({ feedData }: Props) {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
     useState<boolean>(false)
   const [isShowMore, setIsShowMore] = useState<boolean>(false)
-  const [userData, setUserData] = useState<UserData>()
+  const userData = useRecoilValue(userDataState)
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
   const windowSize = useWindowSize()
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
-      setUserData(data.data() as UserData)
-    })
     onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
       setCommentData(doc.data()?.AllComments)
     })
@@ -218,7 +211,7 @@ export default function FeedSortingCard({
     })
   }, [])
 
-  const handleDeleteImage = async () => {
+  const handleDeleteFeed = async () => {
     const feed: FeedData = {
       creator: feedData.creator,
       desc: feedData.desc,
@@ -238,16 +231,19 @@ export default function FeedSortingCard({
 
     handleThreeDotMenuClick()
 
-    await deleteObject(storageImageRef)
-    await deleteDoc(firestoreCommentRef)
+    await deleteObject(storageImageRef).catch((error) =>
+      console.log(error.code),
+    )
+    await deleteDoc(firestoreCommentRef).catch((error) =>
+      console.log(error.code),
+    )
 
     await updateDoc(firestorePersonalRef, {
       feed: arrayRemove(feed),
-    })
+    }).catch((error) => console.log(error.code))
     await updateDoc(firestoreAllRef, {
       feed: arrayRemove(feed),
-    })
-    setPickImageData("all")
+    }).catch((error) => console.log(error.code))
   }
   const handlePrivateToggle = async () => {
     const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
@@ -286,7 +282,6 @@ export default function FeedSortingCard({
         feed: arrayUnion(toggleFeed),
       })
     })
-    setPickImageData("all")
   }
   const handleThreeDotMenuClick = () => {
     setIsMenuOpen((current) => !current)
@@ -341,19 +336,15 @@ export default function FeedSortingCard({
                   <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
                 </Style.HeaderText>
               </FlexBox>
-              {isMainPage ? (
-                <></>
-              ) : (
-                <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
-                  <Image
-                    src="/dot-menu.svg"
-                    alt="menu"
-                    width={20}
-                    height={15}
-                    style={{ cursor: "pointer" }}
-                  />
-                </Style.ThreeDotMenu>
-              )}
+              <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
+                <Image
+                  src="/dot-menu.svg"
+                  alt="menu"
+                  width={20}
+                  height={15}
+                  style={{ cursor: "pointer" }}
+                />
+              </Style.ThreeDotMenu>
               {isMenuOpen ? (
                 <>
                   <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
@@ -390,7 +381,7 @@ export default function FeedSortingCard({
 
                       {feedData.private ? "공개" : "비공개"}
                     </Style.PrivateToggleButton>
-                    <Style.Deletebutton onClick={handleDeleteImage}>
+                    <Style.Deletebutton onClick={handleDeleteFeed}>
                       <Image
                         src="/delete.svg"
                         alt="delete"

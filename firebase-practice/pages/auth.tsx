@@ -15,11 +15,10 @@ import { useState } from "react"
 import { authService, DBService } from "@FireBase"
 import styled from "styled-components"
 import { CustomH6Light, FlexBox, Margin } from "ui"
-import { addDoc, doc, setDoc, updateDoc } from "firebase/firestore"
+import { doc, setDoc, updateDoc } from "firebase/firestore"
 import Layout from "components/layout"
 import Image from "next/image"
 import { UserInfo } from "backend/dto"
-import { async } from "@firebase/util"
 
 const Style = {
   Wrapper: styled.div`

@@ -28,7 +28,7 @@ export default function FollowUserWrapper({ userId }: Props) {
           onClick={() => {
             router.push(`/profile/${userId}`)
           }}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", flexShrink: 0 }}
         >
           <Image
             width={44}

@@ -1,7 +1,5 @@
 import { FeedData } from "backend/dto"
-import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
-import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH2, Margin } from "ui"
 import FeedCard from "./FeedCard"

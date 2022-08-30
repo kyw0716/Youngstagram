@@ -5,7 +5,6 @@ import React, { SetStateAction, useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import {
   CommentIcon,
-  CustomH4,
   CustomH6,
   FlexBox,
   FullHeart,
