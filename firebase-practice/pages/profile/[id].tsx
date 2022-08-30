@@ -10,6 +10,8 @@ import Image from "next/image"
 import { FeedData, UserData } from "backend/dto"
 import { useRouter } from "next/router"
 import FeedGrid from "@share/Feed/FeedGrid"
+import { useRecoilValue } from "recoil"
+import { userDataState } from "@share/recoil/recoilList"
 
 const Style = {
   Wrapper: styled.div`
@@ -28,15 +30,16 @@ export default function Profile({ userId }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>([])
+  const currentUserData = useRecoilValue(userDataState)
   useEffect(() => {
     if (
-      authService.currentUser?.uid !== undefined &&
-      userId === authService.currentUser?.uid
+      currentUserData.info.userId !== undefined &&
+      userId === currentUserData.info.userId
     )
       router.push(`/u/${userId}`)
-    if (router.query.id === authService.currentUser?.uid)
-      router.push(`/u/${authService.currentUser?.uid}`)
-  }, [authService.currentUser, router.query])
+    if (router.query.id === currentUserData.info.userId)
+      router.push(`/u/${currentUserData.info.userId}`)
+  }, [router.query])
 
   useEffect(() => {
     if (router.query !== undefined && router.query.id !== userId)

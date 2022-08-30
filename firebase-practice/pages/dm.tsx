@@ -6,11 +6,13 @@ import MyMessageWrapper from "@feature/dm/MyMessageWrapper"
 import styled from "styled-components"
 import { useEffect, useRef, useState } from "react"
 import getUserDataByUid from "lib/getUserDataByUid"
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
 import UserCard from "@feature/dm/UserCard"
 import { v4 } from "uuid"
 import { doc, onSnapshot } from "firebase/firestore"
 import MessageInput from "@feature/dm/MessageInput"
+import { useRecoilValue } from "recoil"
+import { userDataState } from "@share/recoil/recoilList"
 
 const Style = {
   Wrapper: styled.div`
@@ -79,6 +81,7 @@ export default function Dm() {
   const [isFollowerList, setIsFollowerList] = useState<boolean>(false)
   const [selectedUserId, setSelectedUserId] = useState<string>("")
   const [messageData, setMessageData] = useState<Message[]>([])
+  const userData = useRecoilValue(userDataState)
 
   const DMRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -89,7 +92,7 @@ export default function Dm() {
     })
   }, [messageData.length])
   useEffect(() => {
-    getUserDataByUid(`${authService.currentUser?.uid}`).then((data) => {
+    getUserDataByUid(userData.info.userId).then((data) => {
       if (data) {
         setCurrentUserFollowList((data as UserData).follow)
         setCurrentUserFollowerList((data as UserData).follower)
@@ -101,14 +104,11 @@ export default function Dm() {
       setMessageData([])
       return
     }
-    onSnapshot(
-      doc(DBService, `${authService.currentUser?.uid}`, selectedUserId),
-      (data) => {
-        if (data.data()?.message)
-          setMessageData(data.data()?.message as Message[])
-        else setMessageData([])
-      },
-    )
+    onSnapshot(doc(DBService, userData.info.userId, selectedUserId), (data) => {
+      if (data.data()?.message)
+        setMessageData(data.data()?.message as Message[])
+      else setMessageData([])
+    })
   }, [selectedUserId])
   return (
     <Layout>
@@ -127,7 +127,7 @@ export default function Dm() {
                 flexShrink: 0,
               }}
             >
-              <UserCard userId={`${authService.currentUser?.uid}`} />
+              <UserCard userId={userData.info.userId} />
               <Margin direction="row" size={15} />
               <Style.SelectFollowOrFollowerBtn
                 about={isFollowerList ? "lightgrey" : "white"}
@@ -230,7 +230,7 @@ export default function Dm() {
                 {messageData.map((message) => {
                   return (
                     <>
-                      {message.userId === `${authService.currentUser?.uid}` ? (
+                      {message.userId === userData.info.userId ? (
                         <MyMessageWrapper messageData={message} />
                       ) : (
                         <OtherMessageWrapper messageData={message} />
