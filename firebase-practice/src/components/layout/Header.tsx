@@ -154,7 +154,7 @@ export default function Header() {
               style={{ cursor: "pointer" }}
             />
             <DMIcon />
-            {userData.info.userId !== "" ? (
+            {userData !== undefined && userData.info.userId !== "" ? (
               <Image
                 src={
                   userData.info.profileImage

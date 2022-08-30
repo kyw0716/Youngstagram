@@ -28,6 +28,7 @@ export default function Profile() {
   const [feedData, setFeedData] = useState<FeedData[]>([])
 
   useEffect(() => {
+    if (userData.feed === undefined) return
     if (feedDataType === "public") {
       setFeedData(userData.feed.filter((eachFeed) => !eachFeed.private))
       return
@@ -43,7 +44,7 @@ export default function Profile() {
     <Layout>
       <Style.Wrapper>
         <ProfileHeader />
-        {feedData.length === 0 ? (
+        {feedData !== undefined && feedData.length === 0 ? (
           <FlexBox column={true} width="fit-content" alignItems="center">
             <Image src="/empty.svg" alt="empty" width={150} height={150} />
             <Margin direction="column" size={15} />

@@ -32,9 +32,8 @@ export default function FeedSortList({ FeedData }: Props) {
   const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] = useState<
     FeedData[]
   >([])
-  const userData = useRecoilValue(userDataState)
   useEffect(() => {
-    if (FeedData.length > 0)
+    if (FeedData !== undefined && FeedData.length > 0)
       setFeedDataSortedByUploadTime(
         (JSON.parse(JSON.stringify(FeedData)) as FeedData[]).sort(function (
           a,

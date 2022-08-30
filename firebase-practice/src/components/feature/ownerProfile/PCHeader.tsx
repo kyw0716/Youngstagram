@@ -124,19 +124,25 @@ export default function PCHeader() {
           </FlexBox>
           <Margin direction="column" size={15} />
           {feedDataType === "all" && (
-            <CustomH3Light>게시물: {userData.feed.length}</CustomH3Light>
+            <CustomH3Light>
+              게시물: {userData.feed ? userData.feed.length : `0`}
+            </CustomH3Light>
           )}
           {feedDataType === "public" && (
             <CustomH3Light>
               공개 게시물:{" "}
-              {userData.feed.length -
-                userData.feed.filter((eachFeed) => eachFeed.private).length}
+              {userData.feed
+                ? userData.feed.length -
+                  userData.feed.filter((eachFeed) => eachFeed.private).length
+                : `0`}
             </CustomH3Light>
           )}
           {feedDataType === "private" && (
             <CustomH3Light>
               비공개 게시물:{" "}
-              {userData.feed.filter((eachFeed) => eachFeed.private).length}
+              {userData.feed
+                ? userData.feed.filter((eachFeed) => eachFeed.private).length
+                : `0`}
             </CustomH3Light>
           )}
         </Style.ProfileInfo>

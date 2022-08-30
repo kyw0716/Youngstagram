@@ -119,7 +119,9 @@ export default function MobileHeader() {
           about={feedDataType}
         >
           <CustomH4Light>전체 게시물</CustomH4Light>
-          <CustomH4Light>{userData.feed.length}</CustomH4Light>
+          <CustomH4Light>
+            {userData.feed ? `${userData.feed.length}` : `0`}
+          </CustomH4Light>
         </Style.SortToAll>
         <Style.SortToPublic
           onClick={() => {
@@ -129,8 +131,10 @@ export default function MobileHeader() {
         >
           <CustomH4Light>공개 게시물</CustomH4Light>
           <CustomH4Light>
-            {userData.feed.length -
-              userData.feed.filter((eachFeed) => eachFeed.private).length}
+            {userData.feed
+              ? userData.feed.length -
+                userData.feed.filter((eachFeed) => eachFeed.private).length
+              : `0`}
           </CustomH4Light>
         </Style.SortToPublic>
         <Style.SortToPrivate
@@ -141,7 +145,9 @@ export default function MobileHeader() {
         >
           <CustomH4Light>비공개 게시물</CustomH4Light>
           <CustomH4Light>
-            {userData.feed.filter((eachFeed) => eachFeed.private).length}
+            {userData.feed
+              ? userData.feed.filter((eachFeed) => eachFeed.private).length
+              : `0`}
           </CustomH4Light>
         </Style.SortToPrivate>
       </Style.ProfileInfoWrapper>
