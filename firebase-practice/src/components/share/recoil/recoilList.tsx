@@ -16,7 +16,7 @@ export const userDataState = atom<UserData>({
   },
 })
 
-export const pickFeedDataType = atom<"all" | "public" | "private">({
-  key: "FEEDTYPE",
+export const FeedDataFilter = atom<"all" | "public" | "private">({
+  key: "FEEDFILTER",
   default: "all",
 })
