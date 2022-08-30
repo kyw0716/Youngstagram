@@ -69,7 +69,6 @@ const Style = {
 }
 
 export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
-  const router = useRouter()
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
   const [isClicked, setIsClicked] = useState<boolean>(false)
 
@@ -116,7 +115,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
       uploadBytes(imageSubmitRef, imageFile).then(() => {
         getDownloadURL(imageSubmitRef).then((response) => {
           setImageUrlToAuthService(response)
-          console.log(response)
           setIsSubmit(true)
         })
       })
@@ -127,7 +125,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
 
   const updateProfileNameAndImage = async () => {
     if (authService.currentUser !== null) {
-      console.log("update 함수 호출")
       const profileRef = doc(DBService, "users", authService.currentUser.uid)
       if (submitUserName !== "") {
         const profileForm: UserInfo = {
@@ -138,7 +135,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         }
         await updateProfile(authService.currentUser, {
           displayName: submitUserName,
-        })
+        }).catch((error) => console.log(error.code))
         await updateDoc(profileRef, {
           info: profileForm,
         }).catch((error) => console.log(error.code))
@@ -152,7 +149,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         }
         await updateProfile(authService.currentUser, {
           photoURL: imageUrlToAuthService,
-        })
+        }).catch((error) => console.log(error.code))
         await updateDoc(profileRef, { info: profileForm }).catch((error) =>
           console.log(error.code),
         )
@@ -168,7 +165,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         setUserName("")
         setIsOpen(false)
         setIsClicked(false)
-        router.push("/")
+        setIsSubmit(false)
       })
     }
     /*eslint-disable-next-line*/
