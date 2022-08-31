@@ -179,7 +179,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
                       setIsShowAllComment(true)
                     }}
                   >
-                    더보기{windowSize < 900 ? "" : "..."}
+                    더보기
                   </CustomH6>
                 </FlexBox>
               ) : (

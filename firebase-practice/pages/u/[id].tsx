@@ -21,7 +21,6 @@ const Style = {
     overflow-x: hidden;
   `,
 }
-
 export default function Profile() {
   const userData = useRecoilValue(userDataState)
   const feedDataType = useRecoilValue(FeedDataFilter)

@@ -447,7 +447,7 @@ export default function FeedUploadModal({
               htmlFor="IMAGE-UPLOAD-INPUT"
               style={isDragAccept ? { color: "#4891ff" } : { color: "white" }}
             >
-              {windowSize < 784 ? "갤러리에서 선택" : "컴퓨터에서 선택"}
+              갤러리에서 선택
             </Style.TempButton>
             <Style.HiddenInput
               type="file"
