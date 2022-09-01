@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { DBService } from "@FireBase"
+import { authService, DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { GetServerSideProps } from "next"
 import ProfileHeader from "@feature/customerProfile"
@@ -10,8 +10,10 @@ import Image from "next/image"
 import { FeedData, UserData } from "backend/dto"
 import { useRouter } from "next/router"
 import FeedGrid from "@share/Feed/FeedGrid"
-import { useRecoilValue } from "recoil"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { userDataState } from "@share/recoil/recoilList"
+import { onAuthStateChanged } from "firebase/auth"
+import getUserDataByUid from "lib/getUserDataByUid"
 
 const Style = {
   Wrapper: styled.div`
@@ -30,16 +32,17 @@ export default function Profile({ userId }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>([])
-  const currentUserData = useRecoilValue(userDataState)
+  const setCurrentUserData = useSetRecoilState(userDataState)
+
   useEffect(() => {
-    if (
-      currentUserData.info.userId !== undefined &&
-      userId === currentUserData.info.userId
-    )
-      router.push(`/u/${userId}`)
-    if (router.query.id === currentUserData.info.userId)
-      router.push(`/u/${currentUserData.info.userId}`)
-  }, [router.query])
+    onAuthStateChanged(authService, (user) => {
+      if (user) {
+        getUserDataByUid(user.uid).then((data) => {
+          setCurrentUserData(data as UserData)
+        })
+      }
+    })
+  }, [])
 
   useEffect(() => {
     if (router.query !== undefined && router.query.id !== userId)
