@@ -51,7 +51,15 @@ export default function FeedSortList({ FeedData }: Props) {
         })
       ) : (
         <>
-          <Image src={"/empty.svg"} width={150} height={150} alt="empty" />
+          <Image
+            src={"/empty.svg"}
+            width={150}
+            height={150}
+            alt="empty"
+            priority
+            blurDataURL="/empty.svg"
+            placeholder="blur"
+          />
           <Margin direction="column" size={15} />
           <CustomH2>게시물이 없어용</CustomH2>
         </>
