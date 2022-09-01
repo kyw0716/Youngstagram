@@ -9,7 +9,6 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
-import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -78,112 +77,7 @@ const Style = {
       width: 95%;
     }
   `,
-  ThreeDotMenuBox: styled.div`
-    width: 60px;
-    height: 58px;
-    display: flex;
-    align-items: center;
-    z-index: 10000;
-  `,
-  ThreeDotMenu: styled.div`
-    display: flex;
-    width: 100px;
-    height: 58px;
-    align-items: center;
-    padding-right: 20px;
-    justify-content: flex-end;
-  `,
-  ButtonBox: styled.div`
-    width: 152px;
-    height: 160px;
-    border-bottom: none;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: flex-start;
-    position: absolute;
-    top: 65px;
-    right: 11px;
-    box-shadow: rgba(99, 99, 99, 0.4) 0px 5px 4px 0px;
-    border-radius: 9px;
-    z-index: 2;
-    background-color: white;
-  `,
-  ChatBalloon: styled.div`
-    width: 30px;
-    height: 30px;
-    background-color: white;
-    transform: rotate(45deg);
-    position: absolute;
-    right: 35px;
-    top: 55px;
-    box-shadow: rgba(99, 99, 99, 0.4) 0px 2px 8px 0px;
-    z-index: 1;
-  `,
-  Deletebutton: styled.div`
-    gap: 10px;
-    width: 150px;
-    height: 40px;
-    -webkit-appearance: none;
-    border: none;
-    background-color: white;
-    cursor: pointer;
-    &:hover {
-      background-color: #f0f0f0;
-    }
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-  `,
-  PrivateToggleButton: styled.div`
-    gap: 10px;
-    width: 150px;
-    height: 40px;
-    -webkit-appearance: none;
-    border: none;
-    background-color: white;
-    cursor: pointer;
-    &:hover {
-      background-color: #f0f0f0;
-    }
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-  `,
-  ExitButton: styled.div`
-    gap: 10px;
-    width: 150px;
-    height: 40px;
-    -webkit-appearance: none;
-    border: none;
-    background-color: white;
-    border-bottom: 1px solid lightgrey;
-    border-radius: 0px 0px 9px 9px;
-    cursor: pointer;
-    &:hover {
-      background-color: #f0f0f0;
-    }
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-  `,
-  EditButton: styled.div`
-    gap: 10px;
-    width: 150px;
-    height: 40px;
-    -webkit-appearance: none;
-    border: none;
-    border-radius: 9px 9px 0px 0px;
-    background-color: white;
-    cursor: pointer;
-    &:hover {
-      background-color: #f0f0f0;
-    }
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-  `,
-  CommentBox: styled.div`
+  DescBox: styled.div`
     width: 100%;
     white-space: pre-wrap;
     padding: 0px 10px;
@@ -196,17 +90,13 @@ const Style = {
   `,
 }
 
-export default function FeedCard({ feedData, isMainPage }: Props) {
+export default function FeedCard({ feedData }: Props) {
   const router = useRouter()
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
-  const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
-    useState<boolean>(false)
   const [isShowMore, setIsShowMore] = useState<boolean>(false)
   const [userData, setUserData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
-  const windowSize = useWindowSize()
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -220,78 +110,6 @@ export default function FeedCard({ feedData, isMainPage }: Props) {
     })
   }, [])
 
-  const handleDeleteImage = async () => {
-    const feed: FeedData = {
-      creator: feedData.creator,
-      desc: feedData.desc,
-      imageUrl: feedData.imageUrl,
-      location: feedData.location,
-      private: feedData.private,
-      storageId: feedData.storageId,
-      uploadTime: feedData.uploadTime,
-    }
-    const storageImageRef = ref(
-      storageService,
-      `images/${feedData.creator}/${feedData.storageId}`,
-    )
-    const firestoreAllRef = doc(DBService, "mainPage", "userFeedDataAll")
-    const firestoreCommentRef = doc(DBService, "Comments", feedData.storageId)
-    const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
-
-    handleThreeDotMenuClick()
-
-    await deleteObject(storageImageRef)
-    await deleteDoc(firestoreCommentRef)
-
-    await updateDoc(firestorePersonalRef, {
-      feed: arrayRemove(feed),
-    })
-    await updateDoc(firestoreAllRef, {
-      feed: arrayRemove(feed),
-    })
-  }
-  const handlePrivateToggle = async () => {
-    const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
-    const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
-    const feed: FeedData = {
-      creator: feedData.creator,
-      desc: feedData.desc,
-      imageUrl: feedData.imageUrl,
-      location: feedData.location,
-      private: feedData.private,
-      storageId: feedData.storageId,
-      uploadTime: feedData.uploadTime,
-    }
-    const toggleFeed: FeedData = {
-      creator: feedData.creator,
-      desc: feedData.desc,
-      imageUrl: feedData.imageUrl,
-      location: feedData.location,
-      private: !feedData.private,
-      storageId: feedData.storageId,
-      uploadTime: feedData.uploadTime,
-    }
-
-    handleThreeDotMenuClick()
-    await updateDoc(firestorePersonalRef, {
-      feed: arrayRemove(feed),
-    }).then(async () => {
-      await updateDoc(firestorePersonalRef, {
-        feed: arrayUnion(toggleFeed),
-      })
-    })
-    await updateDoc(firestoreImageAllRef, {
-      feed: arrayRemove(feed),
-    }).then(async () => {
-      await updateDoc(firestoreImageAllRef, {
-        feed: arrayUnion(toggleFeed),
-      })
-    })
-  }
-  const handleThreeDotMenuClick = () => {
-    setIsMenuOpen((current) => !current)
-  }
-
   return (
     <>
       {userData && (
@@ -299,11 +117,6 @@ export default function FeedCard({ feedData, isMainPage }: Props) {
           <CommentModal
             isOpen={isCommentModalOpen}
             setIsOpen={setIsCommentModalOpen}
-            feedData={feedData}
-          />
-          <FeedUploadModal
-            isOpen={isImageUploadModalOpen}
-            setIsOpen={setIsImageUploadModalOpen}
             feedData={feedData}
           />
           <Style.ImageCard>
@@ -320,6 +133,8 @@ export default function FeedCard({ feedData, isMainPage }: Props) {
                       ? `${userData?.info.profileImage}`
                       : "/profile.svg"
                   }
+                  placeholder="blur"
+                  blurDataURL="/profile.svg"
                   alt="creator"
                   width={38}
                   height={38}
@@ -333,87 +148,14 @@ export default function FeedCard({ feedData, isMainPage }: Props) {
                   <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
                 </Style.HeaderText>
               </FlexBox>
-              {isMainPage ? (
-                <></>
-              ) : (
-                <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
-                  <Image
-                    src="/dot-menu.svg"
-                    alt="menu"
-                    width={20}
-                    height={15}
-                    style={{ cursor: "pointer" }}
-                  />
-                </Style.ThreeDotMenu>
-              )}
-              {isMenuOpen ? (
-                <>
-                  <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
-                    <Style.EditButton
-                      onClick={() => {
-                        setIsImageUploadModalOpen(true)
-                      }}
-                    >
-                      <Image
-                        src="/edit.svg"
-                        alt="edit"
-                        width={15}
-                        height={15}
-                        priority
-                      />
-                      편집
-                    </Style.EditButton>
-                    <Style.PrivateToggleButton onClick={handlePrivateToggle}>
-                      {feedData.private ? (
-                        <Image
-                          src="/unLock.svg"
-                          alt="unlock"
-                          width={15}
-                          height={15}
-                        />
-                      ) : (
-                        <Image
-                          src="/lock.svg"
-                          alt="lock"
-                          width={15}
-                          height={15}
-                        />
-                      )}
-
-                      {feedData.private ? "공개" : "비공개"}
-                    </Style.PrivateToggleButton>
-                    <Style.Deletebutton onClick={handleDeleteImage}>
-                      <Image
-                        src="/delete.svg"
-                        alt="delete"
-                        width={15}
-                        height={15}
-                        priority
-                      />
-                      삭제
-                    </Style.Deletebutton>
-                    <Style.ExitButton onClick={handleThreeDotMenuClick}>
-                      <Image
-                        src="/logout.svg"
-                        alt="cancle"
-                        width={15}
-                        height={15}
-                        priority
-                      />
-                      취소
-                    </Style.ExitButton>
-                  </Style.ButtonBox>
-                  <Style.ChatBalloon />
-                </>
-              ) : (
-                <></>
-              )}
             </Style.ImageHeader>
             <Image
               src={feedData.imageUrl ? feedData.imageUrl : "/empty.svg"}
               width={470}
               height={600}
               alt="Image"
+              placeholder="blur"
+              blurDataURL="/empty.svg"
               priority
             />
             <Margin direction="column" size={10} />
@@ -456,7 +198,7 @@ export default function FeedCard({ feedData, isMainPage }: Props) {
                 <CustomH6>댓글 0개</CustomH6>
               )}
             </FlexBox>
-            <Style.CommentBox>
+            <Style.DescBox>
               {feedData.desc.length > 20 ? (
                 <>
                   {isShowMore ? (
@@ -498,7 +240,7 @@ export default function FeedCard({ feedData, isMainPage }: Props) {
               ) : (
                 <>{feedData.desc}</>
               )}
-            </Style.CommentBox>
+            </Style.DescBox>
           </Style.ImageCard>
         </>
       )}
