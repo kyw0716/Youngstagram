@@ -10,7 +10,6 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
-import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -43,6 +42,10 @@ const Style = {
     border-radius: 10px;
     border-bottom: none;
     position: relative;
+    @media (max-width: 500px) {
+      width: 95%;
+      padding: 0px 5px;
+    }
   `,
   HeaderText: styled.div`
     display: flex;
@@ -71,6 +74,9 @@ const Style = {
     padding-bottom: 10px;
     background-color: white;
     max-width: 470px;
+    @media (max-width: 900px) {
+      width: 95%;
+    }
   `,
   ThreeDotMenuBox: styled.div`
     width: 60px;
@@ -200,7 +206,6 @@ export default function FeedSortingCard({ feedData }: Props) {
   const userData = useRecoilValue(userDataState)
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
-  const windowSize = useWindowSize()
 
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
@@ -301,16 +306,8 @@ export default function FeedSortingCard({ feedData }: Props) {
             setIsOpen={setIsImageUploadModalOpen}
             feedData={feedData}
           />
-          <Style.ImageCard
-            style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
-          >
-            <Style.ImageHeader
-              style={
-                windowSize < 500
-                  ? { width: "95%", padding: "0px 5px" }
-                  : { width: 470 }
-              }
-            >
+          <Style.ImageCard>
+            <Style.ImageHeader>
               <FlexBox
                 width={"fit-content"}
                 height={58}

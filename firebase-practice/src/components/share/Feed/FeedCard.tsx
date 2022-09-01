@@ -42,6 +42,10 @@ const Style = {
     border-radius: 10px;
     border-bottom: none;
     position: relative;
+    @media (max-width: 500px) {
+      width: 95%;
+      padding: 0px 5px;
+    }
   `,
   HeaderText: styled.div`
     display: flex;
@@ -70,6 +74,9 @@ const Style = {
     padding-bottom: 10px;
     background-color: white;
     max-width: 470px;
+    @media (max-width: 900px) {
+      width: 95%;
+    }
   `,
   ThreeDotMenuBox: styled.div`
     width: 60px;
@@ -299,16 +306,8 @@ export default function FeedCard({ feedData, isMainPage }: Props) {
             setIsOpen={setIsImageUploadModalOpen}
             feedData={feedData}
           />
-          <Style.ImageCard
-            style={windowSize < 900 ? { width: "95%" } : { width: 470 }}
-          >
-            <Style.ImageHeader
-              style={
-                windowSize < 500
-                  ? { width: "95%", padding: "0px 5px" }
-                  : { width: 470 }
-              }
-            >
+          <Style.ImageCard>
+            <Style.ImageHeader>
               <FlexBox
                 width={"fit-content"}
                 height={58}
