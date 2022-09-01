@@ -64,23 +64,23 @@ export default function Profile({ userId }: Props) {
 
   return (
     <Layout>
-      <Style.Wrapper>
-        <ProfileHeader
-          imageDataLength={feedData.length}
-          userData={
-            userData !== undefined ? (userData as UserData) : ({} as UserData)
-          }
-        />
-        {feedData.length === 0 ? (
-          <FlexBox column={true} width="fit-content" alignItems="center">
-            <Image src="/empty.svg" alt="empty" width={150} height={150} />
-            <Margin direction="column" size={15} />
-            <CustomH2>게시물이 없어용</CustomH2>
-          </FlexBox>
-        ) : (
-          <FeedGrid feedDatas={feedData} />
-        )}
-      </Style.Wrapper>
+      {userData !== undefined && (
+        <Style.Wrapper>
+          <ProfileHeader
+            imageDataLength={feedData.length}
+            userData={userData as UserData}
+          />
+          {feedData.length === 0 ? (
+            <FlexBox column={true} width="fit-content" alignItems="center">
+              <Image src="/empty.svg" alt="empty" width={150} height={150} />
+              <Margin direction="column" size={15} />
+              <CustomH2>게시물이 없어용</CustomH2>
+            </FlexBox>
+          ) : (
+            <FeedGrid feedDatas={feedData} />
+          )}
+        </Style.Wrapper>
+      )}
       <Margin direction="column" size={30} />
     </Layout>
   )
