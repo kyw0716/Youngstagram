@@ -10,13 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
-      if (user) {
-        router.push("/")
-      } else {
-        history.pushState(null, "", location.href)
-        window.onpopstate = function () {
-          history.go(1)
-        }
+      if (!user) {
         router.push("/auth")
       }
     })

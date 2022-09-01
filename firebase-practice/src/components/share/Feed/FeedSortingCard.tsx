@@ -409,6 +409,8 @@ export default function FeedSortingCard({ feedData }: Props) {
               src={feedData.imageUrl ? feedData.imageUrl : "/empty.svg"}
               width={470}
               height={600}
+              placeholder="blur"
+              blurDataURL="/empty.svg"
               alt="Image"
               priority
             />

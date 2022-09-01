@@ -121,7 +121,7 @@ export default function Header() {
         <Style.Nav>
           <Style.Logo
             onClick={() => {
-              if (router.asPath !== "/auth") router.push("/")
+              if (userData) router.push("/")
             }}
           >
             youngstagram
@@ -131,10 +131,12 @@ export default function Header() {
               width={30}
               height={30}
               src="/home.svg"
+              placeholder="blur"
+              blurDataURL="/home.svg"
               alt="home"
               priority
               onClick={() => {
-                if (router.asPath !== "/auth") router.push("/")
+                if (userData) router.push("/")
               }}
               style={{ cursor: "pointer" }}
             />
@@ -142,6 +144,8 @@ export default function Header() {
               width={30}
               height={30}
               src="/image-plus.svg"
+              placeholder="blur"
+              blurDataURL="/image-plus.svg"
               alt="plus"
               priority
               onClick={() => {
@@ -161,6 +165,8 @@ export default function Header() {
                     ? userData.info.profileImage
                     : "/profile.svg"
                 }
+                placeholder="blur"
+                blurDataURL="/profile.svg"
                 priority
                 onClick={handleMenuOpen}
                 about="profile"
@@ -174,6 +180,8 @@ export default function Header() {
                 width={30}
                 height={30}
                 src="/line-menu.svg"
+                placeholder="blur"
+                blurDataURL="/line-menu.svg"
                 onClick={handleMenuOpen}
                 priority
                 alt="menu"
@@ -200,6 +208,8 @@ export default function Header() {
                     width={15}
                     height={15}
                     src="/profile.svg"
+                    placeholder="blur"
+                    blurDataURL="/profile.svg"
                     alt="profile"
                     priority
                   />
@@ -216,6 +226,8 @@ export default function Header() {
                     priority
                     src="/logout.svg"
                     alt="logout"
+                    placeholder="blur"
+                    blurDataURL="/logout.svg"
                   />
                   로그아웃
                 </Style.LogoutButton>
