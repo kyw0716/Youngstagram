@@ -32,6 +32,23 @@ const Style = {
     align-items: center;
     justify-content: center;
   `,
+  TextInputModeWrapper: styled.div`
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    @media (max-width: 900px) {
+      flex-direction: column;
+    }
+  `,
+  SelectedImage: styled.img`
+    width: 494px;
+    height: 494px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    @media (max-width: 900px) {
+      width: 100%;
+      height: 200px;
+    }
+  `,
   TempButton: styled.label`
     background-color: #4891ff;
     width: fit-content;
@@ -53,6 +70,22 @@ const Style = {
     padding-top: 10px;
     align-items: center;
     position: relative;
+    @media (max-width: 900px) {
+      height: fit-content;
+      width: 100%;
+    }
+  `,
+  InputSectionHeader: styled.div`
+    display: flex;
+    width: 310px;
+    height: fit-content;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    @media (max-width: 900px) {
+      width: 100%;
+      padding-left: 10px;
+    }
   `,
   TextArea: styled.textarea`
     width: 310px;
@@ -70,6 +103,24 @@ const Style = {
       ::placeholder {
         color: lightgrey;
       }
+    }
+    @media (max-width: 900px) {
+      height: 100px;
+      width: 100%;
+      padding-left: 10px;
+    }
+  `,
+  TextLength: styled.div`
+    display: flex;
+    width: 310px;
+    justify-content: flex-end;
+    align-items: center;
+    color: lightgrey;
+    padding-right: 10px;
+    margin-bottom: 8px;
+    @media (max-width: 900px) {
+      width: 100%;
+      margin-bottom: 0px;
     }
   `,
   SubmitButton: styled.div`
@@ -95,6 +146,10 @@ const Style = {
     display: flex;
     align-items: center;
     justify-content: center;
+    @media (max-width: 900px) {
+      justify-content: space-between;
+      padding-right: 10px;
+    }
   `,
   LocationInput: styled.input`
     width: 291px;
@@ -108,6 +163,9 @@ const Style = {
     }
     :focus {
       outline: none;
+    }
+    @media (max-width: 900px) {
+      width: 90%;
     }
   `,
 }
@@ -267,7 +325,7 @@ export default function FeedUploadModal({
   return (
     <ModalForImageUpload
       width={
-        windowSize < 784
+        windowSize < 900
           ? "95%"
           : isFileExist
           ? "835px"
@@ -275,7 +333,7 @@ export default function FeedUploadModal({
           ? "835px"
           : "495px"
       }
-      height={windowSize < 784 && isFileExist ? "550px" : "537px"}
+      height={windowSize < 900 && isFileExist ? "550px" : "537px"}
       title={feedData ? "게시글 편집하기" : "새 게시물 만들기"}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
@@ -285,18 +343,8 @@ export default function FeedUploadModal({
       isModifyMode={feedData ? true : false}
     >
       {isFileExist || feedData !== undefined ? (
-        <FlexBox
-          column={windowSize < 784 ? true : false}
-          height={"fit-content"}
-          width={"100%"}
-        >
-          <Image
-            width={windowSize < 784 ? "95%" : 494}
-            height={windowSize < 784 ? 200 : 494}
-            style={{
-              boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
-              maxWidth: 495,
-            }}
+        <Style.TextInputModeWrapper>
+          <Style.SelectedImage
             src={
               feedData
                 ? feedData.imageUrl
@@ -307,16 +355,6 @@ export default function FeedUploadModal({
             alt="selectedImage"
           />
           <Style.InputSection
-            style={
-              windowSize < 784
-                ? {
-                    height: "fit-content",
-                    width: "95%",
-                    alignItems: "flex-start",
-                    paddingLeft: "2.5%",
-                  }
-                : {}
-            }
             onSubmit={(event) => {
               event.preventDefault()
               setIsSubmit(true)
@@ -327,13 +365,7 @@ export default function FeedUploadModal({
               uploadToStorage()
             }}
           >
-            <FlexBox
-              width={windowSize < 784 ? "100%" : "310px"}
-              gap={10}
-              height="fit-content"
-              alignItems="center"
-              justifyContents="space-between"
-            >
+            <Style.InputSectionHeader>
               <FlexBox alignItems="center">
                 <Image
                   src={
@@ -359,11 +391,10 @@ export default function FeedUploadModal({
                   }}
                 />
               </FlexBox>
-            </FlexBox>
+            </Style.InputSectionHeader>
             <Margin direction="column" size={10} />
             <Style.TextArea
               placeholder="문구 입력..."
-              style={windowSize < 784 ? { height: 100, width: "100%" } : {}}
               maxLength={2200}
               value={desc}
               onChange={(event) => {
@@ -371,15 +402,7 @@ export default function FeedUploadModal({
               }}
             />
             <Margin direction="column" size={8} />
-            <FlexBox
-              width={windowSize < 784 ? "" : 310}
-              justifyContents={"flex-end"}
-              alignItems="center"
-              style={{ color: "lightgrey" }}
-            >
-              {desc.length}/2200
-            </FlexBox>
-            <Margin direction="column" size={windowSize < 784 ? 0 : 8} />
+            <Style.TextLength>{desc.length}/2200</Style.TextLength>
             <Style.LocationInputSection>
               <Style.LocationInput
                 placeholder="위치 추가"
@@ -410,7 +433,7 @@ export default function FeedUploadModal({
           >
             공유하기
           </Style.SubmitButton>
-        </FlexBox>
+        </Style.TextInputModeWrapper>
       ) : (
         <Style.Wrapper
           {...getRootProps({ className: "dropzone" })}
