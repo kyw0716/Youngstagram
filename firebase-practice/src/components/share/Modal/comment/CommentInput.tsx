@@ -16,7 +16,7 @@ type Props = {
 const Style = {
   CommentInput: styled.input`
     appearance: none;
-    width: ${(props) => (props.about ? props.about : "429px")};
+    width: 80%;
     height: 53px;
     border: none;
     border-radius: none;
@@ -35,10 +35,13 @@ const Style = {
     :-moz-appearance {
       display: none;
     }
+    @media (max-width: 900px) {
+      width: 80vw;
+    }
   `,
   SubmitButton: styled.button`
     appearance: none;
-    width: ${(props) => props.about};
+    width: 20%;
     border: none;
     background-color: inherit;
     font-weight: bold;
@@ -50,6 +53,9 @@ const Style = {
     :-moz-appearance {
       display: none;
     }
+    @media (max-width: 900px) {
+      width: 15vw;
+    }
   `,
   CommentInputArea: styled.form`
     position: absolute;
@@ -58,7 +64,10 @@ const Style = {
     border-top: 1px solid lightgrey;
     display: flex;
     justify-content: space-between;
-    width: ${(props) => props.about};
+    width: 50%;
+    @media (max-width: 900px) {
+      width: 95vw;
+    }
   `,
 }
 
@@ -70,7 +79,6 @@ export default function CommentInput({
   const [comment, setComment] = useState<string>("")
   const [randomId, setRandomId] = useState<string>(v4())
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
-  const windowSize = useWindowSize()
 
   const handleCommentSubmit = async () => {
     setIsSubmit(true)
@@ -113,7 +121,6 @@ export default function CommentInput({
 
   return (
     <Style.CommentInputArea
-      about={windowSize < 900 ? "95vw" : "50%"}
       onSubmit={(event) => {
         event.preventDefault()
         handleCommentSubmit()
@@ -122,14 +129,12 @@ export default function CommentInput({
       <Style.CommentInput
         value={comment}
         onChange={handleInputOnChange}
-        about={windowSize < 900 ? "80vw" : "80%"}
         placeholder="댓글 달기..."
         ref={inputRef}
       />
       {isSubmit || (
         <Style.SubmitButton
           onClick={handleCommentSubmit}
-          about={windowSize < 900 ? "15vw" : "20%"}
           color={comment.length > 0 ? "#4891ff" : "#d1e3ff"}
         >
           게시

@@ -7,7 +7,6 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore"
-import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -20,11 +19,24 @@ type Props = {
 }
 const Style = {
   Wrapper: styled.div`
-    width: ${(props) => props.about};
+    width: 100%;
     height: fit-content;
     align-items: flex-start;
     padding-left: 15px;
     display: flex;
+    @media (max-width: 900px) {
+      width: 85vw;
+    }
+  `,
+  CommentArea: styled.div`
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    position: relative;
+    word-break: break-all;
+    @media (max-width: 900px) {
+      width: 85vw;
+    }
   `,
   ModifyCommentInput: styled.input`
     width: 200px;
@@ -46,7 +58,6 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
   const [newComment, setNewComment] = useState<string>(commentData.comment)
   const [isShowAllComment, setIsShowAllComment] = useState<boolean>(false)
   const [userData, setUserData] = useState<UserData>()
-  const windowSize = useWindowSize()
 
   useEffect(() => {
     const userInfoRef = doc(DBService, "users", commentData.userId)
@@ -87,7 +98,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
   }
   return (
     <>
-      <Style.Wrapper about={windowSize < 900 ? "85vw" : "100%"}>
+      <Style.Wrapper>
         <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
           <Image
             width={32}
@@ -106,14 +117,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
           />
         </FlexBox>
         <Margin direction="row" size={10} />
-        <FlexBox
-          column={true}
-          style={{
-            width: windowSize < 900 ? "85vw" : "fit-content",
-            position: "relative",
-            wordBreak: "break-all",
-          }}
-        >
+        <Style.CommentArea>
           <Margin direction="column" size={5} />
           <FlexBox width={"fit-content"}>
             <CustomH4>{`${userData?.info.name}`}</CustomH4>
@@ -214,7 +218,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
               </CustomH5>
             </FlexBox>
           )}
-        </FlexBox>
+        </Style.CommentArea>
       </Style.Wrapper>
       <Margin direction="column" size={25} style={{ flexShrink: 0 }} />
     </>
