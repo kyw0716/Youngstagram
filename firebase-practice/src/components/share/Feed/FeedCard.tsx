@@ -140,6 +140,9 @@ export default function FeedCard({ feedData }: Props) {
                   height={38}
                   style={{ borderRadius: 38, cursor: "pointer" }}
                   onClick={() => {
+                    if (feedData.creator === userData.info.userId) {
+                      router.push(`u/${userData.info.userId}`)
+                    }
                     router.push(`/profile/${feedData.creator}`)
                   }}
                 />
