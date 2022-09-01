@@ -5,9 +5,12 @@ import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
 import Layout from "components/layout"
 import Image from "next/image"
-import { FeedData } from "backend/dto"
-import { useRecoilValue } from "recoil"
+import { FeedData, UserData } from "backend/dto"
+import { useRecoilState, useRecoilValue } from "recoil"
 import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
+import { authService } from "@FireBase"
+import { onAuthStateChanged } from "firebase/auth"
+import getUserDataByUid from "lib/getUserDataByUid"
 
 const Style = {
   Wrapper: styled.div`
@@ -21,13 +24,24 @@ const Style = {
     overflow-x: hidden;
   `,
 }
+
 export default function Profile() {
-  const userData = useRecoilValue(userDataState)
+  const [userData, setUserData] = useRecoilState(userDataState)
   const feedDataType = useRecoilValue(FeedDataFilter)
   const [feedData, setFeedData] = useState<FeedData[]>([])
 
   useEffect(() => {
-    if (userData.feed === undefined) return
+    onAuthStateChanged(authService, (user) => {
+      if (user) {
+        getUserDataByUid(user.uid).then((data) => {
+          setUserData(data as UserData)
+        })
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (userData === undefined) return
     if (feedDataType === "public") {
       setFeedData(userData.feed.filter((eachFeed) => !eachFeed.private))
       return
@@ -42,7 +56,7 @@ export default function Profile() {
   return (
     <Layout>
       <Style.Wrapper>
-        <ProfileHeader />
+        {userData && <ProfileHeader />}
         {feedData !== undefined && feedData.length === 0 ? (
           <FlexBox column={true} width="fit-content" alignItems="center">
             <Image src="/empty.svg" alt="empty" width={150} height={150} />
