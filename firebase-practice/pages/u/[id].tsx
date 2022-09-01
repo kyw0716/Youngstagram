@@ -41,7 +41,7 @@ export default function Profile() {
   }, [])
 
   useEffect(() => {
-    if (userData === undefined) return
+    if (userData === undefined || userData.feed === undefined) return
     if (feedDataType === "public") {
       setFeedData(userData.feed.filter((eachFeed) => !eachFeed.private))
       return
