@@ -11,7 +11,7 @@ import {
   UserCredential,
 } from "firebase/auth"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
 import styled from "styled-components"
 import { CustomH6Light, FlexBox, Margin } from "ui"
@@ -357,6 +357,8 @@ export default function Auth() {
           <FlexBox justifyContents="center">
             <Image
               src={"/GoogleIcon.png"}
+              placeholder="blur"
+              blurDataURL="/GoogleIcon.png"
               alt="googleLogin"
               onClick={() => {
                 setPersistence(authService, browserSessionPersistence).then(
@@ -373,6 +375,8 @@ export default function Auth() {
             <Margin direction="row" size={20} />
             <Image
               src={"/GitHubIcon.png"}
+              placeholder="blur"
+              blurDataURL="/GitHubIcon.png"
               alt="githubLogin"
               onClick={() => {
                 setPersistence(authService, browserSessionPersistence).then(
