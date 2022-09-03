@@ -131,8 +131,6 @@ export default function Header() {
               width={30}
               height={30}
               src="/home.svg"
-              placeholder="blur"
-              blurDataURL="/home.svg"
               alt="home"
               priority
               onClick={() => {
@@ -144,8 +142,6 @@ export default function Header() {
               width={30}
               height={30}
               src="/image-plus.svg"
-              placeholder="blur"
-              blurDataURL="/image-plus.svg"
               alt="plus"
               priority
               onClick={() => {
@@ -165,8 +161,6 @@ export default function Header() {
                     ? userData.info.profileImage
                     : "/profile.svg"
                 }
-                placeholder="blur"
-                blurDataURL="/profile.svg"
                 priority
                 onClick={handleMenuOpen}
                 about="profile"
@@ -180,8 +174,6 @@ export default function Header() {
                 width={30}
                 height={30}
                 src="/line-menu.svg"
-                placeholder="blur"
-                blurDataURL="/line-menu.svg"
                 onClick={handleMenuOpen}
                 priority
                 alt="menu"

@@ -2,6 +2,7 @@ import { DBService } from "@FireBase"
 import { userDataState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
+import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -28,9 +29,10 @@ export default function UserCard({ userId }: Props) {
   const currentUserData = useRecoilValue(userDataState)
   const router = useRouter()
   useEffect(() => {
-    onSnapshot(doc(DBService, "users", userId), (data) => {
+    if (userId === "") return
+    getUserDataByUid(userId).then((data) => {
       if (data) {
-        setUserData(data.data() as UserData)
+        setUserData(data as UserData)
       }
     })
   }, [userId])
