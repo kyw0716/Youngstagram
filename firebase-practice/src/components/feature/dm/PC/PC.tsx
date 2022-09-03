@@ -9,7 +9,7 @@ import { DBService } from "@FireBase"
 import UserCard from "@feature/dm/UserCard"
 import { v4 } from "uuid"
 import { doc, onSnapshot } from "firebase/firestore"
-import MessageInput from "@feature/dm/PC/MessageInputInPC"
+import MessageInput from "@feature/dm/PC/MessageInputIn"
 import { useRecoilValue } from "recoil"
 import { userDataState } from "@share/recoil/recoilList"
 

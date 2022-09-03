@@ -5,10 +5,9 @@ import { doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useRef, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { FlexBox, Margin } from "ui"
+import { Margin } from "ui"
 import MyMessageWrapper from "../MyMessageWrapper"
 import OtherMessageWrapper from "../OtherMessageWrapper"
-import UserCard from "../UserCard"
 
 type Props = {
   selectedUserId: string
@@ -16,12 +15,12 @@ type Props = {
 
 const Style = {
   MessageSection: styled.div`
-    width: 583px;
-    height: 70vh;
+    width: 100%;
+    height: calc(100vh - 180px);
     display: flex;
     flex-direction: column;
     gap: 15;
-    border: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
     overflow: auto;
     ::-webkit-scrollbar {
       display: none;
@@ -31,7 +30,7 @@ const Style = {
   `,
   MessageList: styled.div`
     width: 100%;
-    height: calc(70vh - 120px);
+    height: calc(100vh - 180px);
     padding: 10px 0px;
     overflow: scroll;
     display: flex;
@@ -47,6 +46,8 @@ export default function MessageViewer({ selectedUserId }: Props) {
   const [messageData, setMessageData] = useState<Message[]>([])
   const DMRef = useRef<HTMLDivElement>(null)
 
+  console.log(messageData)
+
   useEffect(() => {
     if (selectedUserId === "") {
       setMessageData([])
@@ -61,24 +62,16 @@ export default function MessageViewer({ selectedUserId }: Props) {
       },
     )
   }, [selectedUserId])
+  useEffect(() => {
+    if (DMRef.current === null) return
+    DMRef.current.scrollIntoView({
+      block: "start",
+      behavior: "auto",
+    })
+  }, [messageData.length])
 
   return (
     <Style.MessageSection>
-      {/* <FlexBox
-        width={"100%"}
-        alignItems="center"
-        height={60}
-        style={{
-          borderBottom: selectedUserId ? "1px solid lightgrey" : "",
-          position: "sticky",
-          top: 0,
-          flexShrink: 0,
-          zIndex: 2,
-          backgroundColor: "white",
-        }}
-      >
-        {selectedUserId && <UserCard userId={`${selectedUserId}`} />}
-      </FlexBox> */}
       {selectedUserId && (
         <Style.MessageList>
           {messageData.map((message) => {
