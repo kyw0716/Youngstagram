@@ -19,7 +19,7 @@ const Home: NextPage = () => {
     const AllFeedRef = doc(DBService, "mainPage", `userFeedDataAll`)
 
     onSnapshot(AllFeedRef, { includeMetadataChanges: true }, (doc) => {
-      setDataFromFirestore(doc.data())
+      if (doc) setDataFromFirestore(doc.data())
     })
   }, [])
   useEffect(() => {
@@ -35,7 +35,9 @@ const Home: NextPage = () => {
     })
   }, [authService.currentUser])
   useEffect(() => {
-    if (dataFromFirestore !== undefined) setFeedData(dataFromFirestore.feed)
+    if (dataFromFirestore !== undefined) {
+      setFeedData(dataFromFirestore.feed)
+    }
   }, [dataFromFirestore])
 
   return (

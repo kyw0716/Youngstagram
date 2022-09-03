@@ -8,6 +8,8 @@ import styled from "styled-components"
 import { CustomH4, CustomH6, FlexBox, Margin } from "ui"
 import CommentWrapper from "./CommentWrapper"
 import { v4 } from "uuid"
+import { useRecoilValue } from "recoil"
+import { userDataState } from "@share/recoil/recoilList"
 
 type Props = {
   feedData: FeedData
@@ -59,6 +61,7 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
+  const currentUserData = useRecoilValue(userDataState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -81,6 +84,10 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
               : "/profile.svg"
           }
           onClick={() => {
+            if (userData?.info.userId === currentUserData.info.userId) {
+              router.push(`/u/${currentUserData.info.userId}`)
+              return
+            }
             router.push(`/profile/${userData?.info.userId}`)
           }}
           alt="profile"
@@ -105,6 +112,10 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
               }
               alt="profile"
               onClick={() => {
+                if (userData?.info.userId === currentUserData.info.userId) {
+                  router.push(`/u/${currentUserData.info.userId}`)
+                  return
+                }
                 router.push(`/profile/${userData?.info.userId}`)
               }}
               style={{ borderRadius: "32px", cursor: "pointer" }}
@@ -117,7 +128,9 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
             style={{ paddingRight: "20px" }}
           >
             <Margin direction="column" size={5} />
-            <CustomH4>{userData?.info.name}</CustomH4>
+            <CustomH4 style={{ color: "black" }}>
+              {userData?.info.name}
+            </CustomH4>
             {feedData.desc}
           </FlexBox>
         </Style.CommentAreaHeader>

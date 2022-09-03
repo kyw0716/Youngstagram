@@ -1,4 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
+import { userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserData } from "backend/dto"
 import {
   arrayRemove,
@@ -12,6 +13,7 @@ import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useRecoilState } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -94,13 +96,14 @@ export default function FeedCard({ feedData }: Props) {
   const router = useRouter()
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isShowMore, setIsShowMore] = useState<boolean>(false)
-  const [userData, setUserData] = useState<UserData>()
+  const [feedCreatorData, setFeedCreatorData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
+  const [currentUser, setCurrentUser] = useRecoilState(userDataState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
-      setUserData(data.data() as UserData)
+      setFeedCreatorData(data.data() as UserData)
     })
     onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
       setCommentData(doc.data()?.AllComments)
@@ -109,10 +112,19 @@ export default function FeedCard({ feedData }: Props) {
       setLikerList(doc.data()?.likerList)
     })
   }, [])
+  useEffect(() => {
+    onSnapshot(
+      doc(DBService, "users", `${authService.currentUser?.uid}`),
+      { includeMetadataChanges: true },
+      (doc) => {
+        if (doc) setCurrentUser(doc.data() as UserData)
+      },
+    )
+  }, [])
 
   return (
     <>
-      {userData && (
+      {feedCreatorData && (
         <>
           <CommentModal
             isOpen={isCommentModalOpen}
@@ -129,8 +141,8 @@ export default function FeedCard({ feedData }: Props) {
               >
                 <Image
                   src={
-                    userData?.info.profileImage
-                      ? `${userData?.info.profileImage}`
+                    feedCreatorData?.info.profileImage
+                      ? `${feedCreatorData?.info.profileImage}`
                       : "/profile.svg"
                   }
                   placeholder="blur"
@@ -140,14 +152,17 @@ export default function FeedCard({ feedData }: Props) {
                   height={38}
                   style={{ borderRadius: 38, cursor: "pointer" }}
                   onClick={() => {
-                    if (feedData.creator === userData.info.userId) {
-                      router.push(`u/${userData.info.userId}`)
+                    if (
+                      currentUser.info.userId === feedCreatorData.info.userId
+                    ) {
+                      router.push(`u/${feedCreatorData.info.userId}`)
+                      return
                     }
-                    router.push(`/profile/${feedData.creator}`)
+                    router.push(`/profile/${feedCreatorData.info.userId}`)
                   }}
                 />
                 <Style.HeaderText>
-                  <Style.UserName>{userData?.info.name}</Style.UserName>
+                  <Style.UserName>{feedCreatorData?.info.name}</Style.UserName>
                   <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
                 </Style.HeaderText>
               </FlexBox>
