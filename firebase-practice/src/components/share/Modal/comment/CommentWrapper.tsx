@@ -1,4 +1,5 @@
 import { authService, DBService } from "@FireBase"
+import { userDataState } from "@share/recoil/recoilList"
 import { Comment, UserData } from "backend/dto"
 import {
   arrayRemove,
@@ -10,6 +11,7 @@ import {
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH4, CustomH5, CustomH6, FlexBox, Margin } from "ui"
 
@@ -58,6 +60,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
   const [newComment, setNewComment] = useState<string>(commentData.comment)
   const [isShowAllComment, setIsShowAllComment] = useState<boolean>(false)
   const [userData, setUserData] = useState<UserData>()
+  const currentUserData = useRecoilValue(userDataState)
 
   useEffect(() => {
     const userInfoRef = doc(DBService, "users", commentData.userId)
@@ -111,7 +114,11 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
             }
             alt="profile"
             onClick={() => {
-              router.push(`/profile/${commentData.userId}`)
+              if (userData?.info.userId === currentUserData.info.userId) {
+                router.push(`/u/${currentUserData.info.userId}`)
+                return
+              }
+              router.push(`/profile/${userData?.info.userId}`)
             }}
             priority
           />

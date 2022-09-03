@@ -61,7 +61,7 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
-  const currenUserData = useRecoilValue(userDataState)
+  const currentUserData = useRecoilValue(userDataState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -84,8 +84,8 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
               : "/profile.svg"
           }
           onClick={() => {
-            if (userData?.info.userId === currenUserData.info.userId) {
-              router.push(`/u/${currenUserData.info.userId}`)
+            if (userData?.info.userId === currentUserData.info.userId) {
+              router.push(`/u/${currentUserData.info.userId}`)
               return
             }
             router.push(`/profile/${userData?.info.userId}`)
@@ -112,8 +112,8 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
               }
               alt="profile"
               onClick={() => {
-                if (userData?.info.userId === currenUserData.info.userId) {
-                  router.push(`/u/${currenUserData.info.userId}`)
+                if (userData?.info.userId === currentUserData.info.userId) {
+                  router.push(`/u/${currentUserData.info.userId}`)
                   return
                 }
                 router.push(`/profile/${userData?.info.userId}`)
