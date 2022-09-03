@@ -1,8 +1,10 @@
+import { userDataState } from "@share/recoil/recoilList"
 import { UserData, UserInfo } from "backend/dto"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import { CustomH5Light, FlexBox } from "ui"
 
 type Props = {
@@ -11,6 +13,7 @@ type Props = {
 
 export default function FollowUserWrapper({ userId }: Props) {
   const [userInfo, setUserInfo] = useState<UserInfo>()
+  const currentUserData = useRecoilValue(userDataState)
   const router = useRouter()
   useEffect(() => {
     getUserDataByUid(userId).then((data) => {
@@ -26,6 +29,10 @@ export default function FollowUserWrapper({ userId }: Props) {
           width={400}
           gap={10}
           onClick={() => {
+            if (currentUserData.info.userId === userId) {
+              router.push(`/u/${currentUserData.info.userId}`)
+              return
+            }
             router.push(`/profile/${userId}`)
           }}
           style={{ cursor: "pointer", flexShrink: 0 }}
