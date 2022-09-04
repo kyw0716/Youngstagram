@@ -5,24 +5,26 @@ import Header from "./Header"
 
 type Props = {
   children: React.ReactNode
+  isMobileDM?: boolean
 }
 
 const Style = {
   Wrapper: styled.div`
     width: 100%;
     height: 100%;
-    min-height: calc(100vh + 60px);
     position: relative;
   `,
 }
 
-export default function Layout({ children }: Props) {
+export default function Layout({ children, isMobileDM }: Props) {
   return (
-    <Style.Wrapper>
+    <Style.Wrapper
+      style={{ minHeight: isMobileDM ? "100vh" : "calc(100vh + 60px)" }}
+    >
       <Header />
       {children}
       <Margin direction="column" size={30} />
-      <Footer />
+      {isMobileDM || <Footer />}
     </Style.Wrapper>
   )
 }
