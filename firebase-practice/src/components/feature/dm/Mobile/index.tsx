@@ -7,7 +7,7 @@ import MessageInput from "./MessageInputIn"
 const Style = {
   Wrapper: styled.div`
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 60px);
     background-color: white;
     position: fixed;
     top: 60px;
@@ -24,7 +24,7 @@ export default function MobileDM() {
         setSelectedUserId={setSelectedUserId}
       />
       <MessageViewer selectedUserId={selectedUserId} />
-      <MessageInput selectedUserId={selectedUserId} />
+      {selectedUserId && <MessageInput selectedUserId={selectedUserId} />}
     </Style.Wrapper>
   )
 }
