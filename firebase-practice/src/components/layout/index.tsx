@@ -13,6 +13,7 @@ const Style = {
     width: 100vw;
     height: auto;
     min-height: 100vh;
+    min-height: -webkit-fill-available;
     padding-top: 60px;
     position: relative;
   `,
