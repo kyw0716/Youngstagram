@@ -111,7 +111,7 @@ export default function FeedCard({ feedData }: Props) {
     onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (doc) => {
       setLikerList(doc.data()?.likerList)
     })
-  }, [])
+  }, [feedData])
   useEffect(() => {
     onSnapshot(
       doc(DBService, "users", `${authService.currentUser?.uid}`),
