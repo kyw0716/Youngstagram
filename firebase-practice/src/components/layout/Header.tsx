@@ -5,7 +5,7 @@ import { signOut } from "firebase/auth"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { useRecoilValue } from "recoil"
+import { useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
 import { DMIcon, FlexBox, Margin } from "ui"
 
@@ -114,6 +114,8 @@ export default function Header() {
   }
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const userData = useRecoilValue(userDataState)
+  const resetUserData = useResetRecoilState(userDataState)
+
   return (
     <>
       <FeedUploadModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
@@ -194,7 +196,7 @@ export default function Header() {
                 <Style.ProfileButton
                   onClick={() => {
                     if (userData !== undefined && userData.info.userId !== "") {
-                      router.push(`/u/${userData.info.userId}`)
+                      router.push(`/mypage`)
                     }
                   }}
                 >
@@ -212,6 +214,7 @@ export default function Header() {
                 <Style.LogoutButton
                   onClick={() => {
                     signOut(authService)
+                    resetUserData()
                   }}
                 >
                   <Image

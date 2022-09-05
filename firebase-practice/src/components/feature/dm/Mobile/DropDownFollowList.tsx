@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "firebase/auth"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { FlexBox } from "ui"
 import UserCard from "../UserCard"
@@ -48,21 +48,12 @@ export default function DropDownFollowList({
   selectedUserId,
   setSelectedUserId,
 }: Props) {
-  const [currentUserData, setCurrentUserData] = useRecoilState(userDataState)
+  const currentUserData = useRecoilValue(userDataState)
   const [isFollowerList, setIsFollowerList] = useState<boolean>(false)
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState<boolean>(true)
 
   const [follower, setFollower] = useState<string[]>([])
   const [follow, setFollow] = useState<string[]>([])
-
-  useEffect(() => {
-    onAuthStateChanged(authService, (user) => {
-      if (user)
-        getUserDataByUid(user.uid).then((data) => {
-          setCurrentUserData(data as UserData)
-        })
-    })
-  }, [])
 
   useEffect(() => {
     setFollow(currentUserData.follow)

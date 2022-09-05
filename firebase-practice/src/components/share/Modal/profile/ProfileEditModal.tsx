@@ -79,19 +79,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const [submitUserName, setSubmitUserName] = useState<string>("")
   const [imageUrlToAuthService, setImageUrlToAuthService] = useState<string>("")
 
-  const [userData, setUserData] = useState<DocumentData>()
-
-  useEffect(() => {
-    const userDataRef = doc(
-      DBService,
-      "users",
-      `${authService.currentUser?.uid}`,
-    )
-    onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
-      setUserData(doc.data())
-    })
-  }, [])
-
   const encodeFileToBase64 = (fileblob: File) => {
     const reader = new FileReader()
     if (fileblob === undefined) return

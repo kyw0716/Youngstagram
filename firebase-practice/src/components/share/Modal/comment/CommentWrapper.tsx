@@ -115,7 +115,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
             alt="profile"
             onClick={() => {
               if (userData?.info.userId === currentUserData.info.userId) {
-                router.push(`/u/${currentUserData.info.userId}`)
+                router.push(`/mypage`)
                 return
               }
               router.push(`/profile/${userData?.info.userId}`)

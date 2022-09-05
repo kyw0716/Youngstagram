@@ -11,7 +11,7 @@ import {
   UserCredential,
 } from "firebase/auth"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { authService, DBService } from "@FireBase"
 import styled from "styled-components"
 import { CustomH6Light, FlexBox, Margin } from "ui"
@@ -172,7 +172,7 @@ export default function Auth() {
           .then(async (response) => {
             if (response) {
               CreateNewUserToFirestore(response)
-              router.push("/")
+              router.push("/loading")
             }
           })
           .catch((error) => {
@@ -198,7 +198,7 @@ export default function Auth() {
       .then(async (response) => {
         if (response) {
           CreateNewUserToFirestore(response)
-          router.push("/")
+          router.push("/loading")
         }
       })
       .catch((error) => {
@@ -215,7 +215,7 @@ export default function Auth() {
       .then(async (response) => {
         if (response) {
           CreateNewUserToFirestore(response)
-          router.push("/")
+          router.push("/loading")
         }
       })
       .catch((error) => {
