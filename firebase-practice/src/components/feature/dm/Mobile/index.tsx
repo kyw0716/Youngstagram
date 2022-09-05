@@ -8,6 +8,7 @@ const Style = {
   Wrapper: styled.div`
     width: 100%;
     height: calc(100vh - 60px);
+    height: -webkit-fill-available;
     background-color: white;
     position: fixed;
     top: 60px;

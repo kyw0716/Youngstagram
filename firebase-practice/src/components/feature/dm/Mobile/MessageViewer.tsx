@@ -17,6 +17,7 @@ const Style = {
   MessageSection: styled.div`
     width: 100%;
     height: calc(100vh - 180px);
+    height: -webkit-fill-available;
     display: flex;
     flex-direction: column;
     gap: 15;
