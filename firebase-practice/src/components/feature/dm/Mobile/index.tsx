@@ -7,8 +7,7 @@ import MessageInput from "./MessageInputIn"
 const Style = {
   Wrapper: styled.div`
     width: 100%;
-    height: calc(100vh - 60px);
-    height: -webkit-fill-available;
+    height: calc(calc(var(--vh, 1vh) * 100) - 60px);
     background-color: white;
     position: fixed;
     top: 60px;

@@ -6,8 +6,6 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   overflow-x: hidden;
   background-color: rgb(250, 250, 250);
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
 }
 
 a {

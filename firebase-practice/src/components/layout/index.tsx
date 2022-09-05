@@ -12,7 +12,7 @@ const Style = {
   Wrapper: styled.div`
     width: 100vw;
     height: auto;
-    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
     padding-top: 60px;
     position: relative;
   `,
