@@ -74,24 +74,26 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
   return (
     <>
       <Style.Header>
-        <Image
-          width={32}
-          height={32}
-          style={{ borderRadius: "32px", cursor: "pointer" }}
-          src={
-            userData?.info.profileImage
-              ? userData.info.profileImage
-              : "/profile.svg"
-          }
-          onClick={() => {
-            if (userData?.info.userId === currentUserData.info.userId) {
-              router.push(`/u/${currentUserData.info.userId}`)
-              return
+        <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
+          <Image
+            width={32}
+            height={32}
+            style={{ borderRadius: "32px", cursor: "pointer" }}
+            src={
+              userData?.info.profileImage
+                ? userData.info.profileImage
+                : "/profile.svg"
             }
-            router.push(`/profile/${userData?.info.userId}`)
-          }}
-          alt="profile"
-        />
+            onClick={() => {
+              if (userData?.info.userId === currentUserData.info.userId) {
+                router.push(`/mypage`)
+                return
+              }
+              router.push(`/profile/${userData?.info.userId}`)
+            }}
+            alt="profile"
+          />
+        </FlexBox>
         <Margin direction="row" size={14} />
         <FlexBox column={true}>
           <CustomH4 style={{ color: "black" }}>{userData?.info.name}</CustomH4>
@@ -101,7 +103,7 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
       <Margin direction="column" size={10} />
       <Style.CommentWrapper>
         <Style.CommentAreaHeader>
-          <FlexBox height={32} width={32}>
+          <FlexBox height={32} width={32} style={{ flexShrink: 0 }}>
             <Image
               width={32}
               height={32}
@@ -113,7 +115,7 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
               alt="profile"
               onClick={() => {
                 if (userData?.info.userId === currentUserData.info.userId) {
-                  router.push(`/u/${currentUserData.info.userId}`)
+                  router.push(`/mypage`)
                   return
                 }
                 router.push(`/profile/${userData?.info.userId}`)

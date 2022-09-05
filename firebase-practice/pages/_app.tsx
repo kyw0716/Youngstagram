@@ -10,9 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
-      if (!user) {
-        router.push("/auth")
-      }
+      if (!user) router.push("/auth")
     })
   }, [])
   useEffect(() => {

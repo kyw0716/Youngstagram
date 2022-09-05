@@ -13,7 +13,7 @@ import { deleteObject, ref } from "firebase/storage"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -99,7 +99,7 @@ export default function FeedCard({ feedData }: Props) {
   const [feedCreatorData, setFeedCreatorData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
-  const [currentUser, setCurrentUser] = useRecoilState(userDataState)
+  const currentUser = useRecoilValue(userDataState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -112,15 +112,6 @@ export default function FeedCard({ feedData }: Props) {
       setLikerList(doc.data()?.likerList)
     })
   }, [feedData])
-  useEffect(() => {
-    onSnapshot(
-      doc(DBService, "users", `${authService.currentUser?.uid}`),
-      { includeMetadataChanges: true },
-      (doc) => {
-        if (doc) setCurrentUser(doc.data() as UserData)
-      },
-    )
-  }, [])
 
   return (
     <>
@@ -145,8 +136,6 @@ export default function FeedCard({ feedData }: Props) {
                       ? `${feedCreatorData?.info.profileImage}`
                       : "/profile.svg"
                   }
-                  placeholder="blur"
-                  blurDataURL="/profile.svg"
                   alt="creator"
                   width={38}
                   height={38}
@@ -155,7 +144,7 @@ export default function FeedCard({ feedData }: Props) {
                     if (
                       currentUser.info.userId === feedCreatorData.info.userId
                     ) {
-                      router.push(`u/${feedCreatorData.info.userId}`)
+                      router.push(`/mypage`)
                       return
                     }
                     router.push(`/profile/${feedCreatorData.info.userId}`)

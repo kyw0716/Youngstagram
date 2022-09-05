@@ -11,6 +11,7 @@ import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
 import { authService } from "@FireBase"
 import { onAuthStateChanged } from "firebase/auth"
 import getUserDataByUid from "lib/getUserDataByUid"
+import { useRouter } from "next/router"
 
 const Style = {
   Wrapper: styled.div`
@@ -26,19 +27,15 @@ const Style = {
 }
 
 export default function Profile() {
-  const [userData, setUserData] = useRecoilState(userDataState)
+  const router = useRouter()
+  const userData = useRecoilValue(userDataState)
   const feedDataType = useRecoilValue(FeedDataFilter)
   const [feedData, setFeedData] = useState<FeedData[]>([])
 
   useEffect(() => {
-    onAuthStateChanged(authService, (user) => {
-      if (user) {
-        getUserDataByUid(user.uid).then((data) => {
-          setUserData(data as UserData)
-        })
-      }
-    })
-  }, [])
+    if (userData !== undefined && userData.info.userId === "")
+      router.push("/loading?path=mypage")
+  }, [userData])
 
   useEffect(() => {
     if (userData === undefined || userData.feed === undefined) return
@@ -55,18 +52,22 @@ export default function Profile() {
 
   return (
     <Layout>
-      <Style.Wrapper>
-        {userData && <ProfileHeader />}
-        {feedData !== undefined && feedData.length === 0 ? (
-          <FlexBox column={true} width="fit-content" alignItems="center">
-            <Image src="/empty.svg" alt="empty" width={150} height={150} />
-            <Margin direction="column" size={15} />
-            <CustomH2>게시물이 없어용</CustomH2>
-          </FlexBox>
-        ) : (
-          <FeedSortList FeedData={feedData} />
-        )}
-      </Style.Wrapper>
+      {userData !== undefined && userData.info.userId !== "" ? (
+        <Style.Wrapper>
+          <ProfileHeader />
+          {feedData !== undefined && feedData.length === 0 ? (
+            <FlexBox column={true} width="fit-content" alignItems="center">
+              <Image src="/empty.svg" alt="empty" width={150} height={150} />
+              <Margin direction="column" size={15} />
+              <CustomH2>게시물이 없어용</CustomH2>
+            </FlexBox>
+          ) : (
+            <FeedSortList FeedData={feedData} />
+          )}
+        </Style.Wrapper>
+      ) : (
+        <></>
+      )}
     </Layout>
   )
 }

@@ -53,22 +53,22 @@ const Style = {
 export default function MessageInput({ selectedUserId }: Props) {
   const [message, setMessage] = useState<string>("")
   const [randomId, setRandomId] = useState<string>(v4())
-  const userData = useRecoilValue(userDataState)
+  const currentUserData = useRecoilValue(userDataState)
 
   const handleSendMessage = async () => {
     const uploadTime = getCurrentTime()
     const myMessageRef = doc(
       DBService,
-      `${userData.info.userId}`,
+      `${currentUserData.info.userId}`,
       `${selectedUserId}`,
     )
     const otherMessageRef = doc(
       DBService,
       `${selectedUserId}`,
-      `${userData.info.userId}`,
+      `${currentUserData.info.userId}`,
     )
     const messageData: Message = {
-      userId: `${userData.info.userId}`,
+      userId: `${currentUserData.info.userId}`,
       message: message,
       messageId: randomId,
       uploadTime: uploadTime,

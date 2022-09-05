@@ -74,6 +74,9 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
     onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (data) => {
       if (data) setLikerList(data.data()?.likerList)
     })
+    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (data) => {
+      if (data) setCommentData(data.data()?.AllComments)
+    })
   }, [feedData.storageId, feedData.creator])
   return (
     <YoungstagramModal

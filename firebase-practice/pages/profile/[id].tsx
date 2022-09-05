@@ -32,17 +32,13 @@ export default function Profile({ userId }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>([])
-  const setCurrentUserData = useSetRecoilState(userDataState)
+  const currentUserData = useRecoilValue(userDataState)
 
   useEffect(() => {
-    onAuthStateChanged(authService, (user) => {
-      if (user) {
-        getUserDataByUid(user.uid).then((data) => {
-          setCurrentUserData(data as UserData)
-        })
-      }
-    })
-  }, [])
+    if (currentUserData === undefined) return
+    if (currentUserData.info.userId === "")
+      router.replace(`/loading?path=profile/${userId}`)
+  }, [currentUserData])
 
   useEffect(() => {
     if (router.query !== undefined && router.query.id !== userId)
