@@ -231,7 +231,6 @@ export default function Header() {
           )}
         </Style.Nav>
       </Style.Container>
-      <Margin direction="column" size={60} />
     </>
   )
 }

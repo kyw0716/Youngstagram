@@ -12,15 +12,15 @@ const Style = {
   Wrapper: styled.div`
     width: 100vw;
     height: auto;
+    min-height: 100vh;
+    padding-top: 60px;
     position: relative;
   `,
 }
 
 export default function Layout({ children, isMobileDM }: Props) {
   return (
-    <Style.Wrapper
-      style={{ minHeight: isMobileDM ? "100vh - 60px" : "calc(100vh + 60px)" }}
-    >
+    <Style.Wrapper>
       <Header />
       {children}
       <Margin direction="column" size={30} />

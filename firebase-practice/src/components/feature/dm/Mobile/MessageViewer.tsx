@@ -27,11 +27,10 @@ const Style = {
     }
     background-color: white;
     position: relative;
-    margin-bottom: 60px;
   `,
   MessageList: styled.div`
     width: 100%;
-    height: calc(100vh - 180px);
+    height: 100%;
     padding: 10px 0px;
     overflow: scroll;
     display: flex;
