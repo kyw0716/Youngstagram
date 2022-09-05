@@ -96,9 +96,12 @@ export default function MessageInput({ selectedUserId }: Props) {
   return (
     <Style.DMForm
       onSubmit={(event) => {
+        console.log(message)
+        if (message !== "") {
+          setMessage("")
+          handleSendMessage()
+        }
         event.preventDefault()
-        setMessage("")
-        handleSendMessage()
       }}
     >
       <Style.DMInput
@@ -111,8 +114,10 @@ export default function MessageInput({ selectedUserId }: Props) {
       <Style.SubmitButton
         about={message.length > 0 ? "#4891ff" : "#d1e3ff"}
         onClick={() => {
-          setMessage("")
-          handleSendMessage()
+          if (message !== "") {
+            setMessage("")
+            handleSendMessage()
+          }
         }}
       >
         게시
