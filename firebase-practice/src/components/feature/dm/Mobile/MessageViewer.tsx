@@ -46,8 +46,6 @@ export default function MessageViewer({ selectedUserId }: Props) {
   const [messageData, setMessageData] = useState<Message[]>([])
   const DMRef = useRef<HTMLDivElement>(null)
 
-  console.log(messageData)
-
   useEffect(() => {
     if (selectedUserId === "") {
       setMessageData([])
