@@ -27,6 +27,7 @@ const Style = {
     }
     background-color: white;
     position: relative;
+    margin-bottom: 60px;
   `,
   MessageList: styled.div`
     width: 100%;
@@ -77,7 +78,8 @@ export default function MessageViewer({ selectedUserId }: Props) {
           {messageData.map((message) => {
             return (
               <>
-                {message.userId === currentUserData.info.userId ? (
+                {message.userId === currentUserData.info.userId &&
+                currentUserData !== undefined ? (
                   <MyMessageWrapper messageData={message} />
                 ) : (
                   <OtherMessageWrapper messageData={message} />
@@ -93,7 +95,6 @@ export default function MessageViewer({ selectedUserId }: Props) {
           <div ref={DMRef}></div>
         </Style.MessageList>
       )}
-      {/* {selectedUserId && <MessageInput selectedUserId={selectedUserId} />} */}
     </Style.MessageSection>
   )
 }
