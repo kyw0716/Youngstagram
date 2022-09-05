@@ -96,7 +96,6 @@ export default function MessageInput({ selectedUserId }: Props) {
   return (
     <Style.DMForm
       onSubmit={(event) => {
-        console.log(message)
         if (message !== "") {
           setMessage("")
           handleSendMessage()
