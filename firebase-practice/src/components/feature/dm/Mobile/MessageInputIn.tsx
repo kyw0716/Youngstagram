@@ -20,6 +20,8 @@ const Style = {
     align-items: center;
     z-index: 3;
     border-bottom: 1px solid lightgrey;
+    position: fixed;
+    bottom: 0;
   `,
   DMInput: styled.input`
     width: 500px;
