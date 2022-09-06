@@ -29,8 +29,11 @@ export default function FollowUserWrapper({ userId }: Props) {
           width={400}
           gap={10}
           onClick={() => {
-            if (currentUserData.info.userId === userId) {
-              router.push(`/u/${currentUserData.info.userId}`)
+            if (
+              currentUserData !== undefined &&
+              currentUserData.info.userId === userId
+            ) {
+              router.push("/mypage")
               return
             }
             router.push(`/profile/${userId}`)
