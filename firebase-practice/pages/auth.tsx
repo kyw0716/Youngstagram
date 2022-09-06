@@ -356,9 +356,9 @@ export default function Auth() {
           <Margin direction="column" size={22} />
           <FlexBox justifyContents="center">
             <Image
-              src={"/GoogleIcon.png"}
+              src={"/GoogleIcon.webp"}
               placeholder="blur"
-              blurDataURL="/GoogleIcon.png"
+              blurDataURL="/GoogleIcon.webp"
               alt="googleLogin"
               onClick={() => {
                 setPersistence(authService, browserSessionPersistence).then(
@@ -374,9 +374,9 @@ export default function Auth() {
             />
             <Margin direction="row" size={20} />
             <Image
-              src={"/GitHubIcon.png"}
+              src={"/GitHubIcon.webp"}
               placeholder="blur"
-              blurDataURL="/GitHubIcon.png"
+              blurDataURL="/GitHubIcon.webp"
               alt="githubLogin"
               onClick={() => {
                 setPersistence(authService, browserSessionPersistence).then(

@@ -46,7 +46,7 @@ export default function UserCard({ userId }: Props) {
             src={
               userData.info.profileImage
                 ? `${userData?.info.profileImage}`
-                : "/profile.svg"
+                : "/profile.webp"
             }
             alt={"profile"}
             style={{ borderRadius: "40px", cursor: "pointer" }}

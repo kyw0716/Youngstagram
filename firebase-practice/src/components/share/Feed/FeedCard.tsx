@@ -134,7 +134,7 @@ export default function FeedCard({ feedData }: Props) {
                   src={
                     feedCreatorData?.info.profileImage
                       ? `${feedCreatorData?.info.profileImage}`
-                      : "/profile.svg"
+                      : "/profile.webp"
                   }
                   alt="creator"
                   width={38}
@@ -159,12 +159,12 @@ export default function FeedCard({ feedData }: Props) {
               </FlexBox>
             </Style.ImageHeader>
             <Image
-              src={feedData.imageUrl ? feedData.imageUrl : "/empty.svg"}
+              src={feedData.imageUrl ? feedData.imageUrl : "/empty.webp"}
               width={470}
               height={600}
               alt="Image"
               placeholder="blur"
-              blurDataURL="/empty.svg"
+              blurDataURL="/empty.webp"
               priority
             />
             <Margin direction="column" size={10} />

@@ -176,7 +176,7 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
                 ? imagePreviewSrc
                 : authService.currentUser?.photoURL
                 ? `${authService.currentUser?.photoURL}`
-                : "/profile.svg"
+                : "/profile.webp"
             }
             alt={"profile"}
             style={{ borderRadius: 10 }}

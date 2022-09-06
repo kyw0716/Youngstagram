@@ -80,7 +80,7 @@ export default function FollowListAtMainPage() {
               <Image
                 width={30}
                 height={30}
-                src="/left-arrow-for-carousel.svg"
+                src="/left-arrow-for-carousel.webp"
                 alt="left"
               />
             </FlexBox>
@@ -98,7 +98,7 @@ export default function FollowListAtMainPage() {
               <Image
                 width={30}
                 height={30}
-                src="/right-arrow-for-carousel.svg"
+                src="/right-arrow-for-carousel.webp"
                 alt="left"
               />
             </FlexBox>

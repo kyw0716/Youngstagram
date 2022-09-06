@@ -42,17 +42,14 @@ const Home: NextPage = () => {
             <FollowListAtMainPage />
           </FlexBox>
         )}
-
       <Margin direction="column" size={15} />
-      {currentUserData !== undefined && currentUserData.info.userId !== "" ? (
+      {currentUserData.info.userId !== "" && (
         <FeedList
           FeedData={
             feedData ? feedData.filter((data) => !data.private) : undefined
           }
           isCustomer={true}
         />
-      ) : (
-        <></>
       )}
     </Layout>
   )

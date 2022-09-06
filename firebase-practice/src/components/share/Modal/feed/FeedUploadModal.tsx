@@ -1,13 +1,13 @@
 import { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
-import { CustomH3, CustomH5, FlexBox, Margin } from "ui"
+import { CustomH3, CustomH5, FeedUPloadModalIcon, FlexBox, Margin } from "ui"
 import { useDropzone } from "react-dropzone"
 import ModalForImageUpload from "./ModalForFeedUpload"
 import { authService, DBService, storageService } from "@FireBase"
 import Image from "next/image"
 import { v4 } from "uuid"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { FeedData } from "backend/dto"
+import { FeedData, UserData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -17,6 +17,9 @@ import {
 } from "firebase/firestore"
 import getCurrentTime from "lib/getCurrentTime"
 import useWindowSize from "lib/useWindowSize"
+import getUserDataByUid from "lib/getUserDataByUid"
+import { useSetRecoilState } from "recoil"
+import { userDataState } from "@share/recoil/recoilList"
 
 type Props = {
   isOpen: boolean
@@ -201,6 +204,7 @@ export default function FeedUploadModal({
   const [randomId, setRandomId] = useState<string>(
     feedData ? feedData.storageId : "",
   )
+  const setCurrentUserData = useSetRecoilState(userDataState)
 
   useEffect(() => {
     setRandomId(v4())
@@ -320,6 +324,9 @@ export default function FeedUploadModal({
         })
       }
     })
+    await getUserDataByUid(`${authService.currentUser?.uid}`).then((data) => {
+      if (data) setCurrentUserData(data as UserData)
+    })
   }
 
   return (
@@ -350,7 +357,7 @@ export default function FeedUploadModal({
                 ? feedData.imageUrl
                 : imagePreviewSrc
                 ? imagePreviewSrc
-                : "/empty.svg"
+                : "/empty.webp"
             }
             alt="selectedImage"
           />
@@ -371,7 +378,7 @@ export default function FeedUploadModal({
                   src={
                     authService.currentUser?.photoURL
                       ? `${authService.currentUser?.photoURL}`
-                      : "/profile.svg"
+                      : "/profile.webp"
                   }
                   alt="profile"
                   width={30}
@@ -413,7 +420,7 @@ export default function FeedUploadModal({
               />
               <Margin direction="row" size={10} />
               <Image
-                src={"/location.svg"}
+                src={"/location.webp"}
                 width={16}
                 height={16}
                 alt="location"
@@ -447,12 +454,7 @@ export default function FeedUploadModal({
           }
         >
           <FlexBox column={true} width={"100%"} alignItems="center">
-            <Image
-              width={96}
-              height={77}
-              src="/image-upload.svg"
-              alt="imageUpload"
-            />
+            <FeedUPloadModalIcon />
             <Margin direction="column" size={20} />
             {isDragReject ? (
               <CustomH3 style={{ color: "white" }}>
