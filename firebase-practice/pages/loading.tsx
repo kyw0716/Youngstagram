@@ -3,6 +3,7 @@ import { userDataState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import { onAuthStateChanged } from "firebase/auth"
 import getUserDataByUid from "lib/getUserDataByUid"
+import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useRecoilState } from "recoil"
@@ -22,18 +23,12 @@ const Style = {
 export default function Loading() {
   const router = useRouter()
   const [currentUserData, setCurrentUserData] = useRecoilState(userDataState)
-  const { path } = router.query
-
-  useEffect(() => {
-    if (path === "auth") router.replace("/auth")
-    if (currentUserData === undefined) return
-    if (currentUserData.info.userId !== "") {
-      router.replace(path === undefined ? "/" : `/${path}`)
-      return
-    }
-  }, [currentUserData, path])
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
+      if (user === null) {
+        router.push("/auth")
+        return
+      }
       if (
         user &&
         currentUserData !== undefined &&
@@ -47,6 +42,15 @@ export default function Loading() {
       }
     })
   }, [])
+  useEffect(() => {
+    if (currentUserData === undefined) return
+    if (currentUserData.info.userId !== "") {
+      router.replace(
+        router.query.path === undefined ? "/" : `/${router.query.path}`,
+      )
+      return
+    }
+  }, [currentUserData])
 
   return (
     <Style.Wrapper>

@@ -10,9 +10,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
-      if (user === null) router.push("/loading?path=auth")
+      if (user === null) router.push("/loading")
     })
   }, [])
+
   useEffect(() => {
     let vh = window.innerHeight * 0.01
     document.documentElement.style.setProperty("--vh", `${vh}px`)

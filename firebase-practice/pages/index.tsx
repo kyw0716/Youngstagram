@@ -44,12 +44,16 @@ const Home: NextPage = () => {
         )}
 
       <Margin direction="column" size={15} />
-      <FeedList
-        FeedData={
-          feedData ? feedData.filter((data) => !data.private) : undefined
-        }
-        isCustomer={true}
-      />
+      {currentUserData !== undefined && currentUserData.info.userId !== "" ? (
+        <FeedList
+          FeedData={
+            feedData ? feedData.filter((data) => !data.private) : undefined
+          }
+          isCustomer={true}
+        />
+      ) : (
+        <></>
+      )}
     </Layout>
   )
 }
