@@ -1,11 +1,13 @@
+import { userDataState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import Image from "next/image"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH2, Margin } from "ui"
 import FeedCard from "./FeedCard"
 
 type Props = {
-  FeedData: FeedData[]
+  FeedData: FeedData[] | undefined
   isCustomer: boolean
 }
 
@@ -27,9 +29,10 @@ const Style = {
 }
 
 export default function FeedList({ FeedData, isCustomer: isMainPage }: Props) {
+  console.log(FeedData)
   return (
     <Style.ImageContainer>
-      {FeedData.length !== 0 ? (
+      {FeedData !== undefined && FeedData.length !== 0 ? (
         FeedData.sort(function (a, b) {
           return Number(b.uploadTime) - Number(a.uploadTime)
         }).map((data, index) => {
@@ -39,9 +42,13 @@ export default function FeedList({ FeedData, isCustomer: isMainPage }: Props) {
         })
       ) : (
         <>
-          <Image src={"/empty.svg"} width={150} height={150} alt="empty" />
-          <Margin direction="column" size={15} />
-          <CustomH2>게시물이 없어용</CustomH2>
+          {FeedData && (
+            <>
+              <Image src={"/empty.svg"} width={150} height={150} alt="empty" />
+              <Margin direction="column" size={15} />
+              <CustomH2>게시물이 없어용</CustomH2>
+            </>
+          )}
         </>
       )}
     </Style.ImageContainer>

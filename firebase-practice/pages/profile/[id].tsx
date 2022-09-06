@@ -31,7 +31,7 @@ const Style = {
 export default function Profile({ userId }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
-  const [feedData, setFeedData] = useState<FeedData[]>([])
+  const [feedData, setFeedData] = useState<FeedData[]>()
   const currentUserData = useRecoilValue(userDataState)
 
   useEffect(() => {
@@ -63,17 +63,17 @@ export default function Profile({ userId }: Props) {
       {userData !== undefined && (
         <Style.Wrapper>
           <ProfileHeader
-            imageDataLength={feedData.length}
+            imageDataLength={feedData === undefined ? 0 : feedData.length}
             userData={userData as UserData}
           />
-          {feedData.length === 0 ? (
+          {feedData !== undefined && feedData.length === 0 ? (
             <FlexBox column={true} width="fit-content" alignItems="center">
               <Image src="/empty.svg" alt="empty" width={150} height={150} />
               <Margin direction="column" size={15} />
               <CustomH2>게시물이 없어용</CustomH2>
             </FlexBox>
           ) : (
-            <FeedGrid feedDatas={feedData} />
+            <FeedGrid feedDatas={feedData ? feedData : undefined} />
           )}
         </Style.Wrapper>
       )}

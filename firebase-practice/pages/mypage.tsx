@@ -5,12 +5,9 @@ import styled from "styled-components"
 import { CustomH2, FlexBox, Margin } from "ui"
 import Layout from "components/layout"
 import Image from "next/image"
-import { FeedData, UserData } from "backend/dto"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { FeedData } from "backend/dto"
+import { useRecoilValue } from "recoil"
 import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
-import { authService } from "@FireBase"
-import { onAuthStateChanged } from "firebase/auth"
-import getUserDataByUid from "lib/getUserDataByUid"
 import { useRouter } from "next/router"
 
 const Style = {
@@ -57,7 +54,14 @@ export default function Profile() {
           <ProfileHeader />
           {feedData !== undefined && feedData.length === 0 ? (
             <FlexBox column={true} width="fit-content" alignItems="center">
-              <Image src="/empty.svg" alt="empty" width={150} height={150} />
+              <Image
+                src="/empty.svg"
+                alt="empty"
+                width={150}
+                height={150}
+                placeholder="blur"
+                blurDataURL="/empty.svg"
+              />
               <Margin direction="column" size={15} />
               <CustomH2>게시물이 없어용</CustomH2>
             </FlexBox>

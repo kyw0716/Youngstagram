@@ -144,10 +144,12 @@ export default function FeedCard({ feedData }: Props) {
                     if (
                       currentUser.info.userId === feedCreatorData.info.userId
                     ) {
-                      router.push(`/mypage`)
+                      router.push(`/loading?path=mypage`)
                       return
                     }
-                    router.push(`/profile/${feedCreatorData.info.userId}`)
+                    router.push(
+                      `/loading?path=profile/${feedCreatorData.info.userId}`,
+                    )
                   }}
                 />
                 <Style.HeaderText>

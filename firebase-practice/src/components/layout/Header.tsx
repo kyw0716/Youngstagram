@@ -124,7 +124,7 @@ export default function Header() {
           <Style.Logo
             onClick={() => {
               if (userData !== undefined && userData.info.userId !== "")
-                router.push("/")
+                router.push("/loading")
             }}
           >
             youngstagram
@@ -138,7 +138,7 @@ export default function Header() {
               priority
               onClick={() => {
                 if (userData !== undefined && userData.info.userId !== "")
-                  router.push("/")
+                  router.push("/loading")
               }}
               style={{ cursor: "pointer" }}
             />
@@ -196,7 +196,7 @@ export default function Header() {
                 <Style.ProfileButton
                   onClick={() => {
                     if (userData !== undefined && userData.info.userId !== "") {
-                      router.push(`/mypage`)
+                      router.push(`/loading?path=mypage`)
                     }
                   }}
                 >

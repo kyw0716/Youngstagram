@@ -40,10 +40,10 @@ export default function FollowCard({ userId }: Props) {
               currentUser !== undefined &&
               currentUser.info.userId === userId
             ) {
-              router.push("/mypage")
+              router.push("/loading?path=mypage")
               return
             }
-            router.push(`profile/${userId}`)
+            router.push(`/loading?path=profile/${userId}`)
           }}
         >
           <FlexBox width={56} height={56}>
