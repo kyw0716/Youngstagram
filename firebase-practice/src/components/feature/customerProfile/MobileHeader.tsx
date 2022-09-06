@@ -181,7 +181,7 @@ export default function MobileHeader({ userData }: Props) {
               src={
                 userData.info.profileImage
                   ? `${userData.info.profileImage}`
-                  : "/profile.svg"
+                  : "/profile.webp"
               }
               alt="profile"
               width={90}

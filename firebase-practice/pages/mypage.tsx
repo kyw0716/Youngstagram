@@ -52,22 +52,7 @@ export default function Profile() {
       {userData !== undefined && userData.info.userId !== "" ? (
         <Style.Wrapper>
           <ProfileHeader />
-          {feedData !== undefined && feedData.length === 0 ? (
-            <FlexBox column={true} width="fit-content" alignItems="center">
-              <Image
-                src="/empty.svg"
-                alt="empty"
-                width={150}
-                height={150}
-                placeholder="blur"
-                blurDataURL="/empty.svg"
-              />
-              <Margin direction="column" size={15} />
-              <CustomH2>게시물이 없어용</CustomH2>
-            </FlexBox>
-          ) : (
-            <FeedSortList FeedData={feedData} />
-          )}
+          {feedData !== undefined && <FeedSortList FeedData={feedData} />}
         </Style.Wrapper>
       ) : (
         <></>

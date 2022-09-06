@@ -66,13 +66,7 @@ export default function Profile({ userId }: Props) {
             imageDataLength={feedData === undefined ? 0 : feedData.length}
             userData={userData as UserData}
           />
-          {feedData !== undefined && feedData.length === 0 ? (
-            <FlexBox column={true} width="fit-content" alignItems="center">
-              <Image src="/empty.svg" alt="empty" width={150} height={150} />
-              <Margin direction="column" size={15} />
-              <CustomH2>게시물이 없어용</CustomH2>
-            </FlexBox>
-          ) : (
+          {feedData !== undefined && (
             <FeedGrid feedDatas={feedData ? feedData : undefined} />
           )}
         </Style.Wrapper>

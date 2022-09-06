@@ -1,6 +1,6 @@
 import { authService, DBService, storageService } from "@FireBase"
 import { userDataState } from "@share/recoil/recoilList"
-import { FeedData } from "backend/dto"
+import { FeedData, UserData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -10,10 +10,11 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
+import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { useRecoilValue } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -197,7 +198,6 @@ const Style = {
 }
 
 export default function FeedSortingCard({ feedData }: Props) {
-  const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
@@ -206,6 +206,8 @@ export default function FeedSortingCard({ feedData }: Props) {
   const userData = useRecoilValue(userDataState)
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
+
+  const setCurrentUserdata = useSetRecoilState(userDataState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
@@ -236,19 +238,29 @@ export default function FeedSortingCard({ feedData }: Props) {
 
     handleThreeDotMenuClick()
 
+    await updateDoc(firestorePersonalRef, {
+      feed: arrayRemove(feed),
+    })
+      .then(async () => {
+        await getUserDataByUid(`${authService.currentUser?.uid}`).then(
+          (data) => {
+            if (data) {
+              setCurrentUserdata(data as UserData)
+            }
+          },
+        )
+      })
+      .catch((error) => console.log(error.code))
+    await updateDoc(firestoreAllRef, {
+      feed: arrayRemove(feed),
+    }).catch((error) => console.log(error.code))
+
     await deleteObject(storageImageRef).catch((error) =>
       console.log(error.code),
     )
     await deleteDoc(firestoreCommentRef).catch((error) =>
       console.log(error.code),
     )
-
-    await updateDoc(firestorePersonalRef, {
-      feed: arrayRemove(feed),
-    }).catch((error) => console.log(error.code))
-    await updateDoc(firestoreAllRef, {
-      feed: arrayRemove(feed),
-    }).catch((error) => console.log(error.code))
   }
   const handlePrivateToggle = async () => {
     const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
@@ -275,11 +287,21 @@ export default function FeedSortingCard({ feedData }: Props) {
     handleThreeDotMenuClick()
     await updateDoc(firestorePersonalRef, {
       feed: arrayRemove(feed),
-    }).then(async () => {
-      await updateDoc(firestorePersonalRef, {
-        feed: arrayUnion(toggleFeed),
-      })
     })
+      .then(async () => {
+        await updateDoc(firestorePersonalRef, {
+          feed: arrayUnion(toggleFeed),
+        })
+      })
+      .then(async () => {
+        await getUserDataByUid(`${authService.currentUser?.uid}`).then(
+          (data) => {
+            if (data) {
+              setCurrentUserdata(data as UserData)
+            }
+          },
+        )
+      })
     await updateDoc(firestoreImageAllRef, {
       feed: arrayRemove(feed),
     }).then(async () => {
@@ -318,7 +340,7 @@ export default function FeedSortingCard({ feedData }: Props) {
                   src={
                     userData?.info.profileImage
                       ? `${userData?.info.profileImage}`
-                      : "/profile.svg"
+                      : "/profile.webp"
                   }
                   alt="creator"
                   width={38}
@@ -332,7 +354,7 @@ export default function FeedSortingCard({ feedData }: Props) {
               </FlexBox>
               <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
                 <Image
-                  src="/dot-menu.svg"
+                  src="/dot-menu.webp"
                   alt="menu"
                   width={20}
                   height={15}
@@ -348,7 +370,7 @@ export default function FeedSortingCard({ feedData }: Props) {
                       }}
                     >
                       <Image
-                        src="/edit.svg"
+                        src="/edit.webp"
                         alt="edit"
                         width={15}
                         height={15}
@@ -359,14 +381,14 @@ export default function FeedSortingCard({ feedData }: Props) {
                     <Style.PrivateToggleButton onClick={handlePrivateToggle}>
                       {feedData.private ? (
                         <Image
-                          src="/unLock.svg"
+                          src="/unLock.webp"
                           alt="unlock"
                           width={15}
                           height={15}
                         />
                       ) : (
                         <Image
-                          src="/lock.svg"
+                          src="/lock.webp"
                           alt="lock"
                           width={15}
                           height={15}
@@ -377,7 +399,7 @@ export default function FeedSortingCard({ feedData }: Props) {
                     </Style.PrivateToggleButton>
                     <Style.Deletebutton onClick={handleDeleteFeed}>
                       <Image
-                        src="/delete.svg"
+                        src="/delete.webp"
                         alt="delete"
                         width={15}
                         height={15}
@@ -387,7 +409,7 @@ export default function FeedSortingCard({ feedData }: Props) {
                     </Style.Deletebutton>
                     <Style.ExitButton onClick={handleThreeDotMenuClick}>
                       <Image
-                        src="/logout.svg"
+                        src="/logout.webp"
                         alt="cancle"
                         width={15}
                         height={15}
@@ -403,11 +425,11 @@ export default function FeedSortingCard({ feedData }: Props) {
               )}
             </Style.ImageHeader>
             <Image
-              src={feedData.imageUrl ? feedData.imageUrl : "/empty.svg"}
+              src={feedData.imageUrl ? feedData.imageUrl : "/empty.webp"}
               width={470}
               height={600}
               placeholder="blur"
-              blurDataURL="/empty.svg"
+              blurDataURL="/empty.webp"
               alt="Image"
               priority
             />

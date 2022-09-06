@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { CustomH2, Margin } from "ui"
+import { CustomH2, CustomH2Light, CustomH5Light, Margin } from "ui"
 import FeedSortingCard from "./FeedSortingCard"
 
 type Props = {
@@ -32,6 +32,7 @@ export default function FeedSortList({ FeedData }: Props) {
   const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] =
     useState<FeedData[]>()
   useEffect(() => {
+    if (FeedData.length === 0) setFeedDataSortedByUploadTime([])
     if (FeedData !== undefined && FeedData.length > 0)
       setFeedDataSortedByUploadTime(
         (JSON.parse(JSON.stringify(FeedData)) as FeedData[]).sort(function (
@@ -52,16 +53,18 @@ export default function FeedSortList({ FeedData }: Props) {
       ) : (
         <>
           <Image
-            src={"/empty.svg"}
-            width={150}
-            height={150}
-            alt="empty"
+            src={"/camera.webp"}
+            width={62}
+            height={62}
+            alt="camera"
             priority
-            blurDataURL="/empty.svg"
+            blurDataURL="/camera.webp"
             placeholder="blur"
           />
-          <Margin direction="column" size={15} />
-          <CustomH2>게시물이 없어용</CustomH2>
+          <CustomH2Light>사진 공유</CustomH2Light>
+          <CustomH5Light>
+            사진을 공유하면 회원님의 프로필에 표시됩니다.
+          </CustomH5Light>
         </>
       )}
     </Style.ImageContainer>

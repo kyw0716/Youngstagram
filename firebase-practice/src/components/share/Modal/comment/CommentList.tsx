@@ -82,7 +82,7 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
             src={
               userData?.info.profileImage
                 ? userData.info.profileImage
-                : "/profile.svg"
+                : "/profile.webp"
             }
             onClick={() => {
               if (userData?.info.userId === currentUserData.info.userId) {
@@ -110,7 +110,7 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
               src={
                 userData?.info.profileImage
                   ? userData?.info.profileImage
-                  : "/profile.svg"
+                  : "/profile.webp"
               }
               alt="profile"
               onClick={() => {

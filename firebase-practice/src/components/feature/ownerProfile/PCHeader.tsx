@@ -94,7 +94,7 @@ export default function PCHeader() {
           src={
             userData.info.profileImage
               ? `${userData.info.profileImage}`
-              : "/profile.svg"
+              : "/profile.webp"
           }
           width={150}
           height={150}
@@ -155,7 +155,7 @@ export default function PCHeader() {
           }}
         >
           <CustomH4Light>전체 게시물</CustomH4Light>
-          <Image src="/all-file.svg" alt="allFile" width={15} height={15} />
+          <Image src="/all-file.webp" alt="allFile" width={15} height={15} />
         </Style.SortToAll>
         <Style.SortToPublic
           about={feedDataType}
@@ -164,7 +164,7 @@ export default function PCHeader() {
           }}
         >
           <CustomH4Light>공개 게시물</CustomH4Light>
-          <Image src="/unLock.svg" alt="publicFile" width={15} height={15} />
+          <Image src="/unLock.webp" alt="publicFile" width={15} height={15} />
         </Style.SortToPublic>
         <Style.SortToPrivate
           about={feedDataType}
@@ -173,7 +173,7 @@ export default function PCHeader() {
           }}
         >
           <CustomH4Light>비공개 게시물</CustomH4Light>
-          <Image src="/lock.svg" alt="privateFile" width={15} height={15} />
+          <Image src="/lock.webp" alt="privateFile" width={15} height={15} />
         </Style.SortToPrivate>
       </Style.SortWrapper>
     </>

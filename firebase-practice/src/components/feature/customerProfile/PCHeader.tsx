@@ -167,7 +167,7 @@ export default function PCHeader({ userData }: Props) {
           src={
             userData.info.profileImage
               ? `${userData.info.profileImage}`
-              : "/profile.svg"
+              : "/profile.webp"
           }
           width={150}
           height={150}
@@ -232,7 +232,7 @@ export default function PCHeader({ userData }: Props) {
       <Style.SortWrapper>
         <Style.SortToAll>
           <CustomH4Light>게시물</CustomH4Light>
-          <Image src="/all-file.svg" alt="allFile" width={15} height={15} />
+          <Image src="/all-file.webp" alt="allFile" width={15} height={15} />
         </Style.SortToAll>
       </Style.SortWrapper>
     </>

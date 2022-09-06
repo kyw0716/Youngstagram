@@ -110,7 +110,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
             src={
               userData?.info.profileImage
                 ? `${userData?.info.profileImage}`
-                : "/empty.svg"
+                : "/empty.webp"
             }
             alt="profile"
             onClick={() => {

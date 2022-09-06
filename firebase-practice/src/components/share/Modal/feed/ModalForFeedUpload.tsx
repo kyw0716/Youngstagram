@@ -88,7 +88,7 @@ export default function ModalForImageUpload({
                 style={{ cursor: "pointer" }}
                 width={15}
                 height={15}
-                src="/x.svg"
+                src="/x.webp"
                 alt="x"
                 onClick={() => {
                   setIsOpen(false)
@@ -103,7 +103,7 @@ export default function ModalForImageUpload({
                   style={{ cursor: "pointer" }}
                   width={15}
                   height={15}
-                  src="/left-arrow.svg"
+                  src="/left-arrow.webp"
                   alt="prev"
                   onClick={() => {
                     setIsFileExist(false)
@@ -121,7 +121,7 @@ export default function ModalForImageUpload({
               style={{ cursor: "pointer" }}
               width={15}
               height={15}
-              src="/x.svg"
+              src="/x.webp"
               alt="x"
               onClick={() => {
                 setIsOpen(false)

@@ -53,7 +53,7 @@ export default function FollowCard({ userId }: Props) {
               src={
                 userData.info.profileImage
                   ? userData.info.profileImage
-                  : "/profile.svg"
+                  : "/profile.webp"
               }
               alt="profile"
               style={{ borderRadius: 56 }}

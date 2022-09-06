@@ -80,7 +80,7 @@ export default function YoungstagramModal({
           }}
         >
           <Image
-            src="/x.svg"
+            src="/x.webp"
             alt="x"
             onClick={() => {
               setIsOpen(false)

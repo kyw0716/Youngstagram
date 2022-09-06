@@ -7,7 +7,14 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
-import { DMIcon, FlexBox, Margin } from "ui"
+import {
+  DMIcon,
+  FlexBox,
+  HomeIcon,
+  ImageUploadIcon,
+  Margin,
+  ProfileIcon,
+} from "ui"
 
 const Style = {
   Container: styled.div`
@@ -130,24 +137,13 @@ export default function Header() {
             youngstagram
           </Style.Logo>
           <FlexBox width={"fit-content"} gap={20} alignItems="center">
-            <Image
-              width={30}
-              height={30}
-              src="/home.svg"
-              alt="home"
-              priority
+            <HomeIcon
               onClick={() => {
                 if (userData !== undefined && userData.info.userId !== "")
                   router.push("/loading")
               }}
-              style={{ cursor: "pointer" }}
             />
-            <Image
-              width={30}
-              height={30}
-              src="/image-plus.svg"
-              alt="plus"
-              priority
+            <ImageUploadIcon
               onClick={() => {
                 if (userData !== undefined && userData.info.userId !== "") {
                   setIsModalOpen(true)
@@ -155,7 +151,6 @@ export default function Header() {
                 }
                 alert("로그인 후 이용 가능합니다")
               }}
-              style={{ cursor: "pointer" }}
             />
             <DMIcon />
             {userData !== undefined && userData.info.userId !== "" ? (
@@ -163,7 +158,7 @@ export default function Header() {
                 src={
                   userData.info.profileImage
                     ? userData.info.profileImage
-                    : "/profile.svg"
+                    : "/profile.webp"
                 }
                 priority
                 onClick={handleMenuOpen}
@@ -177,7 +172,7 @@ export default function Header() {
               <Image
                 width={30}
                 height={30}
-                src="/line-menu.svg"
+                src="/line-menu.webp"
                 onClick={handleMenuOpen}
                 priority
                 alt="menu"
@@ -200,13 +195,7 @@ export default function Header() {
                     }
                   }}
                 >
-                  <Image
-                    width={15}
-                    height={15}
-                    src="/profile.svg"
-                    alt="profile"
-                    priority
-                  />
+                  <ProfileIcon />
                   프로필
                 </Style.ProfileButton>
                 <Style.LogoutButton
@@ -219,7 +208,7 @@ export default function Header() {
                     width={15}
                     height={15}
                     priority
-                    src="/logout.svg"
+                    src="/logout.webp"
                     alt="logout"
                   />
                   로그아웃

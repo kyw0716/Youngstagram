@@ -83,7 +83,7 @@ export default function DropDownFollowList({
               width={20}
               height={20}
               alt="x"
-              src="/x.svg"
+              src="/x.webp"
               onClick={() => {
                 setIsDropDownMenuOpen(false)
               }}
@@ -95,7 +95,7 @@ export default function DropDownFollowList({
             width={25}
             height={25}
             alt="bottom-arrow"
-            src="/bottom-arrow.svg"
+            src="/bottom-arrow.webp"
             onClick={() => {
               setIsDropDownMenuOpen(true)
             }}

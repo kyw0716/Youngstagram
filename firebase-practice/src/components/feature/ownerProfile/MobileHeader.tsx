@@ -84,7 +84,7 @@ export default function MobileHeader() {
             src={
               userData.info.profileImage
                 ? userData.info.profileImage
-                : "/profile.svg"
+                : "/profile.webp"
             }
             alt="profile"
             width={90}
