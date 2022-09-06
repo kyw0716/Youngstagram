@@ -29,7 +29,6 @@ const Style = {
 }
 
 export default function FeedList({ FeedData, isCustomer: isMainPage }: Props) {
-  console.log(FeedData)
   return (
     <Style.ImageContainer>
       {FeedData !== undefined && FeedData.length !== 0 ? (

@@ -9,9 +9,8 @@ import { RecoilRoot } from "recoil"
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
   useEffect(() => {
-    if (authService.currentUser === null) router.push("/loading?path=auth")
     onAuthStateChanged(authService, (user) => {
-      if (!user) router.push("/loading?path=auth")
+      if (user === null) router.push("/loading?path=auth")
     })
   }, [])
   useEffect(() => {

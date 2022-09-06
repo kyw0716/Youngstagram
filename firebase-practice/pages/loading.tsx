@@ -22,22 +22,29 @@ const Style = {
 export default function Loading() {
   const router = useRouter()
   const [currentUserData, setCurrentUserData] = useRecoilState(userDataState)
+  const { path } = router.query
 
   useEffect(() => {
-    if (router.query.path === "auth") router.push("/auth")
-    if (currentUserData !== undefined && currentUserData.info.userId !== "")
-      router.replace(
-        router.query.path === undefined ? "/" : `/${router.query.path}`,
-      )
-  }, [currentUserData, router.query])
+    if (path === "auth") router.replace("/auth")
+    if (currentUserData === undefined) return
+    if (currentUserData.info.userId !== "") {
+      router.replace(path === undefined ? "/" : `/${path}`)
+      return
+    }
+  }, [currentUserData, path])
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
-      if (user)
+      if (
+        user &&
+        currentUserData !== undefined &&
+        currentUserData.info.userId === ""
+      ) {
         getUserDataByUid(`${authService.currentUser?.uid}`).then((data) => {
           if (data) {
             setCurrentUserData(data as UserData)
           }
         })
+      }
     })
   }, [])
 

@@ -204,8 +204,6 @@ export default function Header() {
                     width={15}
                     height={15}
                     src="/profile.svg"
-                    placeholder="blur"
-                    blurDataURL="/profile.svg"
                     alt="profile"
                     priority
                   />
@@ -223,8 +221,6 @@ export default function Header() {
                     priority
                     src="/logout.svg"
                     alt="logout"
-                    placeholder="blur"
-                    blurDataURL="/logout.svg"
                   />
                   로그아웃
                 </Style.LogoutButton>
