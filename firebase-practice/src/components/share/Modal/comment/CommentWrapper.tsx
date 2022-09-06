@@ -115,10 +115,10 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
             alt="profile"
             onClick={() => {
               if (userData?.info.userId === currentUserData.info.userId) {
-                router.push(`/mypage`)
+                router.push(`/loading?path=mypage`)
                 return
               }
-              router.push(`/profile/${userData?.info.userId}`)
+              router.push(`/loading?path=profile/${userData?.info.userId}`)
             }}
             priority
           />

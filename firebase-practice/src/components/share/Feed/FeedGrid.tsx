@@ -6,7 +6,7 @@ import useWindowSize from "lib/useWindowSize"
 import { useEffect, useState } from "react"
 
 type Props = {
-  feedDatas: FeedData[]
+  feedDatas: FeedData[] | undefined
 }
 
 const Style = {
@@ -31,6 +31,7 @@ export default function FeedGrid({ feedDatas }: Props) {
     FeedData[]
   >([])
   useEffect(() => {
+    if (feedDatas === undefined) return
     if (feedDatas.length > 0)
       setFeedDataSortedByUploadTime(
         (JSON.parse(JSON.stringify(feedDatas)) as FeedData[]).sort(function (

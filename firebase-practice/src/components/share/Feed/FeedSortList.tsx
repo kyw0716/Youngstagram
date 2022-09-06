@@ -29,9 +29,8 @@ const Style = {
 }
 
 export default function FeedSortList({ FeedData }: Props) {
-  const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] = useState<
-    FeedData[]
-  >([])
+  const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] =
+    useState<FeedData[]>()
   useEffect(() => {
     if (FeedData !== undefined && FeedData.length > 0)
       setFeedDataSortedByUploadTime(
@@ -45,7 +44,8 @@ export default function FeedSortList({ FeedData }: Props) {
   }, [FeedData])
   return (
     <Style.ImageContainer>
-      {feedDataSortedByUploadTime.length !== 0 ? (
+      {feedDataSortedByUploadTime !== undefined &&
+      feedDataSortedByUploadTime.length !== 0 ? (
         feedDataSortedByUploadTime.map((data, index) => {
           return <FeedSortingCard key={index} feedData={data} />
         })

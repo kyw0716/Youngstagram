@@ -14,7 +14,7 @@ import { useRouter } from "next/router"
 const Home: NextPage = () => {
   const router = useRouter()
   const [dataFromFirestore, setDataFromFirestore] = useState<DocumentData>()
-  const [feedData, setFeedData] = useState<FeedData[]>([])
+  const [feedData, setFeedData] = useState<FeedData[]>()
   const currentUserData = useRecoilValue(userDataState)
 
   useEffect(() => {
@@ -45,7 +45,9 @@ const Home: NextPage = () => {
 
       <Margin direction="column" size={15} />
       <FeedList
-        FeedData={feedData ? feedData.filter((data) => !data.private) : []}
+        FeedData={
+          feedData ? feedData.filter((data) => !data.private) : undefined
+        }
         isCustomer={true}
       />
     </Layout>

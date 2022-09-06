@@ -324,13 +324,6 @@ export default function FeedSortingCard({ feedData }: Props) {
                   width={38}
                   height={38}
                   style={{ borderRadius: 38, cursor: "pointer" }}
-                  onClick={() => {
-                    if (userData.info.userId === feedData.creator) {
-                      router.push("/myPage")
-                      return
-                    }
-                    router.push(`/profile/${feedData.creator}`)
-                  }}
                 />
                 <Style.HeaderText>
                   <Style.UserName>{userData?.info.name}</Style.UserName>
