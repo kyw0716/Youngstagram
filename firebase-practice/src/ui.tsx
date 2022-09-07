@@ -388,16 +388,24 @@ export function FeedUPloadModalIcon() {
   )
 }
 
-export function ProfileIcon() {
+type ProfileIconProps = {
+  onClick?: () => void
+  width: number
+  height: number
+}
+
+export function ProfileIcon({ onClick, width, height }: ProfileIconProps) {
   return (
     <svg
       aria-label="프로필"
       color="#262626"
       fill="#262626"
-      height="16"
+      height={height}
       role="img"
       viewBox="0 0 24 24"
-      width="16"
+      width={width}
+      onClick={onClick}
+      style={{ cursor: "pointer" }}
     >
       <circle
         cx="12.004"

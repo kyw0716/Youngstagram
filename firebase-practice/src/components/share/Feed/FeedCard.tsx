@@ -22,6 +22,7 @@ import {
   FullHeart,
   HeartIcon,
   Margin,
+  ProfileIcon,
   ShareIcon,
 } from "ui"
 import CommentModal from "../Modal/comment/CommentModal"
@@ -130,28 +131,47 @@ export default function FeedCard({ feedData }: Props) {
                 gap={15}
                 alignItems={"center"}
               >
-                <Image
-                  src={
-                    feedCreatorData?.info.profileImage
-                      ? `${feedCreatorData?.info.profileImage}`
-                      : "/profile.webp"
-                  }
-                  alt="creator"
-                  width={38}
-                  height={38}
-                  style={{ borderRadius: 38, cursor: "pointer" }}
-                  onClick={() => {
-                    if (
-                      currentUser.info.userId === feedCreatorData.info.userId
-                    ) {
-                      router.push(`/loading?path=mypage`)
-                      return
+                {feedCreatorData?.info.profileImage ? (
+                  <Image
+                    src={
+                      feedCreatorData?.info.profileImage
+                        ? `${feedCreatorData?.info.profileImage}`
+                        : "/profile.webp"
                     }
-                    router.push(
-                      `/loading?path=profile/${feedCreatorData.info.userId}`,
-                    )
-                  }}
-                />
+                    alt="creator"
+                    width={38}
+                    height={38}
+                    style={{ borderRadius: 38, cursor: "pointer" }}
+                    onClick={() => {
+                      if (
+                        currentUser.info.userId === feedCreatorData.info.userId
+                      ) {
+                        router.push(`/loading?path=mypage`)
+                        return
+                      }
+                      router.push(
+                        `/loading?path=profile/${feedCreatorData.info.userId}`,
+                      )
+                    }}
+                  />
+                ) : (
+                  <ProfileIcon
+                    width={38}
+                    height={38}
+                    onClick={() => {
+                      if (
+                        currentUser.info.userId === feedCreatorData.info.userId
+                      ) {
+                        router.push(`/loading?path=mypage`)
+                        return
+                      }
+                      router.push(
+                        `/loading?path=profile/${feedCreatorData.info.userId}`,
+                      )
+                    }}
+                  />
+                )}
+
                 <Style.HeaderText>
                   <Style.UserName>{feedCreatorData?.info.name}</Style.UserName>
                   <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
