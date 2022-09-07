@@ -10,6 +10,7 @@ import {
   CustomH4Light,
   FlexBox,
   Margin,
+  ProfileIcon,
 } from "ui"
 
 const Style = {
@@ -90,21 +91,22 @@ export default function PCHeader() {
       <ProfileEditModal isOpen={isOpen} setIsOpen={setIsOpen} isPC={true} />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
-        <Image
-          src={
-            userData.info.profileImage
-              ? `${userData.info.profileImage}`
-              : "/profile.webp"
-          }
-          width={150}
-          height={150}
-          style={
-            userData.info.profileImage
-              ? { borderRadius: 150 }
-              : { borderRadius: "none" }
-          }
-          alt="profile"
-        />
+        {userData.info.profileImage ? (
+          <Image
+            src={
+              userData.info.profileImage
+                ? `${userData.info.profileImage}`
+                : "/profile.webp"
+            }
+            width={150}
+            height={150}
+            style={{ borderRadius: 150 }}
+            alt="profile"
+          />
+        ) : (
+          <ProfileIcon width={150} height={150} />
+        )}
+
         <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
