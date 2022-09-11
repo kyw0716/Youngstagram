@@ -11,7 +11,7 @@ import {
   UserCredential,
 } from "firebase/auth"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
 import styled from "styled-components"
 import { CustomH6Light, FlexBox, Margin } from "ui"
@@ -171,8 +171,8 @@ export default function Auth() {
         return signInWithEmailAndPassword(authService, Email, Password)
           .then(async (response) => {
             if (response) {
-              CreateNewUserToFirestore(response)
               router.push("/loading")
+              CreateNewUserToFirestore(response)
             }
           })
           .catch((error) => {
@@ -196,9 +196,9 @@ export default function Auth() {
   const handleGoogleAuth = async () => {
     await signInWithPopup(authService, googleProvider)
       .then(async (response) => {
+        router.push("/loading")
         if (response) {
           CreateNewUserToFirestore(response)
-          router.push("/loading")
         }
       })
       .catch((error) => {
@@ -206,6 +206,9 @@ export default function Auth() {
           alert(
             "로그인 진행중에 오류가 발생하였습니다. 팝업창을 닫지 않도록 주의하시기 바랍니다.",
           )
+        }
+        if (error.code === "auth/account-exists-with-different-credential") {
+          alert("동일한 이메일 주소로 이미 가입된 계정이 있습니다.")
         }
       })
   }
@@ -213,9 +216,9 @@ export default function Auth() {
   const handleGitHubAuth = async () => {
     await signInWithPopup(authService, githubProvider)
       .then(async (response) => {
+        router.push("/loading")
         if (response) {
           CreateNewUserToFirestore(response)
-          router.push("/loading")
         }
       })
       .catch((error) => {
@@ -223,6 +226,9 @@ export default function Auth() {
           alert(
             "로그인 진행중에 오류가 발생하였습니다. 팝업창을 닫지 않도록 주의하시기 바랍니다.",
           )
+        }
+        if (error.code === "auth/account-exists-with-different-credential") {
+          alert("동일한 이메일 주소로 이미 가입된 계정이 있습니다.")
         }
       })
   }
@@ -261,7 +267,15 @@ export default function Auth() {
             onChange={handleOnInputChange}
             name="Email"
             value={Email}
+            autoComplete="off"
           />
+          {Email.search(/\@\w+\.com|\@\w+\.net/) === -1 && Email.length > 3 ? (
+            <span style={{ color: "red", width: "268px", fontSize: "13px" }}>
+              올바르지 않은 이메일 형식입니다.
+            </span>
+          ) : (
+            ""
+          )}
           <Margin direction="column" size={6} />
           <Style.InputBox
             type={"password"}

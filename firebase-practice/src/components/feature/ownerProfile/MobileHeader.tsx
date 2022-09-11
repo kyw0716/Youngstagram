@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { CustomH2Light, CustomH4Light, FlexBox, Margin } from "ui"
+import { CustomH2Light, CustomH4Light, FlexBox, Margin, ProfileIcon } from "ui"
 
 const Style = {
   ProfileWrapper: styled.div`
@@ -80,21 +80,18 @@ export default function MobileHeader() {
 
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
-          <Image
-            src={
-              userData.info.profileImage
-                ? userData.info.profileImage
-                : "/profile.webp"
-            }
-            alt="profile"
-            width={90}
-            height={90}
-            style={
-              userData.info.profileImage
-                ? { borderRadius: "100px" }
-                : { borderRadius: "none" }
-            }
-          />
+          {userData.info.profileImage ? (
+            <Image
+              src={userData.info.profileImage}
+              alt="profile"
+              width={90}
+              height={90}
+              style={{ borderRadius: "100px" }}
+            />
+          ) : (
+            <ProfileIcon width={90} height={90} />
+          )}
+
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
             <CustomH2Light>{userData.info.name}</CustomH2Light>

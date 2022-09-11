@@ -154,20 +154,30 @@ export default function Header() {
             />
             <DMIcon />
             {userData !== undefined && userData.info.userId !== "" ? (
-              <Image
-                src={
-                  userData.info.profileImage
-                    ? userData.info.profileImage
-                    : "/profile.webp"
-                }
-                priority
-                onClick={handleMenuOpen}
-                about="profile"
-                width={30}
-                height={30}
-                alt="profile"
-                style={{ cursor: "pointer", borderRadius: "30px" }}
-              />
+              <>
+                {userData.info.profileImage ? (
+                  <Image
+                    src={
+                      userData.info.profileImage
+                        ? userData.info.profileImage
+                        : "/profile.webp"
+                    }
+                    priority
+                    onClick={handleMenuOpen}
+                    about="profile"
+                    width={24}
+                    height={24}
+                    alt="profile"
+                    style={{ cursor: "pointer", borderRadius: "30px" }}
+                  />
+                ) : (
+                  <ProfileIcon
+                    width={24}
+                    height={24}
+                    onClick={handleMenuOpen}
+                  />
+                )}
+              </>
             ) : (
               <Image
                 width={30}
@@ -195,7 +205,7 @@ export default function Header() {
                     }
                   }}
                 >
-                  <ProfileIcon />
+                  <ProfileIcon width={15} height={15} />
                   프로필
                 </Style.ProfileButton>
                 <Style.LogoutButton
