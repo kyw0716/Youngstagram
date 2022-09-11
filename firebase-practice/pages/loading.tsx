@@ -1,7 +1,8 @@
-import { authService } from "@FireBase"
+import { authService, DBService } from "@FireBase"
 import { userDataState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import { onAuthStateChanged } from "firebase/auth"
+import { doc, getDoc } from "firebase/firestore"
 import getUserDataByUid from "lib/getUserDataByUid"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -22,6 +23,16 @@ const Style = {
 export default function Loading() {
   const router = useRouter()
   const [currentUserData, setCurrentUserData] = useRecoilState(userDataState)
+  const handleCurrentUserByDBData = async () => {
+    const profileRef = doc(
+      DBService,
+      "users",
+      `${authService.currentUser?.uid}`,
+    )
+    await getDoc(profileRef).then((data) => {
+      if (data) setCurrentUserData(data.data() as UserData)
+    })
+  }
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
       if (user === null) {
@@ -33,11 +44,7 @@ export default function Loading() {
         currentUserData !== undefined &&
         currentUserData.info.userId === ""
       ) {
-        getUserDataByUid(`${authService.currentUser?.uid}`).then((data) => {
-          if (data) {
-            setCurrentUserData(data as UserData)
-          }
-        })
+        handleCurrentUserByDBData()
       }
     })
   }, [])
@@ -49,7 +56,7 @@ export default function Loading() {
       )
       return
     }
-  }, [currentUserData])
+  }, [currentUserData, router])
 
   return (
     <Style.Wrapper>
