@@ -7,7 +7,8 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { CustomH6Light, FlexBox, Margin, ProfileIcon } from "ui"
+import { CustomH6Light, FlexBox, Margin } from "ui"
+import { ProfileIcon } from "icons"
 
 type Props = {
   userId: string

@@ -4,7 +4,8 @@ import Image from "next/image"
 import { useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { CustomH2Light, CustomH4Light, FlexBox, Margin, ProfileIcon } from "ui"
+import { CustomH2Light, CustomH4Light, FlexBox, Margin } from "ui"
+import { ProfileIcon } from "icons"
 
 const Style = {
   ProfileWrapper: styled.div`

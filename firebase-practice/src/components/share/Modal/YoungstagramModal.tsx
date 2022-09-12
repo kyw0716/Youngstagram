@@ -1,3 +1,4 @@
+import { XIcon } from "icons"
 import Image from "next/image"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
@@ -79,14 +80,12 @@ export default function YoungstagramModal({
             transform: "translateY(-50%)",
           }}
         >
-          <Image
-            src="/x.webp"
-            alt="x"
+          <XIcon
+            width={15}
+            height={15}
             onClick={() => {
               setIsOpen(false)
             }}
-            width={15}
-            height={15}
           />
         </FlexBox>
       </Style.Header>

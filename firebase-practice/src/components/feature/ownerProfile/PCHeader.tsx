@@ -10,8 +10,8 @@ import {
   CustomH4Light,
   FlexBox,
   Margin,
-  ProfileIcon,
 } from "ui"
+import { ProfileIcon } from "icons"
 
 const Style = {
   ProfileHeader: styled.div`

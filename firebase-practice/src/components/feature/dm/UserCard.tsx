@@ -8,7 +8,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { ProfileIcon } from "ui"
+import { ProfileIcon } from "icons"
 
 type Props = {
   userId: string

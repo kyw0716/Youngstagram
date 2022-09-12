@@ -8,6 +8,7 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore"
+import { ProfileIcon } from "icons"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -103,25 +104,39 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
     <>
       <Style.Wrapper>
         <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
-          <Image
-            width={32}
-            height={32}
-            style={{ borderRadius: "32px", cursor: "pointer" }}
-            src={
-              userData?.info.profileImage
-                ? `${userData?.info.profileImage}`
-                : "/empty.webp"
-            }
-            alt="profile"
-            onClick={() => {
-              if (userData?.info.userId === currentUserData.info.userId) {
-                router.push(`/loading?path=mypage`)
-                return
+          {userData?.info.profileImage ? (
+            <Image
+              width={32}
+              height={32}
+              style={{ borderRadius: "32px", cursor: "pointer" }}
+              src={
+                userData?.info.profileImage
+                  ? `${userData?.info.profileImage}`
+                  : "/empty.webp"
               }
-              router.push(`/loading?path=profile/${userData?.info.userId}`)
-            }}
-            priority
-          />
+              alt="profile"
+              onClick={() => {
+                if (userData?.info.userId === currentUserData.info.userId) {
+                  router.push(`/loading?path=mypage`)
+                  return
+                }
+                router.push(`/loading?path=profile/${userData?.info.userId}`)
+              }}
+              priority
+            />
+          ) : (
+            <ProfileIcon
+              width={32}
+              height={32}
+              onClick={() => {
+                if (userData?.info.userId === currentUserData.info.userId) {
+                  router.push(`/loading?path=mypage`)
+                  return
+                }
+                router.push(`/loading?path=profile/${userData?.info.userId}`)
+              }}
+            />
+          )}
         </FlexBox>
         <Margin direction="row" size={10} />
         <Style.CommentArea>

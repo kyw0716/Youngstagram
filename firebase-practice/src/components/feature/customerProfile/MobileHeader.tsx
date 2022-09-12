@@ -14,7 +14,8 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { CustomH2Light, CustomH4Light, FlexBox, Margin, ProfileIcon } from "ui"
+import { CustomH2Light, CustomH4Light, FlexBox, Margin } from "ui"
+import { ProfileIcon } from "icons"
 
 type Props = {
   userData: UserData

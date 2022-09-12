@@ -1,19 +1,11 @@
-import { authService, DBService, storageService } from "@FireBase"
+import { authService, DBService } from "@FireBase"
 import { userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserData } from "backend/dto"
-import {
-  arrayRemove,
-  arrayUnion,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore"
-import { deleteObject, ref } from "firebase/storage"
+import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -22,11 +14,10 @@ import {
   FullHeart,
   HeartIcon,
   Margin,
-  ProfileIcon,
   ShareIcon,
 } from "ui"
+import { ProfileIcon } from "icons"
 import CommentModal from "../Modal/comment/CommentModal"
-import FeedUploadModal from "../Modal/feed/FeedUploadModal"
 
 type Props = {
   feedData: FeedData

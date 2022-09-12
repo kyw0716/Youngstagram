@@ -20,8 +20,8 @@ import {
   CustomH4Light,
   FlexBox,
   Margin,
-  ProfileIcon,
 } from "ui"
+import { ProfileIcon } from "icons"
 
 type Props = {
   userData: UserData

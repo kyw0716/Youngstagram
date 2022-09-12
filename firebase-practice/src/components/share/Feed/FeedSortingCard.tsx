@@ -10,9 +10,9 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
+import { ProfileIcon } from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
@@ -336,17 +336,18 @@ export default function FeedSortingCard({ feedData }: Props) {
                 gap={15}
                 alignItems={"center"}
               >
-                <Image
-                  src={
-                    userData?.info.profileImage
-                      ? `${userData?.info.profileImage}`
-                      : "/profile.webp"
-                  }
-                  alt="creator"
-                  width={38}
-                  height={38}
-                  style={{ borderRadius: 38, cursor: "pointer" }}
-                />
+                {userData.info.profileImage ? (
+                  <Image
+                    src={userData?.info.profileImage}
+                    alt="creator"
+                    width={38}
+                    height={38}
+                    style={{ borderRadius: 38, cursor: "pointer" }}
+                  />
+                ) : (
+                  <ProfileIcon width={38} height={38} />
+                )}
+
                 <Style.HeaderText>
                   <Style.UserName>{userData?.info.name}</Style.UserName>
                   <Style.ImageTitle>{feedData.location}</Style.ImageTitle>

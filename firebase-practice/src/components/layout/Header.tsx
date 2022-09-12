@@ -7,14 +7,8 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
-import {
-  DMIcon,
-  FlexBox,
-  HomeIcon,
-  ImageUploadIcon,
-  Margin,
-  ProfileIcon,
-} from "ui"
+import { DMIcon, FlexBox, HomeIcon, ImageUploadIcon } from "ui"
+import { ProfileIcon } from "icons"
 
 const Style = {
   Container: styled.div`
