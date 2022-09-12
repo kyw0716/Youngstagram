@@ -419,6 +419,7 @@ export function GitHubIcon({ width, height, onClick }: Props) {
       id="i-github"
       xmlns="http://www.w3.org/2000/svg"
       style={{ cursor: "pointer" }}
+      onClick={onClick}
     >
       <path
         strokeWidth="0"
@@ -438,6 +439,7 @@ export function GoogleIcon({ width, height, onClick }: Props) {
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       style={{ cursor: "pointer" }}
+      onClick={onClick}
     >
       <path
         fill="#EA4335 "
