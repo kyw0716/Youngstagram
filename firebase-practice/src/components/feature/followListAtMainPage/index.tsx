@@ -7,6 +7,7 @@ import styled from "styled-components"
 import { FlexBox } from "ui"
 import FollowCard from "./FollowCard"
 import { v4 } from "uuid"
+import { LeftArrowForCarouselIcon, RightArrowForCarouselIcon } from "icons"
 
 const Style = {
   Wrapper: styled.div`
@@ -77,12 +78,7 @@ export default function FollowListAtMainPage() {
                 setFollowNumber((current) => current + 1)
               }}
             >
-              <Image
-                width={30}
-                height={30}
-                src="/left-arrow-for-carousel.webp"
-                alt="left"
-              />
+              <LeftArrowForCarouselIcon width={30} height={30} />
             </FlexBox>
           )}
           {followNumber === 0 || (
@@ -95,12 +91,7 @@ export default function FollowListAtMainPage() {
                 setFollowNumber((current) => current - 1)
               }}
             >
-              <Image
-                width={30}
-                height={30}
-                src="/right-arrow-for-carousel.webp"
-                alt="left"
-              />
+              <RightArrowForCarouselIcon width={30} height={30} />
             </FlexBox>
           )}
         </Style.Wrapper>

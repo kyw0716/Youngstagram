@@ -109,11 +109,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
               width={32}
               height={32}
               style={{ borderRadius: "32px", cursor: "pointer" }}
-              src={
-                userData?.info.profileImage
-                  ? `${userData?.info.profileImage}`
-                  : "/empty.webp"
-              }
+              src={userData?.info.profileImage}
               alt="profile"
               onClick={() => {
                 if (userData?.info.userId === currentUserData.info.userId) {

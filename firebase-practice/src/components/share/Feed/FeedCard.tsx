@@ -124,11 +124,7 @@ export default function FeedCard({ feedData }: Props) {
               >
                 {feedCreatorData?.info.profileImage ? (
                   <Image
-                    src={
-                      feedCreatorData?.info.profileImage
-                        ? `${feedCreatorData?.info.profileImage}`
-                        : "/profile.webp"
-                    }
+                    src={feedCreatorData.info.profileImage}
                     alt="creator"
                     width={38}
                     height={38}
@@ -153,7 +149,6 @@ export default function FeedCard({ feedData }: Props) {
                       if (
                         currentUser.info.userId === feedCreatorData.info.userId
                       ) {
-                        router.push(`/loading?path=mypage`)
                         return
                       }
                       router.push(

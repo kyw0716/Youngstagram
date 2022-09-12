@@ -20,7 +20,7 @@ import useWindowSize from "lib/useWindowSize"
 import getUserDataByUid from "lib/getUserDataByUid"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { userDataState } from "@share/recoil/recoilList"
-import { ProfileIcon } from "icons"
+import { LocationIcon, ProfileIcon } from "icons"
 
 type Props = {
   isOpen: boolean
@@ -422,12 +422,7 @@ export default function FeedUploadModal({
                 value={location}
               />
               <Margin direction="row" size={10} />
-              <Image
-                src={"/location.webp"}
-                width={16}
-                height={16}
-                alt="location"
-              />
+              <LocationIcon width={16} height={16} />
             </Style.LocationInputSection>
           </Style.InputSection>
           <Style.SubmitButton

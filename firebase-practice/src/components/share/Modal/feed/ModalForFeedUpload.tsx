@@ -1,4 +1,4 @@
-import { XIcon } from "icons"
+import { LeftArrowIcon, XIcon } from "icons"
 import Image from "next/image"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
@@ -97,12 +97,9 @@ export default function ModalForImageUpload({
                 <CustomH4>{title}</CustomH4>
               </Style.Title>
               {isModifyMode || (
-                <Image
-                  style={{ cursor: "pointer" }}
+                <LeftArrowIcon
                   width={15}
                   height={15}
-                  src="/left-arrow.webp"
-                  alt="prev"
                   onClick={() => {
                     setIsFileExist(false)
                   }}

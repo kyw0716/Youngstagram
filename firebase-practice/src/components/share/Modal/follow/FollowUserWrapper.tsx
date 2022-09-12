@@ -45,11 +45,7 @@ export default function FollowUserWrapper({ userId }: Props) {
             <Image
               width={44}
               height={44}
-              src={
-                userInfo.profileImage
-                  ? `${userInfo.profileImage}`
-                  : "/empty.webp"
-              }
+              src={userInfo.profileImage}
               alt="profile"
               style={{ borderRadius: 44, cursor: "pointer" }}
             />

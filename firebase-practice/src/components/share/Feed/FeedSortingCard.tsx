@@ -10,7 +10,15 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
-import { ProfileIcon } from "icons"
+import {
+  DeleteIcon,
+  DotMenuIcon,
+  EditIcon,
+  LockIcon,
+  LogoutIcon,
+  ProfileIcon,
+  UnLockIcon,
+} from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useEffect, useState } from "react"
@@ -354,13 +362,7 @@ export default function FeedSortingCard({ feedData }: Props) {
                 </Style.HeaderText>
               </FlexBox>
               <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
-                <Image
-                  src="/dot-menu.webp"
-                  alt="menu"
-                  width={20}
-                  height={15}
-                  style={{ cursor: "pointer" }}
-                />
+                <DotMenuIcon width={20} height={15} />
               </Style.ThreeDotMenu>
               {isMenuOpen ? (
                 <>
@@ -370,52 +372,24 @@ export default function FeedSortingCard({ feedData }: Props) {
                         setIsImageUploadModalOpen(true)
                       }}
                     >
-                      <Image
-                        src="/edit.webp"
-                        alt="edit"
-                        width={15}
-                        height={15}
-                        priority
-                      />
+                      <EditIcon width={15} height={15} />
                       편집
                     </Style.EditButton>
                     <Style.PrivateToggleButton onClick={handlePrivateToggle}>
                       {feedData.private ? (
-                        <Image
-                          src="/unLock.webp"
-                          alt="unlock"
-                          width={15}
-                          height={15}
-                        />
+                        <UnLockIcon width={15} height={15} />
                       ) : (
-                        <Image
-                          src="/lock.webp"
-                          alt="lock"
-                          width={15}
-                          height={15}
-                        />
+                        <LockIcon width={15} height={15} />
                       )}
 
                       {feedData.private ? "공개" : "비공개"}
                     </Style.PrivateToggleButton>
                     <Style.Deletebutton onClick={handleDeleteFeed}>
-                      <Image
-                        src="/delete.webp"
-                        alt="delete"
-                        width={15}
-                        height={15}
-                        priority
-                      />
+                      <DeleteIcon width={15} height={15} />
                       삭제
                     </Style.Deletebutton>
                     <Style.ExitButton onClick={handleThreeDotMenuClick}>
-                      <Image
-                        src="/logout.webp"
-                        alt="cancle"
-                        width={15}
-                        height={15}
-                        priority
-                      />
+                      <LogoutIcon width={15} height={15} />
                       취소
                     </Style.ExitButton>
                   </Style.ButtonBox>

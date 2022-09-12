@@ -10,6 +10,7 @@ import CommentWrapper from "./CommentWrapper"
 import { v4 } from "uuid"
 import { useRecoilValue } from "recoil"
 import { userDataState } from "@share/recoil/recoilList"
+import { ProfileIcon } from "icons"
 
 type Props = {
   feedData: FeedData
@@ -75,24 +76,34 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
     <>
       <Style.Header>
         <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
-          <Image
-            width={32}
-            height={32}
-            style={{ borderRadius: "32px", cursor: "pointer" }}
-            src={
-              userData?.info.profileImage
-                ? userData.info.profileImage
-                : "/profile.webp"
-            }
-            onClick={() => {
-              if (userData?.info.userId === currentUserData.info.userId) {
-                router.push(`/mypage`)
-                return
-              }
-              router.push(`/profile/${userData?.info.userId}`)
-            }}
-            alt="profile"
-          />
+          {userData?.info.profileImage ? (
+            <Image
+              width={32}
+              height={32}
+              style={{ borderRadius: "32px", cursor: "pointer" }}
+              src={userData?.info.profileImage}
+              onClick={() => {
+                if (userData?.info.userId === currentUserData.info.userId) {
+                  router.push(`/mypage`)
+                  return
+                }
+                router.push(`/profile/${userData?.info.userId}`)
+              }}
+              alt="profile"
+            />
+          ) : (
+            <ProfileIcon
+              width={32}
+              height={32}
+              onClick={() => {
+                if (userData?.info.userId === currentUserData.info.userId) {
+                  router.push(`/mypage`)
+                  return
+                }
+                router.push(`/profile/${userData?.info.userId}`)
+              }}
+            />
+          )}
         </FlexBox>
         <Margin direction="row" size={14} />
         <FlexBox column={true}>
@@ -104,24 +115,34 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
       <Style.CommentWrapper>
         <Style.CommentAreaHeader>
           <FlexBox height={32} width={32} style={{ flexShrink: 0 }}>
-            <Image
-              width={32}
-              height={32}
-              src={
-                userData?.info.profileImage
-                  ? userData?.info.profileImage
-                  : "/profile.webp"
-              }
-              alt="profile"
-              onClick={() => {
-                if (userData?.info.userId === currentUserData.info.userId) {
-                  router.push(`/mypage`)
-                  return
-                }
-                router.push(`/profile/${userData?.info.userId}`)
-              }}
-              style={{ borderRadius: "32px", cursor: "pointer" }}
-            />
+            {userData?.info.profileImage ? (
+              <Image
+                width={32}
+                height={32}
+                src={userData?.info.profileImage}
+                alt="profile"
+                onClick={() => {
+                  if (userData?.info.userId === currentUserData.info.userId) {
+                    router.push(`/mypage`)
+                    return
+                  }
+                  router.push(`/profile/${userData?.info.userId}`)
+                }}
+                style={{ borderRadius: "32px", cursor: "pointer" }}
+              />
+            ) : (
+              <ProfileIcon
+                width={32}
+                height={32}
+                onClick={() => {
+                  if (userData?.info.userId === currentUserData.info.userId) {
+                    router.push(`/mypage`)
+                    return
+                  }
+                  router.push(`/profile/${userData?.info.userId}`)
+                }}
+              />
+            )}
           </FlexBox>
           <Margin direction="row" size={10} />
           <FlexBox

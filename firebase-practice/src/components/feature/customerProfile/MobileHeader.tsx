@@ -178,7 +178,7 @@ export default function MobileHeader({ userData }: Props) {
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
           <FlexBox width={90} height={90} style={{ flexShrink: 0 }}>
-            {userData.info.profileImage ? (
+            {userData.info.profileImage !== null ? (
               <Image
                 src={userData.info.profileImage}
                 alt="profile"

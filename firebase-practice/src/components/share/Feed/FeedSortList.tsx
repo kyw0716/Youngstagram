@@ -1,5 +1,6 @@
 import { userDataState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
+import { CameraIcon } from "icons"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
@@ -52,15 +53,7 @@ export default function FeedSortList({ FeedData }: Props) {
         })
       ) : (
         <>
-          <Image
-            src={"/camera.webp"}
-            width={62}
-            height={62}
-            alt="camera"
-            priority
-            blurDataURL="/camera.webp"
-            placeholder="blur"
-          />
+          <CameraIcon width={62} height={62} />
           <CustomH2Light>사진 공유</CustomH2Light>
           <CustomH5Light>
             사진을 공유하면 회원님의 프로필에 표시됩니다.

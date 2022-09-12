@@ -8,7 +8,7 @@ import { useState } from "react"
 import { useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
 import { DMIcon, FlexBox, HomeIcon, ImageUploadIcon } from "ui"
-import { ProfileIcon } from "icons"
+import { LineMenuIcon, LogoutIcon, ProfileIcon } from "icons"
 
 const Style = {
   Container: styled.div`
@@ -151,11 +151,7 @@ export default function Header() {
               <>
                 {userData.info.profileImage ? (
                   <Image
-                    src={
-                      userData.info.profileImage
-                        ? userData.info.profileImage
-                        : "/profile.webp"
-                    }
+                    src={userData.info.profileImage}
                     priority
                     onClick={handleMenuOpen}
                     about="profile"
@@ -173,15 +169,7 @@ export default function Header() {
                 )}
               </>
             ) : (
-              <Image
-                width={30}
-                height={30}
-                src="/line-menu.webp"
-                onClick={handleMenuOpen}
-                priority
-                alt="menu"
-                style={{ cursor: "pointer" }}
-              />
+              <LineMenuIcon width={30} height={30} />
             )}
           </FlexBox>
 
@@ -208,13 +196,7 @@ export default function Header() {
                     resetUserData()
                   }}
                 >
-                  <Image
-                    width={15}
-                    height={15}
-                    priority
-                    src="/logout.webp"
-                    alt="logout"
-                  />
+                  <LogoutIcon width={15} height={15} />
                   로그아웃
                 </Style.LogoutButton>
               </Style.DropDownMenu>
