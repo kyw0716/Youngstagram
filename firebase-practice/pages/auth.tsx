@@ -19,6 +19,7 @@ import { doc, setDoc, updateDoc } from "firebase/firestore"
 import Layout from "components/layout"
 import Image from "next/image"
 import { UserInfo } from "backend/dto"
+import { GitHubIcon, GoogleIcon } from "icons"
 
 const Style = {
   Wrapper: styled.div`
@@ -369,11 +370,9 @@ export default function Auth() {
           </FlexBox>
           <Margin direction="column" size={22} />
           <FlexBox justifyContents="center">
-            <Image
-              src={"/GoogleIcon.webp"}
-              placeholder="blur"
-              blurDataURL="/GoogleIcon.webp"
-              alt="googleLogin"
+            <GoogleIcon
+              width={40}
+              height={40}
               onClick={() => {
                 setPersistence(authService, browserSessionPersistence).then(
                   async () => {
@@ -381,17 +380,11 @@ export default function Auth() {
                   },
                 )
               }}
-              width={40}
-              height={40}
-              style={{ cursor: "pointer" }}
-              priority
             />
             <Margin direction="row" size={20} />
-            <Image
-              src={"/GitHubIcon.webp"}
-              placeholder="blur"
-              blurDataURL="/GitHubIcon.webp"
-              alt="githubLogin"
+            <GitHubIcon
+              width={40}
+              height={40}
               onClick={() => {
                 setPersistence(authService, browserSessionPersistence).then(
                   async () => {
@@ -399,10 +392,6 @@ export default function Auth() {
                   },
                 )
               }}
-              width={40}
-              height={40}
-              style={{ cursor: "pointer" }}
-              priority
             />
           </FlexBox>
         </Style.FormContainer>

@@ -20,8 +20,8 @@ import {
   CustomH4Light,
   FlexBox,
   Margin,
-  ProfileIcon,
 } from "ui"
+import { AllFileIcon, ProfileIcon } from "icons"
 
 type Props = {
   userData: UserData
@@ -164,7 +164,7 @@ export default function PCHeader({ userData }: Props) {
       />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
-        {userData.info.profileImage ? (
+        {userData.info.profileImage !== null ? (
           <Image
             src={userData.info.profileImage}
             width={150}
@@ -175,7 +175,6 @@ export default function PCHeader({ userData }: Props) {
         ) : (
           <ProfileIcon width={150} height={150} />
         )}
-
         <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
@@ -230,7 +229,7 @@ export default function PCHeader({ userData }: Props) {
       <Style.SortWrapper>
         <Style.SortToAll>
           <CustomH4Light>게시물</CustomH4Light>
-          <Image src="/all-file.webp" alt="allFile" width={15} height={15} />
+          <AllFileIcon width={15} height={15} />
         </Style.SortToAll>
       </Style.SortWrapper>
     </>

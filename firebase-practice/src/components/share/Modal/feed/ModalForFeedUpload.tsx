@@ -1,3 +1,4 @@
+import { LeftArrowIcon, XIcon } from "icons"
 import Image from "next/image"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
@@ -84,12 +85,9 @@ export default function ModalForImageUpload({
         {isFileExist ? (
           <>
             <Style.Header>
-              <Image
-                style={{ cursor: "pointer" }}
+              <XIcon
                 width={15}
                 height={15}
-                src="/x.webp"
-                alt="x"
                 onClick={() => {
                   setIsOpen(false)
                   setIsFileExist(false)
@@ -99,12 +97,9 @@ export default function ModalForImageUpload({
                 <CustomH4>{title}</CustomH4>
               </Style.Title>
               {isModifyMode || (
-                <Image
-                  style={{ cursor: "pointer" }}
+                <LeftArrowIcon
                   width={15}
                   height={15}
-                  src="/left-arrow.webp"
-                  alt="prev"
                   onClick={() => {
                     setIsFileExist(false)
                   }}
@@ -117,12 +112,9 @@ export default function ModalForImageUpload({
             <Style.Title>
               <CustomH4>{title}</CustomH4>
             </Style.Title>
-            <Image
-              style={{ cursor: "pointer" }}
+            <XIcon
               width={15}
               height={15}
-              src="/x.webp"
-              alt="x"
               onClick={() => {
                 setIsOpen(false)
                 setIsFileExist(false)

@@ -1,5 +1,6 @@
 import { userDataState } from "@share/recoil/recoilList"
 import { UserData, UserInfo } from "backend/dto"
+import { ProfileIcon } from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useRouter } from "next/router"
@@ -40,15 +41,17 @@ export default function FollowUserWrapper({ userId }: Props) {
           }}
           style={{ cursor: "pointer", flexShrink: 0 }}
         >
-          <Image
-            width={44}
-            height={44}
-            src={
-              userInfo.profileImage ? `${userInfo.profileImage}` : "/empty.webp"
-            }
-            alt="profile"
-            style={{ borderRadius: 44, cursor: "pointer" }}
-          />
+          {userInfo.profileImage ? (
+            <Image
+              width={44}
+              height={44}
+              src={userInfo.profileImage}
+              alt="profile"
+              style={{ borderRadius: 44, cursor: "pointer" }}
+            />
+          ) : (
+            <ProfileIcon width={44} height={44} />
+          )}
 
           <FlexBox
             column={true}

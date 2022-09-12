@@ -1,10 +1,13 @@
 import { authService, DBService, storageService } from "@FireBase"
+import { userDataState } from "@share/recoil/recoilList"
 import { UserInfo } from "backend/dto"
 import { updateProfile } from "firebase/auth"
 import { doc, DocumentData, onSnapshot, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { ProfileIcon } from "icons"
 import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH6, FlexBox, Margin } from "ui"
 import YoungstagramModal from "../YoungstagramModal"
@@ -78,6 +81,8 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
 
   const [submitUserName, setSubmitUserName] = useState<string>("")
   const [imageUrlToAuthService, setImageUrlToAuthService] = useState<string>("")
+
+  const currentUserData = useRecoilValue(userDataState)
 
   const encodeFileToBase64 = (fileblob: File) => {
     const reader = new FileReader()
@@ -170,19 +175,25 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         <Margin direction="column" size={15} />
         <FlexBox width={"100%"} height={isPC ? "200px" : "100px"}>
           <Margin direction="row" size={15} />
-          <Image
-            src={
-              imagePreviewSrc
-                ? imagePreviewSrc
-                : authService.currentUser?.photoURL
-                ? `${authService.currentUser?.photoURL}`
-                : "/profile.webp"
-            }
-            alt={"profile"}
-            style={{ borderRadius: 10 }}
-            width={isPC ? 200 : 100}
-            height={isPC ? 200 : 100}
-          />
+          {imagePreviewSrc ? (
+            <Image
+              src={imagePreviewSrc}
+              alt={"profile"}
+              style={{ borderRadius: 10 }}
+              width={isPC ? 200 : 100}
+              height={isPC ? 200 : 100}
+            />
+          ) : currentUserData.info.profileImage ? (
+            <Image
+              src={currentUserData.info.profileImage}
+              alt={"profile"}
+              style={{ borderRadius: 10 }}
+              width={isPC ? 200 : 100}
+              height={isPC ? 200 : 100}
+            />
+          ) : (
+            <ProfileIcon width={isPC ? 200 : 100} height={isPC ? 200 : 100} />
+          )}
           <Margin direction="row" size={15} />
           <FlexBox
             width={isPC ? "350px" : "70%"}

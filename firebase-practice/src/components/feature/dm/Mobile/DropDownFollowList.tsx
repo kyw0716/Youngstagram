@@ -2,6 +2,7 @@ import { authService, DBService } from "@FireBase"
 import { userDataState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import { onAuthStateChanged } from "firebase/auth"
+import { BottomArrowIcon, XIcon } from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
@@ -69,7 +70,12 @@ export default function DropDownFollowList({
           }
         />
         {isDropDownMenuOpen ? (
-          <FlexBox gap={10} width={"fit-content"}>
+          <FlexBox
+            gap={10}
+            width={"fit-content"}
+            height={"fit-content"}
+            alignItems={"center"}
+          >
             <Style.SelectFollowOrFollowerBtn
               about={isFollowerList ? "lightgrey" : "white"}
               onClick={() => {
@@ -79,27 +85,21 @@ export default function DropDownFollowList({
             >
               {isFollowerList ? "팔로우로 전환" : "팔로워로 전환"}
             </Style.SelectFollowOrFollowerBtn>
-            <Image
-              width={20}
-              height={20}
-              alt="x"
-              src="/x.webp"
+            <XIcon
+              width={25}
+              height={25}
               onClick={() => {
                 setIsDropDownMenuOpen(false)
               }}
-              style={{ cursor: "pointer" }}
             />
           </FlexBox>
         ) : (
-          <Image
+          <BottomArrowIcon
             width={25}
             height={25}
-            alt="bottom-arrow"
-            src="/bottom-arrow.webp"
             onClick={() => {
               setIsDropDownMenuOpen(true)
             }}
-            style={{ cursor: "pointer" }}
           />
         )}
       </Style.Header>

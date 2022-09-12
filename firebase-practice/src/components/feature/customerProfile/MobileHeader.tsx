@@ -14,7 +14,8 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { CustomH2Light, CustomH4Light, FlexBox, Margin, ProfileIcon } from "ui"
+import { CustomH2Light, CustomH4Light, FlexBox, Margin } from "ui"
+import { ProfileIcon } from "icons"
 
 type Props = {
   userData: UserData
@@ -177,7 +178,7 @@ export default function MobileHeader({ userData }: Props) {
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
           <FlexBox width={90} height={90} style={{ flexShrink: 0 }}>
-            {userData.info.profileImage ? (
+            {userData.info.profileImage !== null ? (
               <Image
                 src={userData.info.profileImage}
                 alt="profile"

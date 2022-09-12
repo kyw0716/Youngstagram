@@ -1,5 +1,6 @@
 import { userDataState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
+import { CameraIcon } from "icons"
 import Image from "next/image"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
@@ -43,7 +44,7 @@ export default function FeedList({ FeedData, isCustomer: isMainPage }: Props) {
         <>
           {FeedData?.length === 0 && (
             <>
-              <Image src={"/camera.webp"} width={62} height={62} alt="camera" />
+              <CameraIcon width={62} height={62} />
               <CustomH2Light>사진 공유</CustomH2Light>
               <CustomH5Light>
                 상단 바에 있는 아이콘을 클릭하여 사진을 공유할 수 있습니다.

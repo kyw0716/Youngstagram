@@ -18,8 +18,9 @@ import {
 import getCurrentTime from "lib/getCurrentTime"
 import useWindowSize from "lib/useWindowSize"
 import getUserDataByUid from "lib/getUserDataByUid"
-import { useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { userDataState } from "@share/recoil/recoilList"
+import { LocationIcon, ProfileIcon } from "icons"
 
 type Props = {
   isOpen: boolean
@@ -205,6 +206,7 @@ export default function FeedUploadModal({
     feedData ? feedData.storageId : "",
   )
   const setCurrentUserData = useSetRecoilState(userDataState)
+  const currentUserData = useRecoilValue(userDataState)
 
   useEffect(() => {
     setRandomId(v4())
@@ -374,17 +376,18 @@ export default function FeedUploadModal({
           >
             <Style.InputSectionHeader>
               <FlexBox alignItems="center">
-                <Image
-                  src={
-                    authService.currentUser?.photoURL
-                      ? `${authService.currentUser?.photoURL}`
-                      : "/profile.webp"
-                  }
-                  alt="profile"
-                  width={30}
-                  height={30}
-                  style={{ borderRadius: "30px" }}
-                />
+                {currentUserData.info.profileImage ? (
+                  <Image
+                    src={currentUserData.info.profileImage}
+                    alt="profile"
+                    width={30}
+                    height={30}
+                    style={{ borderRadius: "30px" }}
+                  />
+                ) : (
+                  <ProfileIcon width={30} height={30} />
+                )}
+
                 <Margin direction="row" size={10} />
                 <CustomH5>{authService.currentUser?.displayName}</CustomH5>
               </FlexBox>
@@ -419,12 +422,7 @@ export default function FeedUploadModal({
                 value={location}
               />
               <Margin direction="row" size={10} />
-              <Image
-                src={"/location.webp"}
-                width={16}
-                height={16}
-                alt="location"
-              />
+              <LocationIcon width={16} height={16} />
             </Style.LocationInputSection>
           </Style.InputSection>
           <Style.SubmitButton

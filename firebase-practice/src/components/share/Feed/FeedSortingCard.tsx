@@ -10,9 +10,17 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
+import {
+  DeleteIcon,
+  DotMenuIcon,
+  EditIcon,
+  LockIcon,
+  LogoutIcon,
+  ProfileIcon,
+  UnLockIcon,
+} from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
@@ -336,30 +344,25 @@ export default function FeedSortingCard({ feedData }: Props) {
                 gap={15}
                 alignItems={"center"}
               >
-                <Image
-                  src={
-                    userData?.info.profileImage
-                      ? `${userData?.info.profileImage}`
-                      : "/profile.webp"
-                  }
-                  alt="creator"
-                  width={38}
-                  height={38}
-                  style={{ borderRadius: 38, cursor: "pointer" }}
-                />
+                {userData.info.profileImage ? (
+                  <Image
+                    src={userData?.info.profileImage}
+                    alt="creator"
+                    width={38}
+                    height={38}
+                    style={{ borderRadius: 38, cursor: "pointer" }}
+                  />
+                ) : (
+                  <ProfileIcon width={38} height={38} />
+                )}
+
                 <Style.HeaderText>
                   <Style.UserName>{userData?.info.name}</Style.UserName>
                   <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
                 </Style.HeaderText>
               </FlexBox>
               <Style.ThreeDotMenu onClick={handleThreeDotMenuClick}>
-                <Image
-                  src="/dot-menu.webp"
-                  alt="menu"
-                  width={20}
-                  height={15}
-                  style={{ cursor: "pointer" }}
-                />
+                <DotMenuIcon width={20} height={15} />
               </Style.ThreeDotMenu>
               {isMenuOpen ? (
                 <>
@@ -369,52 +372,24 @@ export default function FeedSortingCard({ feedData }: Props) {
                         setIsImageUploadModalOpen(true)
                       }}
                     >
-                      <Image
-                        src="/edit.webp"
-                        alt="edit"
-                        width={15}
-                        height={15}
-                        priority
-                      />
+                      <EditIcon width={15} height={15} />
                       편집
                     </Style.EditButton>
                     <Style.PrivateToggleButton onClick={handlePrivateToggle}>
                       {feedData.private ? (
-                        <Image
-                          src="/unLock.webp"
-                          alt="unlock"
-                          width={15}
-                          height={15}
-                        />
+                        <UnLockIcon width={15} height={15} />
                       ) : (
-                        <Image
-                          src="/lock.webp"
-                          alt="lock"
-                          width={15}
-                          height={15}
-                        />
+                        <LockIcon width={15} height={15} />
                       )}
 
                       {feedData.private ? "공개" : "비공개"}
                     </Style.PrivateToggleButton>
                     <Style.Deletebutton onClick={handleDeleteFeed}>
-                      <Image
-                        src="/delete.webp"
-                        alt="delete"
-                        width={15}
-                        height={15}
-                        priority
-                      />
+                      <DeleteIcon width={15} height={15} />
                       삭제
                     </Style.Deletebutton>
                     <Style.ExitButton onClick={handleThreeDotMenuClick}>
-                      <Image
-                        src="/logout.webp"
-                        alt="cancle"
-                        width={15}
-                        height={15}
-                        priority
-                      />
+                      <LogoutIcon width={15} height={15} />
                       취소
                     </Style.ExitButton>
                   </Style.ButtonBox>
@@ -424,15 +399,23 @@ export default function FeedSortingCard({ feedData }: Props) {
                 <></>
               )}
             </Style.ImageHeader>
-            <Image
-              src={feedData.imageUrl ? feedData.imageUrl : "/empty.webp"}
-              width={470}
-              height={600}
-              placeholder="blur"
-              blurDataURL="/empty.webp"
-              alt="Image"
-              priority
-            />
+            {feedData.imageUrl ? (
+              <Image
+                src={feedData.imageUrl}
+                width={470}
+                height={600}
+                alt="Image"
+                priority
+              />
+            ) : (
+              <Image
+                src="https://giphy.com/embed/wnYB3vx9t6PXiq1ubB"
+                width={470}
+                height={600}
+                alt="Image"
+              />
+            )}
+
             <Margin direction="column" size={10} />
             <FlexBox
               width={"100%"}

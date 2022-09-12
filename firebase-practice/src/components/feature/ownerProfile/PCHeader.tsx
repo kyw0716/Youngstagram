@@ -10,8 +10,8 @@ import {
   CustomH4Light,
   FlexBox,
   Margin,
-  ProfileIcon,
 } from "ui"
+import { AllFileIcon, LockIcon, ProfileIcon, UnLockIcon } from "icons"
 
 const Style = {
   ProfileHeader: styled.div`
@@ -93,11 +93,7 @@ export default function PCHeader() {
         <Margin direction="row" size={80} />
         {userData.info.profileImage ? (
           <Image
-            src={
-              userData.info.profileImage
-                ? `${userData.info.profileImage}`
-                : "/profile.webp"
-            }
+            src={userData.info.profileImage}
             width={150}
             height={150}
             style={{ borderRadius: 150 }}
@@ -157,7 +153,7 @@ export default function PCHeader() {
           }}
         >
           <CustomH4Light>전체 게시물</CustomH4Light>
-          <Image src="/all-file.webp" alt="allFile" width={15} height={15} />
+          <AllFileIcon width={15} height={15} />
         </Style.SortToAll>
         <Style.SortToPublic
           about={feedDataType}
@@ -166,7 +162,7 @@ export default function PCHeader() {
           }}
         >
           <CustomH4Light>공개 게시물</CustomH4Light>
-          <Image src="/unLock.webp" alt="publicFile" width={15} height={15} />
+          <UnLockIcon width={15} height={15} />
         </Style.SortToPublic>
         <Style.SortToPrivate
           about={feedDataType}
@@ -175,7 +171,7 @@ export default function PCHeader() {
           }}
         >
           <CustomH4Light>비공개 게시물</CustomH4Light>
-          <Image src="/lock.webp" alt="privateFile" width={15} height={15} />
+          <LockIcon width={15} height={15} />
         </Style.SortToPrivate>
       </Style.SortWrapper>
     </>
