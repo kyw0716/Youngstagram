@@ -7,7 +7,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { CustomH6Light, FlexBox, Margin } from "ui"
+import { CustomH6Light, FlexBox, Margin, ProfileIcon } from "ui"
 
 type Props = {
   userId: string
@@ -47,17 +47,17 @@ export default function FollowCard({ userId }: Props) {
           }}
         >
           <FlexBox width={56} height={56}>
-            <Image
-              width={56}
-              height={56}
-              src={
-                userData.info.profileImage
-                  ? userData.info.profileImage
-                  : "/profile.webp"
-              }
-              alt="profile"
-              style={{ borderRadius: 56 }}
-            />
+            {userData.info.profileImage ? (
+              <Image
+                width={56}
+                height={56}
+                src={userData.info.profileImage}
+                alt="profile"
+                style={{ borderRadius: 56 }}
+              />
+            ) : (
+              <ProfileIcon width={56} height={56} />
+            )}
           </FlexBox>
           <Margin direction="column" size={7} />
           {userData.info.name && (

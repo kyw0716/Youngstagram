@@ -8,6 +8,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
+import { ProfileIcon } from "ui"
 
 type Props = {
   userId: string
@@ -40,24 +41,35 @@ export default function UserCard({ userId }: Props) {
     <Style.Wrapper>
       {userData && (
         <>
-          <Image
-            width={40}
-            height={40}
-            src={
-              userData.info.profileImage
-                ? `${userData?.info.profileImage}`
-                : "/profile.webp"
-            }
-            alt={"profile"}
-            style={{ borderRadius: "40px", cursor: "pointer" }}
-            onClick={() => {
-              if (currentUserData.info.userId === userData?.info.userId) {
-                router.push(`/u/${currentUserData.info.userId}`)
-                return
-              }
-              router.push(`/profile/${userData.info.userId}`)
-            }}
-          />
+          {userData.info.profileImage ? (
+            <Image
+              width={40}
+              height={40}
+              src={userData.info.profileImage}
+              alt={"profile"}
+              style={{ borderRadius: "40px", cursor: "pointer" }}
+              onClick={() => {
+                if (currentUserData.info.userId === userData?.info.userId) {
+                  router.push(`/loading?path=mypage`)
+                  return
+                }
+                router.push(`/loading?path=profile/${userData.info.userId}`)
+              }}
+            />
+          ) : (
+            <ProfileIcon
+              width={40}
+              height={40}
+              onClick={() => {
+                if (currentUserData.info.userId === userData?.info.userId) {
+                  router.push(`/loading?path=mypage`)
+                  return
+                }
+                router.push(`/loading?path=profile/${userData.info.userId}`)
+              }}
+            />
+          )}
+
           {userData?.info.name}
         </>
       )}

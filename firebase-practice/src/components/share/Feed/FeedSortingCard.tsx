@@ -424,15 +424,23 @@ export default function FeedSortingCard({ feedData }: Props) {
                 <></>
               )}
             </Style.ImageHeader>
-            <Image
-              src={feedData.imageUrl ? feedData.imageUrl : "/empty.webp"}
-              width={470}
-              height={600}
-              placeholder="blur"
-              blurDataURL="/empty.webp"
-              alt="Image"
-              priority
-            />
+            {feedData.imageUrl ? (
+              <Image
+                src={feedData.imageUrl}
+                width={470}
+                height={600}
+                alt="Image"
+                priority
+              />
+            ) : (
+              <Image
+                src="https://giphy.com/embed/wnYB3vx9t6PXiq1ubB"
+                width={470}
+                height={600}
+                alt="Image"
+              />
+            )}
+
             <Margin direction="column" size={10} />
             <FlexBox
               width={"100%"}
