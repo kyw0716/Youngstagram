@@ -11,7 +11,7 @@ import {
   UserCredential,
 } from "firebase/auth"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { authService, DBService } from "@FireBase"
 import styled from "styled-components"
 import { CustomH6Light, FlexBox, Margin } from "ui"
@@ -110,6 +110,8 @@ export default function Auth() {
   const [confirmPassword, setConfirmPassword] = useState<string>("")
   const [isNewAccount, setIsNewAccount] = useState<boolean>(false)
   const [name, setName] = useState<string>("")
+
+  const [isLogin, setIsLogin] = useState<boolean>(false)
   const githubProvider = new GithubAuthProvider()
   const googleProvider = new GoogleAuthProvider()
 
@@ -171,7 +173,7 @@ export default function Auth() {
         return signInWithEmailAndPassword(authService, Email, Password)
           .then(async (response) => {
             if (response) {
-              router.push("/loading")
+              setIsLogin(true)
               CreateNewUserToFirestore(response)
             }
           })
@@ -196,7 +198,7 @@ export default function Auth() {
   const handleGoogleAuth = async () => {
     await signInWithPopup(authService, googleProvider)
       .then(async (response) => {
-        router.push("/loading")
+        setIsLogin(true)
         if (response) {
           await CreateNewUserToFirestore(response)
         }
@@ -216,7 +218,7 @@ export default function Auth() {
   const handleGitHubAuth = async () => {
     await signInWithPopup(authService, githubProvider)
       .then(async (response) => {
-        router.push("/loading")
+        setIsLogin(true)
         if (response) {
           await CreateNewUserToFirestore(response)
         }
@@ -251,6 +253,10 @@ export default function Auth() {
       },
     )
   }
+
+  useEffect(() => {
+    if (isLogin) router.push("/loading")
+  }, [isLogin])
 
   return (
     <Layout>
