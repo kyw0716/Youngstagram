@@ -11,13 +11,12 @@ import {
   UserCredential,
 } from "firebase/auth"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { authService, DBService } from "@FireBase"
 import styled from "styled-components"
 import { CustomH6Light, FlexBox, Margin } from "ui"
 import { doc, setDoc, updateDoc } from "firebase/firestore"
 import Layout from "components/layout"
-import Image from "next/image"
 import { UserInfo } from "backend/dto"
 import { GitHubIcon, GoogleIcon } from "icons"
 
@@ -199,7 +198,7 @@ export default function Auth() {
       .then(async (response) => {
         router.push("/loading")
         if (response) {
-          CreateNewUserToFirestore(response)
+          await CreateNewUserToFirestore(response)
         }
       })
       .catch((error) => {
@@ -219,7 +218,7 @@ export default function Auth() {
       .then(async (response) => {
         router.push("/loading")
         if (response) {
-          CreateNewUserToFirestore(response)
+          await CreateNewUserToFirestore(response)
         }
       })
       .catch((error) => {

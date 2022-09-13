@@ -3,7 +3,6 @@ import { userDataState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import { onAuthStateChanged } from "firebase/auth"
 import { doc, getDoc } from "firebase/firestore"
-import getUserDataByUid from "lib/getUserDataByUid"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useRecoilState } from "recoil"
@@ -30,7 +29,12 @@ export default function Loading() {
       `${authService.currentUser?.uid}`,
     )
     await getDoc(profileRef).then((data) => {
-      if (data) setCurrentUserData(data.data() as UserData)
+      if (data) {
+        setCurrentUserData(data.data() as UserData)
+        if (data.data() === undefined) {
+          handleCurrentUserByDBData()
+        }
+      }
     })
   }
   useEffect(() => {
@@ -39,11 +43,7 @@ export default function Loading() {
         router.push("/auth")
         return
       }
-      if (
-        user &&
-        currentUserData !== undefined &&
-        currentUserData.info.userId === ""
-      ) {
+      if (currentUserData && currentUserData.info.userId === "") {
         handleCurrentUserByDBData()
       }
     })
