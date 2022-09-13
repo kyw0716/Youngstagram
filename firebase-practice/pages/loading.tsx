@@ -4,7 +4,7 @@ import { UserData } from "backend/dto"
 import { onAuthStateChanged } from "firebase/auth"
 import { doc, getDoc } from "firebase/firestore"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRecoilState } from "recoil"
 import styled from "styled-components"
 import { LoadingPage } from "ui"
@@ -22,7 +22,9 @@ const Style = {
 export default function Loading() {
   const router = useRouter()
   const [currentUserData, setCurrentUserData] = useRecoilState(userDataState)
+  const [timer, setTimer] = useState<NodeJS.Timer>()
   const handleCurrentUserByDBData = async () => {
+    console.log("handleCurrentUserByDBData 함수 호출")
     const profileRef = doc(
       DBService,
       "users",
@@ -32,7 +34,11 @@ export default function Loading() {
       if (data) {
         setCurrentUserData(data.data() as UserData)
         if (data.data() === undefined) {
-          handleCurrentUserByDBData()
+          setTimer(
+            setTimeout(() => {
+              handleCurrentUserByDBData()
+            }, 300),
+          )
         }
       }
     })
@@ -51,6 +57,7 @@ export default function Loading() {
   useEffect(() => {
     if (currentUserData === undefined) return
     if (currentUserData.info.userId !== "") {
+      clearTimeout(timer)
       router.replace(
         router.query.path === undefined ? "/" : `/${router.query.path}`,
       )
