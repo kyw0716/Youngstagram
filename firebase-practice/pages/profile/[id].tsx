@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react"
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
 import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { GetServerSideProps } from "next"
-import ProfileHeader from "@feature/customerProfile"
+import ProfileHeader from "@feature/profile/customerProfile"
 import styled from "styled-components"
-import { CustomH2, FlexBox, Margin } from "ui"
+import { Margin } from "ui"
 import Layout from "components/layout"
-import Image from "next/image"
 import { FeedData, UserData } from "backend/dto"
 import { useRouter } from "next/router"
 import FeedGrid from "@share/Feed/FeedGrid"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue } from "recoil"
 import { userDataState } from "@share/recoil/recoilList"
-import { onAuthStateChanged } from "firebase/auth"
-import getUserDataByUid from "lib/getUserDataByUid"
 
 const Style = {
   Wrapper: styled.div`
