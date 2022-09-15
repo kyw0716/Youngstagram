@@ -124,7 +124,11 @@ export default function Header() {
         <Style.Nav>
           <Style.Logo
             onClick={() => {
-              if (userData !== undefined && userData.info.userId !== "")
+              if (
+                userData !== undefined &&
+                userData.info.userId !== "" &&
+                router.isReady
+              )
                 router.push("/loading")
             }}
           >
@@ -152,7 +156,6 @@ export default function Header() {
                 {userData.info.profileImage ? (
                   <Image
                     src={userData.info.profileImage}
-                    priority
                     onClick={handleMenuOpen}
                     about="profile"
                     width={24}
