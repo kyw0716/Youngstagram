@@ -44,6 +44,7 @@ export default function Loading() {
     })
   }
   useEffect(() => {
+    handleCurrentUserByDBData()
     onAuthStateChanged(authService, (user) => {
       if (user === null) {
         router.push("/auth")
