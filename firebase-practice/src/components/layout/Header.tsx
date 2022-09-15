@@ -109,6 +109,7 @@ const Style = {
 
 export default function Header() {
   const router = useRouter()
+
   const [isMeunOpen, setIsMenuOpen] = useState<boolean>(false)
   const handleMenuOpen = () => {
     setIsMenuOpen((current) => !current)
@@ -124,11 +125,7 @@ export default function Header() {
         <Style.Nav>
           <Style.Logo
             onClick={() => {
-              if (
-                userData !== undefined &&
-                userData.info.userId !== "" &&
-                router.isReady
-              )
+              if (userData !== undefined && userData.info.userId !== "")
                 router.push("/loading")
             }}
           >
