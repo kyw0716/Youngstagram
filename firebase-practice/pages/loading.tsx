@@ -24,7 +24,6 @@ export default function Loading() {
   const [currentUserData, setCurrentUserData] = useRecoilState(userDataState)
   const [timer, setTimer] = useState<NodeJS.Timer>()
   const handleCurrentUserByDBData = async () => {
-    console.log("handleCurrentUserByDBData 함수 호출")
     const profileRef = doc(
       DBService,
       "users",
