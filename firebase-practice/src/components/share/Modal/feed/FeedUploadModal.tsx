@@ -9,12 +9,14 @@ type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   feedData?: FeedData
+  setIsUploaded: React.Dispatch<SetStateAction<boolean>>
 }
 
 export default function FeedUploadModal({
   setIsOpen,
   isOpen,
   feedData,
+  setIsUploaded,
 }: Props) {
   const [isFileExist, setIsFileExist] = useState<boolean>(false)
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
@@ -49,6 +51,7 @@ export default function FeedUploadModal({
           imageFile={imageFile}
           setImageFile={setImageFile}
           setIsFileExist={setIsFileExist}
+          setIsUploaded={setIsUploaded}
         />
       ) : (
         <ImageInput

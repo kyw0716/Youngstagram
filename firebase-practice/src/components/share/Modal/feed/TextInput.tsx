@@ -12,6 +12,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { LocationIcon, ProfileIcon } from "icons"
 import getCurrentTime from "lib/getCurrentTime"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import React, { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
@@ -25,6 +26,7 @@ type Props = {
   imageFile: File | undefined
   setImageFile: React.Dispatch<SetStateAction<File | undefined>>
   setIsFileExist: React.Dispatch<SetStateAction<boolean>>
+  setIsUploaded: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -160,9 +162,12 @@ export default function TextInput({
   imageFile,
   setImageFile,
   setIsFileExist,
+  setIsUploaded,
 }: Props) {
+  const router = useRouter()
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
   const currentUserData = useRecoilValue(userDataState)
+
   const [desc, setDesc] = useState<string>(feedData ? feedData.desc : "")
   const [location, setLocation] = useState<string>(
     feedData ? feedData.location : "",
@@ -187,8 +192,10 @@ export default function TextInput({
       await uploadBytes(storageRef, imageFile)
         .then(
           async () =>
-            await getDownloadURL(storageRef).then((response) => {
-              uploadToFirestore(response)
+            await getDownloadURL(storageRef).then(async (response) => {
+              await uploadToFirestore(response).then(() => {
+                setIsUploaded(true)
+              })
             }),
         )
         .catch((error) => {
@@ -267,8 +274,10 @@ export default function TextInput({
     await updateDoc(firestoreAllRef, {
       feed: arrayRemove(feed),
     })
-      .then(() => {
-        uploadToFirestore(feedData.imageUrl)
+      .then(async () => {
+        await uploadToFirestore(feedData.imageUrl).then(() => {
+          setIsUploaded(true)
+        })
       })
       .catch((error) => console.log(error.code))
   }
