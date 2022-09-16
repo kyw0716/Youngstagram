@@ -1,10 +1,9 @@
 import OtherMessageWrapper from "@feature/dm/OtherMessageWrapper"
-import { Message, UserData } from "backend/dto"
+import { Message } from "backend/dto"
 import { CustomH4, FlexBox, Margin } from "ui"
 import MyMessageWrapper from "@feature/dm/MyMessageWrapper"
 import styled from "styled-components"
 import { useEffect, useRef, useState } from "react"
-import getUserDataByUid from "lib/getUserDataByUid"
 import { DBService } from "@FireBase"
 import UserCard from "@feature/dm/UserCard"
 import { v4 } from "uuid"
@@ -91,13 +90,9 @@ export default function PCDM() {
     })
   }, [messageData.length])
   useEffect(() => {
-    getUserDataByUid(userData.info.userId).then((data) => {
-      if (data) {
-        setCurrentUserFollowList((data as UserData).follow)
-        setCurrentUserFollowerList((data as UserData).follower)
-      }
-    })
-  }, [])
+    setCurrentUserFollowList(userData.follow)
+    setCurrentUserFollowerList(userData.follower)
+  }, [userData])
   useEffect(() => {
     if (selectedUserId === "") {
       setMessageData([])
@@ -133,6 +128,7 @@ export default function PCDM() {
                 setIsFollowerList((current) => !current)
                 setSelectedUserId("")
               }}
+              style={{ fontSize: 13 }}
             >
               {isFollowerList ? "팔로우로 전환" : "팔로워로 전환"}
             </Style.SelectFollowOrFollowerBtn>
