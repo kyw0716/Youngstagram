@@ -109,6 +109,7 @@ const Style = {
 
 export default function Header() {
   const router = useRouter()
+
   const [isMeunOpen, setIsMenuOpen] = useState<boolean>(false)
   const handleMenuOpen = () => {
     setIsMenuOpen((current) => !current)
@@ -152,7 +153,6 @@ export default function Header() {
                 {userData.info.profileImage ? (
                   <Image
                     src={userData.info.profileImage}
-                    priority
                     onClick={handleMenuOpen}
                     about="profile"
                     width={24}

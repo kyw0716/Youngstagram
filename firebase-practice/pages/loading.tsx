@@ -23,8 +23,9 @@ export default function Loading() {
   const router = useRouter()
   const [currentUserData, setCurrentUserData] = useRecoilState(userDataState)
   const [timer, setTimer] = useState<NodeJS.Timer>()
+  const [isDataReady, setIsDataReady] = useState<boolean>(false)
+  const [isLogOut, setIsLogOut] = useState<boolean>(false)
   const handleCurrentUserByDBData = async () => {
-    console.log("handleCurrentUserByDBData 함수 호출")
     const profileRef = doc(
       DBService,
       "users",
@@ -44,26 +45,39 @@ export default function Loading() {
     })
   }
   useEffect(() => {
+    handleCurrentUserByDBData()
     onAuthStateChanged(authService, (user) => {
       if (user === null) {
-        router.push("/auth")
+        setIsLogOut(true)
         return
       }
       if (currentUserData && currentUserData.info.userId === "") {
         handleCurrentUserByDBData()
       }
     })
+    // eslint-disable-next-line
   }, [])
   useEffect(() => {
     if (currentUserData === undefined) return
     if (currentUserData.info.userId !== "") {
       clearTimeout(timer)
+      setIsDataReady(true)
+      return
+    }
+    // eslint-disable-next-line
+  }, [currentUserData, router])
+
+  useEffect(() => {
+    if (isDataReady)
       router.replace(
         router.query.path === undefined ? "/" : `/${router.query.path}`,
       )
-      return
-    }
-  }, [currentUserData, router])
+    // eslint-disable-next-line
+  }, [isDataReady])
+  useEffect(() => {
+    if (isLogOut) router.push("/auth")
+    // eslint-disable-next-line
+  }, [isLogOut])
 
   return (
     <Style.Wrapper>

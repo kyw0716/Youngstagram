@@ -2,31 +2,26 @@ import { authService, DBService, storageService } from "@FireBase"
 import { userDataState } from "@share/recoil/recoilList"
 import { UserInfo } from "backend/dto"
 import { updateProfile } from "firebase/auth"
-import { doc, DocumentData, onSnapshot, updateDoc } from "firebase/firestore"
+import { doc, updateDoc } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { ProfileIcon } from "icons"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import { CustomH6, FlexBox, Margin } from "ui"
+import { FlexBox, Margin } from "ui"
 import YoungstagramModal from "../YoungstagramModal"
+import ImageInput from "./ImageInput"
+import NameInput from "./NameInput"
 
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   isPC: boolean
 }
+
 const Style = {
-  NameInput: styled.input`
-    width: ${(props) => (props.about === "true" ? "350px" : "100%")};
-    height: ${(props) => (props.about === "true" ? "50px" : "30px")};
-    border: 1.5px solid #bdbdbd;
-    border-radius: ${(props) => (props.about === "true" ? "10px" : "5px")};
-    padding-left: 1vw;
-    margin-bottom: ${(props) => (props.about === "true" ? "30px" : "5px")};
-    font-size: 16px;
-  `,
   SubmitButton: styled.div`
     width: ${(props) => (props.about === "true" ? "100px" : "70px")};
     height: ${(props) => (props.about === "true" ? "40px" : "25px")};
@@ -71,11 +66,11 @@ const Style = {
 }
 
 export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
+  const router = useRouter()
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
   const [isClicked, setIsClicked] = useState<boolean>(false)
 
   const [imagePreviewSrc, setImagePreviewSrc] = useState<string>("")
-  const [imageFileName, setImageFileName] = useState<string>("")
   const [imageFile, setImageFile] = useState<File>()
   const [userName, setUserName] = useState<string>("")
 
@@ -83,17 +78,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   const [imageUrlToAuthService, setImageUrlToAuthService] = useState<string>("")
 
   const currentUserData = useRecoilValue(userDataState)
-
-  const encodeFileToBase64 = (fileblob: File) => {
-    const reader = new FileReader()
-    if (fileblob === undefined) return
-    reader.readAsDataURL(fileblob)
-    return new Promise(() => {
-      reader.onload = () => {
-        setImagePreviewSrc(String(reader.result))
-      }
-    })
-  }
 
   const handleSubmit = () => {
     setIsClicked(true)
@@ -151,12 +135,12 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
   useEffect(() => {
     if (isSubmit) {
       updateProfileNameAndImage().then(() => {
-        setImageFileName("")
         setImagePreviewSrc("")
         setUserName("")
         setIsOpen(false)
         setIsClicked(false)
         setIsSubmit(false)
+        router.replace("/loading?path=mypage")
       })
     }
     /*eslint-disable-next-line*/
@@ -202,46 +186,17 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
             justifyContents="center"
           >
             <FlexBox width="100%" height="fit-content" column={true}>
-              <FlexBox column={true}>
-                <label>
-                  <CustomH6>이름 변경:</CustomH6>
-                </label>
-                <Margin direction="column" size={isPC ? 10 : 5} />
-                <Style.NameInput
-                  about={`${isPC}`}
-                  id="PROFILE-NAME-INPUT"
-                  placeholder={`${authService.currentUser?.displayName}`}
-                  onChange={(event) => {
-                    setUserName(event.target.value)
-                  }}
-                  value={userName}
-                />
-              </FlexBox>
-              <CustomH6>이미지 변경:</CustomH6>
-              <Margin direction="column" size={isPC ? 10 : 5} />
-              <FlexBox width={"100%"}>
-                <Style.ImagePreviewName about={`${isPC}`}>
-                  {imageFileName ? `${imageFileName.slice(0, 10)}...` : ""}
-                </Style.ImagePreviewName>
-                <Style.ProfileEditInputLabel
-                  htmlFor="PROFILE-Edit"
-                  about={`${isPC}`}
-                >
-                  이미지 선택
-                </Style.ProfileEditInputLabel>
-                <Style.ProflieImageInput
-                  type="file"
-                  id="PROFILE-Edit"
-                  accept="image/*"
-                  onChange={(event) => {
-                    if (event.target.files !== null) {
-                      setImageFile(event.target.files[0])
-                      setImageFileName(event.target.files[0].name)
-                      encodeFileToBase64(event.target.files[0])
-                    }
-                  }}
-                />
-              </FlexBox>
+              <NameInput
+                isPC={isPC}
+                userName={userName}
+                setUserName={setUserName}
+              />
+              <ImageInput
+                isPC={isPC}
+                setImageFile={setImageFile}
+                setImagePreviewSrc={setImagePreviewSrc}
+                isSubmit={isSubmit}
+              />
             </FlexBox>
           </FlexBox>
           <Margin direction="row" size={15} />
@@ -253,7 +208,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
               작성완료
             </Style.SubmitButton>
           )}
-
           <Margin direction="row" size={isPC ? 20 : 10} />
         </FlexBox>
         <Margin direction="column" size={15} />

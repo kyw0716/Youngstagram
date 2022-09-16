@@ -1,6 +1,6 @@
 import "../styles/globals.css"
 import type { AppProps } from "next/app"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { onAuthStateChanged } from "firebase/auth"
 import { authService } from "@FireBase"
@@ -8,11 +8,15 @@ import { RecoilRoot } from "recoil"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
+  const [isLogOut, setIsLogOut] = useState<boolean>(false)
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
-      if (user === null) router.push("/loading")
+      if (user === null) setIsLogOut(true)
     })
   }, [])
+  useEffect(() => {
+    if (isLogOut) router.push("/loading")
+  }, [isLogOut])
 
   useEffect(() => {
     let vh = window.innerHeight * 0.01
