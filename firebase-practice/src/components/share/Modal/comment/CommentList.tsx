@@ -48,7 +48,7 @@ const Style = {
   `,
   CommentAreaHeader: styled.div`
     display: flex;
-    width: 50%;
+    width: 100%;
     height: fit-content;
     padding-left: 15px;
     flex-shrink: 0;
