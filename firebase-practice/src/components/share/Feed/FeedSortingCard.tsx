@@ -1,6 +1,6 @@
 import { authService, DBService, storageService } from "@FireBase"
 import { userDataState } from "@share/recoil/recoilList"
-import { FeedData, UserData } from "backend/dto"
+import { FeedData, UserData, UserInfo } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -21,12 +21,19 @@ import {
 } from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
+  CustomH3Light,
+  CustomH4,
+  CustomH4Light,
+  CustomH5,
+  CustomH5Light,
   CustomH6,
+  CustomH6Light,
   FlexBox,
   FullHeart,
   HeartIcon,
@@ -206,14 +213,18 @@ const Style = {
 }
 
 export default function FeedSortingCard({ feedData }: Props) {
+  const router = useRouter()
+
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
     useState<boolean>(false)
-  const [isShowMore, setIsShowMore] = useState<boolean>(false)
   const userData = useRecoilValue(userDataState)
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
+  const [creatorInfo, setCreatorInfo] = useState<UserInfo>()
+
+  const [isUploaded, setIsUploaded] = useState<boolean>(false)
 
   const setCurrentUserdata = useSetRecoilState(userDataState)
 
@@ -224,7 +235,15 @@ export default function FeedSortingCard({ feedData }: Props) {
     onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (doc) => {
       setLikerList(doc.data()?.likerList)
     })
+    onSnapshot(doc(DBService, "users", `${feedData.creator}`), (doc) => {
+      setCreatorInfo(doc.data()?.info)
+    })
   }, [])
+
+  useEffect(() => {
+    if (isUploaded)
+      router.replace(`/loading?path=${router.pathname.replace("/", "")}`)
+  }, [isUploaded])
 
   const handleDeleteFeed = async () => {
     const feed: FeedData = {
@@ -335,6 +354,7 @@ export default function FeedSortingCard({ feedData }: Props) {
             isOpen={isImageUploadModalOpen}
             setIsOpen={setIsImageUploadModalOpen}
             feedData={feedData}
+            setIsUploaded={setIsUploaded}
           />
           <Style.ImageCard>
             <Style.ImageHeader>
@@ -457,47 +477,48 @@ export default function FeedSortingCard({ feedData }: Props) {
               )}
             </FlexBox>
             <Style.CommentBox>
-              {feedData.desc.length > 20 ? (
-                <>
-                  {isShowMore ? (
-                    <span>
-                      {feedData.desc}
-                      <CustomH6
-                        style={{
-                          cursor: "pointer",
-                          fontWeight: "bolder",
-                          color: "black",
-                        }}
-                        onClick={() => {
-                          setIsShowMore(false)
-                        }}
-                      >
-                        접기
-                      </CustomH6>
-                    </span>
-                  ) : (
-                    <FlexBox alignItems="flex-end">
-                      {feedData.desc.slice(0, 20)}
-                      <Margin direction="row" size={10} />
-                      <CustomH6
-                        style={{
-                          cursor: "pointer",
-                          fontWeight: "bolder",
-                          color: "black",
-                          flexShrink: 0,
-                        }}
-                        onClick={() => {
-                          setIsShowMore(true)
-                        }}
-                      >
-                        더보기...
-                      </CustomH6>
-                    </FlexBox>
-                  )}
-                </>
-              ) : (
-                <>{feedData.desc}</>
-              )}
+              <FlexBox alignItems="center">
+                {feedData.desc.length > 0 ? (
+                  <CustomH5 style={{ flexShrink: "0" }}>
+                    {creatorInfo?.name}
+                  </CustomH5>
+                ) : (
+                  <CustomH6
+                    style={{
+                      cursor: "pointer",
+                      borderBottom: "1px solid lightgrey",
+                    }}
+                    onClick={() => {
+                      setIsCommentModalOpen(true)
+                    }}
+                  >
+                    더보기
+                  </CustomH6>
+                )}
+                <Margin direction="row" size={10} />
+                {feedData.desc.length > 10 ? (
+                  <FlexBox alignItems="center">
+                    <CustomH5Light>{`${feedData.desc.slice(
+                      0,
+                      10,
+                    )}...`}</CustomH5Light>
+                    <Margin direction="row" size={5} />
+                    <CustomH6
+                      style={{
+                        cursor: "pointer",
+                        borderBottom: "1px solid lightgrey",
+                      }}
+                      onClick={() => {
+                        setIsCommentModalOpen(true)
+                      }}
+                    >
+                      더보기
+                    </CustomH6>
+                  </FlexBox>
+                ) : (
+                  <CustomH5Light>{feedData.desc}</CustomH5Light>
+                )}
+              </FlexBox>
             </Style.CommentBox>
           </Style.ImageCard>
         </>
