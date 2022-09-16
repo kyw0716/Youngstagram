@@ -9,7 +9,7 @@ type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   feedData?: FeedData
-  setIsUploaded: React.Dispatch<SetStateAction<boolean>>
+  setIsUploaded?: React.Dispatch<SetStateAction<boolean>>
 }
 
 export default function FeedUploadModal({

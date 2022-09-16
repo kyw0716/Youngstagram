@@ -26,7 +26,7 @@ type Props = {
   imageFile: File | undefined
   setImageFile: React.Dispatch<SetStateAction<File | undefined>>
   setIsFileExist: React.Dispatch<SetStateAction<boolean>>
-  setIsUploaded: React.Dispatch<SetStateAction<boolean>>
+  setIsUploaded?: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -194,7 +194,7 @@ export default function TextInput({
           async () =>
             await getDownloadURL(storageRef).then(async (response) => {
               await uploadToFirestore(response).then(() => {
-                setIsUploaded(true)
+                if (setIsUploaded) setIsUploaded(true)
               })
             }),
         )
@@ -276,7 +276,7 @@ export default function TextInput({
     })
       .then(async () => {
         await uploadToFirestore(feedData.imageUrl).then(() => {
-          setIsUploaded(true)
+          if (setIsUploaded) setIsUploaded(true)
         })
       })
       .catch((error) => console.log(error.code))
