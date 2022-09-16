@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import FeedSortList from "@share/Feed/FeedSortList"
-import ProfileHeader from "@feature/profile/ownerProfile"
+import ProfileHeader from "@feature/profile/mypage"
 import styled from "styled-components"
 import Layout from "components/layout"
 import { FeedData } from "backend/dto"

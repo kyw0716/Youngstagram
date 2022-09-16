@@ -12,6 +12,7 @@ import {
   Margin,
 } from "ui"
 import { AllFileIcon, LockIcon, ProfileIcon, UnLockIcon } from "icons"
+import FollowListModal from "@share/Modal/follow/FollowListModal"
 
 const Style = {
   ProfileHeader: styled.div`
@@ -84,11 +85,21 @@ const Style = {
 
 export default function PCHeader() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isFollowListModalOpen, setIsFollowListModalOpen] =
+    useState<boolean>(false)
   const [feedDataType, setFeedDataType] = useRecoilState(FeedDataFilter)
+  const [isFollower, setIsFollower] = useState<boolean>(false)
   const userData = useRecoilValue(userDataState)
   return (
     <>
       <ProfileEditModal isOpen={isOpen} setIsOpen={setIsOpen} isPC={true} />
+      <FollowListModal
+        userList={isFollower ? userData.follower : userData.follow}
+        isOpen={isFollowListModalOpen}
+        setIsOpen={setIsFollowListModalOpen}
+        title={isFollower ? "팔로워" : "팔로우"}
+        isPC={true}
+      />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
         {userData.info.profileImage ? (
@@ -121,28 +132,48 @@ export default function PCHeader() {
             <CustomH3Light>이메일: {userData.info.email}</CustomH3Light>
           </FlexBox>
           <Margin direction="column" size={15} />
-          {feedDataType === "all" && (
-            <CustomH3Light>
-              게시물: {userData.feed ? userData.feed.length : `0`}
+          <FlexBox gap={30}>
+            {feedDataType === "all" && (
+              <CustomH3Light>
+                전체 게시물: {userData.feed ? userData.feed.length : `0`}
+              </CustomH3Light>
+            )}
+            {feedDataType === "public" && (
+              <CustomH3Light>
+                공개 게시물:{" "}
+                {userData.feed
+                  ? userData.feed.length -
+                    userData.feed.filter((eachFeed) => eachFeed.private).length
+                  : `0`}
+              </CustomH3Light>
+            )}
+            {feedDataType === "private" && (
+              <CustomH3Light>
+                숨김 게시물:{" "}
+                {userData.feed
+                  ? userData.feed.filter((eachFeed) => eachFeed.private).length
+                  : `0`}
+              </CustomH3Light>
+            )}
+            <CustomH3Light
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setIsFollower(true)
+                setIsFollowListModalOpen(true)
+              }}
+            >
+              팔로우: {userData.follow.length}
             </CustomH3Light>
-          )}
-          {feedDataType === "public" && (
-            <CustomH3Light>
-              공개 게시물:{" "}
-              {userData.feed
-                ? userData.feed.length -
-                  userData.feed.filter((eachFeed) => eachFeed.private).length
-                : `0`}
+            <CustomH3Light
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setIsFollower(false)
+                setIsFollowListModalOpen(true)
+              }}
+            >
+              팔로워: {userData.follower.length}
             </CustomH3Light>
-          )}
-          {feedDataType === "private" && (
-            <CustomH3Light>
-              비공개 게시물:{" "}
-              {userData.feed
-                ? userData.feed.filter((eachFeed) => eachFeed.private).length
-                : `0`}
-            </CustomH3Light>
-          )}
+          </FlexBox>
         </Style.ProfileInfo>
       </Style.ProfileHeader>
       <Style.SortWrapper>
@@ -170,7 +201,7 @@ export default function PCHeader() {
             setFeedDataType("private")
           }}
         >
-          <CustomH4Light>비공개 게시물</CustomH4Light>
+          <CustomH4Light>숨김 게시물</CustomH4Light>
           <LockIcon width={15} height={15} />
         </Style.SortToPrivate>
       </Style.SortWrapper>
