@@ -12,6 +12,7 @@ export default function Dm() {
   const currentUserData = useRecoilValue(userDataState)
   const router = useRouter()
   useEffect(() => {
+    console.log(currentUserData.info.userId)
     if (currentUserData.info.userId === "") router.replace("/loading?path=dm")
   }, [currentUserData])
   return (
