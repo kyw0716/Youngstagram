@@ -4,7 +4,7 @@ import { userDataState } from "@share/recoil/recoilList"
 import { signOut } from "firebase/auth"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
 import { DMIcon, FlexBox, HomeIcon, ImageUploadIcon } from "ui"
@@ -118,9 +118,20 @@ export default function Header() {
   const userData = useRecoilValue(userDataState)
   const resetUserData = useResetRecoilState(userDataState)
 
+  const [isUploaded, setIsUploaded] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (isUploaded)
+      router.replace(`/loading?path=${router.pathname.replace("/", "")}`)
+  }, [isUploaded])
+
   return (
     <>
-      <FeedUploadModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
+      <FeedUploadModal
+        isOpen={isModalOpen}
+        setIsOpen={setIsModalOpen}
+        setIsUploaded={setIsUploaded}
+      />
       <Style.Container>
         <Style.Nav>
           <Style.Logo
