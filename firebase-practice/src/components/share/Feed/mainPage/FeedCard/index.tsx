@@ -19,7 +19,7 @@ import {
   ShareIcon,
 } from "ui"
 import { ProfileIcon } from "icons"
-import CommentModal from "../../Modal/comment/CommentModal"
+import CommentModal from "../../../Modal/comment/CommentModal"
 import FollowListModal from "@share/Modal/follow/FollowListModal"
 import useWindowSize from "lib/useWindowSize"
 import Desc from "./Desc"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import FeedSortList from "@share/Feed/FeedSortList"
+import FeedSortList from "@share/Feed/mypage/FeedSortList"
 import ProfileHeader from "@feature/profile/mypage"
 import styled from "styled-components"
 import Layout from "components/layout"
