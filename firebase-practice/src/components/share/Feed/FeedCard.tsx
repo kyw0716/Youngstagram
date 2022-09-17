@@ -121,7 +121,6 @@ export default function FeedCard({ feedData, setIsCommentModalOpen }: Props) {
             isOpen={isLikerListModalOpen}
             setIsOpen={setIsLikerLIstModalOpen}
             title={"좋아요"}
-            isPC={windowSize > 900 ? true : false}
           />
           <Style.ImageCard>
             <Style.ImageHeader>
