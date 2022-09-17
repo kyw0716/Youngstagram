@@ -20,6 +20,8 @@ import {
 } from "ui"
 import { ProfileIcon } from "icons"
 import CommentModal from "../Modal/comment/CommentModal"
+import FollowListModal from "@share/Modal/follow/FollowListModal"
+import useWindowSize from "lib/useWindowSize"
 
 type Props = {
   feedData: FeedData
@@ -89,10 +91,13 @@ const Style = {
 export default function FeedCard({ feedData }: Props) {
   const router = useRouter()
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
+  const [isLikerListModalOpen, setIsLikerLIstModalOpen] =
+    useState<boolean>(false)
   const [feedCreatorData, setFeedCreatorData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
   const currentUser = useRecoilValue(userDataState)
+  const windowSize = useWindowSize()
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -114,6 +119,13 @@ export default function FeedCard({ feedData }: Props) {
             isOpen={isCommentModalOpen}
             setIsOpen={setIsCommentModalOpen}
             feedData={feedData}
+          />
+          <FollowListModal
+            userList={likerList}
+            isOpen={isLikerListModalOpen}
+            setIsOpen={setIsLikerLIstModalOpen}
+            title={"좋아요"}
+            isPC={windowSize > 900 ? true : false}
           />
           <Style.ImageCard>
             <Style.ImageHeader>
@@ -212,7 +224,14 @@ export default function FeedCard({ feedData }: Props) {
               gap={10}
             >
               {likerList !== undefined ? (
-                <CustomH6>좋아요 {likerList.length}개</CustomH6>
+                <CustomH6
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setIsLikerLIstModalOpen(true)
+                  }}
+                >
+                  좋아요 {likerList.length}개
+                </CustomH6>
               ) : (
                 <CustomH6>좋아요 0개</CustomH6>
               )}

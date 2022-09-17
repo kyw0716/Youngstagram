@@ -20,7 +20,7 @@ export default function ProfileHeader({ userData }: Props) {
         ) : (
           <MobileHeader userData={userData} />
         )}
-        <Margin direction="column" size={44} />
+        <Margin direction="column" size={10} />
       </>
     </>
   )
