@@ -158,7 +158,7 @@ export default function PCHeader() {
             <CustomH3Light
               style={{ cursor: "pointer" }}
               onClick={() => {
-                setIsFollower(true)
+                setIsFollower(false)
                 setIsFollowListModalOpen(true)
               }}
             >
@@ -167,7 +167,7 @@ export default function PCHeader() {
             <CustomH3Light
               style={{ cursor: "pointer" }}
               onClick={() => {
-                setIsFollower(false)
+                setIsFollower(true)
                 setIsFollowListModalOpen(true)
               }}
             >

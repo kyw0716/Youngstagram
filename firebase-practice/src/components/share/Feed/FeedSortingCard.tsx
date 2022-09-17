@@ -1,4 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
+import FollowListModal from "@share/Modal/follow/FollowListModal"
 import { userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserData, UserInfo } from "backend/dto"
 import {
@@ -20,6 +21,7 @@ import {
   UnLockIcon,
 } from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
+import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -215,6 +217,8 @@ const Style = {
 export default function FeedSortingCard({ feedData }: Props) {
   const router = useRouter()
 
+  const [isLikerListModalOpen, setIsLikerListModalOpen] =
+    useState<boolean>(false)
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
@@ -225,6 +229,7 @@ export default function FeedSortingCard({ feedData }: Props) {
   const [creatorInfo, setCreatorInfo] = useState<UserInfo>()
 
   const [isUploaded, setIsUploaded] = useState<boolean>(false)
+  const windowSize = useWindowSize()
 
   const setCurrentUserdata = useSetRecoilState(userDataState)
 
@@ -358,6 +363,13 @@ export default function FeedSortingCard({ feedData }: Props) {
             feedData={feedData}
             setIsUploaded={setIsUploaded}
           />
+          <FollowListModal
+            userList={likerList}
+            isOpen={isLikerListModalOpen}
+            setIsOpen={setIsLikerListModalOpen}
+            title={"좋아요"}
+            isPC={windowSize > 900 ? true : false}
+          />
           <Style.ImageCard>
             <Style.ImageHeader>
               <FlexBox
@@ -468,7 +480,14 @@ export default function FeedSortingCard({ feedData }: Props) {
               gap={10}
             >
               {likerList !== undefined ? (
-                <CustomH6>좋아요 {likerList.length}개</CustomH6>
+                <CustomH6
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setIsLikerListModalOpen(true)
+                  }}
+                >
+                  좋아요 {likerList.length}개
+                </CustomH6>
               ) : (
                 <CustomH6>좋아요 0개</CustomH6>
               )}
