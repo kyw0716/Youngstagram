@@ -1,15 +1,14 @@
-import { userDataState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import { CameraIcon } from "icons"
-import Image from "next/image"
-import { useEffect, useState } from "react"
-import { useRecoilValue } from "recoil"
+import React, { SetStateAction, useEffect, useState } from "react"
 import styled from "styled-components"
-import { CustomH2, CustomH2Light, CustomH5Light, Margin } from "ui"
+import { CustomH2Light, CustomH5Light } from "ui"
 import FeedSortingCard from "./FeedSortingCard"
 
 type Props = {
   FeedData: FeedData[]
+  setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
+  setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -29,7 +28,11 @@ const Style = {
   `,
 }
 
-export default function FeedSortList({ FeedData }: Props) {
+export default function FeedSortList({
+  FeedData,
+  setIsCommentModalOpen,
+  setIsFeedUploadModalOpen,
+}: Props) {
   const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] =
     useState<FeedData[]>()
   useEffect(() => {
@@ -49,7 +52,14 @@ export default function FeedSortList({ FeedData }: Props) {
       {feedDataSortedByUploadTime !== undefined &&
       feedDataSortedByUploadTime.length !== 0 ? (
         feedDataSortedByUploadTime.map((data, index) => {
-          return <FeedSortingCard key={index} feedData={data} />
+          return (
+            <FeedSortingCard
+              key={index}
+              feedData={data}
+              setIsCommentModalOpen={setIsCommentModalOpen}
+              setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
+            />
+          )
         })
       ) : (
         <>

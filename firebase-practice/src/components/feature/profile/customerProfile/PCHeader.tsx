@@ -160,7 +160,6 @@ export default function PCHeader({ userData }: Props) {
         setIsOpen={setIsOpen}
         title={modalTitle}
         userList={followData !== undefined ? followData : []}
-        isPC={true}
       />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />

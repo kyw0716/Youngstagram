@@ -2,6 +2,7 @@ import { userDataState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import { CameraIcon } from "icons"
 import Image from "next/image"
+import { SetStateAction } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH2, CustomH2Light, CustomH5Light, Margin } from "ui"
@@ -9,7 +10,7 @@ import FeedCard from "./FeedCard"
 
 type Props = {
   FeedData: FeedData[] | undefined
-  isCustomer: boolean
+  setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -29,7 +30,7 @@ const Style = {
   `,
 }
 
-export default function FeedList({ FeedData, isCustomer: isMainPage }: Props) {
+export default function FeedList({ FeedData, setIsCommentModalOpen }: Props) {
   return (
     <Style.ImageContainer>
       {FeedData !== undefined && FeedData.length !== 0 ? (
@@ -37,7 +38,11 @@ export default function FeedList({ FeedData, isCustomer: isMainPage }: Props) {
           return Number(b.uploadTime) - Number(a.uploadTime)
         }).map((data, index) => {
           return (
-            <FeedCard key={index} feedData={data} isMainPage={isMainPage} />
+            <FeedCard
+              key={index}
+              feedData={data}
+              setIsCommentModalOpen={setIsCommentModalOpen}
+            />
           )
         })
       ) : (

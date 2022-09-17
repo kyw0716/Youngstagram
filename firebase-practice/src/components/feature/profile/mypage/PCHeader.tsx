@@ -98,7 +98,6 @@ export default function PCHeader() {
         isOpen={isFollowListModalOpen}
         setIsOpen={setIsFollowListModalOpen}
         title={isFollower ? "팔로워" : "팔로우"}
-        isPC={true}
       />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />

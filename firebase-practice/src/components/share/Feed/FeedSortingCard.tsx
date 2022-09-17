@@ -1,6 +1,6 @@
 import { authService, DBService, storageService } from "@FireBase"
 import FollowListModal from "@share/Modal/follow/FollowListModal"
-import { userDataState } from "@share/recoil/recoilList"
+import { feedDataState, userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserData, UserInfo } from "backend/dto"
 import {
   arrayRemove,
@@ -21,32 +21,26 @@ import {
   UnLockIcon,
 } from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
-import useWindowSize from "lib/useWindowSize"
 import Image from "next/image"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
-  CustomH3Light,
-  CustomH4,
-  CustomH4Light,
   CustomH5,
   CustomH5Light,
   CustomH6,
-  CustomH6Light,
   FlexBox,
   FullHeart,
   HeartIcon,
   Margin,
   ShareIcon,
 } from "ui"
-import CommentModal from "../Modal/comment/CommentModal"
-import FeedUploadModal from "../Modal/feed/FeedUploadModal"
 
 type Props = {
   feedData: FeedData
+  setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
+  setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -214,24 +208,21 @@ const Style = {
   `,
 }
 
-export default function FeedSortingCard({ feedData }: Props) {
-  const router = useRouter()
-
+export default function FeedSortingCard({
+  feedData,
+  setIsCommentModalOpen,
+  setIsFeedUploadModalOpen,
+}: Props) {
   const [isLikerListModalOpen, setIsLikerListModalOpen] =
     useState<boolean>(false)
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
-  const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
-  const [isImageUploadModalOpen, setIsImageUploadModalOpen] =
-    useState<boolean>(false)
   const userData = useRecoilValue(userDataState)
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likerList, setLikerList] = useState<string[]>([])
   const [creatorInfo, setCreatorInfo] = useState<UserInfo>()
 
-  const [isUploaded, setIsUploaded] = useState<boolean>(false)
-  const windowSize = useWindowSize()
-
   const setCurrentUserdata = useSetRecoilState(userDataState)
+  const setSelectedFeedData = useSetRecoilState(feedDataState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
@@ -244,11 +235,6 @@ export default function FeedSortingCard({ feedData }: Props) {
       setCreatorInfo(doc.data()?.info)
     })
   }, [])
-
-  useEffect(() => {
-    if (isUploaded)
-      router.replace(`/loading?path=${router.pathname.replace("/", "")}`)
-  }, [isUploaded])
 
   const handleDeleteFeed = async () => {
     const feed: FeedData = {
@@ -352,23 +338,11 @@ export default function FeedSortingCard({ feedData }: Props) {
     <>
       {userData && (
         <>
-          <CommentModal
-            isOpen={isCommentModalOpen}
-            setIsOpen={setIsCommentModalOpen}
-            feedData={feedData}
-          />
-          <FeedUploadModal
-            isOpen={isImageUploadModalOpen}
-            setIsOpen={setIsImageUploadModalOpen}
-            feedData={feedData}
-            setIsUploaded={setIsUploaded}
-          />
           <FollowListModal
             userList={likerList}
             isOpen={isLikerListModalOpen}
             setIsOpen={setIsLikerListModalOpen}
             title={"좋아요"}
-            isPC={windowSize > 900 ? true : false}
           />
           <Style.ImageCard>
             <Style.ImageHeader>
@@ -403,7 +377,8 @@ export default function FeedSortingCard({ feedData }: Props) {
                   <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
                     <Style.EditButton
                       onClick={() => {
-                        setIsImageUploadModalOpen(true)
+                        setSelectedFeedData(feedData)
+                        setIsFeedUploadModalOpen(true)
                       }}
                     >
                       <EditIcon width={15} height={15} />
@@ -468,6 +443,7 @@ export default function FeedSortingCard({ feedData }: Props) {
               <Margin direction="row" size={15} />
               <CommentIcon
                 onClick={() => {
+                  setSelectedFeedData(feedData)
                   setIsCommentModalOpen(true)
                 }}
               />
@@ -510,6 +486,7 @@ export default function FeedSortingCard({ feedData }: Props) {
                       borderBottom: "1px solid lightgrey",
                     }}
                     onClick={() => {
+                      setSelectedFeedData(feedData)
                       setIsCommentModalOpen(true)
                     }}
                   >
@@ -530,6 +507,7 @@ export default function FeedSortingCard({ feedData }: Props) {
                         borderBottom: "1px solid lightgrey",
                       }}
                       onClick={() => {
+                        setSelectedFeedData(feedData)
                         setIsCommentModalOpen(true)
                       }}
                     >

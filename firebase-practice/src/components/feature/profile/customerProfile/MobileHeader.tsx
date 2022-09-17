@@ -173,7 +173,6 @@ export default function MobileHeader({ userData }: Props) {
         setIsOpen={setIsOpen}
         title={modalTitle}
         userList={followData !== undefined ? followData : []}
-        isPC={false}
       />
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>

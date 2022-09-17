@@ -3,10 +3,11 @@ import styled from "styled-components"
 import FeedGridCard from "./FeedGridCard"
 import { v4 } from "uuid"
 import useWindowSize from "lib/useWindowSize"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 
 type Props = {
   feedDatas: FeedData[] | undefined
+  setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -25,7 +26,7 @@ const Style = {
   `,
 }
 
-export default function FeedGrid({ feedDatas }: Props) {
+export default function FeedGrid({ feedDatas, setIsCommentModalOpen }: Props) {
   const windowSize = useWindowSize()
   const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] = useState<
     FeedData[]
@@ -52,7 +53,13 @@ export default function FeedGrid({ feedDatas }: Props) {
       {feedDataSortedByUploadTime !== undefined && (
         <>
           {feedDataSortedByUploadTime.map((feedData) => {
-            return <FeedGridCard feedData={feedData} key={v4()} />
+            return (
+              <FeedGridCard
+                feedData={feedData}
+                key={v4()}
+                setIsCommentModalOpen={setIsCommentModalOpen}
+              />
+            )
           })}
         </>
       )}

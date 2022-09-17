@@ -1,13 +1,16 @@
 import { DBService } from "@FireBase"
 import CommentModal from "@share/Modal/comment/CommentModal"
+import { feedDataState } from "@share/recoil/recoilList"
 import { Comment, FeedData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
+import { useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { Margin } from "ui"
 
 type Props = {
   feedData: FeedData
+  setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -42,11 +45,14 @@ const Style = {
   `,
 }
 
-export default function FeedGridCard({ feedData }: Props) {
+export default function FeedGridCard({
+  feedData,
+  setIsCommentModalOpen,
+}: Props) {
   const [commentData, setCommentData] = useState<Comment[]>([])
   const [likeData, setLikeData] = useState<string[]>()
   const [isHover, setIsHover] = useState<boolean>(false)
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const setSelectedFeedData = useSetRecoilState(feedDataState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", feedData.storageId), (data) => {
@@ -59,7 +65,6 @@ export default function FeedGridCard({ feedData }: Props) {
 
   return (
     <>
-      <CommentModal isOpen={isOpen} setIsOpen={setIsOpen} feedData={feedData} />
       <Style.GridItem
         about={feedData.imageUrl}
         onMouseEnter={() => {
@@ -69,7 +74,8 @@ export default function FeedGridCard({ feedData }: Props) {
           setIsHover(false)
         }}
         onClick={() => {
-          setIsOpen(true)
+          setSelectedFeedData(feedData)
+          setIsCommentModalOpen(true)
         }}
       >
         {isHover && (
