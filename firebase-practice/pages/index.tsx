@@ -8,14 +8,17 @@ import Layout from "components/layout"
 import { FeedData } from "backend/dto"
 import FollowListAtMainPage from "@feature/followListAtMainPage"
 import { useRecoilValue } from "recoil"
-import { userDataState } from "@share/recoil/recoilList"
+import { feedDataState, userDataState } from "@share/recoil/recoilList"
 import { useRouter } from "next/router"
+import CommentModal from "@share/Modal/comment/CommentModal"
 
 const Home: NextPage = () => {
   const router = useRouter()
   const [dataFromFirestore, setDataFromFirestore] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>()
   const currentUserData = useRecoilValue(userDataState)
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
+  const selectedFeedData = useRecoilValue(feedDataState)
 
   useEffect(() => {
     if (currentUserData !== undefined && currentUserData.info.userId === "")
@@ -35,6 +38,11 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
+      <CommentModal
+        isOpen={isCommentModalOpen}
+        setIsOpen={setIsCommentModalOpen}
+        feedData={selectedFeedData}
+      />
       <Margin direction="column" size={30} />
       {currentUserData?.follow !== undefined &&
         currentUserData?.follow.length !== 0 && (
@@ -48,7 +56,7 @@ const Home: NextPage = () => {
           FeedData={
             feedData ? feedData.filter((data) => !data.private) : undefined
           }
-          isCustomer={true}
+          setIsCommentModalOpen={setIsCommentModalOpen}
         />
       )}
     </Layout>

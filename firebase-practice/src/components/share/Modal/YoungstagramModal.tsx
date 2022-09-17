@@ -1,5 +1,5 @@
 import { XIcon } from "icons"
-import Image from "next/image"
+import useWindowSize from "lib/useWindowSize"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
 import styled from "styled-components"
@@ -12,7 +12,6 @@ type Props = {
   width: string
   height: string
   children: ReactNode
-  isPC?: boolean
 }
 
 const Style = {
@@ -39,8 +38,8 @@ export default function YoungstagramModal({
   width,
   height,
   children,
-  isPC,
 }: Props) {
+  const windowSize = useWindowSize()
   return (
     <ReactModal
       style={{
@@ -49,9 +48,9 @@ export default function YoungstagramModal({
           zIndex: "9999999",
         },
         content: {
-          top: isPC ? "50%" : "100px",
-          left: isPC ? "50%" : "2.5vw",
-          transform: isPC ? "translate(-50%,-50%)" : "",
+          top: windowSize > 900 ? "50%" : "100px",
+          left: windowSize > 900 ? "50%" : "2.5vw",
+          transform: windowSize > 900 ? "translate(-50%,-50%)" : "",
           padding: 0,
           width,
           height,

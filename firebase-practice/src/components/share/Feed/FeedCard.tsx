@@ -1,11 +1,11 @@
 import { authService, DBService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import { feedDataState, userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserData, UserInfo } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { useRecoilValue } from "recoil"
+import { SetStateAction, useEffect, useState } from "react"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import {
   CommentIcon,
@@ -25,7 +25,7 @@ import useWindowSize from "lib/useWindowSize"
 
 type Props = {
   feedData: FeedData
-  isMainPage: boolean
+  setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -88,9 +88,9 @@ const Style = {
   `,
 }
 
-export default function FeedCard({ feedData }: Props) {
+export default function FeedCard({ feedData, setIsCommentModalOpen }: Props) {
   const router = useRouter()
-  const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
+  // const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isLikerListModalOpen, setIsLikerLIstModalOpen] =
     useState<boolean>(false)
   const [feedCreatorData, setFeedCreatorData] = useState<UserData>()
@@ -98,6 +98,7 @@ export default function FeedCard({ feedData }: Props) {
   const [likerList, setLikerList] = useState<string[]>([])
   const currentUser = useRecoilValue(userDataState)
   const windowSize = useWindowSize()
+  const setSelectedFeedData = useSetRecoilState(feedDataState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -115,11 +116,6 @@ export default function FeedCard({ feedData }: Props) {
     <>
       {feedCreatorData && (
         <>
-          <CommentModal
-            isOpen={isCommentModalOpen}
-            setIsOpen={setIsCommentModalOpen}
-            feedData={feedData}
-          />
           <FollowListModal
             userList={likerList}
             isOpen={isLikerListModalOpen}
@@ -212,6 +208,7 @@ export default function FeedCard({ feedData }: Props) {
               <Margin direction="row" size={15} />
               <CommentIcon
                 onClick={() => {
+                  setSelectedFeedData(feedData)
                   setIsCommentModalOpen(true)
                 }}
               />
@@ -254,6 +251,7 @@ export default function FeedCard({ feedData }: Props) {
                       borderBottom: "1px solid lightgrey",
                     }}
                     onClick={() => {
+                      setSelectedFeedData(feedData)
                       setIsCommentModalOpen(true)
                     }}
                   >
@@ -274,6 +272,7 @@ export default function FeedCard({ feedData }: Props) {
                         borderBottom: "1px solid lightgrey",
                       }}
                       onClick={() => {
+                        setSelectedFeedData(feedData)
                         setIsCommentModalOpen(true)
                       }}
                     >
