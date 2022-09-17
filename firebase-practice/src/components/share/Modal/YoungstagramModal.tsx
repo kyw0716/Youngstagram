@@ -48,9 +48,10 @@ export default function YoungstagramModal({
           zIndex: "9999999",
         },
         content: {
-          top: windowSize > 900 ? "50%" : "100px",
+          top: "50%",
           left: windowSize > 900 ? "50%" : "2.5vw",
-          transform: windowSize > 900 ? "translate(-50%,-50%)" : "",
+          transform:
+            windowSize > 900 ? "translate(-50%,-50%)" : "translateY(-50%)",
           padding: 0,
           width,
           height,
