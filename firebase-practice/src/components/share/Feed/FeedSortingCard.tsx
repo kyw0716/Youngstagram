@@ -262,6 +262,7 @@ export default function FeedSortingCard({ feedData }: Props) {
     const firestoreAllRef = doc(DBService, "mainPage", "userFeedDataAll")
     const firestoreCommentRef = doc(DBService, "Comments", feedData.storageId)
     const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
+    const firestoreLikeRef = doc(DBService, "like", feedData.storageId)
 
     handleThreeDotMenuClick()
 
@@ -288,6 +289,7 @@ export default function FeedSortingCard({ feedData }: Props) {
     await deleteDoc(firestoreCommentRef).catch((error) =>
       console.log(error.code),
     )
+    await deleteDoc(firestoreLikeRef).catch((error) => console.log(error.code))
   }
   const handlePrivateToggle = async () => {
     const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
