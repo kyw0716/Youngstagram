@@ -10,7 +10,8 @@ import { FeedData, UserData } from "backend/dto"
 import { useRouter } from "next/router"
 import FeedGrid from "@share/Feed/FeedGrid"
 import { useRecoilValue } from "recoil"
-import { userDataState } from "@share/recoil/recoilList"
+import { feedDataState, userDataState } from "@share/recoil/recoilList"
+import CommentModal from "@share/Modal/comment/CommentModal"
 
 const Style = {
   Wrapper: styled.div`
@@ -30,6 +31,8 @@ export default function Profile({ userId }: Props) {
   const [userData, setUserData] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>()
   const currentUserData = useRecoilValue(userDataState)
+  const selectedFeedData = useRecoilValue(feedDataState)
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
 
   useEffect(() => {
     if (currentUserData === undefined) return
@@ -57,6 +60,11 @@ export default function Profile({ userId }: Props) {
 
   return (
     <Layout>
+      <CommentModal
+        isOpen={isCommentModalOpen}
+        setIsOpen={setIsCommentModalOpen}
+        feedData={selectedFeedData}
+      />
       {userData !== undefined && (
         <Style.Wrapper>
           <ProfileHeader
@@ -64,7 +72,10 @@ export default function Profile({ userId }: Props) {
             userData={userData as UserData}
           />
           {feedData !== undefined && (
-            <FeedGrid feedDatas={feedData ? feedData : undefined} />
+            <FeedGrid
+              feedDatas={feedData ? feedData : undefined}
+              setIsCommentModalOpen={setIsCommentModalOpen}
+            />
           )}
         </Style.Wrapper>
       )}
