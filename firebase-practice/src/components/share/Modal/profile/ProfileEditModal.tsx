@@ -154,7 +154,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         width={isPC ? "600px" : "95vw"}
         height={isPC ? "fit-content" : "210px"}
         title="프로필 편집"
-        isPC={isPC}
       >
         <Margin direction="column" size={15} />
         <FlexBox width={"100%"} height={isPC ? "200px" : "100px"}>

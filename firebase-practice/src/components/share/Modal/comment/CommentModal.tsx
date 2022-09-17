@@ -90,7 +90,6 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={"이미지 상세"}
-      isPC={true}
     >
       <Style.Wrapper>
         <Style.ImgWrapper>
