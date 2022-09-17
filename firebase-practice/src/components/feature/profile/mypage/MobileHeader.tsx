@@ -96,7 +96,6 @@ export default function MobileHeader() {
         userList={isFollower ? userData.follower : userData.follow}
         isOpen={isFollowListModalOpen}
         setIsOpen={setIsFollowListModalOpen}
-        isPC={false}
         title={isFollower ? "팔로워" : "팔로우"}
       />
       <Style.ProfileWrapper>

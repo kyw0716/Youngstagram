@@ -3,13 +3,13 @@ import styled from "styled-components"
 import YoungstagramModal from "../YoungstagramModal"
 import FollowUserWrapper from "./FollowUserWrapper"
 import { v4 } from "uuid"
+import useWindowSize from "lib/useWindowSize"
 
 type Props = {
   userList: string[]
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   title: string
-  isPC: boolean
 }
 
 const Style = {
@@ -34,21 +34,24 @@ export default function FollowListModal({
   isOpen,
   setIsOpen,
   title,
-  isPC,
 }: Props) {
+  const windowSize = useWindowSize()
   return (
     <YoungstagramModal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={title}
-      width={isPC ? "400px" : "95vw"}
+      width={windowSize > 900 ? "400px" : "95vw"}
       height={"243px"}
-      isPC={isPC}
     >
       <Style.Wrapper>
-        {userList.map((userId) => {
-          return <FollowUserWrapper key={v4()} userId={userId} />
-        })}
+        {userList && (
+          <>
+            {userList.map((userId) => {
+              return <FollowUserWrapper key={v4()} userId={userId} />
+            })}
+          </>
+        )}
       </Style.Wrapper>
     </YoungstagramModal>
   )
