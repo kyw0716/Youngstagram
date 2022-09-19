@@ -161,7 +161,7 @@ export default function PCHeader() {
                 setIsFollowListModalOpen(true)
               }}
             >
-              팔로우: {userData.follow.length}
+              팔로우: {userData.follow ? userData.follow.length : `0`}
             </CustomH3Light>
             <CustomH3Light
               style={{ cursor: "pointer" }}
@@ -170,7 +170,7 @@ export default function PCHeader() {
                 setIsFollowListModalOpen(true)
               }}
             >
-              팔로워: {userData.follower.length}
+              팔로워: {userData.follower ? userData.follower.length : `0`}
             </CustomH3Light>
           </FlexBox>
         </Style.ProfileInfo>
