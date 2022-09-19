@@ -82,6 +82,7 @@ export default function CommentInput({
 
   const handleCommentSubmit = async () => {
     setIsSubmit(true)
+    setComment("")
     if (comment.length === 0) {
       alert("댓글은 한글자 이상 작성해야합니다.")
       setIsSubmit(false)
@@ -105,7 +106,6 @@ export default function CommentInput({
         }
       })
       .then(() => {
-        setComment("")
         setRandomId(v4())
       })
     commentAreaRef.current?.scrollIntoView({
