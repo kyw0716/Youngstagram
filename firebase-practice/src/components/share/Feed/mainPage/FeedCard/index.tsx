@@ -77,12 +77,17 @@ export default function FeedCard({
   const [feedCreatorData, setFeedCreatorData] = useState<UserData>()
   const [isCurrentUserLike, setIsCurrentUserLike] = useState<boolean>(false)
   const currentUser = useRecoilValue(userDataState)
+  const [routingPath, setRoutingPath] = useState<string>("")
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
       setFeedCreatorData(data.data() as UserData)
     })
   }, [feedData])
+
+  useEffect(() => {
+    if (routingPath !== "") router.replace(`${routingPath}`)
+  }, [routingPath])
 
   return (
     <>
@@ -122,10 +127,10 @@ export default function FeedCard({
                     if (
                       currentUser.info.userId === feedCreatorData.info.userId
                     ) {
-                      router.replace(`/loading?path=mypage`)
+                      setRoutingPath(`/loading?path=mypage`)
                       return
                     }
-                    router.replace(
+                    setRoutingPath(
                       `/loading?path=profile/${feedCreatorData.info.userId}`,
                     )
                   }}
