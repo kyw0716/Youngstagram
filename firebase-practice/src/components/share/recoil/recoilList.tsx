@@ -2,7 +2,7 @@ import { atom } from "recoil"
 import { FeedData, UserData } from "backend/dto"
 
 export const userDataState = atom<UserData>({
-  key: "USERDATA",
+  key: "USERDATAATOM",
   default: {
     info: {
       userId: "",
@@ -17,12 +17,12 @@ export const userDataState = atom<UserData>({
 })
 
 export const FeedDataFilter = atom<"all" | "public" | "private">({
-  key: "FEEDFILTER",
+  key: "FEEDFILTERATOM",
   default: "all",
 })
 
 export const feedDataState = atom<FeedData>({
-  key: "FEEDDATA",
+  key: "FEEDDATAATOM",
   default: {
     imageUrl: "",
     desc: "",
@@ -35,6 +35,6 @@ export const feedDataState = atom<FeedData>({
 })
 
 export const userListState = atom<string[]>({
-  key: "USERLIST",
+  key: "USERLISTATOM",
   default: [],
 })

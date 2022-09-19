@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.23.5",
-    "firebase": "^9.6.1",
+    "firebase": "^9.10.0",
     "firebase-tools": "^11.2.2",
     "next": "12.2.2",
     "react": "18.2.0",
