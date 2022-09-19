@@ -1,5 +1,4 @@
-import { authService, DBService } from "@FireBase"
-import FollowListModal from "@share/Modal/follow/FollowListModal"
+import { DBService } from "@FireBase"
 import { userDataState, userListState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
