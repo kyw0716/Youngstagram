@@ -33,3 +33,8 @@ export const feedDataState = atom<FeedData>({
     uploadTime: "",
   },
 })
+
+export const userListState = atom<string[]>({
+  key: "USERLIST",
+  default: [],
+})

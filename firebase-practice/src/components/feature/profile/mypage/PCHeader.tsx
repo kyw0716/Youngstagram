@@ -1,8 +1,12 @@
 import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
-import { FeedDataFilter, userDataState } from "@share/recoil/recoilList"
+import {
+  FeedDataFilter,
+  userDataState,
+  userListState,
+} from "@share/recoil/recoilList"
 import Image from "next/image"
-import { useState } from "react"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { SetStateAction, useState } from "react"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import {
   CustomH2Light,
@@ -12,7 +16,10 @@ import {
   Margin,
 } from "ui"
 import { AllFileIcon, LockIcon, ProfileIcon, UnLockIcon } from "icons"
-import FollowListModal from "@share/Modal/follow/FollowListModal"
+
+type Props = {
+  setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>
+}
 
 const Style = {
   ProfileHeader: styled.div`
@@ -83,22 +90,14 @@ const Style = {
   `,
 }
 
-export default function PCHeader() {
+export default function PCHeader({ setIsUserListModalOpen }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [isFollowListModalOpen, setIsFollowListModalOpen] =
-    useState<boolean>(false)
   const [feedDataType, setFeedDataType] = useRecoilState(FeedDataFilter)
-  const [isFollower, setIsFollower] = useState<boolean>(false)
   const userData = useRecoilValue(userDataState)
+  const setUserList = useSetRecoilState(userListState)
   return (
     <>
       <ProfileEditModal isOpen={isOpen} setIsOpen={setIsOpen} isPC={true} />
-      <FollowListModal
-        userList={isFollower ? userData.follower : userData.follow}
-        isOpen={isFollowListModalOpen}
-        setIsOpen={setIsFollowListModalOpen}
-        title={isFollower ? "팔로워" : "팔로우"}
-      />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
         {userData.info.profileImage ? (
@@ -157,8 +156,8 @@ export default function PCHeader() {
             <CustomH3Light
               style={{ cursor: "pointer" }}
               onClick={() => {
-                setIsFollower(false)
-                setIsFollowListModalOpen(true)
+                setUserList(userData.follow)
+                setIsUserListModalOpen(true)
               }}
             >
               팔로우: {userData.follow ? userData.follow.length : `0`}
@@ -166,8 +165,8 @@ export default function PCHeader() {
             <CustomH3Light
               style={{ cursor: "pointer" }}
               onClick={() => {
-                setIsFollower(true)
-                setIsFollowListModalOpen(true)
+                setUserList(userData.follower)
+                setIsUserListModalOpen(true)
               }}
             >
               팔로워: {userData.follower ? userData.follower.length : `0`}

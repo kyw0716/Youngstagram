@@ -1,27 +1,14 @@
-import { authService, DBService } from "@FireBase"
-import { feedDataState, userDataState } from "@share/recoil/recoilList"
-import { FeedData, UserData, UserInfo } from "backend/dto"
+import { DBService } from "@FireBase"
+import { userDataState } from "@share/recoil/recoilList"
+import { FeedData, UserData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import {
-  CommentIcon,
-  CustomH5,
-  CustomH5Light,
-  CustomH6,
-  FlexBox,
-  FullHeart,
-  HeartIcon,
-  Margin,
-  ShareIcon,
-} from "ui"
+import { FlexBox, Margin } from "ui"
 import { ProfileIcon } from "icons"
-import CommentModal from "../../../Modal/comment/CommentModal"
-import FollowListModal from "@share/Modal/follow/FollowListModal"
-import useWindowSize from "lib/useWindowSize"
 import Desc from "./Desc"
 import LikeCommentInfo from "./LikeCommentInfo"
 import Icons from "./Icons"
@@ -29,6 +16,7 @@ import Icons from "./Icons"
 type Props = {
   feedData: FeedData
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
+  setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -80,17 +68,26 @@ const Style = {
   `,
 }
 
-export default function FeedCard({ feedData, setIsCommentModalOpen }: Props) {
+export default function FeedCard({
+  feedData,
+  setIsCommentModalOpen,
+  setIsLikeModalOpen,
+}: Props) {
   const router = useRouter()
   const [feedCreatorData, setFeedCreatorData] = useState<UserData>()
   const [isCurrentUserLike, setIsCurrentUserLike] = useState<boolean>(false)
   const currentUser = useRecoilValue(userDataState)
+  const [routingPath, setRoutingPath] = useState<string>("")
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
       setFeedCreatorData(data.data() as UserData)
     })
   }, [feedData])
+
+  useEffect(() => {
+    if (routingPath !== "") router.replace(`${routingPath}`)
+  }, [routingPath])
 
   return (
     <>
@@ -130,10 +127,10 @@ export default function FeedCard({ feedData, setIsCommentModalOpen }: Props) {
                     if (
                       currentUser.info.userId === feedCreatorData.info.userId
                     ) {
-                      router.replace(`/loading?path=mypage`)
+                      setRoutingPath(`/loading?path=mypage`)
                       return
                     }
-                    router.replace(
+                    setRoutingPath(
                       `/loading?path=profile/${feedCreatorData.info.userId}`,
                     )
                   }}
@@ -171,6 +168,7 @@ export default function FeedCard({ feedData, setIsCommentModalOpen }: Props) {
           <LikeCommentInfo
             feedData={feedData}
             setIsCurrentUserLike={setIsCurrentUserLike}
+            setIsLikeModalOpen={setIsLikeModalOpen}
           />
           <Desc
             feedData={feedData}

@@ -9,10 +9,12 @@ import {
   FeedDataFilter,
   feedDataState,
   userDataState,
+  userListState,
 } from "@share/recoil/recoilList"
 import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
+import UserListModal from "@share/Modal/userList/UserListModal"
 
 const Style = {
   Wrapper: styled.div`
@@ -30,10 +32,15 @@ const Style = {
 export default function Profile() {
   const router = useRouter()
   const userData = useRecoilValue(userDataState)
+
   const feedDataType = useRecoilValue(FeedDataFilter)
   const [feedData, setFeedData] = useState<FeedData[]>([])
   const selectedFeedData = useRecoilValue(feedDataState)
+
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
+  const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
+  const likeUserList = useRecoilValue(userListState)
+
   const [isFeedUploadModalOpen, setIsFeedUploadModalOpen] =
     useState<boolean>(false)
   const [isUploaded, setIsUploaded] = useState<boolean>(false)
@@ -74,14 +81,21 @@ export default function Profile() {
         feedData={selectedFeedData}
         setIsUploaded={setIsUploaded}
       />
+      <UserListModal
+        userList={likeUserList}
+        isOpen={isUserListModalOpen}
+        setIsOpen={setIsUserListModalOpen}
+        title={""}
+      />
       {userData !== undefined && userData.info.userId !== "" ? (
         <Style.Wrapper>
-          <ProfileHeader />
+          <ProfileHeader setIsUserListModalOpen={setIsUserListModalOpen} />
           {feedData !== undefined && (
             <FeedSortList
               FeedData={feedData}
               setIsCommentModalOpen={setIsCommentModalOpen}
               setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
+              setIsUserListModalOpen={setIsUserListModalOpen}
             />
           )}
         </Style.Wrapper>

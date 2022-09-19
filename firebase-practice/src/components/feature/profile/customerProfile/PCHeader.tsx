@@ -1,6 +1,5 @@
 import { DBService } from "@FireBase"
-import FollowListModal from "@share/Modal/follow/FollowListModal"
-import { userDataState } from "@share/recoil/recoilList"
+import { userDataState, userListState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import {
   arrayRemove,
@@ -11,8 +10,8 @@ import {
 } from "firebase/firestore"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
-import { useEffect, useState } from "react"
-import { useRecoilValue } from "recoil"
+import { SetStateAction, useEffect, useState } from "react"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import {
   CustomH2Light,
@@ -25,6 +24,7 @@ import { AllFileIcon, ProfileIcon } from "icons"
 
 type Props = {
   userData: UserData
+  setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -75,16 +75,15 @@ const Style = {
   `,
 }
 
-export default function PCHeader({ userData }: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [modalTitle, setModalTitle] = useState<string>("")
+export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
   const [userDataByUserId, setUserDataByUserId] = useState<UserData>()
-  const [followData, setFollowData] = useState<string[]>()
   const [isCurrentUserFollowed, setIsCurrentUserFollowed] =
     useState<boolean>(false)
   const [isFollowingDataModified, setIsFollowingDataModified] =
     useState<boolean>(false)
   const currentUserData = useRecoilValue(userDataState)
+
+  const setUserList = useSetRecoilState(userListState)
 
   const handleFollow = async () => {
     const myFirestoreRef = doc(
@@ -138,7 +137,6 @@ export default function PCHeader({ userData }: Props) {
         setUserDataByUserId(data as UserData)
       }
     })
-    setIsOpen(false)
   }, [isFollowingDataModified, userData])
   useEffect(() => {
     if (userDataByUserId === undefined) return
@@ -147,20 +145,9 @@ export default function PCHeader({ userData }: Props) {
       userDataByUserId?.follower.includes(currentUserData.info.userId),
     )
   }, [userDataByUserId])
-  useEffect(() => {
-    if (modalTitle === "") return
-    if (modalTitle === "팔로우") setFollowData(userDataByUserId?.follow)
-    if (modalTitle === "팔로워") setFollowData(userDataByUserId?.follower)
-    setIsFollowingDataModified(false)
-  }, [modalTitle, userDataByUserId])
+
   return (
     <>
-      <FollowListModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        title={modalTitle}
-        userList={followData !== undefined ? followData : []}
-      />
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
         {userData.info.profileImage !== null ? (
@@ -206,8 +193,8 @@ export default function PCHeader({ userData }: Props) {
             </CustomH3Light>
             <CustomH3Light
               onClick={() => {
-                setModalTitle("팔로워")
-                setIsOpen(true)
+                setUserList(userData.follower)
+                setIsUserListModalOpen(true)
               }}
               style={{ cursor: "pointer" }}
             >
@@ -215,8 +202,8 @@ export default function PCHeader({ userData }: Props) {
             </CustomH3Light>
             <CustomH3Light
               onClick={() => {
-                setModalTitle("팔로우")
-                setIsOpen(true)
+                setUserList(userData.follow)
+                setIsUserListModalOpen(true)
               }}
               style={{ cursor: "pointer" }}
             >

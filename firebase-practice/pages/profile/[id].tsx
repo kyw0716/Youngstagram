@@ -10,8 +10,13 @@ import { FeedData, UserData } from "backend/dto"
 import { useRouter } from "next/router"
 import FeedGrid from "@share/Feed/profilepage/FeedGrid"
 import { useRecoilValue } from "recoil"
-import { feedDataState, userDataState } from "@share/recoil/recoilList"
+import {
+  feedDataState,
+  userDataState,
+  userListState,
+} from "@share/recoil/recoilList"
 import CommentModal from "@share/Modal/comment/CommentModal"
+import UserListModal from "@share/Modal/userList/UserListModal"
 
 const Style = {
   Wrapper: styled.div`
@@ -33,6 +38,8 @@ export default function Profile({ userId }: Props) {
   const currentUserData = useRecoilValue(userDataState)
   const selectedFeedData = useRecoilValue(feedDataState)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
+  const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
+  const userList = useRecoilValue(userListState)
 
   useEffect(() => {
     if (currentUserData === undefined) return
@@ -65,11 +72,18 @@ export default function Profile({ userId }: Props) {
         setIsOpen={setIsCommentModalOpen}
         feedData={selectedFeedData}
       />
+      <UserListModal
+        userList={userList}
+        isOpen={isUserListModalOpen}
+        setIsOpen={setIsUserListModalOpen}
+        title={""}
+      />
       {userData !== undefined && (
         <Style.Wrapper>
           <ProfileHeader
             imageDataLength={feedData === undefined ? 0 : feedData.length}
             userData={userData as UserData}
+            setIsUserListModalOpen={setIsUserListModalOpen}
           />
           {feedData !== undefined && (
             <FeedGrid

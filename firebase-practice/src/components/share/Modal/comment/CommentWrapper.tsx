@@ -62,6 +62,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
   const [isShowAllComment, setIsShowAllComment] = useState<boolean>(false)
   const [userData, setUserData] = useState<UserData>()
   const currentUserData = useRecoilValue(userDataState)
+  const [routingPath, setRoutingPath] = useState<string>("")
 
   useEffect(() => {
     const userInfoRef = doc(DBService, "users", commentData.userId)
@@ -71,6 +72,9 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
       }
     })
   }, [])
+  useEffect(() => {
+    if (routingPath !== "") router.replace(routingPath)
+  }, [routingPath])
 
   const handleRemoveComment = async () => {
     const commentRef = doc(DBService, "Comments", storageId)
@@ -113,10 +117,10 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
               alt="profile"
               onClick={() => {
                 if (userData?.info.userId === currentUserData.info.userId) {
-                  router.push(`/loading?path=mypage`)
+                  setRoutingPath(`/loading?path=mypage`)
                   return
                 }
-                router.push(`/loading?path=profile/${userData?.info.userId}`)
+                setRoutingPath(`/loading?path=profile/${userData?.info.userId}`)
               }}
               priority
             />

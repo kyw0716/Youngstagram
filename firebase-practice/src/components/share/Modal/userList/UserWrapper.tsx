@@ -16,6 +16,7 @@ export default function FollowUserWrapper({ userId }: Props) {
   const [userInfo, setUserInfo] = useState<UserInfo>()
   const currentUserData = useRecoilValue(userDataState)
   const router = useRouter()
+  const [routingPath, setRoutingPath] = useState<string>("")
   useEffect(() => {
     getUserDataByUid(userId).then((data) => {
       if (data) {
@@ -23,6 +24,9 @@ export default function FollowUserWrapper({ userId }: Props) {
       }
     })
   }, [])
+  useEffect(() => {
+    if (routingPath !== "") router.replace(routingPath)
+  }, [routingPath])
   return (
     <>
       {userInfo && (
@@ -34,10 +38,10 @@ export default function FollowUserWrapper({ userId }: Props) {
               currentUserData !== undefined &&
               currentUserData.info.userId === userId
             ) {
-              router.push("/mypage")
+              setRoutingPath(`/loading?path=mypage`)
               return
             }
-            router.push(`/profile/${userId}`)
+            setRoutingPath(`/loading?path=profile/${userId}`)
           }}
           style={{ cursor: "pointer", flexShrink: 0 }}
         >
