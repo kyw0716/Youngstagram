@@ -8,17 +8,26 @@ import Layout from "components/layout"
 import { FeedData } from "backend/dto"
 import FollowListAtMainPage from "@feature/followListAtMainPage"
 import { useRecoilValue } from "recoil"
-import { feedDataState, userDataState } from "@share/recoil/recoilList"
+import {
+  feedDataState,
+  userDataState,
+  userListState,
+} from "@share/recoil/recoilList"
 import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
+import FollowListModal from "@share/Modal/follow/FollowListModal"
 
 const Home: NextPage = () => {
   const router = useRouter()
   const [dataFromFirestore, setDataFromFirestore] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>()
   const currentUserData = useRecoilValue(userDataState)
+
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const selectedFeedData = useRecoilValue(feedDataState)
+
+  const [isLikeModalOpen, setIsLikeModalOpen] = useState<boolean>(false)
+  const likerListData = useRecoilValue(userListState)
 
   useEffect(() => {
     if (currentUserData !== undefined && currentUserData.info.userId === "")
@@ -38,6 +47,12 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
+      <FollowListModal
+        userList={likerListData}
+        isOpen={isLikeModalOpen}
+        setIsOpen={setIsLikeModalOpen}
+        title={"좋아요"}
+      />
       <CommentModal
         isOpen={isCommentModalOpen}
         setIsOpen={setIsCommentModalOpen}
@@ -57,6 +72,7 @@ const Home: NextPage = () => {
             feedData ? feedData.filter((data) => !data.private) : undefined
           }
           setIsCommentModalOpen={setIsCommentModalOpen}
+          setIsLikeModalOpen={setIsLikeModalOpen}
         />
       )}
     </Layout>

@@ -17,6 +17,7 @@ type Props = {
   feedData: FeedData
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
+  setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -72,6 +73,7 @@ export default function FeedSortingCard({
   feedData,
   setIsCommentModalOpen,
   setIsFeedUploadModalOpen,
+  setIsLikeModalOpen,
 }: Props) {
   const userData = useRecoilValue(userDataState)
   const [creatorInfo, setCreatorInfo] = useState<UserInfo>()
@@ -142,6 +144,7 @@ export default function FeedSortingCard({
           <LikeCommentInfo
             feedData={feedData}
             setIsCurrentUserLike={setIsCurrentUserLike}
+            setIsLikeModalOpen={setIsLikeModalOpen}
           />
           <Desc
             feedData={feedData}
