@@ -9,7 +9,7 @@ type Props = {
   FeedData: FeedData[]
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
-  setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>
+  setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -33,7 +33,7 @@ export default function FeedSortList({
   FeedData,
   setIsCommentModalOpen,
   setIsFeedUploadModalOpen,
-  setIsLikeModalOpen,
+  setIsUserListModalOpen: setIsLikeModalOpen,
 }: Props) {
   const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] =
     useState<FeedData[]>()

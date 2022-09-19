@@ -1,6 +1,5 @@
 import { DBService } from "@FireBase"
-import FollowListModal from "@share/Modal/follow/FollowListModal"
-import { userDataState } from "@share/recoil/recoilList"
+import { userDataState, userListState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import {
   arrayRemove,
@@ -11,14 +10,15 @@ import {
 } from "firebase/firestore"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
-import { useEffect, useState } from "react"
-import { useRecoilValue } from "recoil"
+import { SetStateAction, useEffect, useState } from "react"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { CustomH2Light, CustomH4Light, FlexBox, Margin } from "ui"
 import { ProfileIcon } from "icons"
 
 type Props = {
   userData: UserData
+  setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -85,16 +85,18 @@ const Style = {
   `,
 }
 
-export default function MobileHeader({ userData }: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [modalTitle, setModalTitle] = useState<string>("")
+export default function MobileHeader({
+  userData,
+  setIsUserListModalOpen,
+}: Props) {
   const [userDataByUserId, setUserDataByUserId] = useState<UserData>()
-  const [followData, setFollowData] = useState<string[]>()
   const [isCurrentUserFollowed, setIsCurrentUserFollowed] =
     useState<boolean>(false)
   const [isFollowingDataModified, setIsFollowingDataModified] =
     useState<boolean>(false)
   const currentUserData = useRecoilValue(userDataState)
+
+  const setUserList = useSetRecoilState(userListState)
 
   const handleFollow = async () => {
     const myFirestoreRef = doc(
@@ -149,7 +151,6 @@ export default function MobileHeader({ userData }: Props) {
         setUserDataByUserId(data as UserData)
       }
     })
-    setIsOpen(false)
   }, [isFollowingDataModified, userData])
 
   useEffect(() => {
@@ -159,21 +160,8 @@ export default function MobileHeader({ userData }: Props) {
       userDataByUserId?.follower.includes(currentUserData.info.userId),
     )
   }, [userDataByUserId])
-
-  useEffect(() => {
-    if (modalTitle === "") return
-    if (modalTitle === "팔로우") setFollowData(userDataByUserId?.follow)
-    if (modalTitle === "팔로워") setFollowData(userDataByUserId?.follower)
-    setIsFollowingDataModified(false)
-  }, [modalTitle, userDataByUserId])
   return (
     <>
-      <FollowListModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        title={modalTitle}
-        userList={followData !== undefined ? followData : []}
-      />
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
           <FlexBox width={90} height={90} style={{ flexShrink: 0 }}>
@@ -222,8 +210,8 @@ export default function MobileHeader({ userData }: Props) {
         </Style.SortToAll>
         <Style.SortToPublic
           onClick={() => {
-            setModalTitle("팔로워")
-            setIsOpen(true)
+            setUserList(userData.follower)
+            setIsUserListModalOpen(true)
           }}
         >
           <CustomH4Light>팔로워</CustomH4Light>
@@ -234,8 +222,8 @@ export default function MobileHeader({ userData }: Props) {
         <Style.SortToPrivate>
           <CustomH4Light
             onClick={() => {
-              setModalTitle("팔로우")
-              setIsOpen(true)
+              setUserList(userData.follow)
+              setIsUserListModalOpen(true)
             }}
           >
             팔로우

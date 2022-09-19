@@ -15,7 +15,7 @@ import {
 } from "@share/recoil/recoilList"
 import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
-import FollowListModal from "@share/Modal/follow/FollowListModal"
+import UserListModal from "@share/Modal/userList/UserListModal"
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -47,7 +47,7 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
-      <FollowListModal
+      <UserListModal
         userList={likerListData}
         isOpen={isLikeModalOpen}
         setIsOpen={setIsLikeModalOpen}

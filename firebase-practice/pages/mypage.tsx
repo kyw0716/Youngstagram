@@ -14,7 +14,7 @@ import {
 import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
-import FollowListModal from "@share/Modal/follow/FollowListModal"
+import UserListModal from "@share/Modal/userList/UserListModal"
 
 const Style = {
   Wrapper: styled.div`
@@ -38,7 +38,7 @@ export default function Profile() {
   const selectedFeedData = useRecoilValue(feedDataState)
 
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
-  const [isLikeModalOpen, setIsLikeModalOpen] = useState<boolean>(false)
+  const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
   const likeUserList = useRecoilValue(userListState)
 
   const [isFeedUploadModalOpen, setIsFeedUploadModalOpen] =
@@ -81,21 +81,21 @@ export default function Profile() {
         feedData={selectedFeedData}
         setIsUploaded={setIsUploaded}
       />
-      <FollowListModal
+      <UserListModal
         userList={likeUserList}
-        isOpen={isLikeModalOpen}
-        setIsOpen={setIsLikeModalOpen}
-        title={"좋아요"}
+        isOpen={isUserListModalOpen}
+        setIsOpen={setIsUserListModalOpen}
+        title={""}
       />
       {userData !== undefined && userData.info.userId !== "" ? (
         <Style.Wrapper>
-          <ProfileHeader />
+          <ProfileHeader setIsUserListModalOpen={setIsUserListModalOpen} />
           {feedData !== undefined && (
             <FeedSortList
               FeedData={feedData}
               setIsCommentModalOpen={setIsCommentModalOpen}
               setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
-              setIsLikeModalOpen={setIsLikeModalOpen}
+              setIsUserListModalOpen={setIsUserListModalOpen}
             />
           )}
         </Style.Wrapper>
