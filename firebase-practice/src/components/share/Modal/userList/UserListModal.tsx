@@ -1,7 +1,7 @@
 import { SetStateAction } from "react"
 import styled from "styled-components"
 import YoungstagramModal from "../YoungstagramModal"
-import FollowUserWrapper from "./FollowUserWrapper"
+import FollowUserWrapper from "./UserWrapper"
 import { v4 } from "uuid"
 import useWindowSize from "lib/useWindowSize"
 
@@ -29,7 +29,7 @@ const Style = {
   `,
 }
 
-export default function FollowListModal({
+export default function UserListModal({
   userList,
   isOpen,
   setIsOpen,
