@@ -1,3 +1,6 @@
+import { darkModeState } from "@share/recoil/recoilList"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+
 type Props = {
   width: number
   height: number
@@ -559,6 +562,7 @@ export function LeftArrowIcon({ width, height, onClick }: Props) {
 }
 
 export function LineMenuIcon({ width, height, onClick }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       width={width}
@@ -571,7 +575,7 @@ export function LineMenuIcon({ width, height, onClick }: Props) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M1.5 3C1.22386 3 1 3.22386 1 3.5C1 3.77614 1.22386 4 1.5 4H13.5C13.7761 4 14 3.77614 14 3.5C14 3.22386 13.7761 3 13.5 3H1.5ZM1 7.5C1 7.22386 1.22386 7 1.5 7H13.5C13.7761 7 14 7.22386 14 7.5C14 7.77614 13.7761 8 13.5 8H1.5C1.22386 8 1 7.77614 1 7.5ZM1 11.5C1 11.2239 1.22386 11 1.5 11H13.5C13.7761 11 14 11.2239 14 11.5C14 11.7761 13.7761 12 13.5 12H1.5C1.22386 12 1 11.7761 1 11.5Z"
-        fill="currentColor"
+        fill={isDarkMode ? "white" : "#262626"}
       />
     </svg>
   )
@@ -803,6 +807,47 @@ export function UnLockIcon({ width, height, onClick }: Props) {
     >
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
       <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+    </svg>
+  )
+}
+
+export function DarkModeIcon() {
+  const setIsDarkmode = useSetRecoilState(darkModeState)
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="white"
+      style={{ cursor: "pointer" }}
+      onClick={() => {
+        setIsDarkmode(false)
+      }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M20.6144 14.6145C19.787 14.8653 18.9093 15.0001 18 15.0001C13.0294 15.0001 9 10.9707 9 6.00013C9 5.09088 9.13484 4.21311 9.3856 3.38574C5.69007 4.50583 3 7.93883 3 12.0001C3 16.9707 7.02944 21.0001 12 21.0001C16.0613 21.0001 19.4943 18.3101 20.6144 14.6145Z"
+        fill="white"
+      ></path>
+    </svg>
+  )
+}
+
+export function LightModeIcon() {
+  const setIsDarkmode = useSetRecoilState(darkModeState)
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      style={{ cursor: "pointer" }}
+      onClick={() => {
+        setIsDarkmode(true)
+      }}
+    >
+      <path d="M4.069 13h-4.069v-2h4.069c-.041.328-.069.661-.069 1s.028.672.069 1zm3.034-7.312l-2.881-2.881-1.414 1.414 2.881 2.881c.411-.529.885-1.003 1.414-1.414zm11.209 1.414l2.881-2.881-1.414-1.414-2.881 2.881c.528.411 1.002.886 1.414 1.414zm-6.312-3.102c.339 0 .672.028 1 .069v-4.069h-2v4.069c.328-.041.661-.069 1-.069zm0 16c-.339 0-.672-.028-1-.069v4.069h2v-4.069c-.328.041-.661.069-1 .069zm7.931-9c.041.328.069.661.069 1s-.028.672-.069 1h4.069v-2h-4.069zm-3.033 7.312l2.88 2.88 1.415-1.414-2.88-2.88c-.412.528-.886 1.002-1.415 1.414zm-11.21-1.415l-2.88 2.88 1.414 1.414 2.88-2.88c-.528-.411-1.003-.885-1.414-1.414zm6.312-10.897c-3.314 0-6 2.686-6 6s2.686 6 6 6 6-2.686 6-6-2.686-6-6-6z"></path>
     </svg>
   )
 }

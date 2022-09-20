@@ -1,6 +1,6 @@
 import { authService } from "@FireBase"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { signOut } from "firebase/auth"
 import Image from "next/image"
 import { useRouter } from "next/router"
@@ -8,7 +8,13 @@ import { useEffect, useState } from "react"
 import { useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
 import { DMIcon, FlexBox, HomeIcon, ImageUploadIcon } from "ui"
-import { LineMenuIcon, LogoutIcon, ProfileIcon } from "icons"
+import {
+  DarkModeIcon,
+  LightModeIcon,
+  LineMenuIcon,
+  LogoutIcon,
+  ProfileIcon,
+} from "icons"
 
 const Style = {
   Container: styled.div`
@@ -119,6 +125,7 @@ export default function Header() {
   const resetUserData = useResetRecoilState(userDataState)
 
   const [isUploaded, setIsUploaded] = useState<boolean>(false)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
     if (isUploaded)
@@ -132,17 +139,21 @@ export default function Header() {
         setIsOpen={setIsModalOpen}
         setIsUploaded={setIsUploaded}
       />
-      <Style.Container>
+      <Style.Container
+        style={{ backgroundColor: isDarkMode ? "black" : "white" }}
+      >
         <Style.Nav>
           <Style.Logo
             onClick={() => {
               if (userData !== undefined && userData.info.userId !== "")
                 router.push("/loading")
             }}
+            style={{ color: isDarkMode ? "white" : "black" }}
           >
             youngstagram
           </Style.Logo>
           <FlexBox width={"fit-content"} gap={20} alignItems="center">
+            {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
             <HomeIcon
               onClick={() => {
                 if (userData !== undefined && userData.info.userId !== "")
