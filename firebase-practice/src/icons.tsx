@@ -103,6 +103,7 @@ export function DotMenuIcon({ width, height }: Props) {
 }
 
 export function XIcon({ width, height, onClick }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -110,7 +111,7 @@ export function XIcon({ width, height, onClick }: Props) {
       height={height}
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke={isDarkMode ? "white" : "black"}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -582,6 +583,7 @@ export function LineMenuIcon({ width, height, onClick }: Props) {
 }
 
 export function LocationIcon({ width, height, onClick }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       version="1.1"

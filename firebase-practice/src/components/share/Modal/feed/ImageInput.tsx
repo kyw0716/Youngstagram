@@ -1,6 +1,8 @@
+import { darkModeState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import { SetStateAction, useEffect } from "react"
 import { useDropzone } from "react-dropzone"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH3, FeedUPloadModalIcon, FlexBox, Margin } from "ui"
 
@@ -40,6 +42,7 @@ export default function ImageInput({
   setImagePreviewSrc,
   setImageFile,
 }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   const {
     getRootProps,
     acceptedFiles,
@@ -82,7 +85,7 @@ export default function ImageInput({
           ? { backgroundColor: "#ff4848" }
           : isDragAccept
           ? { backgroundColor: "#4891ff" }
-          : { backgroundColor: "white" }
+          : { backgroundColor: isDarkMode ? "black" : "white" }
       }
     >
       <FlexBox column={true} width={"100%"} alignItems="center">
@@ -91,7 +94,13 @@ export default function ImageInput({
         {isDragReject ? (
           <CustomH3 style={{ color: "white" }}>사진만 올릴 수 있어요</CustomH3>
         ) : (
-          <CustomH3 style={isDragAccept ? { color: "white" } : { color: "" }}>
+          <CustomH3
+            style={
+              isDragAccept
+                ? { color: isDarkMode ? "black" : "white" }
+                : { color: isDarkMode ? "white" : "" }
+            }
+          >
             사진을 여기에 끌어다 놓으세요
           </CustomH3>
         )}

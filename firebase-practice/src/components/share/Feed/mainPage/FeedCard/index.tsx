@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
@@ -78,6 +78,7 @@ export default function FeedCard({
   const [isCurrentUserLike, setIsCurrentUserLike] = useState<boolean>(false)
   const currentUser = useRecoilValue(userDataState)
   const [routingPath, setRoutingPath] = useState<string>("")
+  const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -92,8 +93,18 @@ export default function FeedCard({
   return (
     <>
       {feedCreatorData && (
-        <Style.ImageCard>
-          <Style.ImageHeader>
+        <Style.ImageCard
+          style={{
+            border: isDarkMode ? "1px solid lightgrey" : "",
+            backgroundColor: isDarkMode ? "black" : "",
+          }}
+        >
+          <Style.ImageHeader
+            style={{
+              borderBottom: isDarkMode ? "1px solid lightgrey" : "",
+              borderRadius: isDarkMode ? "10px 10px 0px 0px" : "",
+            }}
+          >
             <FlexBox
               width={"fit-content"}
               height={58}
@@ -137,27 +148,37 @@ export default function FeedCard({
                 />
               )}
               <Style.HeaderText>
-                <Style.UserName>{feedCreatorData?.info.name}</Style.UserName>
+                <Style.UserName style={{ color: isDarkMode ? "white" : "" }}>
+                  {feedCreatorData?.info.name}
+                </Style.UserName>
                 <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
               </Style.HeaderText>
             </FlexBox>
           </Style.ImageHeader>
-          {feedData.imageUrl ? (
-            <Image
-              src={feedData.imageUrl}
-              width={470}
-              height={600}
-              alt="Image"
-              priority
-            />
-          ) : (
-            <Image
-              src="https://giphy.com/embed/wnYB3vx9t6PXiq1ubB"
-              width={470}
-              height={600}
-              alt="Image"
-            />
-          )}
+          <FlexBox
+            width={470}
+            height={600}
+            style={{
+              border: isDarkMode ? "1px solid lightgrey" : "",
+            }}
+          >
+            {feedData.imageUrl ? (
+              <Image
+                src={feedData.imageUrl}
+                width={470}
+                height={600}
+                alt="Image"
+                priority
+              />
+            ) : (
+              <Image
+                src="https://giphy.com/embed/wnYB3vx9t6PXiq1ubB"
+                width={470}
+                height={600}
+                alt="Image"
+              />
+            )}
+          </FlexBox>
           <Margin direction="column" size={10} />
           <Icons
             isCurrentUserLike={isCurrentUserLike}

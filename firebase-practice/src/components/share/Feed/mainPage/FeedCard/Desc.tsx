@@ -1,7 +1,7 @@
-import { feedDataState } from "@share/recoil/recoilList"
+import { darkModeState, feedDataState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import { SetStateAction } from "react"
-import { useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { CustomH5, CustomH5Light, CustomH6, FlexBox, Margin } from "ui"
 
@@ -27,16 +27,22 @@ const Style = {
 
 export default function Desc({ feedData, setIsCommentModalOpen, name }: Props) {
   const setSelectedFeedData = useSetRecoilState(feedDataState)
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <Style.DescBox>
       <FlexBox alignItems="center">
         {feedData.desc.length > 0 ? (
-          <CustomH5 style={{ flexShrink: "0" }}>{name}</CustomH5>
+          <CustomH5
+            style={{ flexShrink: "0", color: isDarkMode ? "white" : "" }}
+          >
+            {name}
+          </CustomH5>
         ) : (
           <CustomH6
             style={{
               cursor: "pointer",
               borderBottom: "1px solid lightgrey",
+              color: isDarkMode ? "white" : "",
             }}
             onClick={() => {
               setSelectedFeedData(feedData)
@@ -49,12 +55,15 @@ export default function Desc({ feedData, setIsCommentModalOpen, name }: Props) {
         <Margin direction="row" size={10} />
         {feedData.desc.length > 10 ? (
           <FlexBox alignItems="center">
-            <CustomH5Light>{`${feedData.desc.slice(0, 11)}...`}</CustomH5Light>
+            <CustomH5Light
+              style={{ color: isDarkMode ? "white" : "" }}
+            >{`${feedData.desc.slice(0, 11)}...`}</CustomH5Light>
             <Margin direction="row" size={5} />
             <CustomH6
               style={{
                 cursor: "pointer",
                 borderBottom: "1px solid lightgrey",
+                color: isDarkMode ? "white" : "",
               }}
               onClick={() => {
                 setSelectedFeedData(feedData)
@@ -65,7 +74,9 @@ export default function Desc({ feedData, setIsCommentModalOpen, name }: Props) {
             </CustomH6>
           </FlexBox>
         ) : (
-          <CustomH5Light>{feedData.desc}</CustomH5Light>
+          <CustomH5Light style={{ color: isDarkMode ? "white" : "" }}>
+            {feedData.desc}
+          </CustomH5Light>
         )}
       </FlexBox>
     </Style.DescBox>

@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
@@ -27,6 +27,7 @@ export default function FollowCard({ userId }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<UserData>()
   const currentUser = useRecoilValue(userDataState)
+  const isDarkMode = useRecoilValue(darkModeState)
   useEffect(() => {
     onSnapshot(doc(DBService, "users", userId), (data) => {
       if (data) setUserData(data.data() as UserData)
@@ -62,7 +63,7 @@ export default function FollowCard({ userId }: Props) {
           </FlexBox>
           <Margin direction="column" size={7} />
           {userData.info.name && (
-            <CustomH6Light>
+            <CustomH6Light style={{ color: isDarkMode ? "white" : "" }}>
               {userData.info.name?.length > 4
                 ? `${userData.info.name.slice(0, 4)}..`
                 : userData.info.name}
