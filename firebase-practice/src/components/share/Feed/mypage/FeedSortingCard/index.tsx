@@ -109,7 +109,9 @@ export default function FeedSortingCard({
                 <ProfileIcon width={38} height={38} />
               )}
               <Style.HeaderText>
-                <Style.UserName>{userData?.info.name}</Style.UserName>
+                <Style.UserName style={{ color: isDarkMode ? "white" : "" }}>
+                  {userData?.info.name}
+                </Style.UserName>
                 <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
               </Style.HeaderText>
             </FlexBox>

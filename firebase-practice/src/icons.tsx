@@ -8,11 +8,12 @@ type Props = {
 }
 
 export function ProfileIcon({ onClick, width, height }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       aria-label="프로필"
-      color="#262626"
-      fill="#262626"
+      color={isDarkMode ? "white" : "#262626"}
+      fill={isDarkMode ? "white" : "#262626"}
       height={height}
       role="img"
       viewBox="0 0 24 24"
@@ -25,7 +26,7 @@ export function ProfileIcon({ onClick, width, height }: Props) {
         cy="12.004"
         fill="none"
         r="10.5"
-        stroke="currentColor"
+        stroke={isDarkMode ? "white" : "#262626"}
         strokeLinecap="round"
         strokeMiterlimit="10"
         strokeWidth="2"
@@ -33,7 +34,7 @@ export function ProfileIcon({ onClick, width, height }: Props) {
       <path
         d="M18.793 20.014a6.08 6.08 0 00-1.778-2.447 3.991 3.991 0 00-2.386-.791H9.38a3.994 3.994 0 00-2.386.791 6.09 6.09 0 00-1.779 2.447"
         fill="none"
-        stroke="currentColor"
+        stroke={isDarkMode ? "white" : "#262626"}
         strokeLinecap="round"
         strokeMiterlimit="10"
         strokeWidth="2"
@@ -43,7 +44,7 @@ export function ProfileIcon({ onClick, width, height }: Props) {
         cy="9.718"
         fill="none"
         r="4.109"
-        stroke="currentColor"
+        stroke={isDarkMode ? "white" : "#262626"}
         strokeLinecap="round"
         strokeMiterlimit="10"
         strokeWidth="2"
@@ -652,7 +653,8 @@ export function LockIcon({ width, height, onClick }: Props) {
   )
 }
 
-export function LogoutIcon({ width, height, onClick }: Props) {
+export function LogoutIcon({ width, height }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       version="1.1"
@@ -666,6 +668,8 @@ export function LogoutIcon({ width, height, onClick }: Props) {
       viewBox="0 0 96.943 96.943"
       enableBackground="0 0 96.943 96.943;"
       xmlSpace="preserve"
+      stroke={isDarkMode ? "white" : ""}
+      fill={isDarkMode ? "white" : ""}
     >
       <g>
         <g>

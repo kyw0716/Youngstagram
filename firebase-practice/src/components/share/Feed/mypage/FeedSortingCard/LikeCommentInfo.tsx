@@ -1,5 +1,9 @@
 import { DBService } from "@FireBase"
-import { userDataState, userListState } from "@share/recoil/recoilList"
+import {
+  darkModeState,
+  userDataState,
+  userListState,
+} from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import React, { SetStateAction, useEffect, useState } from "react"
@@ -21,6 +25,7 @@ export default function LikeCommentInfo({
   const [likerList, setLikerList] = useState<string[]>([])
   const currentUser = useRecoilValue(userDataState)
   const setLikeUserList = useSetRecoilState(userListState)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
@@ -43,7 +48,7 @@ export default function LikeCommentInfo({
     <FlexBox style={{ paddingLeft: "10px", marginTop: "-10px" }} gap={10}>
       {likerList !== undefined ? (
         <CustomH6
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
           onClick={() => {
             setLikeUserList(likerList)
             setIsLikeModalOpen(true)
@@ -52,12 +57,18 @@ export default function LikeCommentInfo({
           좋아요 {likerList.length}개
         </CustomH6>
       ) : (
-        <CustomH6>좋아요 0개</CustomH6>
+        <CustomH6 style={{ color: isDarkMode ? "white" : "" }}>
+          좋아요 0개
+        </CustomH6>
       )}
       {commentData !== undefined ? (
-        <CustomH6>댓글 {commentData.length}개</CustomH6>
+        <CustomH6 style={{ color: isDarkMode ? "white" : "" }}>
+          댓글 {commentData.length}개
+        </CustomH6>
       ) : (
-        <CustomH6>댓글 0개</CustomH6>
+        <CustomH6 style={{ color: isDarkMode ? "white" : "" }}>
+          댓글 0개
+        </CustomH6>
       )}
     </FlexBox>
   )

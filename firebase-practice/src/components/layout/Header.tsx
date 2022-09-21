@@ -104,7 +104,7 @@ const Style = {
     background-color: white;
     position: absolute;
     right: 2px;
-    top: 55px;
+    top: 53px;
     z-index: 6;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   `,
@@ -208,6 +208,11 @@ export default function Header() {
                       router.push(`/loading?path=mypage`)
                     }
                   }}
+                  style={{
+                    backgroundColor: isDarkMode ? "black" : "",
+                    border: isDarkMode ? "1px solid lightgrey" : "",
+                    color: isDarkMode ? "white" : "",
+                  }}
                 >
                   <ProfileIcon width={15} height={15} />
                   프로필
@@ -217,12 +222,24 @@ export default function Header() {
                     signOut(authService)
                     resetUserData()
                   }}
+                  style={{
+                    backgroundColor: isDarkMode ? "black" : "",
+                    border: isDarkMode ? "1px solid lightgrey" : "",
+                    color: isDarkMode ? "white" : "",
+                  }}
                 >
                   <LogoutIcon width={15} height={15} />
                   로그아웃
                 </Style.LogoutButton>
               </Style.DropDownMenu>
-              <Style.ChatBalloon />
+              <Style.ChatBalloon
+                style={{
+                  backgroundColor: isDarkMode ? "black" : "",
+                  borderTop: isDarkMode ? "1px solid lightgrey" : "",
+                  borderLeft: isDarkMode ? "1px solid lightgrey" : "",
+                  zIndex: isDarkMode ? 9 : "",
+                }}
+              />
             </>
           ) : (
             <></>
