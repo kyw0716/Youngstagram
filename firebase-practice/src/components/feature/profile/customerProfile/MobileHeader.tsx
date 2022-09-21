@@ -1,5 +1,9 @@
 import { DBService } from "@FireBase"
-import { userDataState, userListState } from "@share/recoil/recoilList"
+import {
+  darkModeState,
+  userDataState,
+  userListState,
+} from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import {
   arrayRemove,
@@ -97,6 +101,7 @@ export default function MobileHeader({
   const currentUserData = useRecoilValue(userDataState)
 
   const setUserList = useSetRecoilState(userListState)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   const handleFollow = async () => {
     const myFirestoreRef = doc(
@@ -179,7 +184,9 @@ export default function MobileHeader({
           </FlexBox>
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2Light style={{ fontSize: "20px" }}>
+            <CustomH2Light
+              style={{ fontSize: "20px", color: isDarkMode ? "white" : "" }}
+            >
               {userData.info.name}
             </CustomH2Light>
             <Margin direction="column" size={13} />
@@ -189,11 +196,19 @@ export default function MobileHeader({
                   let wantToUnFollow = confirm("팔로우를 취소하시겠습니까?")
                   if (wantToUnFollow) handleUnFollow()
                 }}
+                style={
+                  isDarkMode ? { backgroundColor: "black", color: "white" } : {}
+                }
               >
                 팔로잉중
               </Style.ProfileEditButton>
             ) : (
-              <Style.ProfileEditButton onClick={handleFollow}>
+              <Style.ProfileEditButton
+                onClick={handleFollow}
+                style={
+                  isDarkMode ? { backgroundColor: "black", color: "white" } : {}
+                }
+              >
                 팔로우
               </Style.ProfileEditButton>
             )}
@@ -203,8 +218,10 @@ export default function MobileHeader({
       <Margin direction="column" size={15} />
       <Style.ProfileInfoWrapper>
         <Style.SortToAll>
-          <CustomH4Light>게시물</CustomH4Light>
-          <CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            게시물
+          </CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
             {userData.feed ? userData.feed.length : 0}
           </CustomH4Light>
         </Style.SortToAll>
@@ -214,8 +231,10 @@ export default function MobileHeader({
             setIsUserListModalOpen(true)
           }}
         >
-          <CustomH4Light>팔로워</CustomH4Light>
-          <CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            팔로워
+          </CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
             {userData.follower ? userData.follower.length : 0}
           </CustomH4Light>
         </Style.SortToPublic>
@@ -225,10 +244,11 @@ export default function MobileHeader({
               setUserList(userData.follow)
               setIsUserListModalOpen(true)
             }}
+            style={{ color: isDarkMode ? "white" : "" }}
           >
             팔로우
           </CustomH4Light>
-          <CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
             {userData.follow ? userData.follow.length : 0}
           </CustomH4Light>
         </Style.SortToPrivate>

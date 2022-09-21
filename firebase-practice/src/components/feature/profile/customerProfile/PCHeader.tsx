@@ -1,5 +1,9 @@
 import { DBService } from "@FireBase"
-import { userDataState, userListState } from "@share/recoil/recoilList"
+import {
+  darkModeState,
+  userDataState,
+  userListState,
+} from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import {
   arrayRemove,
@@ -70,7 +74,7 @@ const Style = {
     flex-direction: column;
     align-items: center;
     gap: 9px;
-    border-top: 3px solid grey;
+    border-top: 3px solid ${(props) => props.color};
     cursor: pointer;
   `,
 }
@@ -82,6 +86,7 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
   const [isFollowingDataModified, setIsFollowingDataModified] =
     useState<boolean>(false)
   const currentUserData = useRecoilValue(userDataState)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   const setUserList = useSetRecoilState(userListState)
 
@@ -164,7 +169,9 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
         <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
-            <CustomH2Light>{userData.info.name}</CustomH2Light>
+            <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
+              {userData.info.name}
+            </CustomH2Light>
             <Margin direction="row" size={20} />
 
             {isCurrentUserFollowed ? (
@@ -173,22 +180,42 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
                   let wantToUnFollow = confirm("팔로우를 취소하시겠습니까?")
                   if (wantToUnFollow) handleUnFollow()
                 }}
+                style={
+                  isDarkMode
+                    ? {
+                        backgroundColor: "black",
+                        color: "white",
+                      }
+                    : {}
+                }
               >
                 팔로잉중
               </Style.ProfileEditButton>
             ) : (
-              <Style.ProfileEditButton onClick={handleFollow}>
+              <Style.ProfileEditButton
+                onClick={handleFollow}
+                style={
+                  isDarkMode
+                    ? {
+                        backgroundColor: "black",
+                        color: "white",
+                      }
+                    : {}
+                }
+              >
                 팔로우
               </Style.ProfileEditButton>
             )}
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
-            <CustomH3Light>이메일: {userData.info.email}</CustomH3Light>
+            <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
+              이메일: {userData.info.email}
+            </CustomH3Light>
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox gap={40}>
-            <CustomH3Light>
+            <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
               게시물: {userData.feed ? userData.feed.length : 0}
             </CustomH3Light>
             <CustomH3Light
@@ -196,7 +223,7 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
                 setUserList(userData.follower)
                 setIsUserListModalOpen(true)
               }}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
             >
               팔로워: {userData.follower ? userData.follower.length : 0}
             </CustomH3Light>
@@ -205,7 +232,7 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
                 setUserList(userData.follow)
                 setIsUserListModalOpen(true)
               }}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
             >
               팔로우: {userData.follow ? userData.follow.length : 0}
             </CustomH3Light>
@@ -213,8 +240,10 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
         </Style.ProfileInfo>
       </Style.ProfileHeader>
       <Style.SortWrapper>
-        <Style.SortToAll>
-          <CustomH4Light>게시물</CustomH4Light>
+        <Style.SortToAll color={isDarkMode ? "white" : "grey"}>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            게시물
+          </CustomH4Light>
           <AllFileIcon width={15} height={15} />
         </Style.SortToAll>
       </Style.SortWrapper>

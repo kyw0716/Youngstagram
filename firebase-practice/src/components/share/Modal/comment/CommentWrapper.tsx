@@ -224,7 +224,9 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
                   </CustomH6>
                 </FlexBox>
               ) : (
-                commentData.comment
+                <FlexBox style={{ color: isDarkMode ? "white" : "" }}>
+                  {commentData.comment}
+                </FlexBox>
               )}
             </>
           )}

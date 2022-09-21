@@ -122,14 +122,22 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
           <Margin direction="column" size={10} />
           <FlexBox style={{ paddingLeft: "10px" }} gap={15}>
             {likerList !== undefined ? (
-              <CustomH6>좋아요 {likerList.length}개</CustomH6>
+              <CustomH6 style={{ color: isDarkMode ? "white" : "" }}>
+                좋아요 {likerList.length}개
+              </CustomH6>
             ) : (
-              <CustomH6>좋아요 0개</CustomH6>
+              <CustomH6 style={{ color: isDarkMode ? "white" : "" }}>
+                좋아요 0개
+              </CustomH6>
             )}
             {commentData !== undefined ? (
-              <CustomH6>댓글 {commentData.length}개</CustomH6>
+              <CustomH6 style={{ color: isDarkMode ? "white" : "" }}>
+                댓글 {commentData.length}개
+              </CustomH6>
             ) : (
-              <CustomH6>댓글 0개</CustomH6>
+              <CustomH6 style={{ color: isDarkMode ? "white" : "" }}>
+                댓글 0개
+              </CustomH6>
             )}
           </FlexBox>
         </Style.DetailContainer>
