@@ -99,12 +99,7 @@ export default function FeedCard({
             backgroundColor: isDarkMode ? "black" : "",
           }}
         >
-          <Style.ImageHeader
-            style={{
-              borderBottom: isDarkMode ? "1px solid lightgrey" : "",
-              borderRadius: isDarkMode ? "10px 10px 0px 0px" : "",
-            }}
-          >
+          <Style.ImageHeader>
             <FlexBox
               width={"fit-content"}
               height={58}
@@ -155,30 +150,22 @@ export default function FeedCard({
               </Style.HeaderText>
             </FlexBox>
           </Style.ImageHeader>
-          <FlexBox
-            width={470}
-            height={600}
-            style={{
-              border: isDarkMode ? "1px solid lightgrey" : "",
-            }}
-          >
-            {feedData.imageUrl ? (
-              <Image
-                src={feedData.imageUrl}
-                width={470}
-                height={600}
-                alt="Image"
-                priority
-              />
-            ) : (
-              <Image
-                src="https://giphy.com/embed/wnYB3vx9t6PXiq1ubB"
-                width={470}
-                height={600}
-                alt="Image"
-              />
-            )}
-          </FlexBox>
+          {feedData.imageUrl ? (
+            <Image
+              src={feedData.imageUrl}
+              width={470}
+              height={600}
+              alt="Image"
+              priority
+            />
+          ) : (
+            <Image
+              src="https://giphy.com/embed/wnYB3vx9t6PXiq1ubB"
+              width={470}
+              height={600}
+              alt="Image"
+            />
+          )}
           <Margin direction="column" size={10} />
           <Icons
             isCurrentUserLike={isCurrentUserLike}
