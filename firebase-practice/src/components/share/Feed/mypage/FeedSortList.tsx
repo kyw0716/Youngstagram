@@ -1,6 +1,8 @@
+import { darkModeState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import { CameraIcon } from "icons"
 import React, { SetStateAction, useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH2Light, CustomH5Light } from "ui"
 import FeedSortingCard from "./FeedSortingCard"
@@ -49,6 +51,9 @@ export default function FeedSortList({
         }),
       )
   }, [FeedData])
+
+  const isDarkMode = useRecoilValue(darkModeState)
+
   return (
     <Style.ImageContainer>
       {feedDataSortedByUploadTime !== undefined &&
@@ -67,8 +72,10 @@ export default function FeedSortList({
       ) : (
         <>
           <CameraIcon width={62} height={62} />
-          <CustomH2Light>사진 공유</CustomH2Light>
-          <CustomH5Light>
+          <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
+            사진 공유
+          </CustomH2Light>
+          <CustomH5Light style={{ color: isDarkMode ? "white" : "" }}>
             사진을 공유하면 회원님의 프로필에 표시됩니다.
           </CustomH5Light>
         </>

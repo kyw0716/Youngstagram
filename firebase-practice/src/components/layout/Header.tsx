@@ -152,7 +152,7 @@ export default function Header() {
           >
             youngstagram
           </Style.Logo>
-          <FlexBox width={"fit-content"} gap={20} alignItems="center">
+          <FlexBox width={"fit-content"} gap={15} alignItems="center">
             {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
             <HomeIcon
               onClick={() => {

@@ -75,6 +75,7 @@ export function BottomArrowIcon({ width, height, onClick }: Props) {
 }
 
 export function DotMenuIcon({ width, height }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       width={width}
@@ -86,6 +87,7 @@ export function DotMenuIcon({ width, height }: Props) {
       xmlSpace="preserve"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
+      fill={isDarkMode ? "white" : "black"}
     >
       <path
         d="M16,13c-1.654,0-3,1.346-3,3s1.346,3,3,3s3-1.346,3-3S17.654,13,16,13z"
@@ -126,6 +128,7 @@ export function XIcon({ width, height, onClick }: Props) {
 }
 
 export function AllFileIcon({ width, height, onClick }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       version="1.1"
@@ -140,6 +143,8 @@ export function AllFileIcon({ width, height, onClick }: Props) {
       enableBackground="new 0 0 24 24"
       xmlSpace="preserve"
       style={{ cursor: "pointer" }}
+      stroke={isDarkMode ? "white" : ""}
+      fill={isDarkMode ? "white" : ""}
     >
       <g>
         <g>
@@ -160,7 +165,8 @@ export function AllFileIcon({ width, height, onClick }: Props) {
   )
 }
 
-export function CameraIcon({ width, height, onClick }: Props) {
+export function CameraIcon({ width, height }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       version="1.1"
@@ -171,13 +177,12 @@ export function CameraIcon({ width, height, onClick }: Props) {
       y="0px"
       viewBox="0 0 369.946 369.946"
       xmlSpace="preserve"
-      style={{ cursor: "pointer" }}
       width={width}
       height={height}
     >
       <g>
         <path
-          style={{ fill: "#010002" }}
+          style={{ fill: isDarkMode ? "white" : "#010002" }}
           d="M361.658,130.161l0.37-0.322l-0.788-0.925C337.444,54.245,267.429,0,184.973,0
 		C82.975,0,0,82.981,0,184.973c0,101.998,82.981,184.973,184.973,184.973s184.973-82.975,184.973-184.973
 		C369.952,165.897,367.046,147.489,361.658,130.161z M347.767,126.337l-91.311,78.053l45.527-146.767
@@ -563,7 +568,7 @@ export function LeftArrowIcon({ width, height, onClick }: Props) {
   )
 }
 
-export function LineMenuIcon({ width, height, onClick }: Props) {
+export function LineMenuIcon({ width, height }: Props) {
   const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
@@ -583,8 +588,7 @@ export function LineMenuIcon({ width, height, onClick }: Props) {
   )
 }
 
-export function LocationIcon({ width, height, onClick }: Props) {
-  const isDarkMode = useRecoilValue(darkModeState)
+export function LocationIcon({ width, height }: Props) {
   return (
     <svg
       version="1.1"
@@ -637,13 +641,16 @@ export function LocationIcon({ width, height, onClick }: Props) {
   )
 }
 
-export function LockIcon({ width, height, onClick }: Props) {
+export function LockIcon({ width, height }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       width={width}
       height={height}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      stroke={isDarkMode ? "white" : ""}
+      fill={isDarkMode ? "white" : ""}
     >
       <path
         fillRule="evenodd"
@@ -798,7 +805,8 @@ export function RightArrowIcon({ width, height, onClick }: Props) {
   )
 }
 
-export function UnLockIcon({ width, height, onClick }: Props) {
+export function UnLockIcon({ width, height }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       width={width}
@@ -806,7 +814,7 @@ export function UnLockIcon({ width, height, onClick }: Props) {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      stroke="currentColor"
+      stroke={isDarkMode ? "white" : "black"}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

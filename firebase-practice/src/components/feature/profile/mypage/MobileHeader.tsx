@@ -1,5 +1,6 @@
 import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
 import {
+  darkModeState,
   FeedDataFilter,
   userDataState,
   userListState,
@@ -9,11 +10,8 @@ import { SetStateAction, useState } from "react"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import {
-  CustomH2,
   CustomH2Light,
-  CustomH3,
   CustomH3Light,
-  CustomH4,
   CustomH4Light,
   FlexBox,
   Margin,
@@ -64,7 +62,7 @@ const Style = {
     align-items: center;
     gap: 9px;
     border-bottom: 3px solid
-      ${(props) => (props.about === "public" ? "grey" : "none")};
+      ${(props) => (props.about === "public" ? props.color : "none")};
   `,
   SortToPrivate: styled.div`
     cursor: pointer;
@@ -74,7 +72,7 @@ const Style = {
     align-items: center;
     gap: 9px;
     border-bottom: 3px solid
-      ${(props) => (props.about === "private" ? "grey" : "none")};
+      ${(props) => (props.about === "private" ? props.color : "none")};
   `,
   SortToAll: styled.div`
     cursor: pointer;
@@ -84,7 +82,7 @@ const Style = {
     align-items: center;
     gap: 9px;
     border-bottom: 3px solid
-      ${(props) => (props.about === "all" ? "grey" : "none")};
+      ${(props) => (props.about === "all" ? props.color : "none")};
   `,
 }
 
@@ -93,6 +91,7 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
   const [feedDataType, setFeedDataType] = useRecoilState(FeedDataFilter)
   const userData = useRecoilValue(userDataState)
   const setUserList = useSetRecoilState(userListState)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   return (
     <>
@@ -114,11 +113,13 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
           )}
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2Light>{userData.info.name}</CustomH2Light>
+            <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
+              {userData.info.name}
+            </CustomH2Light>
             <Margin direction="column" size={7} />
             <FlexBox gap={15}>
               <CustomH3Light
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
                 onClick={() => {
                   setUserList(userData.follow)
                   setIsUserListModalOpen(true)
@@ -127,7 +128,7 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
                 팔로우: {userData.follow ? userData.follow.length : `0`}
               </CustomH3Light>
               <CustomH3Light
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
                 onClick={() => {
                   setUserList(userData.follower)
                   setIsUserListModalOpen(true)
@@ -138,6 +139,7 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
             </FlexBox>
             <Margin direction="column" size={7} />
             <Style.ProfileEditButton
+              style={{ color: isDarkMode ? "white" : "" }}
               onClick={() => {
                 setIsOpen(true)
               }}
@@ -154,9 +156,12 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
             setFeedDataType("all")
           }}
           about={feedDataType}
+          color={isDarkMode ? "white" : "grey"}
         >
-          <CustomH4Light>전체 게시물</CustomH4Light>
-          <CustomH3Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            전체 게시물
+          </CustomH4Light>
+          <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
             {userData.feed ? `${userData.feed.length}` : `0`}
           </CustomH3Light>
         </Style.SortToAll>
@@ -165,9 +170,12 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
             setFeedDataType("public")
           }}
           about={feedDataType}
+          color={isDarkMode ? "white" : "grey"}
         >
-          <CustomH4Light>공개 게시물</CustomH4Light>
-          <CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            공개 게시물
+          </CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
             {userData.feed
               ? userData.feed.length -
                 userData.feed.filter((eachFeed) => eachFeed.private).length
@@ -179,9 +187,12 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
             setFeedDataType("private")
           }}
           about={feedDataType}
+          color={isDarkMode ? "white" : "grey"}
         >
-          <CustomH4Light>숨김 게시물</CustomH4Light>
-          <CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            숨김 게시물
+          </CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
             {userData.feed
               ? userData.feed.filter((eachFeed) => eachFeed.private).length
               : `0`}
