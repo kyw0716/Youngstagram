@@ -16,6 +16,8 @@ import YoungstagramModal from "../YoungstagramModal"
 import CommentInput from "./CommentInput"
 import useWindowSize from "lib/useWindowSize"
 import CommentList from "./CommentList"
+import { useRecoilValue } from "recoil"
+import { darkModeState } from "@share/recoil/recoilList"
 
 type Props = {
   isOpen: boolean
@@ -69,6 +71,7 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
   const commentAreaRef = useRef<HTMLDivElement>(null)
   const [likerList, setLikerList] = useState<string[]>([])
   const windowSize = useWindowSize()
+  const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
     if (feedData.storageId !== "") {

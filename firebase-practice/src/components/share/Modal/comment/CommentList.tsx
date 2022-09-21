@@ -9,7 +9,7 @@ import { CustomH4, CustomH6, FlexBox, Margin } from "ui"
 import CommentWrapper from "./CommentWrapper"
 import { v4 } from "uuid"
 import { useRecoilValue } from "recoil"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { ProfileIcon } from "icons"
 
 type Props = {
@@ -63,6 +63,7 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
   const [userData, setUserData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
   const currentUserData = useRecoilValue(userDataState)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -107,7 +108,9 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
         </FlexBox>
         <Margin direction="row" size={14} />
         <FlexBox column={true}>
-          <CustomH4 style={{ color: "black" }}>{userData?.info.name}</CustomH4>
+          <CustomH4 style={{ color: isDarkMode ? "white" : "black" }}>
+            {userData?.info.name}
+          </CustomH4>
           <CustomH6>{feedData.location}</CustomH6>
         </FlexBox>
       </Style.Header>
@@ -148,10 +151,10 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
           <FlexBox
             column={true}
             width={"fit-content"}
-            style={{ paddingRight: "20px" }}
+            style={{ paddingRight: "20px", color: isDarkMode ? "white" : "" }}
           >
             <Margin direction="column" size={5} />
-            <CustomH4 style={{ color: "black" }}>
+            <CustomH4 style={{ color: isDarkMode ? "white" : "black" }}>
               {userData?.info.name}
             </CustomH4>
             {feedData.desc}
