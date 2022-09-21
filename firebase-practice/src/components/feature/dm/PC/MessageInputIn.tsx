@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { Message } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import getCurrentTime from "lib/getCurrentTime"
@@ -53,6 +53,7 @@ export default function MessageInput({ selectedUserId }: Props) {
   const [message, setMessage] = useState<string>("")
   const [randomId, setRandomId] = useState<string>(v4())
   const userData = useRecoilValue(userDataState)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   const handleSendMessage = async () => {
     const uploadTime = getCurrentTime()
@@ -101,6 +102,7 @@ export default function MessageInput({ selectedUserId }: Props) {
         }
         event.preventDefault()
       }}
+      style={{ backgroundColor: isDarkMode ? "black" : "" }}
     >
       <Style.DMInput
         value={message}
@@ -108,6 +110,10 @@ export default function MessageInput({ selectedUserId }: Props) {
           setMessage(event.target.value)
         }}
         placeholder="메시지를 입력해주세요"
+        style={{
+          color: isDarkMode ? "white" : "",
+          backgroundColor: isDarkMode ? "black" : "",
+        }}
       />
       <Style.SubmitButton
         about={message.length > 0 ? "#4891ff" : "#d1e3ff"}
@@ -117,6 +123,7 @@ export default function MessageInput({ selectedUserId }: Props) {
             handleSendMessage()
           }
         }}
+        style={{ backgroundColor: isDarkMode ? "black" : "" }}
       >
         게시
       </Style.SubmitButton>

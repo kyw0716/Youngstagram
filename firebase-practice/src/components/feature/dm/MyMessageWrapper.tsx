@@ -1,4 +1,6 @@
+import { darkModeState } from "@share/recoil/recoilList"
 import { Message } from "backend/dto"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { Margin } from "ui"
 
@@ -40,11 +42,19 @@ const Style = {
 }
 
 export default function MyMessageWrapper({ messageData }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <Style.Wrapper>
-      <Style.MessageContainer>
+      <Style.MessageContainer
+        style={{
+          backgroundColor: isDarkMode ? "black" : "",
+          color: isDarkMode ? "white" : "",
+        }}
+      >
         {messageData.message}
-        <Style.ChatBalloon />
+        <Style.ChatBalloon
+          style={{ backgroundColor: isDarkMode ? "black" : "" }}
+        />
       </Style.MessageContainer>
       <Margin direction="row" size={22} />
     </Style.Wrapper>

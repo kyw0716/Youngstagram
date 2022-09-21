@@ -1,16 +1,15 @@
-import { userDataState } from "@share/recoil/recoilList"
+import {
+  darkModeState,
+  dmSelectedUserId,
+  userDataState,
+} from "@share/recoil/recoilList"
 import { BottomArrowIcon, XIcon } from "icons"
 import { SetStateAction, useEffect, useState } from "react"
-import { useRecoilValue } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { FlexBox } from "ui"
 import UserCard from "../UserCard"
 import FollowList from "./FollowList"
-
-type Props = {
-  selectedUserId: string
-  setSelectedUserId: React.Dispatch<SetStateAction<string>>
-}
 
 const Style = {
   Wrapper: styled.div`
@@ -40,16 +39,16 @@ const Style = {
   `,
 }
 
-export default function DropDownFollowList({
-  selectedUserId,
-  setSelectedUserId,
-}: Props) {
+export default function DropDownFollowList() {
   const currentUserData = useRecoilValue(userDataState)
   const [isFollowerList, setIsFollowerList] = useState<boolean>(false)
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState<boolean>(true)
 
   const [follower, setFollower] = useState<string[]>([])
   const [follow, setFollow] = useState<string[]>([])
+
+  const isDarkMode = useRecoilValue(darkModeState)
+  const [selectedUserId, setSelectedUserId] = useRecoilState(dmSelectedUserId)
 
   useEffect(() => {
     setFollow(currentUserData.follow)
@@ -58,11 +57,17 @@ export default function DropDownFollowList({
 
   return (
     <>
-      <Style.Header>
+      <Style.Header
+        style={{
+          backgroundColor: isDarkMode ? "black" : "",
+          borderBottom: "2px solid lightgrey",
+        }}
+      >
         <UserCard
           userId={
             isDropDownMenuOpen ? currentUserData.info.userId : selectedUserId
           }
+          color={isDarkMode ? "black" : "white"}
         />
         {isDropDownMenuOpen ? (
           <FlexBox
@@ -70,6 +75,7 @@ export default function DropDownFollowList({
             width={"fit-content"}
             height={"fit-content"}
             alignItems={"center"}
+            style={{ flexShrink: 0, fontSize: 12 }}
           >
             <Style.SelectFollowOrFollowerBtn
               about={isFollowerList ? "lightgrey" : "white"}
@@ -77,16 +83,10 @@ export default function DropDownFollowList({
                 setIsFollowerList((current) => !current)
                 setSelectedUserId("")
               }}
+              style={{ flexShrink: 0, fontSize: 12 }}
             >
               {isFollowerList ? "팔로우로 전환" : "팔로워로 전환"}
             </Style.SelectFollowOrFollowerBtn>
-            <XIcon
-              width={25}
-              height={25}
-              onClick={() => {
-                setIsDropDownMenuOpen(false)
-              }}
-            />
           </FlexBox>
         ) : (
           <BottomArrowIcon
@@ -101,8 +101,6 @@ export default function DropDownFollowList({
       {isDropDownMenuOpen && (
         <FollowList
           followList={isFollowerList ? follower : follow}
-          selectedUserId={selectedUserId}
-          setSelectedUserId={setSelectedUserId}
           setIsDropDownMenuOpen={setIsDropDownMenuOpen}
         />
       )}

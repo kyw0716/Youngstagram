@@ -9,8 +9,13 @@ import UserCard from "@feature/dm/UserCard"
 import { v4 } from "uuid"
 import { doc, onSnapshot } from "firebase/firestore"
 import MessageInput from "@feature/dm/PC/MessageInputIn"
-import { useRecoilValue } from "recoil"
-import { userDataState } from "@share/recoil/recoilList"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import {
+  darkModeState,
+  dmSelectedUserId,
+  userDataState,
+} from "@share/recoil/recoilList"
+import MessageList from "./MessageList"
 
 const Style = {
   Wrapper: styled.div`
@@ -77,37 +82,20 @@ export default function PCDM() {
     string[]
   >([])
   const [isFollowerList, setIsFollowerList] = useState<boolean>(false)
-  const [selectedUserId, setSelectedUserId] = useState<string>("")
-  const [messageData, setMessageData] = useState<Message[]>([])
-  const userData = useRecoilValue(userDataState)
+  const currentUserData = useRecoilValue(userDataState)
+  const isDarkMode = useRecoilValue(darkModeState)
+  const setSelectedUserId = useSetRecoilState(dmSelectedUserId)
 
-  const DMRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (DMRef.current === null) return
-    DMRef.current.scrollIntoView({
-      block: "start",
-      behavior: "auto",
-    })
-  }, [messageData.length])
-  useEffect(() => {
-    setCurrentUserFollowList(userData.follow)
-    setCurrentUserFollowerList(userData.follower)
-  }, [userData])
-  useEffect(() => {
-    if (selectedUserId === "") {
-      setMessageData([])
-      return
-    }
-    onSnapshot(doc(DBService, userData.info.userId, selectedUserId), (data) => {
-      if (data.data()?.message)
-        setMessageData(data.data()?.message as Message[])
-      else setMessageData([])
-    })
-  }, [selectedUserId])
+    setCurrentUserFollowList(currentUserData.follow)
+    setCurrentUserFollowerList(currentUserData.follower)
+  }, [currentUserData])
   return (
     <Style.Wrapper>
       <FlexBox width={"932px"} height={"70vh"}>
-        <Style.FollowListSection>
+        <Style.FollowListSection
+          style={{ backgroundColor: isDarkMode ? "black" : "" }}
+        >
           <FlexBox
             width={"100%"}
             alignItems={"center"}
@@ -118,9 +106,13 @@ export default function PCDM() {
               top: 0,
               marginBottom: 15,
               flexShrink: 0,
+              paddingRight: 15,
             }}
           >
-            <UserCard userId={userData.info.userId} />
+            <UserCard
+              userId={currentUserData.info.userId}
+              color={isDarkMode ? "black" : "white"}
+            />
             <Margin direction="row" size={15} />
             <Style.SelectFollowOrFollowerBtn
               about={isFollowerList ? "lightgrey" : "white"}
@@ -128,7 +120,7 @@ export default function PCDM() {
                 setIsFollowerList((current) => !current)
                 setSelectedUserId("")
               }}
-              style={{ fontSize: 13 }}
+              style={{ fontSize: 13, flexShrink: 0 }}
             >
               {isFollowerList ? "팔로우로 전환" : "팔로워로 전환"}
             </Style.SelectFollowOrFollowerBtn>
@@ -141,107 +133,19 @@ export default function PCDM() {
           <Margin direction="column" size={10} />
           {isFollowerList ? (
             <>
-              {currentUserFollowerList && (
-                <>
-                  {currentUserFollowerList.map((data) => {
-                    return (
-                      <FlexBox
-                        width={"100%"}
-                        height={60}
-                        key={v4()}
-                        alignItems="center"
-                        onClick={() => {
-                          if (selectedUserId === data) {
-                            setSelectedUserId("")
-                            return
-                          }
-                          setSelectedUserId(data)
-                        }}
-                        style={{
-                          backgroundColor:
-                            data === selectedUserId ? "lightgrey" : "white",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <UserCard userId={data} />
-                      </FlexBox>
-                    )
-                  })}
-                </>
-              )}
+              {currentUserFollowerList?.map((data) => {
+                return <UserCard key={v4()} userId={data} />
+              })}
             </>
           ) : (
             <>
-              {currentUserFollowList && (
-                <>
-                  {currentUserFollowList.map((data) => {
-                    return (
-                      <FlexBox
-                        width={"100%"}
-                        height={60}
-                        key={v4()}
-                        alignItems="center"
-                        onClick={() => {
-                          if (selectedUserId === data) {
-                            setSelectedUserId("")
-                            return
-                          }
-                          setSelectedUserId(data)
-                        }}
-                        style={{
-                          backgroundColor:
-                            data === selectedUserId ? "lightgrey" : "white",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <UserCard userId={data} />
-                      </FlexBox>
-                    )
-                  })}
-                </>
-              )}
+              {currentUserFollowList?.map((data) => {
+                return <UserCard userId={data} key={v4()} />
+              })}
             </>
           )}
         </Style.FollowListSection>
-        <Style.MessageSection>
-          <FlexBox
-            width={"100%"}
-            alignItems="center"
-            height={60}
-            style={{
-              borderBottom: selectedUserId ? "1px solid lightgrey" : "",
-              position: "sticky",
-              top: 0,
-              flexShrink: 0,
-              zIndex: 2,
-              backgroundColor: "white",
-            }}
-          >
-            {selectedUserId && <UserCard userId={`${selectedUserId}`} />}
-          </FlexBox>
-          {selectedUserId && (
-            <Style.MessageList>
-              {messageData.map((message) => {
-                return (
-                  <>
-                    {message.userId === userData.info.userId ? (
-                      <MyMessageWrapper messageData={message} />
-                    ) : (
-                      <OtherMessageWrapper messageData={message} />
-                    )}
-                    <Margin
-                      direction="column"
-                      size={15}
-                      style={{ flexShrink: 0 }}
-                    />
-                  </>
-                )
-              })}
-              <div ref={DMRef}></div>
-            </Style.MessageList>
-          )}
-          {selectedUserId && <MessageInput selectedUserId={selectedUserId} />}
-        </Style.MessageSection>
+        <MessageList />
       </FlexBox>
     </Style.Wrapper>
   )

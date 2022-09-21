@@ -43,3 +43,8 @@ export const darkModeState = atom<boolean>({
   key: "DARKMODEATOM",
   default: false,
 })
+
+export const dmSelectedUserId = atom<string>({
+  key: "DMSELECTEDUSERIDATOM",
+  default: "",
+})

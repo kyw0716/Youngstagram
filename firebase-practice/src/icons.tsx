@@ -54,6 +54,7 @@ export function ProfileIcon({ onClick, width, height }: Props) {
 }
 
 export function BottomArrowIcon({ width, height, onClick }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <svg
       width={width}
@@ -62,7 +63,7 @@ export function BottomArrowIcon({ width, height, onClick }: Props) {
       id="i-chevron-bottom"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      stroke="currentcolor"
+      stroke={isDarkMode ? "white" : "black"}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth="2"
