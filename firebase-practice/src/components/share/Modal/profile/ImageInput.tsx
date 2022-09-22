@@ -1,4 +1,6 @@
+import { darkModeState } from "@share/recoil/recoilList"
 import React, { SetStateAction, useEffect, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH6, FlexBox, Margin } from "ui"
 
@@ -57,12 +59,15 @@ export default function ImageInput({
       }
     })
   }
+  const isDarkMode = useRecoilValue(darkModeState)
   useEffect(() => {
     if (isSubmit) setImageFileName("")
   }, [isSubmit])
   return (
     <>
-      <CustomH6>이미지 변경:</CustomH6>
+      <CustomH6 style={{ color: isDarkMode ? "white" : "black" }}>
+        이미지 변경:
+      </CustomH6>
       <Margin direction="column" size={isPC ? 10 : 5} />
       <FlexBox width={"100%"}>
         <Style.ImagePreviewName about={`${isPC}`}>
