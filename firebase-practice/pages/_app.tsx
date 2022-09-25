@@ -5,12 +5,28 @@ import { useRouter } from "next/router"
 import { onAuthStateChanged } from "firebase/auth"
 import { authService } from "@FireBase"
 import { RecoilRoot, useSetRecoilState } from "recoil"
-import { darkModeState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
+import getUserDataByUid from "lib/getUserDataByUid"
+import { UserData } from "backend/dto"
 
 const SetDarkMode = () => {
   const setDarkRecoil = useSetRecoilState(darkModeState)
   useEffect(() => {
     setDarkRecoil(localStorage.getItem("darkMode") === "dark")
+  }, [])
+  return null
+}
+
+const SetCurrnentUser = () => {
+  const setCurrentUser = useSetRecoilState(userDataState)
+  useEffect(() => {
+    onAuthStateChanged(authService, (user) => {
+      if (user) {
+        getUserDataByUid(user.uid).then((response) => {
+          setCurrentUser(response as UserData)
+        })
+      }
+    })
   }, [])
   return null
 }
@@ -34,6 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <SetDarkMode />
+      <SetCurrnentUser />
       <Component {...pageProps} />
     </RecoilRoot>
   )

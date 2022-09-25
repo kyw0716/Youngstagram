@@ -29,10 +29,10 @@ const Home: NextPage = () => {
   const [isLikeModalOpen, setIsLikeModalOpen] = useState<boolean>(false)
   const likerListData = useRecoilValue(userListState)
 
-  useEffect(() => {
-    if (currentUserData !== undefined && currentUserData.info.userId === "")
-      router.push("/loading")
-  }, [currentUserData])
+  // useEffect(() => {
+  //   if (currentUserData !== undefined && currentUserData.info.userId === "")
+  //     router.push("/loading")
+  // }, [currentUserData])
   useEffect(() => {
     const AllFeedRef = doc(DBService, "mainPage", `userFeedDataAll`)
     onSnapshot(AllFeedRef, { includeMetadataChanges: true }, (doc) => {
