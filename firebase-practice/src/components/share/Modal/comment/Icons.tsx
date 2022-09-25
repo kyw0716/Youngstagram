@@ -42,7 +42,10 @@ export default function Icons({ storageId, inputRef }: Props) {
   }, [storageId])
 
   useEffect(() => {
-    if (likerList.includes(`${authService.currentUser?.uid}`))
+    if (
+      likerList !== undefined &&
+      likerList.includes(`${authService.currentUser?.uid}`)
+    )
       setIsCurrentUserLiked(true)
     else setIsCurrentUserLiked(false)
   }, [authService.currentUser, likerList])
