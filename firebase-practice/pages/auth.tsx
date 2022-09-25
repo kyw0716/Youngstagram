@@ -259,7 +259,8 @@ export default function Auth() {
   }
 
   useEffect(() => {
-    if (isLogin) router.push("/loading")
+    if (isLogin) router.push("/")
+    setIsLogin(false)
   }, [isLogin])
 
   return (

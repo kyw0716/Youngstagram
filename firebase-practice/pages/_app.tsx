@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { onAuthStateChanged } from "firebase/auth"
 import { authService } from "@FireBase"
-import { RecoilRoot, useSetRecoilState } from "recoil"
+import { RecoilRoot, useResetRecoilState, useSetRecoilState } from "recoil"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import getUserDataByUid from "lib/getUserDataByUid"
 import { UserData } from "backend/dto"
@@ -33,15 +33,13 @@ const SetCurrnentUser = () => {
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
-  const [isLogOut, setIsLogOut] = useState<boolean>(false)
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
-      if (user === null) setIsLogOut(true)
+      if (user === null) {
+        router.push("/auth")
+      }
     })
   }, [])
-  useEffect(() => {
-    if (isLogOut) router.push("/loading")
-  }, [isLogOut])
 
   useEffect(() => {
     let vh = window.innerHeight * 0.01

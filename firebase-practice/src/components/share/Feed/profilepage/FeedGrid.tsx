@@ -33,7 +33,7 @@ export default function FeedGrid({ feedDatas, setIsCommentModalOpen }: Props) {
   >([])
   useEffect(() => {
     if (feedDatas === undefined) return
-    if (feedDatas.length > 0)
+    if (feedDatas.length >= 0)
       setFeedDataSortedByUploadTime(
         (JSON.parse(JSON.stringify(feedDatas)) as FeedData[]).sort(function (
           a,

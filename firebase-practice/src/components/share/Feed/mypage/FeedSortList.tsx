@@ -8,7 +8,7 @@ import { CustomH2Light, CustomH5Light } from "ui"
 import FeedSortingCard from "./FeedSortingCard"
 
 type Props = {
-  FeedData: FeedData[]
+  feedData: FeedData[]
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>
@@ -32,7 +32,7 @@ const Style = {
 }
 
 export default function FeedSortList({
-  FeedData,
+  feedData,
   setIsCommentModalOpen,
   setIsFeedUploadModalOpen,
   setIsUserListModalOpen: setIsLikeModalOpen,
@@ -40,17 +40,17 @@ export default function FeedSortList({
   const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] =
     useState<FeedData[]>()
   useEffect(() => {
-    if (FeedData.length === 0) setFeedDataSortedByUploadTime([])
-    if (FeedData !== undefined && FeedData.length > 0)
+    if (feedData.length === 0) setFeedDataSortedByUploadTime([])
+    if (feedData !== undefined && feedData.length > 0)
       setFeedDataSortedByUploadTime(
-        (JSON.parse(JSON.stringify(FeedData)) as FeedData[]).sort(function (
+        (JSON.parse(JSON.stringify(feedData)) as FeedData[]).sort(function (
           a,
           b,
         ) {
           return Number(b.uploadTime) - Number(a.uploadTime)
         }),
       )
-  }, [FeedData])
+  }, [feedData])
 
   const isDarkMode = useRecoilValue(darkModeState)
 

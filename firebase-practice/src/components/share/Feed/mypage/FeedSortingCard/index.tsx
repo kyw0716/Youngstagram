@@ -77,7 +77,6 @@ export default function FeedSortingCard({
 }: Props) {
   const userData = useRecoilValue(userDataState)
   const [creatorInfo, setCreatorInfo] = useState<UserInfo>()
-  const [isCurrentUserLike, setIsCurrentUserLike] = useState<boolean>(false)
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
@@ -136,17 +135,10 @@ export default function FeedSortingCard({
               alt="Image"
             />
           )}
-
           <Margin direction="column" size={10} />
-          <Icons
-            isCurrentUserLike={isCurrentUserLike}
-            setIsCommentModalOpen={setIsCommentModalOpen}
-            feedData={feedData}
-          />
-          <Margin direction="column" size={15} />
           <LikeCommentInfo
             feedData={feedData}
-            setIsCurrentUserLike={setIsCurrentUserLike}
+            setIsCommentModalOpen={setIsCommentModalOpen}
             setIsLikeModalOpen={setIsLikeModalOpen}
           />
           <Desc
