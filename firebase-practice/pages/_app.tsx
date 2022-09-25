@@ -4,7 +4,16 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { onAuthStateChanged } from "firebase/auth"
 import { authService } from "@FireBase"
-import { RecoilRoot } from "recoil"
+import { RecoilRoot, useSetRecoilState } from "recoil"
+import { darkModeState } from "@share/recoil/recoilList"
+
+const SetDarkMode = () => {
+  const setDarkRecoil = useSetRecoilState(darkModeState)
+  useEffect(() => {
+    setDarkRecoil(localStorage.getItem("darkMode") === "dark")
+  }, [])
+  return null
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -24,6 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
   return (
     <RecoilRoot>
+      <SetDarkMode />
       <Component {...pageProps} />
     </RecoilRoot>
   )

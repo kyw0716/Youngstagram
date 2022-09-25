@@ -39,7 +39,7 @@ export const userListState = atom<string[]>({
   default: [],
 })
 
-export const darkModeState = atom<boolean>({
+export const darkModeState = atom<boolean | null>({
   key: "DARKMODEATOM",
   default: false,
 })
