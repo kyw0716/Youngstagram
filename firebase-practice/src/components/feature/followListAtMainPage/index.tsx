@@ -1,13 +1,14 @@
 import { authService, DBService } from "@FireBase"
 import { UserData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
-import Image from "next/image"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { FlexBox } from "ui"
 import FollowCard from "./FollowCard"
 import { v4 } from "uuid"
 import { LeftArrowForCarouselIcon, RightArrowForCarouselIcon } from "icons"
+import { useRecoilValue } from "recoil"
+import { darkModeState } from "@share/recoil/recoilList"
 
 const Style = {
   Wrapper: styled.div`
@@ -40,6 +41,8 @@ export default function FollowListAtMainPage() {
   const [userData, setUserData] = useState<UserData>()
   const [movingRange, setMovingRange] = useState<number>(0)
   const [followNumber, setFollowNumber] = useState<number>(0)
+  const isDarkMode = useRecoilValue(darkModeState)
+
   useEffect(() => {
     if (!authService.currentUser) return
     onSnapshot(doc(DBService, "users", authService.currentUser.uid), (data) => {
@@ -62,7 +65,12 @@ export default function FollowListAtMainPage() {
   return (
     <>
       {userData !== undefined && userData.follow !== undefined ? (
-        <Style.Wrapper>
+        <Style.Wrapper
+          style={{
+            backgroundColor: isDarkMode ? "black" : "",
+            border: isDarkMode ? "1px solid lightgrey" : "",
+          }}
+        >
           <Style.FollowCardWrapper about={`${movingRange}px`}>
             {userData.follow.map((followUserId) => {
               return <FollowCard userId={followUserId} key={v4()} />

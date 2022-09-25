@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
@@ -78,6 +78,7 @@ export default function FeedCard({
   const [isCurrentUserLike, setIsCurrentUserLike] = useState<boolean>(false)
   const currentUser = useRecoilValue(userDataState)
   const [routingPath, setRoutingPath] = useState<string>("")
+  const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
@@ -92,7 +93,12 @@ export default function FeedCard({
   return (
     <>
       {feedCreatorData && (
-        <Style.ImageCard>
+        <Style.ImageCard
+          style={{
+            border: isDarkMode ? "1px solid lightgrey" : "",
+            backgroundColor: isDarkMode ? "black" : "",
+          }}
+        >
           <Style.ImageHeader>
             <FlexBox
               width={"fit-content"}
@@ -137,7 +143,9 @@ export default function FeedCard({
                 />
               )}
               <Style.HeaderText>
-                <Style.UserName>{feedCreatorData?.info.name}</Style.UserName>
+                <Style.UserName style={{ color: isDarkMode ? "white" : "" }}>
+                  {feedCreatorData?.info.name}
+                </Style.UserName>
                 <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
               </Style.HeaderText>
             </FlexBox>

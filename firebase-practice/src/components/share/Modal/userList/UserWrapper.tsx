@@ -1,4 +1,4 @@
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { UserData, UserInfo } from "backend/dto"
 import { ProfileIcon } from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
@@ -17,6 +17,8 @@ export default function FollowUserWrapper({ userId }: Props) {
   const currentUserData = useRecoilValue(userDataState)
   const router = useRouter()
   const [routingPath, setRoutingPath] = useState<string>("")
+  const isDarkMode = useRecoilValue(darkModeState)
+
   useEffect(() => {
     getUserDataByUid(userId).then((data) => {
       if (data) {
@@ -56,7 +58,6 @@ export default function FollowUserWrapper({ userId }: Props) {
           ) : (
             <ProfileIcon width={44} height={44} />
           )}
-
           <FlexBox
             column={true}
             width={"fit-content"}
@@ -64,10 +65,14 @@ export default function FollowUserWrapper({ userId }: Props) {
             justifyContents="center"
             height={44}
           >
-            <CustomH5Light style={{ fontSize: 18 }}>
+            <CustomH5Light
+              style={{ fontSize: 18, color: isDarkMode ? "white" : "" }}
+            >
               {userInfo.name}
             </CustomH5Light>
-            <CustomH5Light style={{ fontSize: 12 }}>
+            <CustomH5Light
+              style={{ fontSize: 12, color: isDarkMode ? "white" : "" }}
+            >
               {userInfo.email}
             </CustomH5Light>
           </FlexBox>

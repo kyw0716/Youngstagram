@@ -1,21 +1,11 @@
-import { authService, DBService } from "@FireBase"
-import { Comment, FeedData } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
-import React, { SetStateAction, useEffect, useRef, useState } from "react"
+import { FeedData } from "backend/dto"
+import React, { SetStateAction, useRef } from "react"
 import styled from "styled-components"
-import {
-  CommentIcon,
-  CustomH6,
-  FlexBox,
-  FullHeart,
-  HeartIcon,
-  Margin,
-  ShareIcon,
-} from "ui"
 import YoungstagramModal from "../YoungstagramModal"
-import CommentInput from "./CommentInput"
+import CommentInput from "./Input"
 import useWindowSize from "lib/useWindowSize"
 import CommentList from "./CommentList"
+import Icons from "./Icons"
 
 type Props = {
   isOpen: boolean
@@ -54,35 +44,13 @@ const Style = {
       width: 95vw;
     }
   `,
-  IconContainer: styled.div`
-    display: flex;
-    width: 100%;
-    height: fit-content;
-    justify-content: flex-start;
-    align-items: center;
-  `,
 }
 
 export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
-  const [commentData, setCommentData] = useState<Comment[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const commentAreaRef = useRef<HTMLDivElement>(null)
-  const [likerList, setLikerList] = useState<string[]>([])
   const windowSize = useWindowSize()
 
-  useEffect(() => {
-    if (feedData.storageId !== "") {
-      onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (data) => {
-        if (data) setLikerList(data.data()?.likerList)
-      })
-      onSnapshot(
-        doc(DBService, "Comments", `${feedData.storageId}`),
-        (data) => {
-          if (data) setCommentData(data.data()?.AllComments)
-        },
-      )
-    }
-  }, [feedData.storageId, feedData.creator])
   return (
     <YoungstagramModal
       width={windowSize < 900 ? "95vw" : "70vw"}
@@ -97,38 +65,7 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
         </Style.ImgWrapper>
         <Style.DetailContainer>
           <CommentList feedData={feedData} commentAreaRef={commentAreaRef} />
-          <Style.IconContainer>
-            <Margin direction="row" size={10} />
-            {likerList !== undefined &&
-            authService.currentUser !== null &&
-            likerList.includes(authService.currentUser.uid) ? (
-              <FullHeart storgateId={feedData.storageId} />
-            ) : (
-              <HeartIcon storgateId={feedData.storageId} />
-            )}
-
-            <Margin direction="row" size={15} />
-            <CommentIcon
-              onClick={() => {
-                if (inputRef.current !== null) inputRef.current.focus()
-              }}
-            />
-            <Margin direction="row" size={15} />
-            <ShareIcon />
-          </Style.IconContainer>
-          <Margin direction="column" size={10} />
-          <FlexBox style={{ paddingLeft: "10px" }} gap={15}>
-            {likerList !== undefined ? (
-              <CustomH6>좋아요 {likerList.length}개</CustomH6>
-            ) : (
-              <CustomH6>좋아요 0개</CustomH6>
-            )}
-            {commentData !== undefined ? (
-              <CustomH6>댓글 {commentData.length}개</CustomH6>
-            ) : (
-              <CustomH6>댓글 0개</CustomH6>
-            )}
-          </FlexBox>
+          <Icons storageId={feedData.storageId} inputRef={inputRef} />
         </Style.DetailContainer>
       </Style.Wrapper>
       <CommentInput

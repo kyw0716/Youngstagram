@@ -1,5 +1,6 @@
 import ProfileEditModal from "@share/Modal/profile/ProfileEditModal"
 import {
+  darkModeState,
   FeedDataFilter,
   userDataState,
   userListState,
@@ -65,7 +66,7 @@ const Style = {
     align-items: center;
     gap: 9px;
     border-top: 3px solid
-      ${(props) => (props.about === "public" ? "grey" : "none")};
+      ${(props) => (props.about === "public" ? props.color : "none")};
     cursor: pointer;
   `,
   SortToPrivate: styled.div`
@@ -75,7 +76,7 @@ const Style = {
     align-items: center;
     gap: 9px;
     border-top: 3px solid
-      ${(props) => (props.about === "private" ? "grey" : "none")};
+      ${(props) => (props.about === "private" ? props.color : "none")};
     cursor: pointer;
   `,
   SortToAll: styled.div`
@@ -85,7 +86,7 @@ const Style = {
     align-items: center;
     gap: 9px;
     border-top: 3px solid
-      ${(props) => (props.about === "all" ? "grey" : "none")};
+      ${(props) => (props.about === "all" ? props.color : "none")};
     cursor: pointer;
   `,
 }
@@ -95,6 +96,7 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
   const [feedDataType, setFeedDataType] = useRecoilState(FeedDataFilter)
   const userData = useRecoilValue(userDataState)
   const setUserList = useSetRecoilState(userListState)
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <>
       <ProfileEditModal isOpen={isOpen} setIsOpen={setIsOpen} isPC={true} />
@@ -115,11 +117,17 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
         <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
-            <CustomH2Light>{userData.info.name}</CustomH2Light>
+            <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
+              {userData.info.name}
+            </CustomH2Light>
             <Margin direction="row" size={20} />
             <Style.ProfileEditButton
               onClick={() => {
                 setIsOpen(true)
+              }}
+              style={{
+                color: isDarkMode ? "white" : "",
+                backgroundColor: isDarkMode ? "black" : "",
               }}
             >
               프로필 편집
@@ -127,17 +135,19 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
-            <CustomH3Light>이메일: {userData.info.email}</CustomH3Light>
+            <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
+              이메일: {userData.info.email}
+            </CustomH3Light>
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox gap={30}>
             {feedDataType === "all" && (
-              <CustomH3Light>
+              <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
                 전체 게시물: {userData.feed ? userData.feed.length : `0`}
               </CustomH3Light>
             )}
             {feedDataType === "public" && (
-              <CustomH3Light>
+              <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
                 공개 게시물:{" "}
                 {userData.feed
                   ? userData.feed.length -
@@ -146,7 +156,7 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
               </CustomH3Light>
             )}
             {feedDataType === "private" && (
-              <CustomH3Light>
+              <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
                 숨김 게시물:{" "}
                 {userData.feed
                   ? userData.feed.filter((eachFeed) => eachFeed.private).length
@@ -154,7 +164,7 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
               </CustomH3Light>
             )}
             <CustomH3Light
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
               onClick={() => {
                 setUserList(userData.follow)
                 setIsUserListModalOpen(true)
@@ -163,7 +173,7 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
               팔로우: {userData.follow ? userData.follow.length : `0`}
             </CustomH3Light>
             <CustomH3Light
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
               onClick={() => {
                 setUserList(userData.follower)
                 setIsUserListModalOpen(true)
@@ -180,8 +190,11 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
           onClick={() => {
             setFeedDataType("all")
           }}
+          color={isDarkMode ? "white" : "grey"}
         >
-          <CustomH4Light>전체 게시물</CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            전체 게시물
+          </CustomH4Light>
           <AllFileIcon width={15} height={15} />
         </Style.SortToAll>
         <Style.SortToPublic
@@ -189,8 +202,11 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
           onClick={() => {
             setFeedDataType("public")
           }}
+          color={isDarkMode ? "white" : "grey"}
         >
-          <CustomH4Light>공개 게시물</CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            공개 게시물
+          </CustomH4Light>
           <UnLockIcon width={15} height={15} />
         </Style.SortToPublic>
         <Style.SortToPrivate
@@ -198,8 +214,11 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
           onClick={() => {
             setFeedDataType("private")
           }}
+          color={isDarkMode ? "white" : "grey"}
         >
-          <CustomH4Light>숨김 게시물</CustomH4Light>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            숨김 게시물
+          </CustomH4Light>
           <LockIcon width={15} height={15} />
         </Style.SortToPrivate>
       </Style.SortWrapper>

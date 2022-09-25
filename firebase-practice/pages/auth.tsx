@@ -19,6 +19,8 @@ import { doc, setDoc, updateDoc } from "firebase/firestore"
 import Layout from "components/layout"
 import { UserInfo } from "backend/dto"
 import { GitHubIcon, GoogleIcon } from "icons"
+import { useRecoilValue } from "recoil"
+import { darkModeState } from "@share/recoil/recoilList"
 
 const Style = {
   Wrapper: styled.div`
@@ -114,6 +116,8 @@ export default function Auth() {
   const [isLogin, setIsLogin] = useState<boolean>(false)
   const githubProvider = new GithubAuthProvider()
   const googleProvider = new GoogleAuthProvider()
+
+  const isDarkMode = useRecoilValue(darkModeState)
 
   const handleOnInputChange: React.ChangeEventHandler<HTMLInputElement> = (
     event,
@@ -260,11 +264,19 @@ export default function Auth() {
 
   return (
     <Layout>
-      <Style.Wrapper>
+      <Style.Wrapper style={{ backgroundColor: isDarkMode ? "black" : "" }}>
         <Margin direction="column" size={60} />
-        <Style.FormContainer onSubmit={handleOnSubmit}>
+        <Style.FormContainer
+          onSubmit={handleOnSubmit}
+          style={{
+            border: isDarkMode ? "1px solid lightgrey" : "",
+            backgroundColor: isDarkMode ? "#373e47" : "",
+          }}
+        >
           <Margin direction="column" size={20} />
-          <Style.Logo>youngstagram</Style.Logo>
+          <Style.Logo style={{ color: isDarkMode ? "white" : "" }}>
+            youngstagram
+          </Style.Logo>
           <Margin direction="column" size={20} />
           <Style.InputBox
             type={"text"}
@@ -274,6 +286,10 @@ export default function Auth() {
             name="Email"
             value={Email}
             autoComplete="off"
+            style={{
+              border: isDarkMode ? "1px solid lightgrey" : "",
+              backgroundColor: isDarkMode ? "#373e47" : "",
+            }}
           />
           {Email.search(/\@\w+\.com|\@\w+\.net/) === -1 && Email.length > 3 ? (
             <span style={{ color: "red", width: "268px", fontSize: "13px" }}>
@@ -295,7 +311,7 @@ export default function Auth() {
               confirmPassword !== "" &&
               Password !== ""
                 ? { backgroundColor: "red" }
-                : { backgroundColor: "white" }
+                : { backgroundColor: isDarkMode ? "#373e47" : "white" }
             }
           />
           {isNewAccount ? (
@@ -401,8 +417,13 @@ export default function Auth() {
           </FlexBox>
         </Style.FormContainer>
         <Margin direction="column" size={30} />
-        <Style.SignUpContainer>
-          <Style.StyledSpan>
+        <Style.SignUpContainer
+          style={{
+            border: isDarkMode ? "1px solid lightgrey" : "",
+            backgroundColor: isDarkMode ? "#373e47" : "",
+          }}
+        >
+          <Style.StyledSpan style={{ color: isDarkMode ? "white" : "" }}>
             {isNewAccount ? "계정이 있으신가요?" : "계정이 없으신가요?"}
           </Style.StyledSpan>
           <Margin direction="row" size={10} />

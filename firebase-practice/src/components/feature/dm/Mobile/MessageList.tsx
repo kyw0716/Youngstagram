@@ -1,5 +1,9 @@
 import { DBService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import {
+  darkModeState,
+  dmSelectedUserId,
+  userDataState,
+} from "@share/recoil/recoilList"
 import { Message } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useRef, useState } from "react"
@@ -8,10 +12,6 @@ import styled from "styled-components"
 import { Margin } from "ui"
 import MyMessageWrapper from "../MyMessageWrapper"
 import OtherMessageWrapper from "../OtherMessageWrapper"
-
-type Props = {
-  selectedUserId: string
-}
 
 const Style = {
   MessageSection: styled.div`
@@ -41,10 +41,12 @@ const Style = {
   `,
 }
 
-export default function MessageViewer({ selectedUserId }: Props) {
+export default function MessageList() {
   const currentUserData = useRecoilValue(userDataState)
   const [messageData, setMessageData] = useState<Message[]>([])
   const DMRef = useRef<HTMLDivElement>(null)
+  const isDarkMode = useRecoilValue(darkModeState)
+  const selectedUserId = useRecoilValue(dmSelectedUserId)
 
   useEffect(() => {
     if (selectedUserId === "") {
@@ -69,7 +71,9 @@ export default function MessageViewer({ selectedUserId }: Props) {
   }, [messageData.length])
 
   return (
-    <Style.MessageSection>
+    <Style.MessageSection
+      style={{ backgroundColor: isDarkMode ? "black" : "" }}
+    >
       {selectedUserId && (
         <Style.MessageList>
           {messageData.map((message) => {

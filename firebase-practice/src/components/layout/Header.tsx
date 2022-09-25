@@ -1,6 +1,6 @@
 import { authService } from "@FireBase"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { signOut } from "firebase/auth"
 import Image from "next/image"
 import { useRouter } from "next/router"
@@ -8,7 +8,13 @@ import { useEffect, useState } from "react"
 import { useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
 import { DMIcon, FlexBox, HomeIcon, ImageUploadIcon } from "ui"
-import { LineMenuIcon, LogoutIcon, ProfileIcon } from "icons"
+import {
+  DarkModeIcon,
+  LightModeIcon,
+  LineMenuIcon,
+  LogoutIcon,
+  ProfileIcon,
+} from "icons"
 
 const Style = {
   Container: styled.div`
@@ -98,7 +104,7 @@ const Style = {
     background-color: white;
     position: absolute;
     right: 2px;
-    top: 55px;
+    top: 53px;
     z-index: 6;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   `,
@@ -119,6 +125,7 @@ export default function Header() {
   const resetUserData = useResetRecoilState(userDataState)
 
   const [isUploaded, setIsUploaded] = useState<boolean>(false)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
     if (isUploaded)
@@ -132,17 +139,21 @@ export default function Header() {
         setIsOpen={setIsModalOpen}
         setIsUploaded={setIsUploaded}
       />
-      <Style.Container>
+      <Style.Container
+        style={{ backgroundColor: isDarkMode ? "black" : "white" }}
+      >
         <Style.Nav>
           <Style.Logo
             onClick={() => {
               if (userData !== undefined && userData.info.userId !== "")
                 router.push("/loading")
             }}
+            style={{ color: isDarkMode ? "white" : "black" }}
           >
             youngstagram
           </Style.Logo>
-          <FlexBox width={"fit-content"} gap={20} alignItems="center">
+          <FlexBox width={"fit-content"} gap={15} alignItems="center">
+            {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
             <HomeIcon
               onClick={() => {
                 if (userData !== undefined && userData.info.userId !== "")
@@ -197,6 +208,11 @@ export default function Header() {
                       router.push(`/loading?path=mypage`)
                     }
                   }}
+                  style={{
+                    backgroundColor: isDarkMode ? "black" : "",
+                    border: isDarkMode ? "1px solid lightgrey" : "",
+                    color: isDarkMode ? "white" : "",
+                  }}
                 >
                   <ProfileIcon width={15} height={15} />
                   프로필
@@ -206,12 +222,24 @@ export default function Header() {
                     signOut(authService)
                     resetUserData()
                   }}
+                  style={{
+                    backgroundColor: isDarkMode ? "black" : "",
+                    border: isDarkMode ? "1px solid lightgrey" : "",
+                    color: isDarkMode ? "white" : "",
+                  }}
                 >
                   <LogoutIcon width={15} height={15} />
                   로그아웃
                 </Style.LogoutButton>
               </Style.DropDownMenu>
-              <Style.ChatBalloon />
+              <Style.ChatBalloon
+                style={{
+                  backgroundColor: isDarkMode ? "black" : "",
+                  borderTop: isDarkMode ? "1px solid lightgrey" : "",
+                  borderLeft: isDarkMode ? "1px solid lightgrey" : "",
+                  zIndex: isDarkMode ? 9 : "",
+                }}
+              />
             </>
           ) : (
             <></>

@@ -1,9 +1,10 @@
 import { authService, DBService } from "@FireBase"
+import { darkModeState } from "@share/recoil/recoilList"
 import { Comment, FeedData } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import getCurrentTime from "lib/getCurrentTime"
-import useWindowSize from "lib/useWindowSize"
 import { useCallback, useState } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { v4 } from "uuid"
 
@@ -79,6 +80,7 @@ export default function CommentInput({
   const [comment, setComment] = useState<string>("")
   const [randomId, setRandomId] = useState<string>(v4())
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   const handleCommentSubmit = async () => {
     setIsSubmit(true)
@@ -131,6 +133,7 @@ export default function CommentInput({
         onChange={handleInputOnChange}
         placeholder="댓글 달기..."
         ref={inputRef}
+        style={{ color: isDarkMode ? "white" : "" }}
       />
       {isSubmit || (
         <Style.SubmitButton

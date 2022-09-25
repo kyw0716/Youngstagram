@@ -1,5 +1,7 @@
 import { authService } from "@FireBase"
+import { darkModeState } from "@share/recoil/recoilList"
 import { SetStateAction } from "react"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH6, FlexBox, Margin } from "ui"
 
@@ -20,13 +22,20 @@ const Input = styled.input`
 `
 
 export default function NameInput({ isPC, userName, setUserName }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <FlexBox column={true}>
       <label>
-        <CustomH6>이름 변경:</CustomH6>
+        <CustomH6 style={{ color: isDarkMode ? "white" : "black" }}>
+          이름 변경:
+        </CustomH6>
       </label>
       <Margin direction="column" size={isPC ? 10 : 5} />
       <Input
+        style={{
+          backgroundColor: isDarkMode ? "black" : "white",
+          color: isDarkMode ? "white" : "black",
+        }}
         about={`${isPC}`}
         id="PROFILE-NAME-INPUT"
         placeholder={`${authService.currentUser?.displayName}`}

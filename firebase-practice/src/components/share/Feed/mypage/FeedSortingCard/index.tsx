@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserInfo } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import { ProfileIcon } from "icons"
@@ -78,6 +78,7 @@ export default function FeedSortingCard({
   const userData = useRecoilValue(userDataState)
   const [creatorInfo, setCreatorInfo] = useState<UserInfo>()
   const [isCurrentUserLike, setIsCurrentUserLike] = useState<boolean>(false)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
     onSnapshot(doc(DBService, "users", `${feedData.creator}`), (doc) => {
@@ -88,7 +89,7 @@ export default function FeedSortingCard({
   return (
     <>
       {userData && (
-        <Style.ImageCard>
+        <Style.ImageCard style={{ backgroundColor: isDarkMode ? "black" : "" }}>
           <Style.ImageHeader>
             <FlexBox
               width={"fit-content"}
@@ -108,7 +109,9 @@ export default function FeedSortingCard({
                 <ProfileIcon width={38} height={38} />
               )}
               <Style.HeaderText>
-                <Style.UserName>{userData?.info.name}</Style.UserName>
+                <Style.UserName style={{ color: isDarkMode ? "white" : "" }}>
+                  {userData?.info.name}
+                </Style.UserName>
                 <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
               </Style.HeaderText>
             </FlexBox>

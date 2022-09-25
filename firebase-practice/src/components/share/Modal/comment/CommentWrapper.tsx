@@ -1,5 +1,5 @@
 import { authService, DBService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { Comment, UserData } from "backend/dto"
 import {
   arrayRemove,
@@ -63,6 +63,7 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
   const [userData, setUserData] = useState<UserData>()
   const currentUserData = useRecoilValue(userDataState)
   const [routingPath, setRoutingPath] = useState<string>("")
+  const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
     const userInfoRef = doc(DBService, "users", commentData.userId)
@@ -142,7 +143,9 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
         <Style.CommentArea>
           <Margin direction="column" size={5} />
           <FlexBox width={"fit-content"}>
-            <CustomH4>{`${userData?.info.name}`}</CustomH4>
+            <CustomH4
+              style={{ color: isDarkMode ? "white" : "" }}
+            >{`${userData?.info.name}`}</CustomH4>
           </FlexBox>
           {isModifyMode ? (
             <FlexBox>
@@ -152,6 +155,9 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
                   setNewComment(event.target.value)
                 }}
                 placeholder={commentData.comment}
+                style={
+                  isDarkMode ? { backgroundColor: "black", color: "white" } : {}
+                }
               />
               <Margin direction="row" size={5} />
               <FlexBox
@@ -175,13 +181,18 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
             <>
               {isShowAllComment ? (
                 <>
-                  <FlexBox width={"fit-content"}>{commentData.comment}</FlexBox>
+                  <FlexBox
+                    width={"fit-content"}
+                    style={{ color: isDarkMode ? "white" : "" }}
+                  >
+                    {commentData.comment}
+                  </FlexBox>
                   <Margin direction="row" size={10} />
                   <CustomH6
                     style={{
                       cursor: "pointer",
                       fontWeight: "bolder",
-                      color: "black",
+                      color: isDarkMode ? "white" : "black",
                     }}
                     onClick={() => {
                       setIsShowAllComment(false)
@@ -191,14 +202,18 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
                   </CustomH6>
                 </>
               ) : commentData.comment.length > 12 ? (
-                <FlexBox alignItems="center" width={"fit-content"}>
+                <FlexBox
+                  alignItems="center"
+                  width={"fit-content"}
+                  style={{ color: isDarkMode ? "white" : "" }}
+                >
                   {commentData.comment.slice(0, 12)}
                   <Margin direction="row" size={5} />
                   <CustomH6
                     style={{
                       cursor: "pointer",
                       fontWeight: "bolder",
-                      color: "black",
+                      color: isDarkMode ? "white" : "black",
                       flexShrink: 0,
                     }}
                     onClick={() => {
@@ -209,7 +224,9 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
                   </CustomH6>
                 </FlexBox>
               ) : (
-                commentData.comment
+                <FlexBox style={{ color: isDarkMode ? "white" : "" }}>
+                  {commentData.comment}
+                </FlexBox>
               )}
             </>
           )}

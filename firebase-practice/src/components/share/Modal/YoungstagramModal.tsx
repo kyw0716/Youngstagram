@@ -1,7 +1,9 @@
+import { darkModeState } from "@share/recoil/recoilList"
 import { XIcon } from "icons"
 import useWindowSize from "lib/useWindowSize"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH4, FlexBox } from "ui"
 
@@ -40,6 +42,7 @@ export default function YoungstagramModal({
   children,
 }: Props) {
   const windowSize = useWindowSize()
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <ReactModal
       style={{
@@ -59,7 +62,7 @@ export default function YoungstagramModal({
           borderRadius: "10px",
           boxShadow: "3px 3px 20px 0 rgba(0, 0, 0, 0.25)",
           overflow: "clip",
-          backgroundColor: "white",
+          backgroundColor: isDarkMode ? "black" : "white",
           position: "relative",
         },
       }}
@@ -67,8 +70,12 @@ export default function YoungstagramModal({
       onRequestClose={() => setIsOpen(false)}
       ariaHideApp={false}
     >
-      <Style.Header>
-        <CustomH4>{title}</CustomH4>
+      <Style.Header
+        style={{ borderBottom: isDarkMode ? "1px solid lightgrey" : "" }}
+      >
+        <CustomH4 style={{ color: isDarkMode ? "white" : "" }}>
+          {title}
+        </CustomH4>
         <FlexBox
           width={15}
           height={15}

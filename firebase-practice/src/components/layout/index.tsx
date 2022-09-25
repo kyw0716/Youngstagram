@@ -1,3 +1,5 @@
+import { darkModeState } from "@share/recoil/recoilList"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { Margin } from "ui"
 import Footer from "./Footer"
@@ -19,8 +21,9 @@ const Style = {
 }
 
 export default function Layout({ children, isMobileDM }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
-    <Style.Wrapper>
+    <Style.Wrapper style={{ backgroundColor: isDarkMode ? "black" : "" }}>
       <Header />
       {children}
       <Margin direction="column" size={30} />

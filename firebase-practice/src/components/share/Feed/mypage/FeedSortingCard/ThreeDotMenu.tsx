@@ -1,5 +1,9 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { feedDataState, userDataState } from "@share/recoil/recoilList"
+import {
+  darkModeState,
+  feedDataState,
+  userDataState,
+} from "@share/recoil/recoilList"
 import { FeedData, UserData } from "backend/dto"
 import {
   arrayRemove,
@@ -19,7 +23,7 @@ import {
 } from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
 import { SetStateAction, useState } from "react"
-import { useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 
 type Props = {
@@ -66,7 +70,7 @@ const Style = {
     transform: rotate(45deg);
     position: absolute;
     right: 35px;
-    top: 55px;
+    top: 50px;
     box-shadow: rgba(99, 99, 99, 0.4) 0px 2px 8px 0px;
     z-index: 1;
   `,
@@ -142,6 +146,7 @@ export default function ThreeDotMenu({
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const setSelectedFeedData = useSetRecoilState(feedDataState)
   const setCurrentUserData = useSetRecoilState(userDataState)
+  const isDarkMode = useRecoilValue(darkModeState)
 
   const handleThreeDotMenuClick = () => {
     setIsMenuOpen((current) => !current)
@@ -249,17 +254,28 @@ export default function ThreeDotMenu({
       </Style.ThreeDotMenu>
       {isMenuOpen && (
         <>
-          <Style.ButtonBox onMouseLeave={handleThreeDotMenuClick}>
+          <Style.ButtonBox
+            onMouseLeave={handleThreeDotMenuClick}
+            style={isDarkMode ? { border: "1px solid lightgrey" } : {}}
+          >
             <Style.EditButton
               onClick={() => {
                 setSelectedFeedData(feedData)
                 setIsFeedUploadModalOpen(true)
               }}
+              style={
+                isDarkMode ? { backgroundColor: "black", color: "white" } : {}
+              }
             >
               <EditIcon width={15} height={15} />
               편집
             </Style.EditButton>
-            <Style.PrivateToggleButton onClick={handlePrivateToggle}>
+            <Style.PrivateToggleButton
+              onClick={handlePrivateToggle}
+              style={
+                isDarkMode ? { backgroundColor: "black", color: "white" } : {}
+              }
+            >
               {feedData.private ? (
                 <UnLockIcon width={15} height={15} />
               ) : (
@@ -268,16 +284,39 @@ export default function ThreeDotMenu({
 
               {feedData.private ? "공개" : "비공개"}
             </Style.PrivateToggleButton>
-            <Style.Deletebutton onClick={handleDeleteFeed}>
+            <Style.Deletebutton
+              onClick={handleDeleteFeed}
+              style={
+                isDarkMode ? { backgroundColor: "black", color: "white" } : {}
+              }
+            >
               <DeleteIcon width={15} height={15} />
               삭제
             </Style.Deletebutton>
-            <Style.ExitButton onClick={handleThreeDotMenuClick}>
+            <Style.ExitButton
+              onClick={handleThreeDotMenuClick}
+              style={
+                isDarkMode ? { backgroundColor: "black", color: "white" } : {}
+              }
+            >
               <LogoutIcon width={15} height={15} />
               취소
             </Style.ExitButton>
           </Style.ButtonBox>
-          <Style.ChatBalloon />
+          <Style.ChatBalloon
+            style={
+              isDarkMode
+                ? {
+                    backgroundColor: "black",
+                    color: "white",
+                    borderLeft: "1px solid lightgrey",
+                    borderTop: "1px solid lightgrey",
+                    zIndex: 3,
+                    boxShadow: "none",
+                  }
+                : {}
+            }
+          />
         </>
       )}
     </>

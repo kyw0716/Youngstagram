@@ -1,3 +1,5 @@
+import { darkModeState } from "@share/recoil/recoilList"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH4 } from "ui"
 
@@ -14,8 +16,9 @@ const Style = {
 }
 
 export default function Footer() {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
-    <Style.Wrapper>
+    <Style.Wrapper style={{ backgroundColor: isDarkMode ? "black" : "" }}>
       <CustomH4>&copy; 2022. Young Woo Kim. all rights reserved.</CustomH4>
     </Style.Wrapper>
   )

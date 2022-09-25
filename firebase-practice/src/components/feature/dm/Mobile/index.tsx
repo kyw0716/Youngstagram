@@ -1,8 +1,10 @@
 import { useState } from "react"
 import styled from "styled-components"
 import DropDownFollowList from "./DropDownFollowList"
-import MessageViewer from "./MessageViewer"
+import MessageList from "./MessageList"
 import MessageInput from "./MessageInputIn"
+import { useRecoilValue } from "recoil"
+import { darkModeState, dmSelectedUserId } from "@share/recoil/recoilList"
 
 const Style = {
   Wrapper: styled.div`
@@ -15,15 +17,12 @@ const Style = {
 }
 
 export default function MobileDM() {
-  const [selectedUserId, setSelectedUserId] = useState<string>("")
-
+  const selectedUserId = useRecoilValue(dmSelectedUserId)
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
-    <Style.Wrapper>
-      <DropDownFollowList
-        selectedUserId={selectedUserId}
-        setSelectedUserId={setSelectedUserId}
-      />
-      <MessageViewer selectedUserId={selectedUserId} />
+    <Style.Wrapper style={{ backgroundColor: isDarkMode ? "black" : "" }}>
+      <DropDownFollowList />
+      <MessageList />
       {selectedUserId && <MessageInput selectedUserId={selectedUserId} />}
     </Style.Wrapper>
   )

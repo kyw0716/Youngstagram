@@ -1,33 +1,44 @@
-import { DBService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import {
+  darkModeState,
+  dmSelectedUserId,
+  userDataState,
+} from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { useRecoilValue } from "recoil"
+import React, { SetStateAction, useEffect, useState } from "react"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { ProfileIcon } from "icons"
 
 type Props = {
   userId: string
+  color?: string
+  setIsDropDownMenuOpen?: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
   Wrapper: styled.div`
     display: flex;
     gap: 15px;
-    width: max-content;
-    height: fit-content;
+    width: 100%;
+    height: 60px;
     align-items: center;
     padding-left: 15px;
   `,
 }
 
-export default function UserCard({ userId }: Props) {
+export default function UserCard({
+  userId,
+  color,
+  setIsDropDownMenuOpen,
+}: Props) {
   const [userData, setUserData] = useState<UserData>()
   const currentUserData = useRecoilValue(userDataState)
+  const [selectedUserId, setSelectedUserId] = useRecoilState(dmSelectedUserId)
+  const isDarkMode = useRecoilValue(darkModeState)
+
   const router = useRouter()
   useEffect(() => {
     if (userId === "") return
@@ -38,7 +49,27 @@ export default function UserCard({ userId }: Props) {
     })
   }, [userId])
   return (
-    <Style.Wrapper>
+    <Style.Wrapper
+      onClick={() => {
+        if (currentUserData.info.userId !== userId) setSelectedUserId(userId)
+        if (userId === selectedUserId) setSelectedUserId("")
+        if (setIsDropDownMenuOpen) setIsDropDownMenuOpen(false)
+      }}
+      style={{
+        cursor: "pointer",
+        backgroundColor: color
+          ? color
+          : selectedUserId === userId
+          ? isDarkMode
+            ? "grey"
+            : "lightgrey"
+          : isDarkMode
+          ? "black"
+          : "white",
+        borderBottom: color ? "1px solid lightgrey" : "",
+        color: isDarkMode ? "white" : "black",
+      }}
+    >
       {userData && (
         <>
           {userData.info.profileImage ? (
@@ -69,7 +100,6 @@ export default function UserCard({ userId }: Props) {
               }}
             />
           )}
-
           {userData?.info.name}
         </>
       )}

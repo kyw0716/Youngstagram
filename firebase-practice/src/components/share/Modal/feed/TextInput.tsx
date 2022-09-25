@@ -1,5 +1,5 @@
 import { authService, DBService, storageService } from "@FireBase"
-import { userDataState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import {
   arrayRemove,
@@ -138,7 +138,7 @@ const Style = {
   `,
   LocationInput: styled.input`
     width: 291px;
-    height: 44px;
+    height: 43px;
     border: none;
     padding-left: 10px;
     font-size: 16px;
@@ -164,7 +164,7 @@ export default function TextInput({
   setIsFileExist,
   setIsUploaded,
 }: Props) {
-  const router = useRouter()
+  const isDarkMode = useRecoilValue(darkModeState)
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
   const currentUserData = useRecoilValue(userDataState)
 
@@ -318,7 +318,6 @@ export default function TextInput({
             ) : (
               <ProfileIcon width={30} height={30} />
             )}
-
             <Margin direction="row" size={10} />
             <CustomH5>{authService.currentUser?.displayName}</CustomH5>
           </FlexBox>
@@ -341,6 +340,10 @@ export default function TextInput({
           onChange={(event) => {
             setDesc(event.target.value)
           }}
+          style={{
+            backgroundColor: isDarkMode ? "black" : "",
+            color: isDarkMode ? "white" : "",
+          }}
         />
         <Margin direction="column" size={8} />
         <Style.TextLength>{desc.length}/2200</Style.TextLength>
@@ -351,6 +354,10 @@ export default function TextInput({
               setLocation(event.target.value)
             }}
             value={location}
+            style={{
+              backgroundColor: isDarkMode ? "black" : "",
+              color: isDarkMode ? "white" : "",
+            }}
           />
           <Margin direction="row" size={10} />
           <LocationIcon width={16} height={16} />

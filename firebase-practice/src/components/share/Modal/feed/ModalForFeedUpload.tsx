@@ -1,7 +1,9 @@
+import { darkModeState } from "@share/recoil/recoilList"
 import { LeftArrowIcon, XIcon } from "icons"
 import Image from "next/image"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
+import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH4 } from "ui"
 
@@ -55,6 +57,7 @@ export default function ModalForImageUpload({
   isModifyMode,
   setIsFileExist,
 }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
     <ReactModal
       style={{
@@ -74,7 +77,7 @@ export default function ModalForImageUpload({
           borderRadius: "10px",
           boxShadow: "3px 3px 20px 0 rgba(0, 0, 0, 0.25)",
           overflow: "hidden",
-          backgroundColor: "white",
+          backgroundColor: isDarkMode ? "black" : "white",
         },
       }}
       isOpen={isOpen}
@@ -94,7 +97,9 @@ export default function ModalForImageUpload({
                 }}
               />
               <Style.Title>
-                <CustomH4>{title}</CustomH4>
+                <CustomH4 style={{ color: isDarkMode ? "white" : "" }}>
+                  {title}
+                </CustomH4>
               </Style.Title>
               {isModifyMode || (
                 <LeftArrowIcon
@@ -108,9 +113,13 @@ export default function ModalForImageUpload({
             </Style.Header>
           </>
         ) : (
-          <Style.Header>
+          <Style.Header
+            style={{ borderBottom: isDarkMode ? "1px solid lightgrey" : "" }}
+          >
             <Style.Title>
-              <CustomH4>{title}</CustomH4>
+              <CustomH4 style={{ color: isDarkMode ? "white" : "" }}>
+                {title}
+              </CustomH4>
             </Style.Title>
             <XIcon
               width={15}
