@@ -134,11 +134,7 @@ export default function Header() {
 
   return (
     <>
-      <FeedUploadModal
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
-        setIsUploaded={setIsUploaded}
-      />
+      <FeedUploadModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
       <Style.Container
         style={{ backgroundColor: isDarkMode ? "black" : "white" }}
       >
