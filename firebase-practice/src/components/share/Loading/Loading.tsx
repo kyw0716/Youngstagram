@@ -1,5 +1,7 @@
+import { darkModeState } from "@share/recoil/recoilList"
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
+import { useRecoilValue } from "recoil"
 
 type Props = {
   width: number | string
@@ -9,8 +11,12 @@ type Props = {
 }
 
 export default function Loading({ width, height, borderRadius, count }: Props) {
+  const isDarkMode = useRecoilValue(darkModeState)
   return (
-    <SkeletonTheme baseColor="#e8e8e8" highlightColor="#f7f7f7">
+    <SkeletonTheme
+      baseColor={isDarkMode ? "#212121" : "#e8e8e8"}
+      highlightColor={isDarkMode ? "#4a4a4a" : "#f7f7f7"}
+    >
       <Skeleton
         width={width}
         height={height}
