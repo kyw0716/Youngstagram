@@ -7,7 +7,7 @@ import {
 } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
-import React, { SetStateAction, useEffect, useState } from "react"
+import React, { SetStateAction, useCallback, useEffect, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import {
   CommentIcon,
@@ -45,14 +45,19 @@ export default function LikeCommentInfo({
     onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (doc) => {
       setLikerList(doc.data()?.likerList)
     })
-  }, [feedData])
+  }, [])
+
+  const handleCurrentUserLike = useCallback((isLike: boolean) => {
+    setIsCurrentUserLike(isLike)
+  }, [])
 
   useEffect(() => {
+    console.log("변경")
     if (!likerList) return
     if (!currentUser) return
     if (currentUser.info.userId === "") return
-    if (likerList.includes(currentUser.info.userId)) setIsCurrentUserLike(true)
-    else setIsCurrentUserLike(false)
+    if (likerList.includes(currentUser.info.userId)) handleCurrentUserLike(true)
+    else handleCurrentUserLike(false)
   }, [likerList, currentUser])
 
   return (

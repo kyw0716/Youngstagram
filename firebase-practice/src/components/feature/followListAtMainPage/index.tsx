@@ -8,7 +8,7 @@ import FollowCard from "./FollowCard"
 import { v4 } from "uuid"
 import { LeftArrowForCarouselIcon, RightArrowForCarouselIcon } from "icons"
 import { useRecoilValue } from "recoil"
-import { darkModeState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 
 const Style = {
   Wrapper: styled.div`
@@ -38,33 +38,27 @@ const Style = {
 }
 
 export default function FollowListAtMainPage() {
-  const [userData, setUserData] = useState<UserData>()
+  const currentUserData = useRecoilValue(userDataState)
   const [movingRange, setMovingRange] = useState<number>(0)
   const [followNumber, setFollowNumber] = useState<number>(0)
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
-    if (!authService.currentUser) return
-    onSnapshot(doc(DBService, "users", authService.currentUser.uid), (data) => {
-      if (data) setUserData(data.data() as UserData)
-    })
-  }, [authService.currentUser?.uid])
-  useEffect(() => {
-    if (userData === undefined) return
-    if (userData.follow === undefined) return
+    if (currentUserData === undefined) return
+    if (currentUserData.follow === undefined) return
     if (window.innerWidth < 470) {
-      setFollowNumber(userData.follow.length - 5)
+      setFollowNumber(currentUserData.follow.length - 5)
       return
     }
-    setFollowNumber(userData.follow.length - 6)
-  }, [userData])
+    setFollowNumber(currentUserData.follow.length - 6)
+  }, [currentUserData])
   useEffect(() => {
     if (followNumber < 0) setFollowNumber(0)
   }, [followNumber])
 
   return (
     <>
-      {userData !== undefined && userData.follow !== undefined ? (
+      {currentUserData !== undefined && currentUserData.follow !== undefined ? (
         <Style.Wrapper
           style={{
             backgroundColor: isDarkMode ? "black" : "",
@@ -72,7 +66,7 @@ export default function FollowListAtMainPage() {
           }}
         >
           <Style.FollowCardWrapper about={`${movingRange}px`}>
-            {userData.follow.map((followUserId) => {
+            {currentUserData.follow.map((followUserId) => {
               return <FollowCard userId={followUserId} key={v4()} />
             })}
           </Style.FollowCardWrapper>

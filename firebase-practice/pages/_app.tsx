@@ -3,11 +3,11 @@ import type { AppProps } from "next/app"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { onAuthStateChanged } from "firebase/auth"
-import { authService } from "@FireBase"
-import { RecoilRoot, useResetRecoilState, useSetRecoilState } from "recoil"
+import { authService, DBService } from "@FireBase"
+import { RecoilRoot, useSetRecoilState } from "recoil"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
-import getUserDataByUid from "lib/getUserDataByUid"
 import { UserData } from "backend/dto"
+import { doc, onSnapshot } from "firebase/firestore"
 
 const SetDarkMode = () => {
   const setDarkRecoil = useSetRecoilState(darkModeState)
@@ -22,8 +22,8 @@ const SetCurrnentUser = () => {
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
       if (user) {
-        getUserDataByUid(user.uid).then((response) => {
-          setCurrentUser(response as UserData)
+        onSnapshot(doc(DBService, "users", `${user.uid}`), (response) => {
+          setCurrentUser(response.data() as UserData)
         })
       }
     })

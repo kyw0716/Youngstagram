@@ -175,17 +175,7 @@ export default function ThreeDotMenu({
 
     await updateDoc(firestorePersonalRef, {
       feed: arrayRemove(feed),
-    })
-      .then(async () => {
-        await getUserDataByUid(`${authService.currentUser?.uid}`).then(
-          (data) => {
-            if (data) {
-              setCurrentUserData(data as UserData)
-            }
-          },
-        )
-      })
-      .catch((error) => console.log(error.code))
+    }).catch((error) => console.log(error.code))
     await updateDoc(firestoreAllRef, {
       feed: arrayRemove(feed),
     }).catch((error) => console.log(error.code))
@@ -223,21 +213,11 @@ export default function ThreeDotMenu({
     handleThreeDotMenuClick()
     await updateDoc(firestorePersonalRef, {
       feed: arrayRemove(feed),
+    }).then(async () => {
+      await updateDoc(firestorePersonalRef, {
+        feed: arrayUnion(toggleFeed),
+      })
     })
-      .then(async () => {
-        await updateDoc(firestorePersonalRef, {
-          feed: arrayUnion(toggleFeed),
-        })
-      })
-      .then(async () => {
-        await getUserDataByUid(`${authService.currentUser?.uid}`).then(
-          (data) => {
-            if (data) {
-              setCurrentUserData(data as UserData)
-            }
-          },
-        )
-      })
     await updateDoc(firestoreImageAllRef, {
       feed: arrayRemove(feed),
     }).then(async () => {

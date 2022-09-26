@@ -40,12 +40,6 @@ export default function Profile({ userId }: Props) {
   const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
   const userList = useRecoilValue(userListState)
 
-  // useEffect(() => {
-  //   if (currentUserData === undefined) return
-  //   if (currentUserData.info.userId === "")
-  //     router.replace(`/loading?path=profile/${userId}`)
-  // }, [currentUserData])
-
   useEffect(() => {
     if (router.query !== undefined && router.query.id !== userId)
       router.push(`/profile/${router.query.id}`)

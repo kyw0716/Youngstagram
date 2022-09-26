@@ -211,7 +211,7 @@ export function DMIcon() {
       width="24"
       style={{ cursor: "pointer" }}
       onClick={() => {
-        if (authService.currentUser) router.push("/loading?path=dm")
+        if (authService.currentUser) router.push("/dm")
       }}
     >
       <line

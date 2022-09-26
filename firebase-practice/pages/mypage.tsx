@@ -43,12 +43,6 @@ export default function Profile() {
 
   const [isFeedUploadModalOpen, setIsFeedUploadModalOpen] =
     useState<boolean>(false)
-  const [isUploaded, setIsUploaded] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (isUploaded)
-      router.replace(`/loading?path=${router.pathname.replace("/", "")}`)
-  }, [isUploaded])
 
   useEffect(() => {
     if (currentUserData === undefined || currentUserData.feed === undefined)
@@ -75,7 +69,6 @@ export default function Profile() {
         setIsOpen={setIsFeedUploadModalOpen}
         isOpen={isFeedUploadModalOpen}
         feedData={selectedFeedData}
-        setIsUploaded={setIsUploaded}
       />
       <UserListModal
         userList={likeUserList}
