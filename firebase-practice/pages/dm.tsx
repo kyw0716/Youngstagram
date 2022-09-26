@@ -2,10 +2,6 @@ import Layout from "components/layout"
 import PCDM from "@feature/dm/PC"
 import useWindowSize from "lib/useWindowSize"
 import MobileDM from "@feature/dm/Mobile"
-import { useRecoilValue } from "recoil"
-import { userDataState } from "@share/recoil/recoilList"
-import { useEffect } from "react"
-import { useRouter } from "next/router"
 
 export default function Dm() {
   const windowSize = useWindowSize()

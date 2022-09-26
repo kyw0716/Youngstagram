@@ -200,9 +200,9 @@ export default function Auth() {
   }
 
   const handleGoogleAuth = async () => {
+    setIsLogin(true)
     await signInWithPopup(authService, googleProvider)
       .then(async (response) => {
-        setIsLogin(true)
         if (response) {
           await CreateNewUserToFirestore(response)
         }
@@ -220,9 +220,9 @@ export default function Auth() {
   }
 
   const handleGitHubAuth = async () => {
+    setIsLogin(true)
     await signInWithPopup(authService, githubProvider)
       .then(async (response) => {
-        setIsLogin(true)
         if (response) {
           await CreateNewUserToFirestore(response)
         }

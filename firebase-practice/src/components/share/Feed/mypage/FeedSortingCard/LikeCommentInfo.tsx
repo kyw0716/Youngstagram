@@ -52,7 +52,6 @@ export default function LikeCommentInfo({
   }, [])
 
   useEffect(() => {
-    console.log("변경")
     if (!likerList) return
     if (!currentUser) return
     if (currentUser.info.userId === "") return

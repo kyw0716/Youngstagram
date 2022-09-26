@@ -124,13 +124,7 @@ export default function Header() {
   const userData = useRecoilValue(userDataState)
   const resetUserData = useResetRecoilState(userDataState)
 
-  const [isUploaded, setIsUploaded] = useState<boolean>(false)
   const isDarkMode = useRecoilValue(darkModeState)
-
-  useEffect(() => {
-    if (isUploaded)
-      router.replace(`/loading?path=${router.pathname.replace("/", "")}`)
-  }, [isUploaded])
 
   return (
     <>
@@ -200,9 +194,7 @@ export default function Header() {
               >
                 <Style.ProfileButton
                   onClick={() => {
-                    if (userData !== undefined && userData.info.userId !== "") {
-                      router.push(`/mypage`)
-                    }
+                    router.push(`/mypage`)
                   }}
                   style={{
                     backgroundColor: isDarkMode ? "black" : "",
@@ -215,6 +207,7 @@ export default function Header() {
                 </Style.ProfileButton>
                 <Style.LogoutButton
                   onClick={() => {
+                    router.replace("/auth")
                     signOut(authService)
                     resetUserData()
                   }}
