@@ -40,10 +40,10 @@ export default function FollowUserWrapper({ userId }: Props) {
               currentUserData !== undefined &&
               currentUserData.info.userId === userId
             ) {
-              setRoutingPath(`/loading?path=mypage`)
+              setRoutingPath(`/mypage`)
               return
             }
-            setRoutingPath(`/loading?path=profile/${userId}`)
+            setRoutingPath(`/profile/${userId}`)
           }}
           style={{ cursor: "pointer", flexShrink: 0 }}
         >

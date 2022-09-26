@@ -3,9 +3,11 @@ import type { AppProps } from "next/app"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { onAuthStateChanged } from "firebase/auth"
-import { authService } from "@FireBase"
+import { authService, DBService } from "@FireBase"
 import { RecoilRoot, useSetRecoilState } from "recoil"
-import { darkModeState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
+import { UserData } from "backend/dto"
+import { doc, onSnapshot } from "firebase/firestore"
 
 const SetDarkMode = () => {
   const setDarkRecoil = useSetRecoilState(darkModeState)
@@ -15,17 +17,29 @@ const SetDarkMode = () => {
   return null
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter()
-  const [isLogOut, setIsLogOut] = useState<boolean>(false)
+const SetCurrnentUser = () => {
+  const setCurrentUser = useSetRecoilState(userDataState)
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
-      if (user === null) setIsLogOut(true)
+      if (user) {
+        onSnapshot(doc(DBService, "users", `${user.uid}`), (response) => {
+          setCurrentUser(response.data() as UserData)
+        })
+      }
     })
   }, [])
+  return null
+}
+
+function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter()
   useEffect(() => {
-    if (isLogOut) router.push("/loading")
-  }, [isLogOut])
+    onAuthStateChanged(authService, (user) => {
+      if (user === null) {
+        router.push("/auth")
+      }
+    })
+  }, [])
 
   useEffect(() => {
     let vh = window.innerHeight * 0.01
@@ -34,6 +48,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <SetDarkMode />
+      <SetCurrnentUser />
       <Component {...pageProps} />
     </RecoilRoot>
   )

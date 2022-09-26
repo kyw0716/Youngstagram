@@ -75,7 +75,6 @@ export default function FeedCard({
 }: Props) {
   const router = useRouter()
   const [feedCreatorData, setFeedCreatorData] = useState<UserData>()
-  const [isCurrentUserLike, setIsCurrentUserLike] = useState<boolean>(false)
   const currentUser = useRecoilValue(userDataState)
   const [routingPath, setRoutingPath] = useState<string>("")
   const isDarkMode = useRecoilValue(darkModeState)
@@ -117,12 +116,10 @@ export default function FeedCard({
                     if (
                       currentUser.info.userId === feedCreatorData.info.userId
                     ) {
-                      router.replace(`/loading?path=mypage`)
+                      router.replace(`/mypage`)
                       return
                     }
-                    router.replace(
-                      `/loading?path=profile/${feedCreatorData.info.userId}`,
-                    )
+                    router.replace(`/profile/${feedCreatorData.info.userId}`)
                   }}
                 />
               ) : (
@@ -167,15 +164,9 @@ export default function FeedCard({
             />
           )}
           <Margin direction="column" size={10} />
-          <Icons
-            isCurrentUserLike={isCurrentUserLike}
-            setIsCommentModalOpen={setIsCommentModalOpen}
-            feedData={feedData}
-          />
-          <Margin direction="column" size={15} />
           <LikeCommentInfo
             feedData={feedData}
-            setIsCurrentUserLike={setIsCurrentUserLike}
+            setIsCommentModalOpen={setIsCommentModalOpen}
             setIsLikeModalOpen={setIsLikeModalOpen}
           />
           <Desc

@@ -81,10 +81,10 @@ export default function UserCard({
               style={{ borderRadius: "40px", cursor: "pointer" }}
               onClick={() => {
                 if (currentUserData.info.userId === userData?.info.userId) {
-                  router.push(`/loading?path=mypage`)
+                  router.push(`/mypage`)
                   return
                 }
-                router.push(`/loading?path=profile/${userData.info.userId}`)
+                router.push(`/profile/${userData.info.userId}`)
               }}
             />
           ) : (
@@ -93,10 +93,10 @@ export default function UserCard({
               height={40}
               onClick={() => {
                 if (currentUserData.info.userId === userData?.info.userId) {
-                  router.push(`/loading?path=mypage`)
+                  router.push(`/mypage`)
                   return
                 }
-                router.push(`/loading?path=profile/${userData.info.userId}`)
+                router.push(`/profile/${userData.info.userId}`)
               }}
             />
           )}

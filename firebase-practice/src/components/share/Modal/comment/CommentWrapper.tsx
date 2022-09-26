@@ -11,7 +11,7 @@ import {
 import { ProfileIcon } from "icons"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH4, CustomH5, CustomH6, FlexBox, Margin } from "ui"
@@ -19,6 +19,7 @@ import { CustomH4, CustomH5, CustomH6, FlexBox, Margin } from "ui"
 type Props = {
   commentData: Comment
   storageId: string
+  setIsOpen: React.Dispatch<SetStateAction<boolean>>
 }
 const Style = {
   Wrapper: styled.div`
@@ -55,7 +56,11 @@ const Style = {
   `,
 }
 
-export default function CommentWrapper({ commentData, storageId }: Props) {
+export default function CommentWrapper({
+  commentData,
+  storageId,
+  setIsOpen,
+}: Props) {
   const router = useRouter()
   const [isModifyMode, setIsModifyMode] = useState<boolean>(false)
   const [newComment, setNewComment] = useState<string>(commentData.comment)
@@ -74,7 +79,10 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
     })
   }, [])
   useEffect(() => {
-    if (routingPath !== "") router.replace(routingPath)
+    if (routingPath !== "") {
+      router.replace(routingPath)
+      setIsOpen(false)
+    }
   }, [routingPath])
 
   const handleRemoveComment = async () => {
@@ -118,10 +126,10 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
               alt="profile"
               onClick={() => {
                 if (userData?.info.userId === currentUserData.info.userId) {
-                  setRoutingPath(`/loading?path=mypage`)
+                  setRoutingPath(`/mypage`)
                   return
                 }
-                setRoutingPath(`/loading?path=profile/${userData?.info.userId}`)
+                setRoutingPath(`/profile/${userData?.info.userId}`)
               }}
               priority
             />
@@ -131,10 +139,10 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
               height={32}
               onClick={() => {
                 if (userData?.info.userId === currentUserData.info.userId) {
-                  router.push(`/loading?path=mypage`)
+                  router.push(`/mypage`)
                   return
                 }
-                router.push(`/loading?path=profile/${userData?.info.userId}`)
+                router.push(`/profile/${userData?.info.userId}`)
               }}
             />
           )}

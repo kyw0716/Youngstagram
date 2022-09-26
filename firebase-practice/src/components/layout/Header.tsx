@@ -134,11 +134,7 @@ export default function Header() {
 
   return (
     <>
-      <FeedUploadModal
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
-        setIsUploaded={setIsUploaded}
-      />
+      <FeedUploadModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
       <Style.Container
         style={{ backgroundColor: isDarkMode ? "black" : "white" }}
       >
@@ -146,7 +142,7 @@ export default function Header() {
           <Style.Logo
             onClick={() => {
               if (userData !== undefined && userData.info.userId !== "")
-                router.push("/loading")
+                router.push("/")
             }}
             style={{ color: isDarkMode ? "white" : "black" }}
           >
@@ -157,7 +153,7 @@ export default function Header() {
             <HomeIcon
               onClick={() => {
                 if (userData !== undefined && userData.info.userId !== "")
-                  router.push("/loading")
+                  router.push("/")
               }}
             />
             <ImageUploadIcon
@@ -205,7 +201,7 @@ export default function Header() {
                 <Style.ProfileButton
                   onClick={() => {
                     if (userData !== undefined && userData.info.userId !== "") {
-                      router.push(`/loading?path=mypage`)
+                      router.push(`/mypage`)
                     }
                   }}
                   style={{

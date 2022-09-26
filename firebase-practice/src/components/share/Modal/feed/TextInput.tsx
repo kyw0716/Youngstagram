@@ -162,7 +162,6 @@ export default function TextInput({
   imageFile,
   setImageFile,
   setIsFileExist,
-  setIsUploaded,
 }: Props) {
   const isDarkMode = useRecoilValue(darkModeState)
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
@@ -193,9 +192,7 @@ export default function TextInput({
         .then(
           async () =>
             await getDownloadURL(storageRef).then(async (response) => {
-              await uploadToFirestore(response).then(() => {
-                if (setIsUploaded) setIsUploaded(true)
-              })
+              uploadToFirestore(response)
             }),
         )
         .catch((error) => {
@@ -275,9 +272,7 @@ export default function TextInput({
       feed: arrayRemove(feed),
     })
       .then(async () => {
-        await uploadToFirestore(feedData.imageUrl).then(() => {
-          if (setIsUploaded) setIsUploaded(true)
-        })
+        await uploadToFirestore(feedData.imageUrl)
       })
       .catch((error) => console.log(error.code))
   }

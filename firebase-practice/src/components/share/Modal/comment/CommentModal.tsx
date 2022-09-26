@@ -64,7 +64,11 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
           <Style.Img src={feedData.imageUrl} alt="image" />
         </Style.ImgWrapper>
         <Style.DetailContainer>
-          <CommentList feedData={feedData} commentAreaRef={commentAreaRef} />
+          <CommentList
+            feedData={feedData}
+            commentAreaRef={commentAreaRef}
+            setIsOpen={setIsOpen}
+          />
           <Icons storageId={feedData.storageId} inputRef={inputRef} />
         </Style.DetailContainer>
       </Style.Wrapper>

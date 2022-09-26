@@ -31,7 +31,7 @@ const Style = {
 
 export default function Profile() {
   const router = useRouter()
-  const userData = useRecoilValue(userDataState)
+  const currentUserData = useRecoilValue(userDataState)
 
   const feedDataType = useRecoilValue(FeedDataFilter)
   const [feedData, setFeedData] = useState<FeedData[]>([])
@@ -43,30 +43,20 @@ export default function Profile() {
 
   const [isFeedUploadModalOpen, setIsFeedUploadModalOpen] =
     useState<boolean>(false)
-  const [isUploaded, setIsUploaded] = useState<boolean>(false)
 
   useEffect(() => {
-    if (userData !== undefined && userData.info.userId === "")
-      router.push("/loading?path=mypage")
-  }, [userData])
-
-  useEffect(() => {
-    if (isUploaded)
-      router.replace(`/loading?path=${router.pathname.replace("/", "")}`)
-  }, [isUploaded])
-
-  useEffect(() => {
-    if (userData === undefined || userData.feed === undefined) return
+    if (currentUserData === undefined || currentUserData.feed === undefined)
+      return
     if (feedDataType === "public") {
-      setFeedData(userData.feed.filter((eachFeed) => !eachFeed.private))
+      setFeedData(currentUserData.feed.filter((eachFeed) => !eachFeed.private))
       return
     }
     if (feedDataType === "private") {
-      setFeedData(userData.feed.filter((eachFeed) => eachFeed.private))
+      setFeedData(currentUserData.feed.filter((eachFeed) => eachFeed.private))
       return
     }
-    setFeedData(userData.feed)
-  }, [feedDataType, userData])
+    setFeedData(currentUserData.feed)
+  }, [feedDataType, currentUserData])
 
   return (
     <Layout>
@@ -79,7 +69,6 @@ export default function Profile() {
         setIsOpen={setIsFeedUploadModalOpen}
         isOpen={isFeedUploadModalOpen}
         feedData={selectedFeedData}
-        setIsUploaded={setIsUploaded}
       />
       <UserListModal
         userList={likeUserList}
@@ -87,12 +76,12 @@ export default function Profile() {
         setIsOpen={setIsUserListModalOpen}
         title={""}
       />
-      {userData !== undefined && userData.info.userId !== "" ? (
+      {currentUserData !== undefined && currentUserData.info.userId !== "" ? (
         <Style.Wrapper>
           <ProfileHeader setIsUserListModalOpen={setIsUserListModalOpen} />
           {feedData !== undefined && (
             <FeedSortList
-              FeedData={feedData}
+              feedData={feedData}
               setIsCommentModalOpen={setIsCommentModalOpen}
               setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
               setIsUserListModalOpen={setIsUserListModalOpen}

@@ -30,10 +30,6 @@ const Home: NextPage = () => {
   const likerListData = useRecoilValue(userListState)
 
   useEffect(() => {
-    if (currentUserData !== undefined && currentUserData.info.userId === "")
-      router.push("/loading")
-  }, [currentUserData])
-  useEffect(() => {
     const AllFeedRef = doc(DBService, "mainPage", `userFeedDataAll`)
     onSnapshot(AllFeedRef, { includeMetadataChanges: true }, (doc) => {
       if (doc) setDataFromFirestore(doc.data())
@@ -66,7 +62,7 @@ const Home: NextPage = () => {
           </FlexBox>
         )}
       <Margin direction="column" size={15} />
-      {currentUserData.info.userId !== "" && (
+      {currentUserData?.info.userId !== "" && (
         <FeedList
           FeedData={
             feedData ? feedData.filter((data) => !data.private) : undefined
