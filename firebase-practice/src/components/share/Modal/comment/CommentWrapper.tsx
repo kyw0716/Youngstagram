@@ -131,7 +131,6 @@ export default function CommentWrapper({
                 }
                 setRoutingPath(`/profile/${userData?.info.userId}`)
               }}
-              priority
             />
           ) : (
             <ProfileIcon

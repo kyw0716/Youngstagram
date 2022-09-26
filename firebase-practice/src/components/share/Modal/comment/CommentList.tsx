@@ -137,6 +137,7 @@ export default function CommentList({
                   router.push(`/profile/${userData?.info.userId}`)
                 }}
                 style={{ borderRadius: "32px", cursor: "pointer" }}
+                priority={true}
               />
             ) : (
               <ProfileIcon
@@ -173,17 +174,21 @@ export default function CommentList({
             })
             .map((data, index) => {
               return (
-                <>
+                <FlexBox
+                  key={v4()}
+                  width={"max-content"}
+                  height={"max-content"}
+                  style={{ flexShrink: 0, marginBottom: 20 }}
+                >
                   {index === commentData.length - 1 && (
-                    <div ref={commentAreaRef} key={v4()}></div>
+                    <div ref={commentAreaRef}></div>
                   )}
                   <CommentWrapper
-                    key={v4()}
                     commentData={data}
                     storageId={feedData.storageId}
                     setIsOpen={setIsOpen}
                   />
-                </>
+                </FlexBox>
               )
             })}
       </Style.CommentWrapper>
