@@ -4,7 +4,7 @@ import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { signOut } from "firebase/auth"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
 import { DMIcon, FlexBox, HomeIcon, ImageUploadIcon } from "ui"
@@ -15,7 +15,6 @@ import {
   LogoutIcon,
   ProfileIcon,
 } from "icons"
-import Loading from "@share/Loading/Loading"
 
 const Style = {
   Container: styled.div`
@@ -197,11 +196,15 @@ export default function Header() {
                   onClick={() => {
                     router.push(`/mypage`)
                   }}
-                  style={{
-                    backgroundColor: isDarkMode ? "black" : "",
-                    border: isDarkMode ? "1px solid lightgrey" : "",
-                    color: isDarkMode ? "white" : "",
-                  }}
+                  style={
+                    isDarkMode
+                      ? {
+                          backgroundColor: "black",
+                          border: "1px solid lightgrey",
+                          color: "white",
+                        }
+                      : {}
+                  }
                 >
                   <ProfileIcon width={15} height={15} />
                   프로필
@@ -212,23 +215,31 @@ export default function Header() {
                     signOut(authService)
                     resetUserData()
                   }}
-                  style={{
-                    backgroundColor: isDarkMode ? "black" : "",
-                    border: isDarkMode ? "1px solid lightgrey" : "",
-                    color: isDarkMode ? "white" : "",
-                  }}
+                  style={
+                    isDarkMode
+                      ? {
+                          backgroundColor: "black",
+                          border: "1px solid lightgrey",
+                          color: "white",
+                        }
+                      : {}
+                  }
                 >
                   <LogoutIcon width={15} height={15} />
                   로그아웃
                 </Style.LogoutButton>
               </Style.DropDownMenu>
               <Style.ChatBalloon
-                style={{
-                  backgroundColor: isDarkMode ? "black" : "",
-                  borderTop: isDarkMode ? "1px solid lightgrey" : "",
-                  borderLeft: isDarkMode ? "1px solid lightgrey" : "",
-                  zIndex: isDarkMode ? 9 : "",
-                }}
+                style={
+                  isDarkMode
+                    ? {
+                        backgroundColor: "black",
+                        borderTop: "1px solid lightgrey",
+                        borderLeft: "1px solid lightgrey",
+                        zIndex: 9,
+                      }
+                    : {}
+                }
               />
             </>
           ) : (

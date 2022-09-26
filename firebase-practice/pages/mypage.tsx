@@ -15,7 +15,6 @@ import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
-import Loading from "@share/Loading/Loading"
 
 const Style = {
   Wrapper: styled.div`
