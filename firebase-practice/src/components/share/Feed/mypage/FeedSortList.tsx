@@ -5,10 +5,11 @@ import React, { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH2Light, CustomH5Light } from "ui"
+import { v4 } from "uuid"
 import FeedSortingCard from "./FeedSortingCard"
 
 type Props = {
-  feedData: FeedData[]
+  feedData: FeedData[] | undefined
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>
@@ -37,38 +38,28 @@ export default function FeedSortList({
   setIsFeedUploadModalOpen,
   setIsUserListModalOpen: setIsLikeModalOpen,
 }: Props) {
-  const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] =
-    useState<FeedData[]>()
-  useEffect(() => {
-    if (feedData.length === 0) setFeedDataSortedByUploadTime([])
-    if (feedData !== undefined && feedData.length > 0)
-      setFeedDataSortedByUploadTime(
-        (JSON.parse(JSON.stringify(feedData)) as FeedData[]).sort(function (
-          a,
-          b,
-        ) {
-          return Number(b.uploadTime) - Number(a.uploadTime)
-        }),
-      )
-  }, [feedData])
-
   const isDarkMode = useRecoilValue(darkModeState)
 
   return (
     <Style.ImageContainer>
-      {feedDataSortedByUploadTime !== undefined &&
-      feedDataSortedByUploadTime.length !== 0 ? (
-        feedDataSortedByUploadTime.map((data, index) => {
-          return (
-            <FeedSortingCard
-              key={index}
-              feedData={data}
-              setIsCommentModalOpen={setIsCommentModalOpen}
-              setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
-              setIsLikeModalOpen={setIsLikeModalOpen}
-            />
-          )
-        })
+      {feedData !== undefined && feedData.length !== 0 ? (
+        <>
+          {[...feedData]
+            .sort((a, b) => {
+              return Number(b.uploadTime) - Number(a.uploadTime)
+            })
+            .map((data) => {
+              return (
+                <FeedSortingCard
+                  key={v4()}
+                  feedData={data}
+                  setIsCommentModalOpen={setIsCommentModalOpen}
+                  setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
+                  setIsLikeModalOpen={setIsLikeModalOpen}
+                />
+              )
+            })}
+        </>
       ) : (
         <>
           <CameraIcon width={62} height={62} />

@@ -35,7 +35,6 @@ export default function Profile({ userId }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>()
-  const currentUserData = useRecoilValue(userDataState)
   const selectedFeedData = useRecoilValue(feedDataState)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
