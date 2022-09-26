@@ -1,6 +1,3 @@
-import { authService, DBService } from "@FireBase"
-import { UserData } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { FlexBox } from "ui"

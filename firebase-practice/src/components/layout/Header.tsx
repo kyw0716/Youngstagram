@@ -15,6 +15,7 @@ import {
   LogoutIcon,
   ProfileIcon,
 } from "icons"
+import Loading from "@share/Loading/Loading"
 
 const Style = {
   Container: styled.div`
@@ -160,9 +161,12 @@ export default function Header() {
               }}
             />
             <DMIcon />
-            {userData !== undefined && userData.info.userId !== "" ? (
+            {authService.currentUser === null ? (
+              <LineMenuIcon width={30} height={30} />
+            ) : (
               <>
-                {userData.info.profileImage ? (
+                {userData.info.profileImage !== "" &&
+                userData.info.profileImage !== null ? (
                   <Image
                     src={userData.info.profileImage}
                     onClick={handleMenuOpen}
@@ -180,11 +184,8 @@ export default function Header() {
                   />
                 )}
               </>
-            ) : (
-              <LineMenuIcon width={30} height={30} />
             )}
           </FlexBox>
-
           {isMeunOpen ? (
             <>
               <Style.DropDownMenu
