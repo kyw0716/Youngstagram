@@ -15,6 +15,7 @@ import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
+import Loading from "@share/Loading/Loading"
 
 const Style = {
   Wrapper: styled.div`
@@ -76,21 +77,17 @@ export default function Profile() {
         setIsOpen={setIsUserListModalOpen}
         title={""}
       />
-      {currentUserData !== undefined && currentUserData.info.userId !== "" ? (
-        <Style.Wrapper>
-          <ProfileHeader setIsUserListModalOpen={setIsUserListModalOpen} />
-          {feedData !== undefined && (
-            <FeedSortList
-              feedData={feedData}
-              setIsCommentModalOpen={setIsCommentModalOpen}
-              setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
-              setIsUserListModalOpen={setIsUserListModalOpen}
-            />
-          )}
-        </Style.Wrapper>
-      ) : (
-        <></>
-      )}
+      <Style.Wrapper>
+        <ProfileHeader setIsUserListModalOpen={setIsUserListModalOpen} />
+        {feedData !== undefined && (
+          <FeedSortList
+            feedData={feedData}
+            setIsCommentModalOpen={setIsCommentModalOpen}
+            setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
+            setIsUserListModalOpen={setIsUserListModalOpen}
+          />
+        )}
+      </Style.Wrapper>
     </Layout>
   )
 }
