@@ -15,6 +15,7 @@ import {
   LogoutIcon,
   ProfileIcon,
 } from "icons"
+import Link from "next/link"
 
 const Style = {
   Container: styled.div`
@@ -133,23 +134,24 @@ export default function Header() {
         style={{ backgroundColor: isDarkMode ? "black" : "white" }}
       >
         <Style.Nav>
-          <Style.Logo
-            onClick={() => {
-              if (userData !== undefined && userData.info.userId !== "")
-                router.push("/")
-            }}
-            style={{ color: isDarkMode ? "white" : "black" }}
+          <Link
+            href={
+              userData !== undefined && userData.info.userId !== "" ? "/" : ""
+            }
           >
-            youngstagram
-          </Style.Logo>
+            <Style.Logo style={{ color: isDarkMode ? "white" : "black" }}>
+              youngstagram
+            </Style.Logo>
+          </Link>
           <FlexBox width={"fit-content"} gap={15} alignItems="center">
             {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
-            <HomeIcon
-              onClick={() => {
-                if (userData !== undefined && userData.info.userId !== "")
-                  router.push("/")
-              }}
-            />
+            <Link
+              href={
+                userData !== undefined && userData.info.userId !== "" ? "/" : ""
+              }
+            >
+              <HomeIcon />
+            </Link>
             <ImageUploadIcon
               onClick={() => {
                 if (userData !== undefined && userData.info.userId !== "") {
@@ -192,42 +194,42 @@ export default function Header() {
                   setIsMenuOpen(false)
                 }}
               >
-                <Style.ProfileButton
-                  onClick={() => {
-                    router.push(`/mypage`)
-                  }}
-                  style={
-                    isDarkMode
-                      ? {
-                          backgroundColor: "black",
-                          border: "1px solid lightgrey",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                >
-                  <ProfileIcon width={15} height={15} />
-                  프로필
-                </Style.ProfileButton>
-                <Style.LogoutButton
-                  onClick={() => {
-                    router.replace("/auth")
-                    signOut(authService)
-                    resetUserData()
-                  }}
-                  style={
-                    isDarkMode
-                      ? {
-                          backgroundColor: "black",
-                          border: "1px solid lightgrey",
-                          color: "white",
-                        }
-                      : {}
-                  }
-                >
-                  <LogoutIcon width={15} height={15} />
-                  로그아웃
-                </Style.LogoutButton>
+                <Link href={"/mypage"}>
+                  <Style.ProfileButton
+                    style={
+                      isDarkMode
+                        ? {
+                            backgroundColor: "black",
+                            border: "1px solid lightgrey",
+                            color: "white",
+                          }
+                        : {}
+                    }
+                  >
+                    <ProfileIcon width={15} height={15} />
+                    프로필
+                  </Style.ProfileButton>
+                </Link>
+                <Link href={"/auth"}>
+                  <Style.LogoutButton
+                    onClick={() => {
+                      signOut(authService)
+                      resetUserData()
+                    }}
+                    style={
+                      isDarkMode
+                        ? {
+                            backgroundColor: "black",
+                            border: "1px solid lightgrey",
+                            color: "white",
+                          }
+                        : {}
+                    }
+                  >
+                    <LogoutIcon width={15} height={15} />
+                    로그아웃
+                  </Style.LogoutButton>
+                </Link>
               </Style.DropDownMenu>
               <Style.ChatBalloon
                 style={

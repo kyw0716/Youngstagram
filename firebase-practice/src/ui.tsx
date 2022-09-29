@@ -7,6 +7,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
@@ -199,39 +200,37 @@ export function CommentIcon({ onClick }: CommentProps) {
 }
 export function DMIcon() {
   const isDarkMode = useRecoilValue(darkModeState)
-  const router = useRouter()
   return (
-    <svg
-      aria-label="게시물 공유"
-      color="#262626"
-      fill={isDarkMode ? "white" : "#262626"}
-      height="24"
-      role="img"
-      viewBox="0 0 24 24"
-      width="24"
-      style={{ cursor: "pointer" }}
-      onClick={() => {
-        if (authService.currentUser) router.push("/dm")
-      }}
-    >
-      <line
-        fill="none"
-        stroke={isDarkMode ? "white" : "#262626"}
-        strokeLinejoin="round"
-        strokeWidth="2"
-        x1="22"
-        x2="9.218"
-        y1="3"
-        y2="10.083"
-      ></line>
-      <polygon
-        fill="none"
-        points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
-        stroke={isDarkMode ? "white" : "#262626"}
-        strokeLinejoin="round"
-        strokeWidth="2"
-      ></polygon>
-    </svg>
+    <Link href={authService.currentUser ? "/dm" : ""}>
+      <svg
+        aria-label="게시물 공유"
+        color="#262626"
+        fill={isDarkMode ? "white" : "#262626"}
+        height="24"
+        role="img"
+        viewBox="0 0 24 24"
+        width="24"
+        style={{ cursor: "pointer" }}
+      >
+        <line
+          fill="none"
+          stroke={isDarkMode ? "white" : "#262626"}
+          strokeLinejoin="round"
+          strokeWidth="2"
+          x1="22"
+          x2="9.218"
+          y1="3"
+          y2="10.083"
+        ></line>
+        <polygon
+          fill="none"
+          points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
+          stroke={isDarkMode ? "white" : "#262626"}
+          strokeLinejoin="round"
+          strokeWidth="2"
+        ></polygon>
+      </svg>
+    </Link>
   )
 }
 
@@ -274,7 +273,7 @@ export function ShareIcon() {
 }
 
 type HomeIconProps = {
-  onClick: () => void
+  onClick?: () => void
 }
 
 export function HomeIcon({ onClick }: HomeIconProps) {

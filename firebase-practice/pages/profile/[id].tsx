@@ -50,6 +50,7 @@ export default function Profile({ userId }: Props) {
       }
     })
   }, [router.query, userId])
+
   useEffect(() => {
     setFeedData(userData?.feed)
   }, [userData, router.query])
