@@ -172,11 +172,7 @@ export default function Header() {
                     style={{ cursor: "pointer", borderRadius: "30px" }}
                   />
                 ) : (
-                  <ProfileIcon
-                    width={24}
-                    height={24}
-                    onClick={handleMenuOpen}
-                  />
+                  <ProfileIcon width={24} height={24} />
                 )}
               </>
             )}
