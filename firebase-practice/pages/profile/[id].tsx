@@ -68,21 +68,19 @@ export default function Profile({ userId }: Props) {
         setIsOpen={setIsUserListModalOpen}
         title={""}
       />
-      {userData !== undefined && (
-        <Style.Wrapper>
-          <ProfileHeader
-            imageDataLength={feedData === undefined ? 0 : feedData.length}
-            userData={userData as UserData}
-            setIsUserListModalOpen={setIsUserListModalOpen}
+      <Style.Wrapper>
+        <ProfileHeader
+          imageDataLength={feedData === undefined ? 0 : feedData.length}
+          userData={userData as UserData}
+          setIsUserListModalOpen={setIsUserListModalOpen}
+        />
+        {feedData !== undefined && (
+          <FeedGrid
+            feedDatas={feedData ? feedData : undefined}
+            setIsCommentModalOpen={setIsCommentModalOpen}
           />
-          {feedData !== undefined && (
-            <FeedGrid
-              feedDatas={feedData ? feedData : undefined}
-              setIsCommentModalOpen={setIsCommentModalOpen}
-            />
-          )}
-        </Style.Wrapper>
-      )}
+        )}
+      </Style.Wrapper>
       <Margin direction="column" size={30} />
     </Layout>
   )

@@ -25,6 +25,7 @@ import {
   Margin,
 } from "ui"
 import { AllFileIcon, ProfileIcon } from "icons"
+import Loading from "@share/Loading/Loading"
 
 type Props = {
   userData: UserData
@@ -137,11 +138,12 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
     setIsFollowingDataModified(true)
   }
   useEffect(() => {
-    getUserDataByUid(userData.info.userId).then((data) => {
-      if (data) {
-        setUserDataByUserId(data as UserData)
-      }
-    })
+    if (userData)
+      getUserDataByUid(userData.info.userId).then((data) => {
+        if (data) {
+          setUserDataByUserId(data as UserData)
+        }
+      })
   }, [isFollowingDataModified, userData])
   useEffect(() => {
     if (userDataByUserId === undefined) return
@@ -155,87 +157,125 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
     <>
       <Style.ProfileHeader>
         <Margin direction="row" size={80} />
-        {userData.info.profileImage !== null ? (
-          <Image
-            src={userData.info.profileImage}
-            width={150}
-            height={150}
-            style={{ borderRadius: 150 }}
-            alt="profile"
-          />
+        {userData === undefined ? (
+          <Loading width={150} height={150} borderRadius={150} />
         ) : (
-          <ProfileIcon width={150} height={150} />
+          <>
+            {userData.info.profileImage !== null ? (
+              <Image
+                src={userData.info.profileImage}
+                width={150}
+                height={150}
+                style={{ borderRadius: 150 }}
+                alt="profile"
+              />
+            ) : (
+              <ProfileIcon width={150} height={150} />
+            )}
+          </>
         )}
+
         <Margin direction="row" size={80} />
         <Style.ProfileInfo>
           <FlexBox alignItems="center">
-            <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
-              {userData.info.name}
-            </CustomH2Light>
+            {userData === undefined ? (
+              <Loading width={150} height={30} borderRadius={5} />
+            ) : (
+              <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
+                {userData.info.name}
+              </CustomH2Light>
+            )}
+
             <Margin direction="row" size={20} />
 
-            {isCurrentUserFollowed ? (
-              <Style.ProfileEditButton
-                onClick={() => {
-                  let wantToUnFollow = confirm("팔로우를 취소하시겠습니까?")
-                  if (wantToUnFollow) handleUnFollow()
-                }}
-                style={
-                  isDarkMode
-                    ? {
-                        backgroundColor: "black",
-                        color: "white",
-                      }
-                    : {}
-                }
-              >
-                팔로잉중
-              </Style.ProfileEditButton>
+            {userData === undefined ? (
+              <Loading width={107} height={30} borderRadius={5} />
             ) : (
-              <Style.ProfileEditButton
-                onClick={handleFollow}
-                style={
-                  isDarkMode
-                    ? {
-                        backgroundColor: "black",
-                        color: "white",
-                      }
-                    : {}
-                }
-              >
-                팔로우
-              </Style.ProfileEditButton>
+              <>
+                {isCurrentUserFollowed ? (
+                  <Style.ProfileEditButton
+                    onClick={() => {
+                      let wantToUnFollow = confirm("팔로우를 취소하시겠습니까?")
+                      if (wantToUnFollow) handleUnFollow()
+                    }}
+                    style={
+                      isDarkMode
+                        ? {
+                            backgroundColor: "black",
+                            color: "white",
+                          }
+                        : {}
+                    }
+                  >
+                    팔로잉중
+                  </Style.ProfileEditButton>
+                ) : (
+                  <Style.ProfileEditButton
+                    onClick={handleFollow}
+                    style={
+                      isDarkMode
+                        ? {
+                            backgroundColor: "black",
+                            color: "white",
+                          }
+                        : {}
+                    }
+                  >
+                    팔로우
+                  </Style.ProfileEditButton>
+                )}
+              </>
             )}
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
-            <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
-              이메일: {userData.info.email}
-            </CustomH3Light>
+            {userData === undefined ? (
+              <Loading width={250} height={30} borderRadius={5} />
+            ) : (
+              <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
+                이메일: {userData.info.email}
+              </CustomH3Light>
+            )}
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox gap={40}>
-            <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
-              게시물: {userData.feed ? userData.feed.length : 0}
-            </CustomH3Light>
-            <CustomH3Light
-              onClick={() => {
-                setUserList(userData.follower)
-                setIsUserListModalOpen(true)
-              }}
-              style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
-            >
-              팔로워: {userData.follower ? userData.follower.length : 0}
-            </CustomH3Light>
-            <CustomH3Light
-              onClick={() => {
-                setUserList(userData.follow)
-                setIsUserListModalOpen(true)
-              }}
-              style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
-            >
-              팔로우: {userData.follow ? userData.follow.length : 0}
-            </CustomH3Light>
+            {userData === undefined ? (
+              <FlexBox gap={10}>
+                <Loading width={100} height={30} borderRadius={5} />
+                <Loading width={100} height={30} borderRadius={5} />
+                <Loading width={100} height={30} borderRadius={5} />
+              </FlexBox>
+            ) : (
+              <>
+                <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
+                  게시물: {userData.feed ? userData.feed.length : 0}
+                </CustomH3Light>
+                <CustomH3Light
+                  onClick={() => {
+                    setUserList(userData.follower)
+                    setIsUserListModalOpen(true)
+                  }}
+                  style={{
+                    cursor: "pointer",
+                    color: isDarkMode ? "white" : "",
+                  }}
+                >
+                  팔로워: {userData.follower ? userData.follower.length : 0}
+                </CustomH3Light>
+                <CustomH3Light
+                  onClick={() => {
+                    setUserList(userData.follow)
+                    setIsUserListModalOpen(true)
+                  }}
+                  style={{
+                    cursor: "pointer",
+                    color: isDarkMode ? "white" : "",
+                  }}
+                >
+                  팔로우: {userData.follow ? userData.follow.length : 0}
+                </CustomH3Light>
+              </>
+            )}
           </FlexBox>
         </Style.ProfileInfo>
       </Style.ProfileHeader>
