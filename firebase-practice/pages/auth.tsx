@@ -123,6 +123,7 @@ export default function Auth() {
     event,
   ) => {
     if (event.target.name === "Email") {
+      if (event.target.value === "서경") alert("사랑해")
       setEmail(event.target.value)
       return
     }
@@ -290,6 +291,7 @@ export default function Auth() {
             style={{
               border: isDarkMode ? "1px solid lightgrey" : "",
               backgroundColor: isDarkMode ? "#373e47" : "",
+              color: isDarkMode ? "white" : "black",
             }}
           />
           {Email.search(/\@\w+\.com|\@\w+\.net/) === -1 && Email.length > 3 ? (
@@ -312,7 +314,10 @@ export default function Auth() {
               confirmPassword !== "" &&
               Password !== ""
                 ? { backgroundColor: "red" }
-                : { backgroundColor: isDarkMode ? "#373e47" : "white" }
+                : {
+                    backgroundColor: isDarkMode ? "#373e47" : "white",
+                    color: isDarkMode ? "white" : "black",
+                  }
             }
           />
           {isNewAccount ? (
