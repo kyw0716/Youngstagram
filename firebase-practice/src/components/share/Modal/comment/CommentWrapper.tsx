@@ -140,7 +140,7 @@ export default function CommentWrapper({
             <ProfileIcon
               width={32}
               height={32}
-              creatorId={userData?.info.userId}
+              userId={userData?.info.userId}
             />
           )}
         </FlexBox>

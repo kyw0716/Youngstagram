@@ -128,7 +128,7 @@ export default function FeedCard({
                 <ProfileIcon
                   width={38}
                   height={38}
-                  creatorId={feedCreatorData.info.userId}
+                  userId={feedCreatorData.info.userId}
                 />
               )}
               <Style.HeaderText>

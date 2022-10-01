@@ -11,6 +11,8 @@ import React, { SetStateAction, useEffect, useState } from "react"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { ProfileIcon } from "icons"
+import { FlexBox } from "ui"
+import Link from "next/link"
 
 type Props = {
   userId: string
@@ -73,32 +75,25 @@ export default function UserCard({
       {userData && (
         <>
           {userData.info.profileImage ? (
-            <Image
-              width={40}
-              height={40}
-              src={userData.info.profileImage}
-              alt={"profile"}
-              style={{ borderRadius: "40px", cursor: "pointer" }}
-              onClick={() => {
-                if (currentUserData.info.userId === userData?.info.userId) {
-                  router.push(`/mypage`)
-                  return
-                }
-                router.push(`/profile/${userData.info.userId}`)
-              }}
-            />
+            <Link
+              href={
+                currentUserData.info.userId === userData?.info.userId
+                  ? "/mypage"
+                  : `/profile/${userData.info.userId}`
+              }
+            >
+              <FlexBox width={"fit-content"} height={"fit-content"}>
+                <Image
+                  width={40}
+                  height={40}
+                  src={userData.info.profileImage}
+                  alt={"profile"}
+                  style={{ borderRadius: "40px", cursor: "pointer" }}
+                />
+              </FlexBox>
+            </Link>
           ) : (
-            <ProfileIcon
-              width={40}
-              height={40}
-              onClick={() => {
-                if (currentUserData.info.userId === userData?.info.userId) {
-                  router.push(`/mypage`)
-                  return
-                }
-                router.push(`/profile/${userData.info.userId}`)
-              }}
-            />
+            <ProfileIcon width={40} height={40} userId={userData.info.userId} />
           )}
           {userData?.info.name}
         </>

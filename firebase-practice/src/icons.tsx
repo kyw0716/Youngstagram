@@ -11,18 +11,18 @@ type Props = {
 type ProfileIconProps = {
   width: number
   height: number
-  creatorId?: string
+  userId?: string
 }
 
-export function ProfileIcon({ creatorId, width, height }: ProfileIconProps) {
+export function ProfileIcon({ userId, width, height }: ProfileIconProps) {
   const isDarkMode = useRecoilValue(darkModeState)
   const currentUserData = useRecoilValue(userDataState)
   return (
     <Link
       href={
-        currentUserData.info.userId === `${creatorId}`
+        currentUserData.info.userId === `${userId}`
           ? "/mypage"
-          : `/profile/${creatorId}`
+          : `/profile/${userId}`
       }
     >
       <svg

@@ -52,7 +52,7 @@ export default function FollowUserWrapper({ userId }: Props) {
               </FlexBox>
             </Link>
           ) : (
-            <ProfileIcon width={44} height={44} creatorId={userInfo.userId} />
+            <ProfileIcon width={44} height={44} userId={userInfo.userId} />
           )}
           <FlexBox
             column={true}
