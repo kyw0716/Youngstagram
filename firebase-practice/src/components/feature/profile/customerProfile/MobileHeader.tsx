@@ -196,7 +196,10 @@ export default function MobileHeader({
               <Loading width={100} height={40} />
             ) : (
               <CustomH2Light
-                style={{ fontSize: "20px", color: isDarkMode ? "white" : "" }}
+                style={{
+                  fontSize: "20px",
+                  color: isDarkMode ? "white" : "black",
+                }}
               >
                 {userData.info.name}
               </CustomH2Light>
@@ -244,10 +247,10 @@ export default function MobileHeader({
       ) : (
         <Style.ProfileInfoWrapper>
           <Style.SortToAll>
-            <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
               게시물
             </CustomH4Light>
-            <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
               {userData.feed ? userData.feed.length : 0}
             </CustomH4Light>
           </Style.SortToAll>
@@ -257,10 +260,10 @@ export default function MobileHeader({
               setIsUserListModalOpen(true)
             }}
           >
-            <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
               팔로워
             </CustomH4Light>
-            <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
               {userData.follower ? userData.follower.length : 0}
             </CustomH4Light>
           </Style.SortToPublic>
@@ -270,11 +273,11 @@ export default function MobileHeader({
                 setUserList(userData.follow)
                 setIsUserListModalOpen(true)
               }}
-              style={{ color: isDarkMode ? "white" : "" }}
+              style={{ color: isDarkMode ? "white" : "black" }}
             >
               팔로우
             </CustomH4Light>
-            <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
               {userData.follow ? userData.follow.length : 0}
             </CustomH4Light>
           </Style.SortToPrivate>

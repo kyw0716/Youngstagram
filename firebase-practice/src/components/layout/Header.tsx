@@ -145,13 +145,7 @@ export default function Header() {
           </Link>
           <FlexBox width={"fit-content"} gap={15} alignItems="center">
             {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
-            <Link
-              href={
-                userData !== undefined && userData.info.userId !== "" ? "/" : ""
-              }
-            >
-              <HomeIcon />
-            </Link>
+            <HomeIcon />
             <ImageUploadIcon
               onClick={() => {
                 if (userData !== undefined && userData.info.userId !== "") {

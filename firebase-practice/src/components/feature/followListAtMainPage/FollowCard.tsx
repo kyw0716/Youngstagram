@@ -9,6 +9,7 @@ import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH6Light, FlexBox, Margin } from "ui"
 import { ProfileIcon } from "icons"
+import Link from "next/link"
 
 type Props = {
   userId: string
@@ -36,40 +37,37 @@ export default function FollowCard({ userId }: Props) {
   return (
     <>
       {userData && (
-        <Style.Wrapper
-          onClick={() => {
-            if (
-              currentUser !== undefined &&
-              currentUser.info.userId === userId
-            ) {
-              router.push("/mypage")
-              return
-            }
-            router.push(`/profile/${userId}`)
-          }}
+        <Link
+          href={
+            currentUser !== undefined && currentUser.info.userId === userId
+              ? "/mypage"
+              : `/profile/${userId}`
+          }
         >
-          <FlexBox width={56} height={56}>
-            {userData.info.profileImage ? (
-              <Image
-                width={56}
-                height={56}
-                src={userData.info.profileImage}
-                alt="profile"
-                style={{ borderRadius: 56 }}
-              />
-            ) : (
-              <ProfileIcon width={56} height={56} />
+          <Style.Wrapper>
+            <FlexBox width={56} height={56}>
+              {userData.info.profileImage ? (
+                <Image
+                  width={56}
+                  height={56}
+                  src={userData.info.profileImage}
+                  alt="profile"
+                  style={{ borderRadius: 56 }}
+                />
+              ) : (
+                <ProfileIcon width={56} height={56} />
+              )}
+            </FlexBox>
+            <Margin direction="column" size={7} />
+            {userData.info.name && (
+              <CustomH6Light style={{ color: isDarkMode ? "white" : "" }}>
+                {userData.info.name?.length > 4
+                  ? `${userData.info.name.slice(0, 4)}..`
+                  : userData.info.name}
+              </CustomH6Light>
             )}
-          </FlexBox>
-          <Margin direction="column" size={7} />
-          {userData.info.name && (
-            <CustomH6Light style={{ color: isDarkMode ? "white" : "" }}>
-              {userData.info.name?.length > 4
-                ? `${userData.info.name.slice(0, 4)}..`
-                : userData.info.name}
-            </CustomH6Light>
-          )}
-        </Style.Wrapper>
+          </Style.Wrapper>
+        </Link>
       )}
     </>
   )

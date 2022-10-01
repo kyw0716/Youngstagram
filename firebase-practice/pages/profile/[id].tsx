@@ -10,11 +10,7 @@ import { FeedData, UserData } from "backend/dto"
 import { useRouter } from "next/router"
 import FeedGrid from "@share/Feed/profilepage/FeedGrid"
 import { useRecoilValue } from "recoil"
-import {
-  feedDataState,
-  userDataState,
-  userListState,
-} from "@share/recoil/recoilList"
+import { feedDataState, userListState } from "@share/recoil/recoilList"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
 
@@ -41,6 +37,7 @@ export default function Profile({ userId }: Props) {
   const userList = useRecoilValue(userListState)
 
   useEffect(() => {
+    setIsUserListModalOpen(false)
     if (router.query !== undefined && router.query.id !== userId)
       router.push(`/profile/${router.query.id}`)
     const userDataRef = doc(DBService, "users", `${userId}`)

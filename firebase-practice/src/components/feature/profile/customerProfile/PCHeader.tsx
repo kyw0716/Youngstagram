@@ -181,7 +181,7 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
             {userData === undefined ? (
               <Loading width={150} height={30} borderRadius={5} />
             ) : (
-              <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
+              <CustomH2Light style={{ color: isDarkMode ? "white" : "black" }}>
                 {userData.info.name}
               </CustomH2Light>
             )}
@@ -232,7 +232,7 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
             {userData === undefined ? (
               <Loading width={250} height={30} borderRadius={5} />
             ) : (
-              <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
+              <CustomH3Light style={{ color: isDarkMode ? "white" : "black" }}>
                 이메일: {userData.info.email}
               </CustomH3Light>
             )}
@@ -247,7 +247,9 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
               </FlexBox>
             ) : (
               <>
-                <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
+                <CustomH3Light
+                  style={{ color: isDarkMode ? "white" : "black" }}
+                >
                   게시물: {userData.feed ? userData.feed.length : 0}
                 </CustomH3Light>
                 <CustomH3Light
@@ -281,7 +283,7 @@ export default function PCHeader({ userData, setIsUserListModalOpen }: Props) {
       </Style.ProfileHeader>
       <Style.SortWrapper>
         <Style.SortToAll color={isDarkMode ? "white" : "grey"}>
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+          <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
             게시물
           </CustomH4Light>
           <AllFileIcon width={15} height={15} />

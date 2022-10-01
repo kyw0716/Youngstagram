@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore"
 import { ProfileIcon } from "icons"
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
@@ -118,31 +119,28 @@ export default function CommentWrapper({
       <Style.Wrapper>
         <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
           {userData?.info.profileImage ? (
-            <Image
-              width={32}
-              height={32}
-              style={{ borderRadius: "32px", cursor: "pointer" }}
-              src={userData?.info.profileImage}
-              alt="profile"
-              onClick={() => {
-                if (userData?.info.userId === currentUserData.info.userId) {
-                  setRoutingPath(`/mypage`)
-                  return
-                }
-                setRoutingPath(`/profile/${userData?.info.userId}`)
-              }}
-            />
+            <Link
+              href={
+                userData?.info.userId === currentUserData.info.userId
+                  ? "/mypage"
+                  : `/profile/${userData?.info.userId}`
+              }
+            >
+              <FlexBox width={"fit-content"} height={"fit-content"}>
+                <Image
+                  width={32}
+                  height={32}
+                  style={{ borderRadius: "32px", cursor: "pointer" }}
+                  src={userData?.info.profileImage}
+                  alt="profile"
+                />
+              </FlexBox>
+            </Link>
           ) : (
             <ProfileIcon
               width={32}
               height={32}
-              onClick={() => {
-                if (userData?.info.userId === currentUserData.info.userId) {
-                  router.push(`/mypage`)
-                  return
-                }
-                router.push(`/profile/${userData?.info.userId}`)
-              }}
+              creatorId={userData?.info.userId}
             />
           )}
         </FlexBox>
