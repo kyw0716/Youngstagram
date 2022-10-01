@@ -33,13 +33,21 @@ const SetCurrnentUser = () => {
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
+  const [routingPath, setRoutingPath] = useState<string>("")
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
       if (user === null) {
-        router.push("/auth")
+        setRoutingPath("auth")
       }
     })
   }, [])
+
+  useEffect(() => {
+    if (routingPath !== "") {
+      router.push(`/${routingPath}`)
+      setRoutingPath("")
+    }
+  }, [routingPath])
 
   useEffect(() => {
     let vh = window.innerHeight * 0.01

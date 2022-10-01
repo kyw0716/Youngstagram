@@ -217,6 +217,7 @@ export default function Auth() {
         if (error.code === "auth/account-exists-with-different-credential") {
           alert("동일한 이메일 주소로 이미 가입된 계정이 있습니다.")
         }
+        router.push("/auth")
       })
   }
 
@@ -237,6 +238,7 @@ export default function Auth() {
         if (error.code === "auth/account-exists-with-different-credential") {
           alert("동일한 이메일 주소로 이미 가입된 계정이 있습니다.")
         }
+        router.push("/auth")
       })
   }
 
@@ -266,17 +268,21 @@ export default function Auth() {
 
   return (
     <Layout>
-      <Style.Wrapper style={{ backgroundColor: isDarkMode ? "black" : "" }}>
+      <Style.Wrapper style={isDarkMode ? { backgroundColor: "black" } : {}}>
         <Margin direction="column" size={60} />
         <Style.FormContainer
           onSubmit={handleOnSubmit}
-          style={{
-            border: isDarkMode ? "1px solid lightgrey" : "",
-            backgroundColor: isDarkMode ? "#373e47" : "",
-          }}
+          style={
+            isDarkMode
+              ? {
+                  border: "1px solid lightgrey",
+                  backgroundColor: "#373e47",
+                }
+              : {}
+          }
         >
           <Margin direction="column" size={20} />
-          <Style.Logo style={{ color: isDarkMode ? "white" : "" }}>
+          <Style.Logo style={{ color: isDarkMode ? "white" : "black" }}>
             youngstagram
           </Style.Logo>
           <Margin direction="column" size={20} />
@@ -288,11 +294,15 @@ export default function Auth() {
             name="Email"
             value={Email}
             autoComplete="off"
-            style={{
-              border: isDarkMode ? "1px solid lightgrey" : "",
-              backgroundColor: isDarkMode ? "#373e47" : "",
-              color: isDarkMode ? "white" : "black",
-            }}
+            style={
+              isDarkMode
+                ? {
+                    border: "1px solid lightgrey",
+                    backgroundColor: "#373e47",
+                    color: "white",
+                  }
+                : {}
+            }
           />
           {Email.search(/\@\w+\.com|\@\w+\.net/) === -1 && Email.length > 3 ? (
             <span style={{ color: "red", width: "268px", fontSize: "13px" }}>
@@ -424,12 +434,16 @@ export default function Auth() {
         </Style.FormContainer>
         <Margin direction="column" size={30} />
         <Style.SignUpContainer
-          style={{
-            border: isDarkMode ? "1px solid lightgrey" : "",
-            backgroundColor: isDarkMode ? "#373e47" : "",
-          }}
+          style={
+            isDarkMode
+              ? {
+                  border: "1px solid lightgrey",
+                  backgroundColor: "#373e47",
+                }
+              : {}
+          }
         >
-          <Style.StyledSpan style={{ color: isDarkMode ? "white" : "" }}>
+          <Style.StyledSpan style={{ color: isDarkMode ? "white" : "black" }}>
             {isNewAccount ? "계정이 있으신가요?" : "계정이 없으신가요?"}
           </Style.StyledSpan>
           <Margin direction="row" size={10} />
