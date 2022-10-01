@@ -11,6 +11,7 @@ import { v4 } from "uuid"
 import { useRecoilValue } from "recoil"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { ProfileIcon } from "icons"
+import Link from "next/link"
 
 type Props = {
   feedData: FeedData
@@ -83,31 +84,28 @@ export default function CommentList({
       <Style.Header>
         <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
           {userData?.info.profileImage ? (
-            <Image
-              width={32}
-              height={32}
-              style={{ borderRadius: "32px", cursor: "pointer" }}
-              src={userData?.info.profileImage}
-              onClick={() => {
-                if (userData?.info.userId === currentUserData.info.userId) {
-                  router.push(`/mypage`)
-                  return
-                }
-                router.push(`/profile/${userData?.info.userId}`)
-              }}
-              alt="profile"
-            />
+            <Link
+              href={
+                userData?.info.userId === currentUserData.info.userId
+                  ? "/mypage"
+                  : `/profile/${userData.info.userId}`
+              }
+            >
+              <FlexBox width={"fit-content"} height={"fit-content"}>
+                <Image
+                  width={32}
+                  height={32}
+                  style={{ borderRadius: "32px", cursor: "pointer" }}
+                  src={userData?.info.profileImage}
+                  alt="profile"
+                />
+              </FlexBox>
+            </Link>
           ) : (
             <ProfileIcon
               width={32}
               height={32}
-              onClick={() => {
-                if (userData?.info.userId === currentUserData.info.userId) {
-                  router.push(`/mypage`)
-                  return
-                }
-                router.push(`/profile/${userData?.info.userId}`)
-              }}
+              userId={userData?.info.userId}
             />
           )}
         </FlexBox>
@@ -124,32 +122,38 @@ export default function CommentList({
         <Style.CommentAreaHeader>
           <FlexBox height={32} width={32} style={{ flexShrink: 0 }}>
             {userData?.info.profileImage ? (
-              <Image
-                width={32}
-                height={32}
-                src={userData?.info.profileImage}
-                alt="profile"
-                onClick={() => {
-                  if (userData?.info.userId === currentUserData.info.userId) {
-                    router.push(`/mypage`)
-                    return
-                  }
-                  router.push(`/profile/${userData?.info.userId}`)
-                }}
-                style={{ borderRadius: "32px", cursor: "pointer" }}
-                priority={true}
-              />
+              <Link
+                href={
+                  userData?.info.userId === currentUserData.info.userId
+                    ? "/mypage"
+                    : `/profile/${userData.info.userId}`
+                }
+              >
+                <FlexBox>
+                  <Image
+                    width={32}
+                    height={32}
+                    src={userData?.info.profileImage}
+                    alt="profile"
+                    onClick={() => {
+                      if (
+                        userData?.info.userId === currentUserData.info.userId
+                      ) {
+                        router.push(`/mypage`)
+                        return
+                      }
+                      router.push(`/profile/${userData?.info.userId}`)
+                    }}
+                    style={{ borderRadius: "32px", cursor: "pointer" }}
+                    priority={true}
+                  />
+                </FlexBox>
+              </Link>
             ) : (
               <ProfileIcon
                 width={32}
                 height={32}
-                onClick={() => {
-                  if (userData?.info.userId === currentUserData.info.userId) {
-                    router.push(`/mypage`)
-                    return
-                  }
-                  router.push(`/profile/${userData?.info.userId}`)
-                }}
+                userId={userData?.info.userId}
               />
             )}
           </FlexBox>
