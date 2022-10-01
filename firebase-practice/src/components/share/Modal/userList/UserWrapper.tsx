@@ -3,7 +3,7 @@ import { UserData, UserInfo } from "backend/dto"
 import { ProfileIcon } from "icons"
 import getUserDataByUid from "lib/getUserDataByUid"
 import Image from "next/image"
-import { useRouter } from "next/router"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import { CustomH5Light, FlexBox } from "ui"
@@ -15,8 +15,6 @@ type Props = {
 export default function FollowUserWrapper({ userId }: Props) {
   const [userInfo, setUserInfo] = useState<UserInfo>()
   const currentUserData = useRecoilValue(userDataState)
-  const router = useRouter()
-  const [routingPath, setRoutingPath] = useState<string>("")
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
@@ -26,37 +24,35 @@ export default function FollowUserWrapper({ userId }: Props) {
       }
     })
   }, [])
-  useEffect(() => {
-    if (routingPath !== "") router.replace(routingPath)
-  }, [routingPath])
   return (
     <>
       {userInfo && (
         <FlexBox
           width={400}
           gap={10}
-          onClick={() => {
-            if (
-              currentUserData !== undefined &&
-              currentUserData.info.userId === userId
-            ) {
-              setRoutingPath(`/mypage`)
-              return
-            }
-            setRoutingPath(`/profile/${userId}`)
-          }}
           style={{ cursor: "pointer", flexShrink: 0 }}
         >
           {userInfo.profileImage ? (
-            <Image
-              width={44}
-              height={44}
-              src={userInfo.profileImage}
-              alt="profile"
-              style={{ borderRadius: 44, cursor: "pointer" }}
-            />
+            <Link
+              href={
+                currentUserData !== undefined &&
+                currentUserData.info.userId === userId
+                  ? "/mypage"
+                  : `/profile/${userInfo.userId}`
+              }
+            >
+              <FlexBox width={"fit-content"} height={"fit-content"}>
+                <Image
+                  width={44}
+                  height={44}
+                  src={userInfo.profileImage}
+                  alt="profile"
+                  style={{ borderRadius: 44, cursor: "pointer" }}
+                />
+              </FlexBox>
+            </Link>
           ) : (
-            <ProfileIcon width={44} height={44} />
+            <ProfileIcon width={44} height={44} userId={userInfo.userId} />
           )}
           <FlexBox
             column={true}

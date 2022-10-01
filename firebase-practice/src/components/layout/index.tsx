@@ -23,7 +23,7 @@ const Style = {
 export default function Layout({ children, isMobileDM }: Props) {
   const isDarkMode = useRecoilValue(darkModeState)
   return (
-    <Style.Wrapper style={{ backgroundColor: isDarkMode ? "black" : "" }}>
+    <Style.Wrapper style={{ backgroundColor: isDarkMode ? "black" : "white" }}>
       <Header />
       {children}
       <Margin direction="column" size={30} />

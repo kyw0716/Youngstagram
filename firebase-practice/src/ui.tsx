@@ -1,5 +1,5 @@
 import { authService, DBService } from "@FireBase"
-import { darkModeState } from "@share/recoil/recoilList"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import {
   arrayRemove,
   arrayUnion,
@@ -7,6 +7,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
@@ -199,39 +200,37 @@ export function CommentIcon({ onClick }: CommentProps) {
 }
 export function DMIcon() {
   const isDarkMode = useRecoilValue(darkModeState)
-  const router = useRouter()
   return (
-    <svg
-      aria-label="게시물 공유"
-      color="#262626"
-      fill={isDarkMode ? "white" : "#262626"}
-      height="24"
-      role="img"
-      viewBox="0 0 24 24"
-      width="24"
-      style={{ cursor: "pointer" }}
-      onClick={() => {
-        if (authService.currentUser) router.push("/dm")
-      }}
-    >
-      <line
-        fill="none"
-        stroke={isDarkMode ? "white" : "#262626"}
-        strokeLinejoin="round"
-        strokeWidth="2"
-        x1="22"
-        x2="9.218"
-        y1="3"
-        y2="10.083"
-      ></line>
-      <polygon
-        fill="none"
-        points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
-        stroke={isDarkMode ? "white" : "#262626"}
-        strokeLinejoin="round"
-        strokeWidth="2"
-      ></polygon>
-    </svg>
+    <Link href={authService.currentUser ? "/dm" : ""}>
+      <svg
+        aria-label="게시물 공유"
+        color="#262626"
+        fill={isDarkMode ? "white" : "#262626"}
+        height="24"
+        role="img"
+        viewBox="0 0 24 24"
+        width="24"
+        style={{ cursor: "pointer" }}
+      >
+        <line
+          fill="none"
+          stroke={isDarkMode ? "white" : "#262626"}
+          strokeLinejoin="round"
+          strokeWidth="2"
+          x1="22"
+          x2="9.218"
+          y1="3"
+          y2="10.083"
+        ></line>
+        <polygon
+          fill="none"
+          points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
+          stroke={isDarkMode ? "white" : "#262626"}
+          strokeLinejoin="round"
+          strokeWidth="2"
+        ></polygon>
+      </svg>
+    </Link>
   )
 }
 
@@ -273,26 +272,30 @@ export function ShareIcon() {
   )
 }
 
-type HomeIconProps = {
-  onClick: () => void
-}
-
-export function HomeIcon({ onClick }: HomeIconProps) {
+export function HomeIcon() {
   const isDarkMode = useRecoilValue(darkModeState)
+  const currentUserData = useRecoilValue(userDataState)
   return (
-    <svg
-      aria-label="홈"
-      color={isDarkMode ? "white" : "#262626"}
-      fill={isDarkMode ? "white" : "#262626"}
-      height="24"
-      role="img"
-      viewBox="0 0 24 24"
-      width="24"
-      onClick={onClick}
-      style={{ cursor: "pointer" }}
+    <Link
+      href={
+        currentUserData !== undefined && currentUserData.info.userId !== ""
+          ? "/"
+          : ""
+      }
     >
-      <path d="M22 23h-6.001a1 1 0 01-1-1v-5.455a2.997 2.997 0 10-5.993 0V22a1 1 0 01-1 1H2a1 1 0 01-1-1V11.543a1.002 1.002 0 01.31-.724l10-9.543a1.001 1.001 0 011.38 0l10 9.543a1.002 1.002 0 01.31.724V22a1 1 0 01-1 1z"></path>
-    </svg>
+      <svg
+        aria-label="홈"
+        color={isDarkMode ? "white" : "#262626"}
+        fill={isDarkMode ? "white" : "#262626"}
+        height="24"
+        role="img"
+        viewBox="0 0 24 24"
+        width="24"
+        style={{ cursor: "pointer" }}
+      >
+        <path d="M22 23h-6.001a1 1 0 01-1-1v-5.455a2.997 2.997 0 10-5.993 0V22a1 1 0 01-1 1H2a1 1 0 01-1-1V11.543a1.002 1.002 0 01.31-.724l10-9.543a1.001 1.001 0 011.38 0l10 9.543a1.002 1.002 0 01.31.724V22a1 1 0 01-1 1z"></path>
+      </svg>
+    </Link>
   )
 }
 

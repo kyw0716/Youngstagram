@@ -18,7 +18,7 @@ const Style = {
 export default function Footer() {
   const isDarkMode = useRecoilValue(darkModeState)
   return (
-    <Style.Wrapper style={{ backgroundColor: isDarkMode ? "black" : "" }}>
+    <Style.Wrapper style={isDarkMode ? { backgroundColor: "black" } : {}}>
       <CustomH4>&copy; 2022. Young Woo Kim. all rights reserved.</CustomH4>
     </Style.Wrapper>
   )

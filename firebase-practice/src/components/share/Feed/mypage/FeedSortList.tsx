@@ -1,4 +1,5 @@
-import { darkModeState } from "@share/recoil/recoilList"
+import Loading from "@share/Loading/Loading"
+import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { FeedData } from "backend/dto"
 import { CameraIcon } from "icons"
 import React, { SetStateAction, useEffect, useState } from "react"
@@ -39,36 +40,43 @@ export default function FeedSortList({
   setIsUserListModalOpen: setIsLikeModalOpen,
 }: Props) {
   const isDarkMode = useRecoilValue(darkModeState)
+  const currentUserData = useRecoilValue(userDataState)
 
   return (
     <Style.ImageContainer>
-      {feedData !== undefined && feedData.length !== 0 ? (
-        <>
-          {[...feedData]
-            .sort((a, b) => {
-              return Number(b.uploadTime) - Number(a.uploadTime)
-            })
-            .map((data) => {
-              return (
-                <FeedSortingCard
-                  key={v4()}
-                  feedData={data}
-                  setIsCommentModalOpen={setIsCommentModalOpen}
-                  setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
-                  setIsLikeModalOpen={setIsLikeModalOpen}
-                />
-              )
-            })}
-        </>
+      {currentUserData.info.userId === "" ? (
+        <Loading width={470} height={750} borderRadius={10} count={2} />
       ) : (
         <>
-          <CameraIcon width={62} height={62} />
-          <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
-            사진 공유
-          </CustomH2Light>
-          <CustomH5Light style={{ color: isDarkMode ? "white" : "" }}>
-            사진을 공유하면 회원님의 프로필에 표시됩니다.
-          </CustomH5Light>
+          {feedData !== undefined && feedData.length !== 0 ? (
+            <>
+              {[...feedData]
+                .sort((a, b) => {
+                  return Number(b.uploadTime) - Number(a.uploadTime)
+                })
+                .map((data) => {
+                  return (
+                    <FeedSortingCard
+                      key={v4()}
+                      feedData={data}
+                      setIsCommentModalOpen={setIsCommentModalOpen}
+                      setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
+                      setIsLikeModalOpen={setIsLikeModalOpen}
+                    />
+                  )
+                })}
+            </>
+          ) : (
+            <>
+              <CameraIcon width={62} height={62} />
+              <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
+                사진 공유
+              </CustomH2Light>
+              <CustomH5Light style={{ color: isDarkMode ? "white" : "" }}>
+                사진을 공유하면 회원님의 프로필에 표시됩니다.
+              </CustomH5Light>
+            </>
+          )}
         </>
       )}
     </Style.ImageContainer>

@@ -16,6 +16,7 @@ import {
 import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
+import Loading from "@share/Loading/Loading"
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -56,13 +57,17 @@ const Home: NextPage = () => {
       />
       <Margin direction="column" size={30} />
       {currentUserData?.follow !== undefined &&
-        currentUserData?.follow.length !== 0 && (
-          <FlexBox justifyContents="center">
-            <FollowListAtMainPage />
-          </FlexBox>
-        )}
+      currentUserData.follow.length > 0 ? (
+        <FlexBox justifyContents="center">
+          <FollowListAtMainPage />
+        </FlexBox>
+      ) : (
+        <FlexBox justifyContents="center">
+          <Loading width={470} height={119} borderRadius={10} />
+        </FlexBox>
+      )}
       <Margin direction="column" size={15} />
-      {currentUserData?.info.userId !== "" && (
+      {feedData !== undefined && currentUserData.info.userId !== "" ? (
         <FeedList
           FeedData={
             feedData ? feedData.filter((data) => !data.private) : undefined
@@ -70,6 +75,10 @@ const Home: NextPage = () => {
           setIsCommentModalOpen={setIsCommentModalOpen}
           setIsLikeModalOpen={setIsLikeModalOpen}
         />
+      ) : (
+        <FlexBox justifyContents="center">
+          <Loading width={470} height={750} borderRadius={10} count={2} />
+        </FlexBox>
       )}
     </Layout>
   )

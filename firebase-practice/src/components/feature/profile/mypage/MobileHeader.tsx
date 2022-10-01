@@ -17,6 +17,7 @@ import {
   Margin,
 } from "ui"
 import { ProfileIcon } from "icons"
+import Loading from "@share/Loading/Loading"
 
 type Props = {
   setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>
@@ -98,45 +99,67 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
       <ProfileEditModal isPC={false} isOpen={isOpen} setIsOpen={setIsOpen} />
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
-          {userData.info.profileImage ? (
-            <FlexBox width={90} height={90} style={{ flexShrink: 0 }}>
-              <Image
-                src={userData.info.profileImage}
-                alt="profile"
-                width={90}
-                height={90}
-                style={{ borderRadius: "100px" }}
-              />
-            </FlexBox>
+          {userData.info.userId === "" ? (
+            <Loading width={90} height={90} borderRadius={90} />
           ) : (
-            <ProfileIcon width={90} height={90} />
+            <>
+              {userData.info.profileImage ? (
+                <FlexBox width={90} height={90} style={{ flexShrink: 0 }}>
+                  <Image
+                    src={userData.info.profileImage}
+                    alt="profile"
+                    width={90}
+                    height={90}
+                    style={{ borderRadius: "100px" }}
+                  />
+                </FlexBox>
+              ) : (
+                <ProfileIcon width={90} height={90} />
+              )}
+            </>
           )}
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
-              {userData.info.name}
-            </CustomH2Light>
+            {userData.info.userId === "" ? (
+              <Loading width={200} height={25} borderRadius={5} />
+            ) : (
+              <CustomH2Light style={{ color: isDarkMode ? "white" : "" }}>
+                {userData.info.name}
+              </CustomH2Light>
+            )}
+
             <Margin direction="column" size={7} />
-            <FlexBox gap={15}>
-              <CustomH3Light
-                style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
-                onClick={() => {
-                  setUserList(userData.follow)
-                  setIsUserListModalOpen(true)
-                }}
-              >
-                팔로우: {userData.follow ? userData.follow.length : `0`}
-              </CustomH3Light>
-              <CustomH3Light
-                style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
-                onClick={() => {
-                  setUserList(userData.follower)
-                  setIsUserListModalOpen(true)
-                }}
-              >
-                팔로워: {userData.follower ? userData.follower.length : `0`}
-              </CustomH3Light>
-            </FlexBox>
+            {userData.info.userId === "" ? (
+              <Loading width={200} height={25} borderRadius={5} />
+            ) : (
+              <FlexBox gap={15}>
+                <CustomH3Light
+                  style={{
+                    cursor: "pointer",
+                    color: isDarkMode ? "white" : "",
+                  }}
+                  onClick={() => {
+                    setUserList(userData.follow)
+                    setIsUserListModalOpen(true)
+                  }}
+                >
+                  팔로우: {userData.follow ? userData.follow.length : `0`}
+                </CustomH3Light>
+                <CustomH3Light
+                  style={{
+                    cursor: "pointer",
+                    color: isDarkMode ? "white" : "",
+                  }}
+                  onClick={() => {
+                    setUserList(userData.follower)
+                    setIsUserListModalOpen(true)
+                  }}
+                >
+                  팔로워: {userData.follower ? userData.follower.length : `0`}
+                </CustomH3Light>
+              </FlexBox>
+            )}
+
             <Margin direction="column" size={7} />
             <Style.ProfileEditButton
               style={{ color: isDarkMode ? "white" : "" }}
@@ -149,56 +172,62 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
           </FlexBox>
         </FlexBox>
       </Style.ProfileWrapper>
-      <Margin direction="column" size={15} />
-      <Style.ProfileInfoWrapper>
-        <Style.SortToAll
-          onClick={() => {
-            setFeedDataType("all")
-          }}
-          about={feedDataType}
-          color={isDarkMode ? "white" : "grey"}
-        >
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            전체 게시물
-          </CustomH4Light>
-          <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
-            {userData.feed ? `${userData.feed.length}` : `0`}
-          </CustomH3Light>
-        </Style.SortToAll>
-        <Style.SortToPublic
-          onClick={() => {
-            setFeedDataType("public")
-          }}
-          about={feedDataType}
-          color={isDarkMode ? "white" : "grey"}
-        >
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            공개 게시물
-          </CustomH4Light>
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            {userData.feed
-              ? userData.feed.length -
-                userData.feed.filter((eachFeed) => eachFeed.private).length
-              : `0`}
-          </CustomH4Light>
-        </Style.SortToPublic>
-        <Style.SortToPrivate
-          onClick={() => {
-            setFeedDataType("private")
-          }}
-          about={feedDataType}
-          color={isDarkMode ? "white" : "grey"}
-        >
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            숨김 게시물
-          </CustomH4Light>
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            {userData.feed
-              ? userData.feed.filter((eachFeed) => eachFeed.private).length
-              : `0`}
-          </CustomH4Light>
-        </Style.SortToPrivate>
-      </Style.ProfileInfoWrapper>
+      {userData.info.userId === "" ? (
+        <Loading width={900} height={90} />
+      ) : (
+        <>
+          <Margin direction="column" size={15} />
+          <Style.ProfileInfoWrapper>
+            <Style.SortToAll
+              onClick={() => {
+                setFeedDataType("all")
+              }}
+              about={feedDataType}
+              color={isDarkMode ? "white" : "grey"}
+            >
+              <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+                전체 게시물
+              </CustomH4Light>
+              <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
+                {userData.feed ? `${userData.feed.length}` : `0`}
+              </CustomH3Light>
+            </Style.SortToAll>
+            <Style.SortToPublic
+              onClick={() => {
+                setFeedDataType("public")
+              }}
+              about={feedDataType}
+              color={isDarkMode ? "white" : "grey"}
+            >
+              <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+                공개 게시물
+              </CustomH4Light>
+              <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+                {userData.feed
+                  ? userData.feed.length -
+                    userData.feed.filter((eachFeed) => eachFeed.private).length
+                  : `0`}
+              </CustomH4Light>
+            </Style.SortToPublic>
+            <Style.SortToPrivate
+              onClick={() => {
+                setFeedDataType("private")
+              }}
+              about={feedDataType}
+              color={isDarkMode ? "white" : "grey"}
+            >
+              <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+                숨김 게시물
+              </CustomH4Light>
+              <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+                {userData.feed
+                  ? userData.feed.filter((eachFeed) => eachFeed.private).length
+                  : `0`}
+              </CustomH4Light>
+            </Style.SortToPrivate>
+          </Style.ProfileInfoWrapper>
+        </>
+      )}
     </>
   )
 }

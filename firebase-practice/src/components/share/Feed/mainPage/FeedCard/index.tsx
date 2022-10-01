@@ -12,6 +12,7 @@ import { ProfileIcon } from "icons"
 import Desc from "./Desc"
 import LikeCommentInfo from "./LikeCommentInfo"
 import Icons from "./Icons"
+import Link from "next/link"
 
 type Props = {
   feedData: FeedData
@@ -106,37 +107,28 @@ export default function FeedCard({
               alignItems={"center"}
             >
               {feedCreatorData?.info.profileImage ? (
-                <Image
-                  src={feedCreatorData.info.profileImage}
-                  alt="creator"
-                  width={38}
-                  height={38}
-                  style={{ borderRadius: 38, cursor: "pointer" }}
-                  onClick={() => {
-                    if (
-                      currentUser.info.userId === feedCreatorData.info.userId
-                    ) {
-                      router.replace(`/mypage`)
-                      return
-                    }
-                    router.replace(`/profile/${feedCreatorData.info.userId}`)
-                  }}
-                />
+                <Link
+                  href={
+                    currentUser.info.userId === feedCreatorData.info.userId
+                      ? "/mypage"
+                      : `/profile/${feedCreatorData.info.userId}`
+                  }
+                >
+                  <FlexBox width={"fit-content"} height={"fit-content"}>
+                    <Image
+                      src={feedCreatorData.info.profileImage}
+                      alt="creator"
+                      width={38}
+                      height={38}
+                      style={{ borderRadius: 38, cursor: "pointer" }}
+                    />
+                  </FlexBox>
+                </Link>
               ) : (
                 <ProfileIcon
                   width={38}
                   height={38}
-                  onClick={() => {
-                    if (
-                      currentUser.info.userId === feedCreatorData.info.userId
-                    ) {
-                      setRoutingPath(`/loading?path=mypage`)
-                      return
-                    }
-                    setRoutingPath(
-                      `/loading?path=profile/${feedCreatorData.info.userId}`,
-                    )
-                  }}
+                  userId={feedCreatorData.info.userId}
                 />
               )}
               <Style.HeaderText>

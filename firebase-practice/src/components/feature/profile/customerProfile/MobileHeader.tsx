@@ -19,6 +19,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { CustomH2Light, CustomH4Light, FlexBox, Margin } from "ui"
 import { ProfileIcon } from "icons"
+import Loading from "@share/Loading/Loading"
 
 type Props = {
   userData: UserData
@@ -151,11 +152,12 @@ export default function MobileHeader({
   }
 
   useEffect(() => {
-    getUserDataByUid(userData.info.userId).then((data) => {
-      if (data) {
-        setUserDataByUserId(data as UserData)
-      }
-    })
+    if (userData)
+      getUserDataByUid(userData.info.userId).then((data) => {
+        if (data) {
+          setUserDataByUserId(data as UserData)
+        }
+      })
   }, [isFollowingDataModified, userData])
 
   useEffect(() => {
@@ -170,89 +172,117 @@ export default function MobileHeader({
       <Style.ProfileWrapper>
         <FlexBox width={"100%"}>
           <FlexBox width={90} height={90} style={{ flexShrink: 0 }}>
-            {userData.info.profileImage !== null ? (
-              <Image
-                src={userData.info.profileImage}
-                alt="profile"
-                width={90}
-                height={90}
-                style={{ borderRadius: "100px" }}
-              />
+            {userData === undefined ? (
+              <Loading width={90} height={90} borderRadius={90} />
             ) : (
-              <ProfileIcon width={90} height={90} />
+              <>
+                {userData.info.profileImage !== null ? (
+                  <Image
+                    src={userData.info.profileImage}
+                    alt="profile"
+                    width={90}
+                    height={90}
+                    style={{ borderRadius: "100px" }}
+                  />
+                ) : (
+                  <ProfileIcon width={90} height={90} />
+                )}
+              </>
             )}
           </FlexBox>
           <Margin direction="row" size={15} />
           <FlexBox column={true} width="fit-content">
-            <CustomH2Light
-              style={{ fontSize: "20px", color: isDarkMode ? "white" : "" }}
-            >
-              {userData.info.name}
-            </CustomH2Light>
-            <Margin direction="column" size={13} />
-            {isCurrentUserFollowed ? (
-              <Style.ProfileEditButton
-                onClick={() => {
-                  let wantToUnFollow = confirm("팔로우를 취소하시겠습니까?")
-                  if (wantToUnFollow) handleUnFollow()
-                }}
-                style={
-                  isDarkMode ? { backgroundColor: "black", color: "white" } : {}
-                }
-              >
-                팔로잉중
-              </Style.ProfileEditButton>
+            {userData === undefined ? (
+              <Loading width={100} height={40} />
             ) : (
-              <Style.ProfileEditButton
-                onClick={handleFollow}
-                style={
-                  isDarkMode ? { backgroundColor: "black", color: "white" } : {}
-                }
+              <CustomH2Light
+                style={{
+                  fontSize: "20px",
+                  color: isDarkMode ? "white" : "black",
+                }}
               >
-                팔로우
-              </Style.ProfileEditButton>
+                {userData.info.name}
+              </CustomH2Light>
+            )}
+
+            <Margin direction="column" size={13} />
+            {userData === undefined ? (
+              <Loading width={250} height={40} borderRadius={10} />
+            ) : (
+              <>
+                {isCurrentUserFollowed ? (
+                  <Style.ProfileEditButton
+                    onClick={() => {
+                      let wantToUnFollow = confirm("팔로우를 취소하시겠습니까?")
+                      if (wantToUnFollow) handleUnFollow()
+                    }}
+                    style={
+                      isDarkMode
+                        ? { backgroundColor: "black", color: "white" }
+                        : {}
+                    }
+                  >
+                    팔로잉중
+                  </Style.ProfileEditButton>
+                ) : (
+                  <Style.ProfileEditButton
+                    onClick={handleFollow}
+                    style={
+                      isDarkMode
+                        ? { backgroundColor: "black", color: "white" }
+                        : {}
+                    }
+                  >
+                    팔로우
+                  </Style.ProfileEditButton>
+                )}
+              </>
             )}
           </FlexBox>
         </FlexBox>
       </Style.ProfileWrapper>
       <Margin direction="column" size={15} />
-      <Style.ProfileInfoWrapper>
-        <Style.SortToAll>
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            게시물
-          </CustomH4Light>
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            {userData.feed ? userData.feed.length : 0}
-          </CustomH4Light>
-        </Style.SortToAll>
-        <Style.SortToPublic
-          onClick={() => {
-            setUserList(userData.follower)
-            setIsUserListModalOpen(true)
-          }}
-        >
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            팔로워
-          </CustomH4Light>
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            {userData.follower ? userData.follower.length : 0}
-          </CustomH4Light>
-        </Style.SortToPublic>
-        <Style.SortToPrivate>
-          <CustomH4Light
+      {userData === undefined ? (
+        <Loading width={"95vw"} height={70} borderRadius={10} />
+      ) : (
+        <Style.ProfileInfoWrapper>
+          <Style.SortToAll>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
+              게시물
+            </CustomH4Light>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
+              {userData.feed ? userData.feed.length : 0}
+            </CustomH4Light>
+          </Style.SortToAll>
+          <Style.SortToPublic
             onClick={() => {
-              setUserList(userData.follow)
+              setUserList(userData.follower)
               setIsUserListModalOpen(true)
             }}
-            style={{ color: isDarkMode ? "white" : "" }}
           >
-            팔로우
-          </CustomH4Light>
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            {userData.follow ? userData.follow.length : 0}
-          </CustomH4Light>
-        </Style.SortToPrivate>
-      </Style.ProfileInfoWrapper>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
+              팔로워
+            </CustomH4Light>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
+              {userData.follower ? userData.follower.length : 0}
+            </CustomH4Light>
+          </Style.SortToPublic>
+          <Style.SortToPrivate>
+            <CustomH4Light
+              onClick={() => {
+                setUserList(userData.follow)
+                setIsUserListModalOpen(true)
+              }}
+              style={{ color: isDarkMode ? "white" : "black" }}
+            >
+              팔로우
+            </CustomH4Light>
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "black" }}>
+              {userData.follow ? userData.follow.length : 0}
+            </CustomH4Light>
+          </Style.SortToPrivate>
+        </Style.ProfileInfoWrapper>
+      )}
     </>
   )
 }

@@ -4,7 +4,7 @@ import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { signOut } from "firebase/auth"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
 import { DMIcon, FlexBox, HomeIcon, ImageUploadIcon } from "ui"
@@ -15,6 +15,7 @@ import {
   LogoutIcon,
   ProfileIcon,
 } from "icons"
+import Link from "next/link"
 
 const Style = {
   Container: styled.div`
@@ -133,23 +134,18 @@ export default function Header() {
         style={{ backgroundColor: isDarkMode ? "black" : "white" }}
       >
         <Style.Nav>
-          <Style.Logo
-            onClick={() => {
-              if (userData !== undefined && userData.info.userId !== "")
-                router.push("/")
-            }}
-            style={{ color: isDarkMode ? "white" : "black" }}
+          <Link
+            href={
+              userData !== undefined && userData.info.userId !== "" ? "/" : ""
+            }
           >
-            youngstagram
-          </Style.Logo>
+            <Style.Logo style={{ color: isDarkMode ? "white" : "black" }}>
+              youngstagram
+            </Style.Logo>
+          </Link>
           <FlexBox width={"fit-content"} gap={15} alignItems="center">
             {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
-            <HomeIcon
-              onClick={() => {
-                if (userData !== undefined && userData.info.userId !== "")
-                  router.push("/")
-              }}
-            />
+            <HomeIcon />
             <ImageUploadIcon
               onClick={() => {
                 if (userData !== undefined && userData.info.userId !== "") {
@@ -160,9 +156,12 @@ export default function Header() {
               }}
             />
             <DMIcon />
-            {userData !== undefined && userData.info.userId !== "" ? (
+            {authService.currentUser === null ? (
+              <LineMenuIcon width={30} height={30} />
+            ) : (
               <>
-                {userData.info.profileImage ? (
+                {userData.info.profileImage !== "" &&
+                userData.info.profileImage !== null ? (
                   <Image
                     src={userData.info.profileImage}
                     onClick={handleMenuOpen}
@@ -173,18 +172,11 @@ export default function Header() {
                     style={{ cursor: "pointer", borderRadius: "30px" }}
                   />
                 ) : (
-                  <ProfileIcon
-                    width={24}
-                    height={24}
-                    onClick={handleMenuOpen}
-                  />
+                  <ProfileIcon width={24} height={24} />
                 )}
               </>
-            ) : (
-              <LineMenuIcon width={30} height={30} />
             )}
           </FlexBox>
-
           {isMeunOpen ? (
             <>
               <Style.DropDownMenu
@@ -192,42 +184,54 @@ export default function Header() {
                   setIsMenuOpen(false)
                 }}
               >
-                <Style.ProfileButton
-                  onClick={() => {
-                    router.push(`/mypage`)
-                  }}
-                  style={{
-                    backgroundColor: isDarkMode ? "black" : "",
-                    border: isDarkMode ? "1px solid lightgrey" : "",
-                    color: isDarkMode ? "white" : "",
-                  }}
-                >
-                  <ProfileIcon width={15} height={15} />
-                  프로필
-                </Style.ProfileButton>
-                <Style.LogoutButton
-                  onClick={() => {
-                    router.replace("/auth")
-                    signOut(authService)
-                    resetUserData()
-                  }}
-                  style={{
-                    backgroundColor: isDarkMode ? "black" : "",
-                    border: isDarkMode ? "1px solid lightgrey" : "",
-                    color: isDarkMode ? "white" : "",
-                  }}
-                >
-                  <LogoutIcon width={15} height={15} />
-                  로그아웃
-                </Style.LogoutButton>
+                <Link href={"/mypage"}>
+                  <Style.ProfileButton
+                    style={
+                      isDarkMode
+                        ? {
+                            backgroundColor: "black",
+                            border: "1px solid lightgrey",
+                            color: "white",
+                          }
+                        : {}
+                    }
+                  >
+                    <ProfileIcon width={15} height={15} />
+                    프로필
+                  </Style.ProfileButton>
+                </Link>
+                <Link href={"/auth"}>
+                  <Style.LogoutButton
+                    onClick={() => {
+                      signOut(authService)
+                      resetUserData()
+                    }}
+                    style={
+                      isDarkMode
+                        ? {
+                            backgroundColor: "black",
+                            border: "1px solid lightgrey",
+                            color: "white",
+                          }
+                        : {}
+                    }
+                  >
+                    <LogoutIcon width={15} height={15} />
+                    로그아웃
+                  </Style.LogoutButton>
+                </Link>
               </Style.DropDownMenu>
               <Style.ChatBalloon
-                style={{
-                  backgroundColor: isDarkMode ? "black" : "",
-                  borderTop: isDarkMode ? "1px solid lightgrey" : "",
-                  borderLeft: isDarkMode ? "1px solid lightgrey" : "",
-                  zIndex: isDarkMode ? 9 : "",
-                }}
+                style={
+                  isDarkMode
+                    ? {
+                        backgroundColor: "black",
+                        borderTop: "1px solid lightgrey",
+                        borderLeft: "1px solid lightgrey",
+                        zIndex: 9,
+                      }
+                    : {}
+                }
               />
             </>
           ) : (
