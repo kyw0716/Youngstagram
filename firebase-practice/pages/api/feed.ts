@@ -14,7 +14,9 @@ export default async function handler(
 
     if (docSnapShot.exists()) {
       const data = docSnapShot.data()?.feed as FeedData[]
-      res.status(200).json(data)
+      res
+        .status(200)
+        .json(data.sort((a, b) => Number(a.uploadTime) - Number(b.uploadTime)))
     }
   }
 }
