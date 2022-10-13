@@ -70,7 +70,10 @@ export default function ImageInput({
       </CustomH6>
       <Margin direction="column" size={isPC ? 10 : 5} />
       <FlexBox width={"100%"}>
-        <Style.ImagePreviewName about={`${isPC}`}>
+        <Style.ImagePreviewName
+          about={`${isPC}`}
+          style={isDarkMode ? { color: "white" } : {}}
+        >
           {imageFileName ? `${imageFileName.slice(0, 10)}...` : ""}
         </Style.ImagePreviewName>
         <Style.ProfileEditInputLabel htmlFor="PROFILE-Edit" about={`${isPC}`}>

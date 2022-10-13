@@ -140,7 +140,6 @@ export default function ProfileEditModal({ isPC, isOpen, setIsOpen }: Props) {
         setIsOpen(false)
         setIsClicked(false)
         setIsSubmit(false)
-        router.replace("/loading?path=mypage")
       })
     }
     /*eslint-disable-next-line*/
