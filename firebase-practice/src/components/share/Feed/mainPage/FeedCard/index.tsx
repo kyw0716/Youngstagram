@@ -11,7 +11,6 @@ import { FlexBox, Margin } from "ui"
 import { ProfileIcon } from "icons"
 import Desc from "./Desc"
 import LikeCommentInfo from "./LikeCommentInfo"
-import Icons from "./Icons"
 import Link from "next/link"
 
 type Props = {

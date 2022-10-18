@@ -8,8 +8,6 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import Link from "next/link"
-import { useRouter } from "next/router"
-import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 

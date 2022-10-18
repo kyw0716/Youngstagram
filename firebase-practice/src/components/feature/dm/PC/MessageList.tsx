@@ -6,7 +6,7 @@ import {
 } from "@share/recoil/recoilList"
 import { Message } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
-import { RefObject, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { FlexBox, Margin } from "ui"

@@ -1,14 +1,8 @@
-import OtherMessageWrapper from "@feature/dm/OtherMessageWrapper"
-import { Message } from "backend/dto"
 import { CustomH4, FlexBox, Margin } from "ui"
-import MyMessageWrapper from "@feature/dm/MyMessageWrapper"
 import styled from "styled-components"
-import { useEffect, useRef, useState } from "react"
-import { DBService } from "@FireBase"
+import { useEffect, useState } from "react"
 import UserCard from "@feature/dm/UserCard"
 import { v4 } from "uuid"
-import { doc, onSnapshot } from "firebase/firestore"
-import MessageInput from "@feature/dm/PC/MessageInputIn"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import {
   darkModeState,

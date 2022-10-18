@@ -1,5 +1,4 @@
 import { DBService } from "@FireBase"
-import CommentModal from "@share/Modal/comment/CommentModal"
 import { feedDataState } from "@share/recoil/recoilList"
 import { Comment, FeedData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"

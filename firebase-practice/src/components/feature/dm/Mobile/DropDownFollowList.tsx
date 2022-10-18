@@ -3,8 +3,8 @@ import {
   dmSelectedUserId,
   userDataState,
 } from "@share/recoil/recoilList"
-import { BottomArrowIcon, XIcon } from "icons"
-import { SetStateAction, useEffect, useState } from "react"
+import { BottomArrowIcon } from "icons"
+import { useEffect, useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { FlexBox } from "ui"

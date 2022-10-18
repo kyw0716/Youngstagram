@@ -11,7 +11,6 @@ import {
   userDataState,
   userListState,
 } from "@share/recoil/recoilList"
-import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
@@ -30,7 +29,6 @@ const Style = {
 }
 
 export default function Profile() {
-  const router = useRouter()
   const currentUserData = useRecoilValue(userDataState)
 
   const feedDataType = useRecoilValue(FeedDataFilter)

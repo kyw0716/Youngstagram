@@ -1,6 +1,5 @@
 import { darkModeState } from "@share/recoil/recoilList"
 import { LeftArrowIcon, XIcon } from "icons"
-import Image from "next/image"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
 import { useRecoilValue } from "recoil"

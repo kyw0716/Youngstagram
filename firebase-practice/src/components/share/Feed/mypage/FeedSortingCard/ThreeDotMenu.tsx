@@ -1,10 +1,10 @@
-import { authService, DBService, storageService } from "@FireBase"
+import { DBService, storageService } from "@FireBase"
 import {
   darkModeState,
   feedDataState,
   userDataState,
 } from "@share/recoil/recoilList"
-import { FeedData, UserData } from "backend/dto"
+import { FeedData } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -21,7 +21,6 @@ import {
   LogoutIcon,
   UnLockIcon,
 } from "icons"
-import getUserDataByUid from "lib/getUserDataByUid"
 import { SetStateAction, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
