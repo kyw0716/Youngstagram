@@ -3,7 +3,7 @@ import { FeedData, UserData, Comment } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { CustomH4, CustomH6, FlexBox, Margin } from "ui"
 import CommentWrapper from "./CommentWrapper"
@@ -16,7 +16,6 @@ import Link from "next/link"
 type Props = {
   feedData: FeedData
   commentAreaRef: React.RefObject<HTMLDivElement>
-  setIsOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -60,11 +59,7 @@ const Style = {
   `,
 }
 
-export default function CommentList({
-  feedData,
-  commentAreaRef,
-  setIsOpen,
-}: Props) {
+export default function CommentList({ feedData, commentAreaRef }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<UserData>()
   const [commentData, setCommentData] = useState<Comment[]>([])
@@ -79,6 +74,7 @@ export default function CommentList({
       if (data) setCommentData(data.data()?.AllComments)
     })
   }, [])
+
   return (
     <>
       <Style.Header>
@@ -190,7 +186,6 @@ export default function CommentList({
                   <CommentWrapper
                     commentData={data}
                     storageId={feedData.storageId}
-                    setIsOpen={setIsOpen}
                   />
                 </FlexBox>
               )

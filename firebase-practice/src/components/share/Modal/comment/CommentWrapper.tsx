@@ -11,8 +11,7 @@ import {
 import { ProfileIcon } from "icons"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/router"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH4, CustomH5, CustomH6, FlexBox, Margin } from "ui"
@@ -20,7 +19,6 @@ import { CustomH4, CustomH5, CustomH6, FlexBox, Margin } from "ui"
 type Props = {
   commentData: Comment
   storageId: string
-  setIsOpen: React.Dispatch<SetStateAction<boolean>>
 }
 const Style = {
   Wrapper: styled.div`
@@ -57,18 +55,12 @@ const Style = {
   `,
 }
 
-export default function CommentWrapper({
-  commentData,
-  storageId,
-  setIsOpen,
-}: Props) {
-  const router = useRouter()
+export default function CommentWrapper({ commentData, storageId }: Props) {
   const [isModifyMode, setIsModifyMode] = useState<boolean>(false)
   const [newComment, setNewComment] = useState<string>(commentData.comment)
   const [isShowAllComment, setIsShowAllComment] = useState<boolean>(false)
   const [userData, setUserData] = useState<UserData>()
   const currentUserData = useRecoilValue(userDataState)
-  const [routingPath, setRoutingPath] = useState<string>("")
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
@@ -79,12 +71,6 @@ export default function CommentWrapper({
       }
     })
   }, [])
-  useEffect(() => {
-    if (routingPath !== "") {
-      router.replace(routingPath)
-      setIsOpen(false)
-    }
-  }, [routingPath])
 
   const handleRemoveComment = async () => {
     const commentRef = doc(DBService, "Comments", storageId)
