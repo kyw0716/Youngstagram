@@ -1,57 +1,11 @@
-# Description
+# 📌 Target
+
+저는 다른 사람들이 혹시나 볼까 싶어 인스타그램과 같은 SNS에 사진 업로드를 잘 하지 않았습니다. 하지만 다른 사람들의 프로필에 기록된 시간들을 보며 저도 여자친구와 함께했던 시간을 기록해보고 싶다는 생각을 했습니다. 다른 사람들이 보지 못하는 둘만의 공간을 만들어 함께한 시간을 기록해보고자 프로젝트를 시작하게 되었습니다.
 
 <br/>
-
-[youngstagram](https://youngstagram-demo.vercel.app)은 typescript, react, firebase 등을 이용하여 백엔드 개발자 없이 인스타그램이 제공하는 서비스를 구현해보고자 만들었다.
-
-- 현재까지 공부한 내용을 어떻게 활용할까 고민해보다 평소 아무 생각없이 자주 접속하던 인스타그램을 만들어보는게 어떨까 하는 생각이 들어 이 프로젝트를 시작하게 되었다.
-- 그냥 겉모습만 비슷한 프로젝트가 아닌 실제로 사용할 수 있는 프로젝트를 하고 싶어 vercel을 통해 배포를 한 상태로 개발을 진행하였다.
-- 혼자 진행한 프로젝트인 만큼 gitflow와 같이 복잡한 방식을 사용하지 않고 Trunk-Based Development 방식을 도입하여 개발을 진행하였다.
-
 <br/>
 
-# Installation
-
-<br/>
-
-기본적으로 node.js가 설치되어 있어야 하고, firebase 초기 설정 또한 필요하다. node.js 설치가 되어 있다면
-
-```node.js
-  npm i
-```
-
-를 입력하여 필요한 모듈들을 다운받는다.
-
-<br/>
-
-초기 firebase 설정을 위해 firebase-practice 폴더의 src와 같은 경로에 `FireBase.tsx` 파일을 만든 후 다음과 같이 코드를 작성한다
-
-```typescript
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-
-const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
-};
-
-const FireBasApp = initializeApp(firebaseConfig);
-export const authService = getAuth(FireBasApp);
-export const DBService = getFirestore(FireBasApp);
-export const storageService = getStorage(FireBasApp);
-```
-
-여기서 firebaseConfig는 firebase 공식 홈페이지의 초기설정을 마치면 나오는 코드를 그대로 복사해 사용하면 된다.
-
-<br/>
-
-# Stack
+# 📖 Tech Stack
 
 - Programming Langruage:
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white" />
@@ -82,32 +36,53 @@ export const storageService = getStorage(FireBasApp);
   <img src="https://img.shields.io/badge/Edge-0078D7?style=flat&logo=Microsoft-edge&logoColor=white" />
   <img src="https://img.shields.io/badge/Safari-FF1B2D?style=flat&logo=Safari&logoColor=white" />
 
-# Image
+<br><br>
 
-- 로그인 페이지 <br/>
-  <img src="./readmeImages/youngstagram1.png" width="400px" />
+# 🛠️ Feature
 
-- 이미지 등록 모달 <br/>
-  <img src="./readmeImages/youngstagram2.png" width="400px" />
-  <img src="./readmeImages/youngstagram3.png" width="400px" />
+- 로그인 기능
+- 피드 업로드 / 수정 / 삭제 기능
+- 코멘트 등록 / 수정 / 삭제 기능
+- 프로필 수정 기능
+- DM 기능
+- 팔로우 기능
+- 좋아요 기능
 
-- 프로필 수정 모달 <br/>
-  <img src="./readmeImages/youngstagram4.png" width="400px" />
+<br><br>
 
-- DM 페이지 <br/>
-  <img src="./readmeImages/youngstagram5.png" width="400px" />
+# 🖥️ Deployment
 
-- 팔로우, 팔로워 리스트 모달 <br/>
-  <img src="./readmeImages/youngstagram6.png" width="400px" />
+### 📷 [Youngstagram](https://youngstagram-demo.vercel.app)
 
-- 내 프로필 페이지 <br/>
-  <img src="./readmeImages/youngstagram10.png" width="400px" />
+<br>
 
-- 다른 사람 프로필 페이지 <br/>
-  <img src="./readmeImages/youngstagram7.png" width="400px" />
+1️⃣ DM기능, 다크모드 기능
 
-- 피드 정보 카드 <br/>
-  <img src="./readmeImages/youngstagram8.png" width="400px" />
+<div style="display:flex; gap:10px;">
+  <img src="./readmeImages/DM기능.gif" width="400px"/>
+  <img src="./readmeImages/다크모드%20기능.gif" width="400px"/>
+</div>
 
-- 피드 상세 정보 및 댓글 모달 <br/>
-  <img src="./readmeImages/youngstagram9.png" width="400px" />
+<br>
+
+2️⃣ 댓글 기능, 로그인 기능
+
+<div style="display:flex; gap:10px;">
+  <img src="./readmeImages/댓글%20기능.gif" width="400px"/>
+  <img src="./readmeImages/로그인%20기능.gif" width="400px"/>
+</div>
+
+<br>
+
+3️⃣ 이미지 업로드 기능, 팔로우 기능
+
+<div style="display:flex; gap:10px;">
+  <img src="./readmeImages/이미지%20업로드%20기능.gif" width="400px"/>
+  <img src="./readmeImages/팔로우%20기능.gif" width="400px"/>
+</div>
+
+<br>
+
+4️⃣ 프로필 편집 기능
+
+<img src="./readmeImages/프로필%20편집%20기능.gif" width="400px"/>
