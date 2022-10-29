@@ -4,7 +4,7 @@ import { FeedData } from "backend/dto"
 import { doc, getDoc } from "firebase/firestore"
 import type { NextApiRequest, NextApiResponse } from "next"
 
-export default async function handler(
+export default async function getFeed(
   req: NextApiRequest,
   res: NextApiResponse<FeedData[]>,
 ) {
