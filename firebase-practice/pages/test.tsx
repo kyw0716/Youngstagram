@@ -4,7 +4,7 @@ import { useEffect } from "react"
 
 export default function Test() {
   useEffect(() => {
-    fetch("/api/feed")
+    fetch("/api/like?storageId=37958bfa-a656-4536-b596-62e0bfbe662f")
       .then((response) => response.json())
       .then((json) => console.log(json))
   }, [])
