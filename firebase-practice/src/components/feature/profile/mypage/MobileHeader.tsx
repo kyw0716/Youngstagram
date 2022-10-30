@@ -205,7 +205,8 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
               <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
                 {userData.feed
                   ? userData.feed.length -
-                    userData.feed.filter((eachFeed) => eachFeed.private).length
+                    userData.feed.filter((eachFeed) => eachFeed.isPrivate)
+                      .length
                   : `0`}
               </CustomH4Light>
             </Style.SortToPublic>
@@ -221,7 +222,8 @@ export default function MobileHeader({ setIsUserListModalOpen }: Props) {
               </CustomH4Light>
               <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
                 {userData.feed
-                  ? userData.feed.filter((eachFeed) => eachFeed.private).length
+                  ? userData.feed.filter((eachFeed) => eachFeed.isPrivate)
+                      .length
                   : `0`}
               </CustomH4Light>
             </Style.SortToPrivate>

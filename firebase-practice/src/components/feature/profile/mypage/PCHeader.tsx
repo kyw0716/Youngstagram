@@ -169,7 +169,7 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
                   공개 게시물:{" "}
                   {userData.feed
                     ? userData.feed.length -
-                      userData.feed.filter((eachFeed) => eachFeed.private)
+                      userData.feed.filter((eachFeed) => eachFeed.isPrivate)
                         .length
                     : `0`}
                 </CustomH3Light>
@@ -178,7 +178,7 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
                 <CustomH3Light style={{ color: isDarkMode ? "white" : "" }}>
                   숨김 게시물:{" "}
                   {userData.feed
-                    ? userData.feed.filter((eachFeed) => eachFeed.private)
+                    ? userData.feed.filter((eachFeed) => eachFeed.isPrivate)
                         .length
                     : `0`}
                 </CustomH3Light>

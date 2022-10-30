@@ -46,11 +46,13 @@ export default function Profile() {
     if (currentUserData === undefined || currentUserData.feed === undefined)
       return
     if (feedDataType === "public") {
-      setFeedData(currentUserData.feed.filter((eachFeed) => !eachFeed.private))
+      setFeedData(
+        currentUserData.feed.filter((eachFeed) => !eachFeed.isPrivate),
+      )
       return
     }
     if (feedDataType === "private") {
-      setFeedData(currentUserData.feed.filter((eachFeed) => eachFeed.private))
+      setFeedData(currentUserData.feed.filter((eachFeed) => eachFeed.isPrivate))
       return
     }
     setFeedData(currentUserData.feed)

@@ -27,7 +27,7 @@ export const feedDataState = atom<FeedData>({
     imageUrl: "",
     desc: "",
     location: "",
-    private: true,
+    isPrivate: true,
     storageId: "",
     creator: "",
     uploadTime: "",
