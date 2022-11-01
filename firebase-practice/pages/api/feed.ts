@@ -7,11 +7,12 @@ import type { NextApiRequest, NextApiResponse } from "next"
 /**
  * request url : /api/feed
  * method : GET
+ * response : 메인 페이지의 피드 정보들
  */
 
 export default async function getFeed(
   req: NextApiRequest,
-  res: NextApiResponse<FeedData[]>,
+  res: NextApiResponse<FeedData[] | string>,
 ) {
   if (req.method === "GET") {
     const getFeedRef = doc(DBService, "mainPage", "userFeedDataAll")
@@ -22,6 +23,8 @@ export default async function getFeed(
       res
         .status(200)
         .json(data.sort((a, b) => Number(a.uploadTime) - Number(b.uploadTime)))
+    } else {
+      res.status(500).json("Fail")
     }
   }
 }

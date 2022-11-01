@@ -8,6 +8,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
  * request url : /api/feedUpload
  * request body : FeedData
  * method : POST
+ * response: 성공시 "Success", 실패시 "Fail"
  */
 
 export default async function uploadFeed(
@@ -45,6 +46,8 @@ export default async function uploadFeed(
         await setDoc(firestoreAllRef, {
           feed: [feed],
         })
+      } else {
+        res.status(500).json("Fail")
       }
     })
 
@@ -55,6 +58,8 @@ export default async function uploadFeed(
         await setDoc(firestorePersonalRef, {
           feed: [feed],
         })
+      } else {
+        res.status(500).json("fail")
       }
     })
 

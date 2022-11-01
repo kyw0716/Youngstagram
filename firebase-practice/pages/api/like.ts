@@ -6,6 +6,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 /**
  * request url : /api/like?storageId=${이미지 저장 스토리지 아이디}
  * method : GET
+ * response : storageId를 가진 피드를 좋아요 한 사람들 리스트
  */
 
 export default async function getLike(
