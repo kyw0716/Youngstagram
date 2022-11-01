@@ -1,27 +1,37 @@
 import { authService, DBService } from "@FireBase"
 import { UserData, UserInfo } from "backend/dto"
 import { updateProfile } from "firebase/auth"
-import { doc, updateDoc } from "firebase/firestore"
+import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { NextApiRequest, NextApiResponse } from "next"
 
 /**
- * @requestUrl /api/profile?userId=${유저 아이디}
- * @requestData {
- *  userId: string => 유저 uid
- *  profileImage: string => 프로필 이미지 url
- *  name: string => 유저 이름
- *  email: string => 유저 이메일
- *  currentUser: User => authService.currentUser
- * }
- * @method GET
- * @response userId를 가진 유저의 프로필 정보
+ * method : GET
+ * request url : /api/profile?userId=${유저 아이디}
+ * response : userId를 가진 유저의 프로필 정보
+ *
+ * method : POST
+ * requset url : /api/profile
+ * request data : {userId, userName, profileImage, email}
+ * response : Success
  */
 
-export default async function setProfile(
+export default async function getProfile(
   req: NextApiRequest,
   res: NextApiResponse<UserData | string>,
 ) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
+    const userId = req.query?.userId
+    console.log(userId)
+    const getProfileRef = doc(DBService, "users", `${userId}`)
+    const docSnapShot = await getDoc(getProfileRef)
+
+    if (docSnapShot.exists()) {
+      const data = docSnapShot.data()
+      res.status(200).json(data as UserData)
+    } else {
+      res.status(500).json("Fail")
+    }
+  } else if (req.method === "POST") {
     const { userId, userName, profileImage, email } = req.body
     const setProfileRef = doc(DBService, "users", `${userId}`)
 
