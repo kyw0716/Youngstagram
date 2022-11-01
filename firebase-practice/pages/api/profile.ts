@@ -15,7 +15,7 @@ import { NextApiRequest, NextApiResponse } from "next"
  * response : Success
  */
 
-export default async function getProfile(
+export default async function profile(
   req: NextApiRequest,
   res: NextApiResponse<UserData | string>,
 ) {
@@ -42,11 +42,6 @@ export default async function getProfile(
       email: email,
     }
 
-    if (authService.currentUser)
-      await updateProfile(authService.currentUser, {
-        displayName: userName,
-        photoURL: profileImage,
-      }).catch((error) => res.status(500).json(error.code))
     await updateDoc(setProfileRef, {
       info: profileForm,
     })
