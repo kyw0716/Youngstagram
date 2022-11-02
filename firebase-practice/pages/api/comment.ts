@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { Comment, UserData } from "backend/dto"
+import { Comment } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,

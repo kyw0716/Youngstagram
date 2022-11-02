@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { DBService } from "@FireBase"
 import { FeedData } from "backend/dto"
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore"
