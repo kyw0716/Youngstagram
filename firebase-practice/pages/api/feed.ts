@@ -1,6 +1,13 @@
 import { DBService } from "@FireBase"
 import { FeedData } from "backend/dto"
-import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore"
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore"
 import type { NextApiRequest, NextApiResponse } from "next"
 
 /**
@@ -82,6 +89,43 @@ export default async function getFeed(
       } else {
         res.status(500).json(error.code)
       }
+    })
+
+    res.status(200).json("Success")
+  } else if (req.method === "DELETE") {
+    const {
+      imageUrl,
+      desc,
+      location,
+      isPrivate,
+      storageId,
+      creator,
+      uploadTime,
+    } = req.body as FeedData
+
+    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
+    const firestorePersonalRef = doc(DBService, "users", `${creator}`)
+
+    const feed: FeedData = {
+      imageUrl: imageUrl,
+      desc: desc,
+      location: location,
+      isPrivate: isPrivate,
+      storageId: storageId,
+      creator: creator,
+      uploadTime: uploadTime,
+    }
+
+    await updateDoc(firestoreAllRef, {
+      feed: arrayRemove(feed),
+    }).catch((error) => {
+      res.status(500).json(error.code)
+    })
+
+    await updateDoc(firestorePersonalRef, {
+      feed: arrayRemove(feed),
+    }).catch((error) => {
+      res.status(500).json(error.code)
     })
 
     res.status(200).json("Success")
