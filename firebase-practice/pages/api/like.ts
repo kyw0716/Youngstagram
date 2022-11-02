@@ -39,19 +39,6 @@ export default async function getLike(
       const data = docSnapShot.data()?.likerList
       res.status(200).json(data as string[])
     }
-  } else if (req.method === "DELETE") {
-    const { storageId, userId } = req.body
-    const likeRef = doc(DBService, "like", storageId)
-
-    await updateDoc(likeRef, {
-      likerList: arrayRemove(userId),
-    })
-      .catch((error) => {
-        res.status(500).json(error.code)
-      })
-      .then(() => {
-        res.status(200).json("Success")
-      })
   } else if (req.method === "PUT") {
     const { storageId, userId } = req.body
     const likeRef = doc(DBService, "like", storageId)
@@ -67,6 +54,19 @@ export default async function getLike(
         } else {
           res.status(500).json(error.code)
         }
+      })
+      .then(() => {
+        res.status(200).json("Success")
+      })
+  } else if (req.method === "DELETE") {
+    const { storageId, userId } = req.body
+    const likeRef = doc(DBService, "like", storageId)
+
+    await updateDoc(likeRef, {
+      likerList: arrayRemove(userId),
+    })
+      .catch((error) => {
+        res.status(500).json(error.code)
       })
       .then(() => {
         res.status(200).json("Success")
