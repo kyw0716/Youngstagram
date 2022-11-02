@@ -9,6 +9,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
  * request url : /api/feed
  * response : 메인 페이지의 피드 정보들
  *
+ * TODO: 새로운 피드 등록과 피드 수정 기능 구분하기
  * method : POST
  * request url : /api/feed
  * request body : FeedData
