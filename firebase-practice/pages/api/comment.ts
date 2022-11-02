@@ -19,7 +19,7 @@ import { v4 } from "uuid"
  *
  * method : POST
  * request url : /api/comment
- * request data : {commentId?, oldComment?, uploadTime?, userId, comment, feedId}
+ * request body : {commentId?, oldComment?, uploadTime?, userId, comment, feedId}
  * response : Success
  *
  * update : commentId, oldComment, uploadTime 모두 포함한 데이터 전송
@@ -28,7 +28,7 @@ import { v4 } from "uuid"
  *
  * method : DELETE
  * request url : /api/comment
- * request data : {commentId, comment, uploadTime, userId, feedId}
+ * request body : {commentId, comment, uploadTime, userId, feedId}
  * response : Success
  */
 

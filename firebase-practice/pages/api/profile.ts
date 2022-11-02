@@ -1,6 +1,5 @@
-import { authService, DBService } from "@FireBase"
+import { DBService } from "@FireBase"
 import { UserData, UserInfo } from "backend/dto"
-import { updateProfile } from "firebase/auth"
 import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { NextApiRequest, NextApiResponse } from "next"
 
@@ -11,7 +10,7 @@ import { NextApiRequest, NextApiResponse } from "next"
  *
  * method : POST
  * requset url : /api/profile
- * request data : {userId, userName, profileImage, email}
+ * request body : {userId, userName, profileImage, email}
  * response : Success
  */
 

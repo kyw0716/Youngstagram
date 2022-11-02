@@ -16,12 +16,12 @@ import { NextApiRequest, NextApiResponse } from "next"
  *
  * method : PUT
  * requset url : /api/like
- * request data : {storageId, userId}
+ * request body : {storageId, userId}
  * response : Success
  *
  * method : DELETE
  * requset url : /api/like
- * request data : {storageId, userId}
+ * request body : {storageId, userId}
  * rseponse : Success
  */
 
