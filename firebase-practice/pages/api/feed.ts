@@ -12,8 +12,13 @@ import type { NextApiRequest, NextApiResponse } from "next"
  * TODO: 새로운 피드 등록과 피드 수정 기능 구분하기
  * method : POST
  * request url : /api/feed
- * request body : FeedData
- * response: 성공시 "Success", 실패시 "Fail"
+ * request body : {imageUrl, desc, location, isPrivate, storageId, creator, uploadTime}
+ * response: "Success"
+ *
+ * method : DELETE
+ * request url : /api/feed
+ * request body : {imageUrl, desc, location, isPrivate, storageId, creator, uploadTime}
+ * response : Success
  */
 
 export default async function getFeed(
