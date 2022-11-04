@@ -157,7 +157,7 @@ export default function ThreeDotMenu({
       desc: feedData.desc,
       imageUrl: feedData.imageUrl,
       location: feedData.location,
-      private: feedData.private,
+      isPrivate: feedData.isPrivate,
       storageId: feedData.storageId,
       uploadTime: feedData.uploadTime,
     }
@@ -195,7 +195,7 @@ export default function ThreeDotMenu({
       desc: feedData.desc,
       imageUrl: feedData.imageUrl,
       location: feedData.location,
-      private: feedData.private,
+      isPrivate: feedData.isPrivate,
       storageId: feedData.storageId,
       uploadTime: feedData.uploadTime,
     }
@@ -204,7 +204,7 @@ export default function ThreeDotMenu({
       desc: feedData.desc,
       imageUrl: feedData.imageUrl,
       location: feedData.location,
-      private: !feedData.private,
+      isPrivate: !feedData.isPrivate,
       storageId: feedData.storageId,
       uploadTime: feedData.uploadTime,
     }
@@ -255,13 +255,13 @@ export default function ThreeDotMenu({
                 isDarkMode ? { backgroundColor: "black", color: "white" } : {}
               }
             >
-              {feedData.private ? (
+              {feedData.isPrivate ? (
                 <UnLockIcon width={15} height={15} />
               ) : (
                 <LockIcon width={15} height={15} />
               )}
 
-              {feedData.private ? "공개" : "비공개"}
+              {feedData.isPrivate ? "공개" : "비공개"}
             </Style.PrivateToggleButton>
             <Style.Deletebutton
               onClick={handleDeleteFeed}

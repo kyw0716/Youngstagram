@@ -70,7 +70,7 @@ const Home: NextPage = () => {
       {feedData !== undefined && currentUserData.info.userId !== "" ? (
         <FeedList
           FeedData={
-            feedData ? feedData.filter((data) => !data.private) : undefined
+            feedData ? feedData.filter((data) => !data.isPrivate) : undefined
           }
           setIsCommentModalOpen={setIsCommentModalOpen}
           setIsLikeModalOpen={setIsLikeModalOpen}

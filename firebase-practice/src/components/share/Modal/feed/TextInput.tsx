@@ -171,7 +171,7 @@ export default function TextInput({
     feedData ? feedData.location : "",
   )
   const [isPrivate, setIsPrivate] = useState<boolean>(
-    feedData ? feedData.private : false,
+    feedData ? feedData.isPrivate : false,
   )
   const [randomId, setRandomId] = useState<string>(
     feedData ? feedData.storageId : "",
@@ -204,7 +204,7 @@ export default function TextInput({
       imageUrl: downloadUrl,
       desc: desc,
       location: location,
-      private: isPrivate,
+      isPrivate: isPrivate,
       storageId: feedData?.storageId ? feedData.storageId : randomId,
       uploadTime: feedData?.uploadTime ? feedData.uploadTime : getCurrentTime(),
       creator: `${authService.currentUser?.uid}`,
@@ -259,7 +259,7 @@ export default function TextInput({
       imageUrl: feedData.imageUrl,
       desc: feedData.desc,
       location: feedData.location,
-      private: feedData.private,
+      isPrivate: feedData.isPrivate,
       storageId: feedData.storageId,
       uploadTime: feedData.uploadTime,
       creator: feedData.creator,

@@ -12,7 +12,7 @@ export type FeedData = {
   imageUrl: string
   desc: string
   location: string
-  private: boolean
+  isPrivate: boolean
   storageId: string
   creator: string
   uploadTime: string
