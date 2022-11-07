@@ -17,10 +17,10 @@ import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
 import Loading from "@share/Loading/Loading"
+import axios from "axios"
 
 const Home: NextPage = () => {
   const router = useRouter()
-  const [dataFromFirestore, setDataFromFirestore] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>()
   const currentUserData = useRecoilValue(userDataState)
 
@@ -31,16 +31,13 @@ const Home: NextPage = () => {
   const likerListData = useRecoilValue(userListState)
 
   useEffect(() => {
-    const AllFeedRef = doc(DBService, "mainPage", `userFeedDataAll`)
-    onSnapshot(AllFeedRef, { includeMetadataChanges: true }, (doc) => {
-      if (doc) setDataFromFirestore(doc.data())
+    axios({
+      method: "GET",
+      url: `/api/feed`,
+    }).then((response) => {
+      setFeedData(response.data)
     })
   }, [])
-  useEffect(() => {
-    if (dataFromFirestore !== undefined) {
-      setFeedData(dataFromFirestore.feed)
-    }
-  }, [dataFromFirestore])
 
   return (
     <Layout>
