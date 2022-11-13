@@ -1,7 +1,5 @@
 import type { NextPage } from "next"
 import { useEffect, useState } from "react"
-import { DBService } from "@FireBase"
-import { doc, DocumentData, onSnapshot } from "firebase/firestore"
 import { FlexBox, Margin } from "ui"
 import FeedList from "@share/Feed/mainPage/FeedList"
 import Layout from "components/layout"

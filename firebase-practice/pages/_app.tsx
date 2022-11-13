@@ -8,6 +8,7 @@ import { RecoilRoot, useSetRecoilState } from "recoil"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
+import axios from "axios"
 
 const SetDarkMode = () => {
   const setDarkRecoil = useSetRecoilState(darkModeState)
@@ -22,8 +23,11 @@ const SetCurrnentUser = () => {
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
       if (user) {
-        onSnapshot(doc(DBService, "users", `${user.uid}`), (response) => {
-          setCurrentUser(response.data() as UserData)
+        axios<UserData>({
+          method: "",
+          url: `/api/profile?userId=${user.uid}`,
+        }).then((response) => {
+          setCurrentUser(response.data)
         })
       }
     })
