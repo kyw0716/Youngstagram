@@ -31,7 +31,6 @@ export default async function getLike(
 ) {
   if (req.method === "GET") {
     const storageId = req.query?.storageId
-    console.log(storageId)
     const getLikeRef = doc(DBService, "like", `${storageId}`)
     const docSnapShot = await getDoc(getLikeRef)
 
