@@ -6,7 +6,7 @@ import {
   userListState,
 } from "@share/recoil/recoilList"
 import axios from "axios"
-import { FeedData } from "backend/dto"
+import { Comment, FeedData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import React, { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
@@ -42,9 +42,15 @@ export default function LikeCommentInfo({
   const [isCurrentUserLike, setIsCurrentUserLike] = useState<boolean>(false)
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
-      setCommentData(doc.data()?.AllComments)
+    axios<Comment[]>({
+      method: "GET",
+      url: `/api/comment?commentId=${feedData.storageId}`,
     })
+      .then((res) => {
+        setCommentData(res.data)
+      })
+      .catch((error) => console.log(error))
+
     axios<string[]>({
       method: "GET",
       url: `/api/like?storageId=${feedData.storageId}`,
