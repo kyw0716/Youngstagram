@@ -41,8 +41,6 @@ export default async function getComment(
     const getCommentRef = doc(DBService, "Comments", `${commentId}`)
     const docSnapShot = await getDoc(getCommentRef)
 
-    console.log(docSnapShot.data())
-
     if (docSnapShot.exists()) {
       const data = docSnapShot.data()?.AllComments
       res.status(200).json(data as Comment[])

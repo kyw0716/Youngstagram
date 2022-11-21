@@ -5,6 +5,7 @@ import {
   userDataState,
   userListState,
 } from "@share/recoil/recoilList"
+import axios from "axios"
 import { FeedData } from "backend/dto"
 import { doc, onSnapshot } from "firebase/firestore"
 import React, { SetStateAction, useCallback, useEffect, useState } from "react"
@@ -39,11 +40,20 @@ export default function LikeCommentInfo({
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
-      setCommentData(doc.data()?.AllComments)
+    axios<Comment[]>({
+      method: "GET",
+      url: `/api/comment?commentId=${feedData.storageId}`,
     })
-    onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (doc) => {
-      setLikerList(doc.data()?.likerList)
+      .then((res) => {
+        setCommentData(res.data)
+      })
+      .catch((error) => console.log(error))
+
+    axios<string[]>({
+      method: "GET",
+      url: `/api/like?storageId=${feedData.storageId}`,
+    }).then((res) => {
+      setLikerList(res.data)
     })
   }, [])
 
