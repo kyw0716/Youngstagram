@@ -20,7 +20,6 @@ export default async function profile(
 ) {
   if (req.method === "GET") {
     const userId = req.query?.userId
-    console.log(userId)
     const getProfileRef = doc(DBService, "users", `${userId}`)
     const docSnapShot = await getDoc(getProfileRef)
 

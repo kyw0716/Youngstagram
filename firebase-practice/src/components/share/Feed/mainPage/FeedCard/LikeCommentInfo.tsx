@@ -1,4 +1,3 @@
-import { DBService } from "@FireBase"
 import {
   darkModeState,
   feedDataState,
@@ -7,7 +6,6 @@ import {
 } from "@share/recoil/recoilList"
 import axios from "axios"
 import { Comment, FeedData } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
 import React, { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
-import { DBService } from "@FireBase"
-import { doc, DocumentData, onSnapshot } from "firebase/firestore"
+import { DocumentData } from "firebase/firestore"
 import { GetServerSideProps } from "next"
 import ProfileHeader from "@feature/profile/customerProfile"
 import styled from "styled-components"
@@ -13,6 +12,7 @@ import { useRecoilValue } from "recoil"
 import { feedDataState, userListState } from "@share/recoil/recoilList"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
+import axios from "axios"
 
 const Style = {
   Wrapper: styled.div`
@@ -40,13 +40,16 @@ export default function Profile({ userId }: Props) {
     setIsUserListModalOpen(false)
     if (router.query !== undefined && router.query.id !== userId)
       router.push(`/profile/${router.query.id}`)
-    const userDataRef = doc(DBService, "users", `${userId}`)
-    onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
-      if (doc) {
-        setUserData(doc.data())
-      }
-    })
   }, [router.query, userId])
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `/api/profile?userId=${userId}`,
+    }).then((response) => {
+      setUserData(response.data)
+    })
+  }, [userId])
 
   useEffect(() => {
     setFeedData(userData?.feed)

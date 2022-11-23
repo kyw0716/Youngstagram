@@ -1,7 +1,6 @@
-import { DBService } from "@FireBase"
 import { feedDataState } from "@share/recoil/recoilList"
+import axios from "axios"
 import { Comment, FeedData } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
 import { SetStateAction, useEffect, useState } from "react"
 import { useSetRecoilState } from "recoil"
 import styled from "styled-components"
@@ -54,11 +53,18 @@ export default function FeedGridCard({
   const setSelectedFeedData = useSetRecoilState(feedDataState)
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "Comments", feedData.storageId), (data) => {
-      if (data) setCommentData(data.data()?.AllComments as Comment[])
+    axios<Comment[]>({
+      method: "GET",
+      url: `/api/comment?commentId=${feedData.storageId}`,
+    }).then((response) => {
+      setCommentData(response.data)
     })
-    onSnapshot(doc(DBService, "like", feedData.storageId), (data) => {
-      if (data) setLikeData(data.data()?.likerList as string[])
+
+    axios<string[]>({
+      method: "GET",
+      url: `/api/like?storageId=${feedData.storageId}`,
+    }).then((response) => {
+      setLikeData(response.data)
     })
   }, [])
 

@@ -1,7 +1,5 @@
-import { DBService } from "@FireBase"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { FeedData, UserData } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
@@ -12,6 +10,7 @@ import { ProfileIcon } from "icons"
 import Desc from "./Desc"
 import LikeCommentInfo from "./LikeCommentInfo"
 import Link from "next/link"
+import axios from "axios"
 
 type Props = {
   feedData: FeedData
@@ -80,8 +79,11 @@ export default function FeedCard({
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
-      setFeedCreatorData(data.data() as UserData)
+    axios<UserData>({
+      method: "GET",
+      url: `/api/profile?userId=${feedData.creator}`,
+    }).then((response) => {
+      setFeedCreatorData(response.data)
     })
   }, [feedData])
 

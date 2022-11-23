@@ -7,7 +7,6 @@ import { authService, DBService } from "@FireBase"
 import { RecoilRoot, useSetRecoilState } from "recoil"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
 import axios from "axios"
 
 const SetDarkMode = () => {

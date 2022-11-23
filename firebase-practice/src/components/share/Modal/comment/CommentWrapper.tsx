@@ -1,13 +1,8 @@
 import { authService, DBService } from "@FireBase"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
+import axios from "axios"
 import { Comment, UserData } from "backend/dto"
-import {
-  arrayRemove,
-  arrayUnion,
-  doc,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore"
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
 import { ProfileIcon } from "icons"
 import Image from "next/image"
 import Link from "next/link"
@@ -64,11 +59,11 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
-    const userInfoRef = doc(DBService, "users", commentData.userId)
-    onSnapshot(userInfoRef, (docData) => {
-      if (docData) {
-        setUserData(docData.data() as UserData)
-      }
+    axios<UserData>({
+      method: "GET",
+      url: `/api/profile?userId=${commentData.userId}`,
+    }).then((response) => {
+      setUserData(response.data)
     })
   }, [])
 

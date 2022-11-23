@@ -1,6 +1,4 @@
-import { DBService } from "@FireBase"
 import { FeedData, UserData, Comment } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -12,6 +10,7 @@ import { useRecoilValue } from "recoil"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { ProfileIcon } from "icons"
 import Link from "next/link"
+import axios from "axios"
 
 type Props = {
   feedData: FeedData
@@ -67,11 +66,18 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
-      if (data) setUserData(data.data() as UserData)
+    axios<UserData>({
+      method: "GET",
+      url: `/api/profile?userId=${feedData.creator}`,
+    }).then((response) => {
+      setUserData(response.data)
     })
-    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (data) => {
-      if (data) setCommentData(data.data()?.AllComments)
+
+    axios<Comment[]>({
+      method: "GET",
+      url: `/api/comment?commentId=${feedData.storageId}`,
+    }).then((response) => {
+      setCommentData(response.data)
     })
   }, [])
 

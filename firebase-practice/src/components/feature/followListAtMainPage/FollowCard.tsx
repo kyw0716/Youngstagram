@@ -1,7 +1,5 @@
-import { DBService } from "@FireBase"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { UserData } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -10,6 +8,7 @@ import styled from "styled-components"
 import { CustomH6Light, FlexBox, Margin } from "ui"
 import { ProfileIcon } from "icons"
 import Link from "next/link"
+import axios from "axios"
 
 type Props = {
   userId: string
@@ -30,8 +29,11 @@ export default function FollowCard({ userId }: Props) {
   const currentUser = useRecoilValue(userDataState)
   const isDarkMode = useRecoilValue(darkModeState)
   useEffect(() => {
-    onSnapshot(doc(DBService, "users", userId), (data) => {
-      if (data) setUserData(data.data() as UserData)
+    axios<UserData>({
+      method: "GET",
+      url: `/api/profile?userId=${userId}`,
+    }).then((response) => {
+      setUserData(response.data)
     })
   }, [])
   return (

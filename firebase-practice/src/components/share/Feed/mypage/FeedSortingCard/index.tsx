@@ -1,7 +1,6 @@
-import { DBService } from "@FireBase"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
-import { FeedData, UserInfo } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
+import axios from "axios"
+import { FeedData, UserData, UserInfo } from "backend/dto"
 import { ProfileIcon } from "icons"
 import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
@@ -79,8 +78,11 @@ export default function FeedSortingCard({
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "users", `${feedData.creator}`), (doc) => {
-      setCreatorInfo(doc.data()?.info)
+    axios<UserData>({
+      method: "GET",
+      url: `/api/profile?userId=${feedData.creator}`,
+    }).then((response) => {
+      setCreatorInfo(response.data?.info)
     })
   }, [feedData])
 

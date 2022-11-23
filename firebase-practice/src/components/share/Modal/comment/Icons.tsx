@@ -1,6 +1,7 @@
-import { authService, DBService } from "@FireBase"
+import { authService } from "@FireBase"
 import { darkModeState } from "@share/recoil/recoilList"
-import { doc, onSnapshot } from "firebase/firestore"
+import axios from "axios"
+import { Comment } from "backend/dto"
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
@@ -33,11 +34,18 @@ export default function Icons({ storageId, inputRef }: Props) {
   const [isCurrentUserLiked, setIsCurrentUserLiked] = useState<boolean>(false)
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "like", `${storageId}`), (data) => {
-      if (data) setLikerList(data.data()?.likerList)
+    axios<string[]>({
+      method: "GET",
+      url: `/api/like?storageId=${storageId}`,
+    }).then((response) => {
+      setLikerList(response.data)
     })
-    onSnapshot(doc(DBService, "Comments", `${storageId}`), (data) => {
-      if (data) setCommentData(data.data()?.AllComments)
+
+    axios<Comment[]>({
+      method: "GET",
+      url: `/api/like?storageId=${storageId}`,
+    }).then((response) => {
+      setCommentData(response.data)
     })
   }, [storageId])
 
