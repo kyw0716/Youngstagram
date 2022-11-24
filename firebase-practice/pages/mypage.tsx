@@ -14,6 +14,8 @@ import {
 import CommentModal from "@share/Modal/comment/CommentModal"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
+import { FlexBox } from "ui"
+import Loading from "@share/Loading/Loading"
 
 const Style = {
   Wrapper: styled.div`
@@ -78,13 +80,17 @@ export default function Profile() {
       />
       <Style.Wrapper>
         <ProfileHeader setIsUserListModalOpen={setIsUserListModalOpen} />
-        {feedData !== undefined && (
+        {feedData !== undefined ? (
           <FeedSortList
             feedData={feedData}
             setIsCommentModalOpen={setIsCommentModalOpen}
             setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
             setIsUserListModalOpen={setIsUserListModalOpen}
           />
+        ) : (
+          <FlexBox justifyContents="center">
+            <Loading width={470} height={750} borderRadius={10} count={2} />
+          </FlexBox>
         )}
       </Style.Wrapper>
     </Layout>
