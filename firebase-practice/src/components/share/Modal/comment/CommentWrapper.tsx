@@ -1,4 +1,5 @@
 import { authService, DBService } from "@FireBase"
+import Loading from "@share/Loading/Loading"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import axios from "axios"
 import { Comment, UserData } from "backend/dto"
@@ -99,39 +100,49 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
     <>
       <Style.Wrapper>
         <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
-          {userData?.info.profileImage ? (
-            <Link
-              href={
-                userData?.info.userId === currentUserData.info.userId
-                  ? "/mypage"
-                  : `/profile/${userData?.info.userId}`
-              }
-            >
-              <FlexBox width={"fit-content"} height={"fit-content"}>
-                <Image
+          {userData?.info.profileImage === undefined ? (
+            <Loading width={32} height={32} borderRadius={32} />
+          ) : (
+            <>
+              {userData.info.profileImage !== null ? (
+                <Link
+                  href={
+                    userData?.info.userId === currentUserData.info.userId
+                      ? "/mypage"
+                      : `/profile/${userData?.info.userId}`
+                  }
+                >
+                  <FlexBox width={"fit-content"} height={"fit-content"}>
+                    <Image
+                      width={32}
+                      height={32}
+                      style={{ borderRadius: "32px", cursor: "pointer" }}
+                      src={userData?.info.profileImage}
+                      alt="profile"
+                    />
+                  </FlexBox>
+                </Link>
+              ) : (
+                <ProfileIcon
                   width={32}
                   height={32}
-                  style={{ borderRadius: "32px", cursor: "pointer" }}
-                  src={userData?.info.profileImage}
-                  alt="profile"
+                  userId={userData?.info.userId}
                 />
-              </FlexBox>
-            </Link>
-          ) : (
-            <ProfileIcon
-              width={32}
-              height={32}
-              userId={userData?.info.userId}
-            />
+              )}
+            </>
           )}
         </FlexBox>
         <Margin direction="row" size={10} />
         <Style.CommentArea>
           <Margin direction="column" size={5} />
           <FlexBox width={"fit-content"}>
-            <CustomH4
-              style={{ color: isDarkMode ? "white" : "" }}
-            >{`${userData?.info.name}`}</CustomH4>
+            {userData?.info.name ? (
+              <CustomH4
+                style={{ color: isDarkMode ? "white" : "" }}
+              >{`${userData?.info.name}`}</CustomH4>
+            ) : (
+              <Loading width={100} height={15} />
+            )}
           </FlexBox>
           {isModifyMode ? (
             <FlexBox>
@@ -167,12 +178,17 @@ export default function CommentWrapper({ commentData, storageId }: Props) {
             <>
               {isShowAllComment ? (
                 <>
-                  <FlexBox
-                    width={"fit-content"}
-                    style={{ color: isDarkMode ? "white" : "" }}
-                  >
-                    {commentData.comment}
-                  </FlexBox>
+                  {commentData.comment ? (
+                    <FlexBox
+                      width={"fit-content"}
+                      style={{ color: isDarkMode ? "white" : "" }}
+                    >
+                      {commentData.comment}
+                    </FlexBox>
+                  ) : (
+                    <Loading width={100} height={15} />
+                  )}
+
                   <Margin direction="row" size={10} />
                   <CustomH6
                     style={{

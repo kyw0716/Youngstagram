@@ -1,11 +1,12 @@
 import { FeedData } from "backend/dto"
-import React, { SetStateAction, useRef } from "react"
+import React, { SetStateAction, useEffect, useRef } from "react"
 import styled from "styled-components"
 import YoungstagramModal from "../YoungstagramModal"
 import CommentInput from "./Input"
 import useWindowSize from "lib/useWindowSize"
 import CommentList from "./CommentList"
 import Icons from "./Icons"
+import Loading from "@share/Loading/Loading"
 
 type Props = {
   isOpen: boolean
@@ -51,6 +52,10 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
   const commentAreaRef = useRef<HTMLDivElement>(null)
   const windowSize = useWindowSize()
 
+  useEffect(() => {
+    console.log("이미지: ", feedData.imageUrl)
+  }, [feedData])
+
   return (
     <YoungstagramModal
       width={windowSize < 900 ? "95vw" : "70vw"}
@@ -61,7 +66,11 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
     >
       <Style.Wrapper>
         <Style.ImgWrapper>
-          <Style.Img src={feedData.imageUrl} alt="image" />
+          {feedData.imageUrl ? (
+            <Style.Img src={feedData.imageUrl} alt="image" />
+          ) : (
+            <Loading width={"100%"} height={"100%"} />
+          )}
         </Style.ImgWrapper>
         <Style.DetailContainer>
           <CommentList feedData={feedData} commentAreaRef={commentAreaRef} />
