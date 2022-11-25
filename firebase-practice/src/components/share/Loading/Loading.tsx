@@ -8,9 +8,16 @@ type Props = {
   height: number | string
   borderRadius?: number | string
   count?: number
+  paddingTop?: string
 }
 
-export default function Loading({ width, height, borderRadius, count }: Props) {
+export default function Loading({
+  width,
+  height,
+  borderRadius,
+  count,
+  paddingTop,
+}: Props) {
   const isDarkMode = useRecoilValue(darkModeState)
   return (
     <SkeletonTheme
@@ -22,6 +29,7 @@ export default function Loading({ width, height, borderRadius, count }: Props) {
         height={height}
         borderRadius={borderRadius}
         count={count}
+        style={{ paddingTop: `${paddingTop}` }}
       />
     </SkeletonTheme>
   )

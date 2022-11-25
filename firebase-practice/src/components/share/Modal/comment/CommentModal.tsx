@@ -52,10 +52,6 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
   const commentAreaRef = useRef<HTMLDivElement>(null)
   const windowSize = useWindowSize()
 
-  useEffect(() => {
-    console.log("이미지: ", feedData.imageUrl)
-  }, [feedData])
-
   return (
     <YoungstagramModal
       width={windowSize < 900 ? "95vw" : "70vw"}

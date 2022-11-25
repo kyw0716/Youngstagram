@@ -13,6 +13,7 @@ import { feedDataState, userListState } from "@share/recoil/recoilList"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
 import axios from "axios"
+import ProfileLoadingGrid from "@share/Loading/ProfileLoadingGrid"
 
 const Style = {
   Wrapper: styled.div`
@@ -74,11 +75,13 @@ export default function Profile({ userId }: Props) {
           userData={userData as UserData}
           setIsUserListModalOpen={setIsUserListModalOpen}
         />
-        {feedData !== undefined && (
+        {feedData !== undefined ? (
           <FeedGrid
             feedDatas={feedData ? feedData : undefined}
             setIsCommentModalOpen={setIsCommentModalOpen}
           />
+        ) : (
+          <ProfileLoadingGrid />
         )}
       </Style.Wrapper>
       <Margin direction="column" size={30} />

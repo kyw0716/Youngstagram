@@ -132,17 +132,19 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
               </CustomH2Light>
             )}
             <Margin direction="row" size={20} />
-            <Style.ProfileEditButton
-              onClick={() => {
-                setIsOpen(true)
-              }}
-              style={{
-                color: isDarkMode ? "white" : "",
-                backgroundColor: isDarkMode ? "black" : "",
-              }}
-            >
-              프로필 편집
-            </Style.ProfileEditButton>
+            {userData.info.userId !== "" && (
+              <Style.ProfileEditButton
+                onClick={() => {
+                  setIsOpen(true)
+                }}
+                style={{
+                  color: isDarkMode ? "white" : "",
+                  backgroundColor: isDarkMode ? "black" : "",
+                }}
+              >
+                프로필 편집
+              </Style.ProfileEditButton>
+            )}
           </FlexBox>
           <Margin direction="column" size={15} />
           <FlexBox>
@@ -205,44 +207,46 @@ export default function PCHeader({ setIsUserListModalOpen }: Props) {
           )}
         </Style.ProfileInfo>
       </Style.ProfileHeader>
-      <Style.SortWrapper>
-        <Style.SortToAll
-          about={feedDataType}
-          onClick={() => {
-            setFeedDataType("all")
-          }}
-          color={isDarkMode ? "white" : "grey"}
-        >
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            전체 게시물
-          </CustomH4Light>
-          <AllFileIcon width={15} height={15} />
-        </Style.SortToAll>
-        <Style.SortToPublic
-          about={feedDataType}
-          onClick={() => {
-            setFeedDataType("public")
-          }}
-          color={isDarkMode ? "white" : "grey"}
-        >
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            공개 게시물
-          </CustomH4Light>
-          <UnLockIcon width={15} height={15} />
-        </Style.SortToPublic>
-        <Style.SortToPrivate
-          about={feedDataType}
-          onClick={() => {
-            setFeedDataType("private")
-          }}
-          color={isDarkMode ? "white" : "grey"}
-        >
-          <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
-            숨김 게시물
-          </CustomH4Light>
-          <LockIcon width={15} height={15} />
-        </Style.SortToPrivate>
-      </Style.SortWrapper>
+      {userData.info.userId !== "" && (
+        <Style.SortWrapper>
+          <Style.SortToAll
+            about={feedDataType}
+            onClick={() => {
+              setFeedDataType("all")
+            }}
+            color={isDarkMode ? "white" : "grey"}
+          >
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+              전체 게시물
+            </CustomH4Light>
+            <AllFileIcon width={15} height={15} />
+          </Style.SortToAll>
+          <Style.SortToPublic
+            about={feedDataType}
+            onClick={() => {
+              setFeedDataType("public")
+            }}
+            color={isDarkMode ? "white" : "grey"}
+          >
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+              공개 게시물
+            </CustomH4Light>
+            <UnLockIcon width={15} height={15} />
+          </Style.SortToPublic>
+          <Style.SortToPrivate
+            about={feedDataType}
+            onClick={() => {
+              setFeedDataType("private")
+            }}
+            color={isDarkMode ? "white" : "grey"}
+          >
+            <CustomH4Light style={{ color: isDarkMode ? "white" : "" }}>
+              숨김 게시물
+            </CustomH4Light>
+            <LockIcon width={15} height={15} />
+          </Style.SortToPrivate>
+        </Style.SortWrapper>
+      )}
     </>
   )
 }
