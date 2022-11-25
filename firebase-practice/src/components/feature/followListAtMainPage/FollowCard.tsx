@@ -9,6 +9,7 @@ import { CustomH6Light, FlexBox, Margin } from "ui"
 import { ProfileIcon } from "icons"
 import Link from "next/link"
 import axios from "axios"
+import Loading from "@share/Loading/Loading"
 
 type Props = {
   userId: string
@@ -38,7 +39,7 @@ export default function FollowCard({ userId }: Props) {
   }, [])
   return (
     <>
-      {userData && (
+      {userData ? (
         <Link
           href={
             currentUser !== undefined && currentUser.info.userId === userId
@@ -70,6 +71,12 @@ export default function FollowCard({ userId }: Props) {
             )}
           </Style.Wrapper>
         </Link>
+      ) : (
+        <Style.Wrapper>
+          <Loading width={56} height={56} borderRadius={56} />
+          <Margin direction="column" size={5} />
+          <Loading width={56} height={15} borderRadius={10} />
+        </Style.Wrapper>
       )}
     </>
   )
