@@ -1,4 +1,4 @@
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 import { SetStateAction } from "react"
 import { Margin } from "ui"
 import MobileHeader from "./MobileHeader"

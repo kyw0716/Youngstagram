@@ -1,6 +1,6 @@
 import { darkModeState } from "@share/recoil/recoilList"
 import { XIcon } from "icons"
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 import React, { ReactNode, SetStateAction } from "react"
 import ReactModal from "react-modal"
 import { useRecoilValue } from "recoil"

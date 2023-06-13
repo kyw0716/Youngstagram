@@ -2,7 +2,7 @@ import { FeedData } from "backend/dto"
 import styled from "styled-components"
 import FeedGridCard from "./FeedGridCard"
 import { v4 } from "uuid"
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 import { SetStateAction, useEffect, useState } from "react"
 
 type Props = {

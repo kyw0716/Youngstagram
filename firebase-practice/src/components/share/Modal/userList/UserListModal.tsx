@@ -3,7 +3,7 @@ import styled from "styled-components"
 import YoungstagramModal from "../YoungstagramModal"
 import FollowUserWrapper from "./UserWrapper"
 import { v4 } from "uuid"
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 
 type Props = {
   userList: string[]
