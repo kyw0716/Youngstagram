@@ -155,6 +155,7 @@ export const useAuth = () => {
 
   const CreateNewUserToFirestore = async (response: UserCredential) => {
     const newUserToFirestoreRef = doc(DBService, "users", response.user.uid)
+
     const UserDataForm: UserInfo = {
       userId: response.user.uid,
       profileImage: response.user.photoURL,
@@ -162,14 +163,19 @@ export const useAuth = () => {
       email: response.user.email,
     }
 
+    setIsLogin(true)
+
     await updateDoc(newUserToFirestoreRef, { info: UserDataForm }).catch(
       (error) => {
+        setIsLogin(false)
+
         if (error.code === "not-found") {
           setDoc(newUserToFirestoreRef, { info: UserDataForm })
             .then(async () => {
               const userDocument = await getDoc(newUserToFirestoreRef)
 
               setCurrentUser(userDocument.data() as UserData)
+              setIsLogin(true)
             })
             .catch((error) => console.log(error.code))
         }

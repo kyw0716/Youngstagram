@@ -52,15 +52,11 @@ const Home: NextPage = () => {
       />
       <Margin direction="column" size={30} />
       {currentUserData?.follow !== undefined &&
-      currentUserData.follow.length > 0 ? (
-        <FlexBox justifyContents="center">
-          <FollowListAtMainPage />
-        </FlexBox>
-      ) : (
-        <FlexBox justifyContents="center">
-          <Loading width={470} height={119} borderRadius={10} />
-        </FlexBox>
-      )}
+        currentUserData.follow.length > 0 && (
+          <FlexBox justifyContents="center">
+            <FollowListAtMainPage />
+          </FlexBox>
+        )}
       <Margin direction="column" size={15} />
       {feedData !== undefined && currentUserData.info.userId !== "" ? (
         <FeedList
