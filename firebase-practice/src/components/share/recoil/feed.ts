@@ -1,7 +1,7 @@
 import { FeedItems } from "backend/dto"
 import { atom } from "recoil"
 
-export const mainFeedItems = atom<FeedItems[]>({
+export const mainFeedItemsAtom = atom<FeedItems[]>({
   key: "mainFeedItemsKey",
   default: [],
   effects: [

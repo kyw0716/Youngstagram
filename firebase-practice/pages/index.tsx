@@ -14,12 +14,12 @@ import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
 import Loading from "@share/Loading/Loading"
-import { mainFeedItems } from "@share/recoil/feed"
+import { mainFeedItemsAtom } from "@share/recoil/feed"
 
 const Home: NextPage = () => {
   const router = useRouter()
 
-  const feedData = useRecoilValue(mainFeedItems)
+  const feedData = useRecoilValue(mainFeedItemsAtom)
 
   const currentUserData = useRecoilValue(userDataState)
 
