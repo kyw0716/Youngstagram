@@ -133,7 +133,6 @@ export const useAuth = () => {
   }
 
   const handleGitHubAuth = async () => {
-    setIsLogin(true)
     signInWithPopup(authService, githubProvider)
       .then((response) => {
         if (response) {

@@ -5,7 +5,7 @@ import {
   userListState,
 } from "@share/recoil/recoilList"
 import axios from "axios"
-import { FeedData } from "backend/dto"
+import { FeedItems } from "backend/dto"
 import React, { SetStateAction, useCallback, useEffect, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import {
@@ -19,7 +19,7 @@ import {
 } from "ui"
 
 type Props = {
-  feedData: FeedData
+  feedData: FeedItems
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>
 }

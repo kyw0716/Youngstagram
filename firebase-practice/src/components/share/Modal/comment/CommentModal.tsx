@@ -1,4 +1,4 @@
-import { FeedData } from "backend/dto"
+import { FeedItems } from "backend/dto"
 import React, { SetStateAction, useEffect, useRef } from "react"
 import styled from "styled-components"
 import YoungstagramModal from "../YoungstagramModal"
@@ -11,7 +11,7 @@ import Loading from "@share/Loading/Loading"
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
-  feedData: FeedData
+  feedData: FeedItems
 }
 
 const Style = {

@@ -1,5 +1,5 @@
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
-import { FeedData, UserData } from "backend/dto"
+import { FeedItems, UserData } from "backend/dto"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
@@ -13,7 +13,7 @@ import Link from "next/link"
 import axios from "axios"
 
 type Props = {
-  feedData: FeedData
+  feedData: FeedItems
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>
 }

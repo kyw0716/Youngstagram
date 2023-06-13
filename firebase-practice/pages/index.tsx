@@ -1,9 +1,8 @@
 import type { NextPage } from "next"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { FlexBox, Margin } from "ui"
 import FeedList from "@share/Feed/mainPage/FeedList"
 import Layout from "components/layout"
-import { FeedData } from "backend/dto"
 import FollowListAtMainPage from "@feature/followListAtMainPage"
 import { useRecoilValue } from "recoil"
 import {
@@ -15,11 +14,13 @@ import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
 import Loading from "@share/Loading/Loading"
-import axios from "axios"
+import { mainFeedItems } from "@share/recoil/feed"
 
 const Home: NextPage = () => {
   const router = useRouter()
-  const [feedData, setFeedData] = useState<FeedData[]>()
+
+  const feedData = useRecoilValue(mainFeedItems)
+
   const currentUserData = useRecoilValue(userDataState)
 
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
@@ -27,15 +28,6 @@ const Home: NextPage = () => {
 
   const [isLikeModalOpen, setIsLikeModalOpen] = useState<boolean>(false)
   const likerListData = useRecoilValue(userListState)
-
-  useEffect(() => {
-    axios({
-      method: "GET",
-      url: `/api/feed`,
-    }).then((response) => {
-      setFeedData(response.data)
-    })
-  }, [])
 
   return (
     <Layout>
@@ -58,11 +50,9 @@ const Home: NextPage = () => {
           </FlexBox>
         )}
       <Margin direction="column" size={15} />
-      {feedData !== undefined && currentUserData.info.userId !== "" ? (
+      {currentUserData.info.userId !== "" ? (
         <FeedList
-          FeedData={
-            feedData ? feedData.filter((data) => !data.isPrivate) : undefined
-          }
+          feedItems={feedData}
           setIsCommentModalOpen={setIsCommentModalOpen}
           setIsLikeModalOpen={setIsLikeModalOpen}
         />

@@ -5,7 +5,7 @@ import ProfileHeader from "@feature/profile/customerProfile"
 import styled from "styled-components"
 import { Margin } from "ui"
 import Layout from "components/layout"
-import { FeedData, UserData } from "backend/dto"
+import { FeedItems, UserData } from "backend/dto"
 import { useRouter } from "next/router"
 import FeedGrid from "@share/Feed/profilepage/FeedGrid"
 import { useRecoilValue } from "recoil"
@@ -31,7 +31,7 @@ const Style = {
 export default function Profile({ userId }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
-  const [feedData, setFeedData] = useState<FeedData[]>()
+  const [feedData, setFeedData] = useState<FeedItems[]>()
   const selectedFeedData = useRecoilValue(feedDataState)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)

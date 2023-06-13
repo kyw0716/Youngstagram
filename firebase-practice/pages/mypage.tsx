@@ -3,7 +3,7 @@ import FeedSortList from "@share/Feed/mypage/FeedSortList"
 import ProfileHeader from "@feature/profile/mypage"
 import styled from "styled-components"
 import Layout from "components/layout"
-import { FeedData } from "backend/dto"
+import { FeedItems } from "backend/dto"
 import { useRecoilValue } from "recoil"
 import {
   FeedDataFilter,
@@ -34,7 +34,7 @@ export default function Profile() {
   const currentUserData = useRecoilValue(userDataState)
 
   const feedDataType = useRecoilValue(FeedDataFilter)
-  const [feedData, setFeedData] = useState<FeedData[]>([])
+  const [feedData, setFeedData] = useState<FeedItems[]>([])
   const selectedFeedData = useRecoilValue(feedDataState)
 
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)

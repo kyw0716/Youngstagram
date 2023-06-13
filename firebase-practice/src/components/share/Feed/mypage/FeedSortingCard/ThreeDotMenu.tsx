@@ -4,7 +4,7 @@ import {
   feedDataState,
   userDataState,
 } from "@share/recoil/recoilList"
-import { FeedData } from "backend/dto"
+import { FeedItems } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -26,7 +26,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 
 type Props = {
-  feedData: FeedData
+  feedData: FeedItems
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
@@ -151,7 +151,7 @@ export default function ThreeDotMenu({
   }
 
   const handleDeleteFeed = async () => {
-    const feed: FeedData = {
+    const feed: FeedItems = {
       creator: feedData.creator,
       desc: feedData.desc,
       imageUrl: feedData.imageUrl,
@@ -189,7 +189,7 @@ export default function ThreeDotMenu({
   const handlePrivateToggle = async () => {
     const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
     const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
-    const feed: FeedData = {
+    const feed: FeedItems = {
       creator: feedData.creator,
       desc: feedData.desc,
       imageUrl: feedData.imageUrl,
@@ -198,7 +198,7 @@ export default function ThreeDotMenu({
       storageId: feedData.storageId,
       uploadTime: feedData.uploadTime,
     }
-    const toggleFeed: FeedData = {
+    const toggleFeed: FeedItems = {
       creator: feedData.creator,
       desc: feedData.desc,
       imageUrl: feedData.imageUrl,

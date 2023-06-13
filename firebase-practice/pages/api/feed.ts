@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { FeedData } from "backend/dto"
+import { FeedItems } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -35,17 +35,21 @@ import type { NextApiRequest, NextApiResponse } from "next"
 
 export default async function getFeed(
   req: NextApiRequest,
-  res: NextApiResponse<FeedData[] | string>,
+  res: NextApiResponse<FeedItems[] | string>,
 ) {
   if (req.method === "GET") {
     const getFeedRef = doc(DBService, "mainPage", "userFeedDataAll")
     const docSnapShot = await getDoc(getFeedRef)
 
     if (docSnapShot.exists()) {
-      const data = docSnapShot.data()?.feed as FeedData[]
+      const data = docSnapShot.data()?.feed as FeedItems[]
       res
         .status(200)
-        .json(data.sort((a, b) => Number(a.uploadTime) - Number(b.uploadTime)))
+        .json(
+          data
+            .filter((feedItem) => !feedItem.isPrivate)
+            .sort((a, b) => Number(a.uploadTime) - Number(b.uploadTime)),
+        )
     } else {
       res.status(500).json("Fail")
     }
@@ -67,7 +71,7 @@ export default async function getFeed(
     const firestorePersonalRef = doc(DBService, "users", `${creator}`)
 
     if (!uploadTime) {
-      const feed: FeedData = {
+      const feed: FeedItems = {
         imageUrl: imageUrl,
         desc: desc,
         location: location,
@@ -103,7 +107,7 @@ export default async function getFeed(
 
       res.status(200).json("Success")
     } else {
-      const feedToRemove: FeedData = {
+      const feedToRemove: FeedItems = {
         imageUrl: imageUrl,
         desc: desc,
         location: location,
@@ -112,7 +116,7 @@ export default async function getFeed(
         creator: creator,
         uploadTime: uploadTime,
       }
-      const newFeed: FeedData = {
+      const newFeed: FeedItems = {
         imageUrl: imageUrl,
         desc: newDesc,
         location: newLocation,
@@ -151,12 +155,12 @@ export default async function getFeed(
       storageId,
       creator,
       uploadTime,
-    } = req.body as FeedData
+    } = req.body as FeedItems
 
     const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
     const firestorePersonalRef = doc(DBService, "users", `${creator}`)
 
-    const feed: FeedData = {
+    const feed: FeedItems = {
       imageUrl: imageUrl,
       desc: desc,
       location: location,

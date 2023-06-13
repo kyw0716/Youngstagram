@@ -1,6 +1,6 @@
 import { authService, DBService, storageService } from "@FireBase"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
-import { FeedData } from "backend/dto"
+import { FeedItems } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -19,7 +19,7 @@ import { CustomH5, FlexBox, Margin } from "ui"
 import { v4 } from "uuid"
 
 type Props = {
-  feedData?: FeedData
+  feedData?: FeedItems
   imagePreviewSrc: string
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   imageFile: File | undefined
@@ -200,7 +200,7 @@ export default function TextInput({
   }
 
   const uploadToFirestore = async (downloadUrl: string) => {
-    const feed: FeedData = {
+    const feed: FeedItems = {
       imageUrl: downloadUrl,
       desc: desc,
       location: location,
@@ -255,7 +255,7 @@ export default function TextInput({
       "users",
       `${authService.currentUser?.uid}`,
     )
-    const feed: FeedData = {
+    const feed: FeedItems = {
       imageUrl: feedData.imageUrl,
       desc: feedData.desc,
       location: feedData.location,

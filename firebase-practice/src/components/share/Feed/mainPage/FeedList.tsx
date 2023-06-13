@@ -1,4 +1,4 @@
-import { FeedData } from "backend/dto"
+import { FeedItems } from "backend/dto"
 import { CameraIcon } from "icons"
 import { SetStateAction } from "react"
 import styled from "styled-components"
@@ -6,7 +6,7 @@ import { CustomH2Light, CustomH5Light } from "ui"
 import FeedCard from "./FeedCard"
 
 type Props = {
-  FeedData: FeedData[] | undefined
+  feedItems: FeedItems[]
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
@@ -29,28 +29,30 @@ const Style = {
 }
 
 export default function FeedList({
-  FeedData,
+  feedItems,
   setIsCommentModalOpen,
   setIsLikeModalOpen,
 }: Props) {
   return (
     <Style.ImageContainer>
-      {FeedData !== undefined && FeedData.length !== 0 ? (
-        FeedData.sort(function (a, b) {
-          return Number(b.uploadTime) - Number(a.uploadTime)
-        }).map((data, index) => {
-          return (
-            <FeedCard
-              key={index}
-              feedData={data}
-              setIsCommentModalOpen={setIsCommentModalOpen}
-              setIsLikeModalOpen={setIsLikeModalOpen}
-            />
-          )
-        })
+      {feedItems.length !== 0 ? (
+        feedItems
+          // .sort(function (a, b) {
+          //   return Number(b.uploadTime) - Number(a.uploadTime)
+          // })
+          .map((data, index) => {
+            return (
+              <FeedCard
+                key={index}
+                feedData={data}
+                setIsCommentModalOpen={setIsCommentModalOpen}
+                setIsLikeModalOpen={setIsLikeModalOpen}
+              />
+            )
+          })
       ) : (
         <>
-          {FeedData?.length === 0 && (
+          {feedItems?.length === 0 && (
             <>
               <CameraIcon width={62} height={62} />
               <CustomH2Light>사진 공유</CustomH2Light>
