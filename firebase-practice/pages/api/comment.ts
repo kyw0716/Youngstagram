@@ -38,7 +38,6 @@ export default async function getComment(
 ) {
   if (req.method === "GET") {
     const commentId = req.query?.commentId
-    console.log(commentId)
     const getCommentRef = doc(DBService, "Comments", `${commentId}`)
     const docSnapShot = await getDoc(getCommentRef)
 

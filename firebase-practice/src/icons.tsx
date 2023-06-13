@@ -17,6 +17,9 @@ type ProfileIconProps = {
 export function ProfileIcon({ userId, width, height }: ProfileIconProps) {
   const isDarkMode = useRecoilValue(darkModeState)
   const currentUserData = useRecoilValue(userDataState)
+
+  if (currentUserData === undefined) return <></>
+
   return (
     <Link
       href={

@@ -1,7 +1,7 @@
 import { SetStateAction, useState } from "react"
 import ModalForImageUpload from "./ModalForFeedUpload"
 import { FeedData } from "backend/dto"
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 import TextInput from "./TextInput"
 import ImageInput from "./ImageInput"
 

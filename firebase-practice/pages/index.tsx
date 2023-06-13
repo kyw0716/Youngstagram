@@ -19,7 +19,6 @@ import UserListModal from "@share/Modal/userList/UserListModal"
 import Loading from "@share/Loading/Loading"
 
 const Home: NextPage = () => {
-  const router = useRouter()
   const [dataFromFirestore, setDataFromFirestore] = useState<DocumentData>()
   const [feedData, setFeedData] = useState<FeedData[]>()
   const currentUserData = useRecoilValue(userDataState)
@@ -36,6 +35,7 @@ const Home: NextPage = () => {
       if (doc) setDataFromFirestore(doc.data())
     })
   }, [])
+
   useEffect(() => {
     if (dataFromFirestore !== undefined) {
       setFeedData(dataFromFirestore.feed)

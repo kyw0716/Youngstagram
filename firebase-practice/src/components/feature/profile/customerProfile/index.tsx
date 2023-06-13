@@ -2,7 +2,7 @@ import MobileHeader from "./MobileHeader"
 import PCHeader from "./PCHeader"
 import { Margin } from "ui"
 import { UserData } from "backend/dto"
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 import { SetStateAction } from "react"
 
 type Props = {

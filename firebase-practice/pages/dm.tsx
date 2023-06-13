@@ -1,6 +1,6 @@
 import Layout from "components/layout"
 import PCDM from "@feature/dm/PC"
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 import MobileDM from "@feature/dm/Mobile"
 
 export default function Dm() {

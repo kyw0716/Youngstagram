@@ -3,7 +3,7 @@ import React, { SetStateAction, useRef } from "react"
 import styled from "styled-components"
 import YoungstagramModal from "../YoungstagramModal"
 import CommentInput from "./Input"
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 import CommentList from "./CommentList"
 import Icons from "./Icons"
 

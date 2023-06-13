@@ -144,7 +144,6 @@ export default function ThreeDotMenu({
 }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const setSelectedFeedData = useSetRecoilState(feedDataState)
-  const setCurrentUserData = useSetRecoilState(userDataState)
   const isDarkMode = useRecoilValue(darkModeState)
 
   const handleThreeDotMenuClick = () => {
