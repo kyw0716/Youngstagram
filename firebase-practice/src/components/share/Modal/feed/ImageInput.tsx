@@ -1,5 +1,5 @@
 import { darkModeState } from "@share/recoil/recoilList"
-import { FeedItems } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import { SetStateAction, useEffect } from "react"
 import { useDropzone } from "react-dropzone"
 import { useRecoilValue } from "recoil"
@@ -7,7 +7,7 @@ import styled from "styled-components"
 import { CustomH3, FeedUPloadModalIcon, FlexBox, Margin } from "ui"
 
 type Props = {
-  feedData?: FeedItems
+  feedData?: FeedItem
   setIsFileExist: React.Dispatch<SetStateAction<boolean>>
   setImagePreviewSrc: React.Dispatch<SetStateAction<string>>
   setImageFile: React.Dispatch<SetStateAction<File | undefined>>

@@ -1,6 +1,6 @@
 import Loading from "@share/Loading/Loading"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
-import { FeedItems } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import { CameraIcon } from "icons"
 import React, { SetStateAction } from "react"
 import { useRecoilValue } from "recoil"
@@ -10,7 +10,7 @@ import { v4 } from "uuid"
 import FeedSortingCard from "./FeedSortingCard"
 
 type Props = {
-  feedData: FeedItems[] | undefined
+  feedData: FeedItem[] | undefined
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>

@@ -1,13 +1,13 @@
 import { feedDataState } from "@share/recoil/recoilList"
 import axios from "axios"
-import { Comment, FeedItems } from "backend/dto"
+import { Comment, FeedItem } from "backend/dto"
 import { SetStateAction, useEffect, useState } from "react"
 import { useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { Margin } from "ui"
 
 type Props = {
-  feedData: FeedItems
+  feedData: FeedItem
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 

@@ -1,4 +1,4 @@
-import { FeedItems } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import { CameraIcon } from "icons"
 import { SetStateAction } from "react"
 import styled from "styled-components"
@@ -6,7 +6,7 @@ import { CustomH2Light, CustomH5Light } from "ui"
 import FeedCard from "./FeedCard"
 
 type Props = {
-  feedItems: FeedItems[]
+  feedItems: FeedItem[]
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>
 }

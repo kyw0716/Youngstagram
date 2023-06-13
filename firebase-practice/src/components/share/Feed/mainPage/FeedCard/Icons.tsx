@@ -1,5 +1,5 @@
 import { feedDataState } from "@share/recoil/recoilList"
-import { FeedItems } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import React, { SetStateAction } from "react"
 import { useSetRecoilState } from "recoil"
 import {
@@ -13,7 +13,7 @@ import {
 
 type Props = {
   isCurrentUserLike: boolean
-  feedData: FeedItems
+  feedData: FeedItem
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 

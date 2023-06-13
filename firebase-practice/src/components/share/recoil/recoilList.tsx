@@ -1,5 +1,5 @@
 import { atom } from "recoil"
-import { FeedItems, UserData } from "backend/dto"
+import { FeedItem, UserData } from "backend/dto"
 
 export const userDataState = atom<UserData>({
   key: "USERDATAATOM",
@@ -21,7 +21,7 @@ export const FeedDataFilter = atom<"all" | "public" | "private">({
   default: "all",
 })
 
-export const feedDataState = atom<FeedItems>({
+export const feedDataState = atom<FeedItem>({
   key: "FEEDDATAATOM",
   default: {
     imageUrl: "",

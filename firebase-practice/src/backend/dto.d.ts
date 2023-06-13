@@ -8,7 +8,7 @@
  * @creator 피드를 올린 사람의 userId
  * @uploadTime 피드의 업로드 시간 (components/lib/getCurrentTime.tsx 사용)
  */
-export type FeedItems = {
+export type FeedItem = {
   imageUrl: string
   desc: string
   location: string
@@ -52,5 +52,5 @@ export type UserData = {
   info: UserInfo
   follow: string[]
   follower: string[]
-  feed: FeedItems[]
+  feed: FeedItem[]
 }

@@ -1,16 +1,16 @@
 import { authService } from "@FireBase"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
-import { FeedItems } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import { LocationIcon, ProfileIcon } from "icons"
 import { useFeedUploadModal } from "lib/hooks/useFeedUploadModal"
 import Image from "next/image"
-import React, { SetStateAction } from "react"
+import React, { SetStateAction, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH5, FlexBox, Margin } from "ui"
 
 type Props = {
-  feedData?: FeedItems
+  feedData?: FeedItem
   imagePreviewSrc: string
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   imageFile: File | undefined
@@ -156,23 +156,26 @@ export default function TextInput({
   const isDarkMode = useRecoilValue(darkModeState)
   const currentUserData = useRecoilValue(userDataState)
 
-  const {
-    isPrivate,
-    desc,
-    location,
-    isSubmit,
-    setIsSubmit,
-    EditToFireStore,
-    uploadToStorage,
-    setIsPrivate,
-    setLocation,
-    setDesc,
-  } = useFeedUploadModal(
-    feedData,
+  const [isSubmit, setIsSubmit] = useState(false)
+  const [desc, setDesc] = useState(feedData ? feedData.desc : "")
+  const [location, setLocation] = useState(feedData ? feedData.location : "")
+  const [isPrivate, setIsPrivate] = useState(
+    feedData ? feedData.isPrivate : false,
+  )
+
+  const resetInputs = () => {
+    setDesc("")
+    setIsPrivate(false)
+    setLocation("")
+  }
+
+  const { EditToFireStore, uploadToStorage } = useFeedUploadModal(
     imageFile,
     setImageFile,
     setIsFileExist,
     setIsOpen,
+    resetInputs,
+    setIsSubmit,
   )
 
   return (
@@ -192,10 +195,10 @@ export default function TextInput({
           event.preventDefault()
           setIsSubmit(true)
           if (feedData) {
-            EditToFireStore()
+            EditToFireStore(desc, location, isPrivate)
             return
           }
-          uploadToStorage()
+          uploadToStorage(desc, location, isPrivate)
         }}
       >
         <Style.InputSectionHeader>
@@ -260,10 +263,10 @@ export default function TextInput({
         onClick={() => {
           setIsSubmit(true)
           if (feedData) {
-            EditToFireStore()
+            EditToFireStore(desc, location, isPrivate, feedData)
             return
           }
-          uploadToStorage()
+          uploadToStorage(desc, location, isPrivate)
         }}
         about={isSubmit ? "none" : ""}
       >

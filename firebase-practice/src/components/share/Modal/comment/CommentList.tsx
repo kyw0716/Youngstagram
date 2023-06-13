@@ -1,4 +1,4 @@
-import { FeedItems, UserData, Comment } from "backend/dto"
+import { FeedItem, UserData, Comment } from "backend/dto"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -14,7 +14,7 @@ import axios from "axios"
 import Loading from "@share/Loading/Loading"
 
 type Props = {
-  feedData: FeedItems
+  feedData: FeedItem
   commentAreaRef: React.RefObject<HTMLDivElement>
 }
 

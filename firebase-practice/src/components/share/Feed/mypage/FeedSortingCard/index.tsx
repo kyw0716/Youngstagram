@@ -1,6 +1,6 @@
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import axios from "axios"
-import { FeedItems, UserData, UserInfo } from "backend/dto"
+import { FeedItem, UserData, UserInfo } from "backend/dto"
 import { ProfileIcon } from "icons"
 import Image from "next/image"
 import { SetStateAction, useEffect, useState } from "react"
@@ -12,7 +12,7 @@ import LikeCommentInfo from "./LikeCommentInfo"
 import ThreeDotMenu from "./ThreeDotMenu"
 
 type Props = {
-  feedData: FeedItems
+  feedData: FeedItem
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>

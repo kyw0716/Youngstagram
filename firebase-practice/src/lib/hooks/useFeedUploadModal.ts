@@ -1,7 +1,7 @@
 import { DBService, authService, storageService } from "@FireBase"
 import { mainFeedItemsAtom } from "@share/recoil/feed"
 import { userDataState } from "@share/recoil/recoilList"
-import { FeedItems } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -16,24 +16,22 @@ import { useSetRecoilState } from "recoil"
 import { v4 } from "uuid"
 
 export const useFeedUploadModal = (
-  feedData: FeedItems | undefined,
   imageFile: File | undefined,
-  setImageFile: React.Dispatch<SetStateAction<File | undefined>>,
-  setIsFileExist: React.Dispatch<SetStateAction<boolean>>,
-  setIsOpen: (isOpen: boolean) => void,
+  setImageFile?: React.Dispatch<SetStateAction<File | undefined>>,
+  setIsFileExist?: React.Dispatch<SetStateAction<boolean>>,
+  setIsOpen?: (isOpen: boolean) => void,
+  resetInputs?: () => void,
+  setIsSubmit?: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
   const randomId = v4()
 
   const setMainFeedItems = useSetRecoilState(mainFeedItemsAtom)
 
-  const [isSubmit, setIsSubmit] = useState(false)
-  const [desc, setDesc] = useState(feedData ? feedData.desc : "")
-  const [location, setLocation] = useState(feedData ? feedData.location : "")
-  const [isPrivate, setIsPrivate] = useState(
-    feedData ? feedData.isPrivate : false,
-  )
-
-  const uploadToStorage = async () => {
+  const uploadToStorage = async (
+    desc: string,
+    location: string,
+    isPrivate: boolean,
+  ) => {
     const storageRef = ref(
       storageService,
       `images/${authService.currentUser?.uid}/${randomId}`,
@@ -43,7 +41,7 @@ export const useFeedUploadModal = (
         .then(
           async () =>
             await getDownloadURL(storageRef).then(async (response) => {
-              uploadToFirestore(response)
+              uploadToFirestore(response, desc, location, isPrivate)
             }),
         )
         .catch((error) => {
@@ -51,14 +49,21 @@ export const useFeedUploadModal = (
         })
   }
 
-  const uploadToFirestore = async (downloadUrl: string) => {
-    const feed: FeedItems = {
+  const uploadToFirestore = async (
+    downloadUrl: string,
+    desc: string,
+    location: string,
+    isPrivate: boolean,
+    storageId?: string,
+    uploadTime?: string,
+  ) => {
+    const feed: FeedItem = {
       imageUrl: downloadUrl,
       desc: desc,
       location: location,
       isPrivate: isPrivate,
-      storageId: feedData?.storageId ? feedData.storageId : randomId,
-      uploadTime: feedData?.uploadTime ? feedData.uploadTime : getCurrentTime(),
+      storageId: storageId ?? randomId,
+      uploadTime: uploadTime ?? getCurrentTime(),
       creator: `${authService.currentUser?.uid}`,
     }
 
@@ -81,14 +86,13 @@ export const useFeedUploadModal = (
         }
       })
       .then(() => {
-        setIsOpen(false)
-        setIsSubmit(false)
-        if (feedData) return
-        setDesc("")
-        setIsPrivate(false)
-        setLocation("")
-        setImageFile(undefined)
-        setIsFileExist(false)
+        setIsOpen?.(false)
+        resetInputs?.()
+        setIsSubmit?.(false)
+        if (storageId) return
+        resetInputs?.()
+        setImageFile?.(undefined)
+        setIsFileExist?.(false)
       })
     await updateDoc(firestorePersonalRef, {
       feed: arrayUnion(feed),
@@ -101,7 +105,12 @@ export const useFeedUploadModal = (
     })
   }
 
-  const EditToFireStore = async () => {
+  const EditToFireStore = async (
+    desc: string,
+    location: string,
+    isPrivate: boolean,
+    feedData?: FeedItem,
+  ) => {
     if (feedData === undefined) return
     const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
     const firestorePersonalRef = doc(
@@ -109,7 +118,7 @@ export const useFeedUploadModal = (
       "users",
       `${authService.currentUser?.uid}`,
     )
-    const feed: FeedItems = {
+    const feed: FeedItem = {
       imageUrl: feedData.imageUrl,
       desc: feedData.desc,
       location: feedData.location,
@@ -133,21 +142,20 @@ export const useFeedUploadModal = (
       feed: arrayRemove(feed),
     })
       .then(async () => {
-        await uploadToFirestore(feedData.imageUrl)
+        await uploadToFirestore(
+          feedData.imageUrl,
+          desc,
+          location,
+          isPrivate,
+          feedData.storageId,
+          feedData.uploadTime,
+        )
       })
       .catch((error) => console.log(error.code))
   }
 
   return {
-    isPrivate,
-    desc,
-    location,
-    isSubmit,
-    setIsSubmit,
     EditToFireStore,
     uploadToStorage,
-    setIsPrivate,
-    setLocation,
-    setDesc,
   }
 }

@@ -1,6 +1,6 @@
 import { SetStateAction, useState } from "react"
 import ModalForImageUpload from "./ModalForFeedUpload"
-import { FeedItems } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import useWindowSize from "lib/hooks/useWindowSize"
 import TextInput from "./TextInput"
 import ImageInput from "./ImageInput"
@@ -8,7 +8,7 @@ import ImageInput from "./ImageInput"
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
-  feedData?: FeedItems
+  feedData?: FeedItem
 }
 
 export default function FeedUploadModal({

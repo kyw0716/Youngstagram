@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { FeedItems } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -35,14 +35,14 @@ import type { NextApiRequest, NextApiResponse } from "next"
 
 export default async function getFeed(
   req: NextApiRequest,
-  res: NextApiResponse<FeedItems[] | string>,
+  res: NextApiResponse<FeedItem[] | string>,
 ) {
   if (req.method === "GET") {
     const getFeedRef = doc(DBService, "mainPage", "userFeedDataAll")
     const docSnapShot = await getDoc(getFeedRef)
 
     if (docSnapShot.exists()) {
-      const data = docSnapShot.data()?.feed as FeedItems[]
+      const data = docSnapShot.data()?.feed as FeedItem[]
       res
         .status(200)
         .json(
@@ -71,7 +71,7 @@ export default async function getFeed(
     const firestorePersonalRef = doc(DBService, "users", `${creator}`)
 
     if (!uploadTime) {
-      const feed: FeedItems = {
+      const feed: FeedItem = {
         imageUrl: imageUrl,
         desc: desc,
         location: location,
@@ -107,7 +107,7 @@ export default async function getFeed(
 
       res.status(200).json("Success")
     } else {
-      const feedToRemove: FeedItems = {
+      const feedToRemove: FeedItem = {
         imageUrl: imageUrl,
         desc: desc,
         location: location,
@@ -116,7 +116,7 @@ export default async function getFeed(
         creator: creator,
         uploadTime: uploadTime,
       }
-      const newFeed: FeedItems = {
+      const newFeed: FeedItem = {
         imageUrl: imageUrl,
         desc: newDesc,
         location: newLocation,
@@ -155,12 +155,12 @@ export default async function getFeed(
       storageId,
       creator,
       uploadTime,
-    } = req.body as FeedItems
+    } = req.body as FeedItem
 
     const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
     const firestorePersonalRef = doc(DBService, "users", `${creator}`)
 
-    const feed: FeedItems = {
+    const feed: FeedItem = {
       imageUrl: imageUrl,
       desc: desc,
       location: location,
