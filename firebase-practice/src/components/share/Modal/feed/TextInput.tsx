@@ -2,7 +2,7 @@ import { authService } from "@FireBase"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { FeedItem } from "backend/dto"
 import { LocationIcon, ProfileIcon } from "icons"
-import { useFeedUploadModal } from "lib/hooks/useFeedUploadModal"
+import { useFeedCRUD } from "lib/hooks/useFeedCRUD"
 import Image from "next/image"
 import React, { SetStateAction, useState } from "react"
 import { useRecoilValue } from "recoil"
@@ -169,14 +169,14 @@ export default function TextInput({
     setLocation("")
   }
 
-  const { EditToFireStore, uploadToStorage } = useFeedUploadModal(
+  const { EditToFireStore, uploadToStorage } = useFeedCRUD({
     imageFile,
     setImageFile,
     setIsFileExist,
     setIsOpen,
     resetInputs,
     setIsSubmit,
-  )
+  })
 
   return (
     <Style.TextInputModeWrapper>

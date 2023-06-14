@@ -37,9 +37,7 @@ export default function FeedList({
     <Style.ImageContainer>
       {feedItems.length !== 0 ? (
         feedItems
-          // .sort(function (a, b) {
-          //   return Number(b.uploadTime) - Number(a.uploadTime)
-          // })
+          .filter((feed) => !feed.isPrivate)
           .map((data, index) => {
             return (
               <FeedCard

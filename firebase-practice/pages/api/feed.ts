@@ -45,11 +45,7 @@ export default async function getFeed(
       const data = docSnapShot.data()?.feed as FeedItem[]
       res
         .status(200)
-        .json(
-          data
-            .filter((feedItem) => !feedItem.isPrivate)
-            .sort((a, b) => Number(a.uploadTime) - Number(b.uploadTime)),
-        )
+        .json(data.sort((a, b) => Number(b.uploadTime) - Number(a.uploadTime)))
     } else {
       res.status(500).json("Fail")
     }
@@ -72,12 +68,12 @@ export default async function getFeed(
 
     if (!uploadTime) {
       const feed: FeedItem = {
-        imageUrl: imageUrl,
-        desc: desc,
-        location: location,
-        isPrivate: isPrivate,
-        storageId: storageId,
-        creator: creator,
+        imageUrl,
+        desc,
+        location,
+        isPrivate,
+        storageId,
+        creator,
         uploadTime: getCurrentTime(),
       }
 
@@ -108,22 +104,22 @@ export default async function getFeed(
       res.status(200).json("Success")
     } else {
       const feedToRemove: FeedItem = {
-        imageUrl: imageUrl,
-        desc: desc,
-        location: location,
-        isPrivate: isPrivate,
-        storageId: storageId,
-        creator: creator,
-        uploadTime: uploadTime,
+        imageUrl,
+        desc,
+        location,
+        isPrivate,
+        storageId,
+        creator,
+        uploadTime,
       }
       const newFeed: FeedItem = {
-        imageUrl: imageUrl,
+        imageUrl,
         desc: newDesc,
         location: newLocation,
         isPrivate: newIsPrivate,
-        storageId: storageId,
-        creator: creator,
-        uploadTime: uploadTime,
+        storageId,
+        creator,
+        uploadTime,
       }
 
       await updateDoc(firestoreAllRef, {
@@ -161,13 +157,13 @@ export default async function getFeed(
     const firestorePersonalRef = doc(DBService, "users", `${creator}`)
 
     const feed: FeedItem = {
-      imageUrl: imageUrl,
-      desc: desc,
-      location: location,
-      isPrivate: isPrivate,
-      storageId: storageId,
-      creator: creator,
-      uploadTime: uploadTime,
+      imageUrl,
+      desc,
+      location,
+      isPrivate,
+      storageId,
+      creator,
+      uploadTime,
     }
 
     await updateDoc(firestoreAllRef, {

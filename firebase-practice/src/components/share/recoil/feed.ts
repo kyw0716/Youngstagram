@@ -11,10 +11,6 @@ export const mainFeedItemsAtom = atom<FeedItem[]>({
           method: "GET",
         }).then<FeedItem[]>((response) => response.json())
 
-        feedItems.sort(function (a, b) {
-          return Number(b.uploadTime) - Number(a.uploadTime)
-        })
-
         setSelf(feedItems)
       }
 
