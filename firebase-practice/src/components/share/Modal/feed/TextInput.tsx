@@ -195,7 +195,7 @@ export default function TextInput({
           event.preventDefault()
           setIsSubmit(true)
           if (feedData) {
-            EditToFireStore(desc, location, isPrivate)
+            EditToFireStore(desc, location, isPrivate, feedData)
             return
           }
           uploadToStorage(desc, location, isPrivate)

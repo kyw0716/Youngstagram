@@ -7,7 +7,6 @@ import {
   arrayUnion,
   deleteDoc,
   doc,
-  setDoc,
   updateDoc,
 } from "firebase/firestore"
 import {
@@ -16,8 +15,7 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage"
-import getCurrentTime from "lib/getCurrentTime"
-import { SetStateAction, useState } from "react"
+import { SetStateAction } from "react"
 import { useSetRecoilState } from "recoil"
 import { v4 } from "uuid"
 
@@ -29,6 +27,15 @@ interface Params {
   resetInputs?: () => void
   setIsSubmit?: React.Dispatch<React.SetStateAction<boolean>>
   handleThreeDotMenuClick?: () => void
+}
+
+interface UploadToFirestoreParams {
+  downloadUrl: string
+  desc: string
+  location: string
+  isPrivate: boolean
+  storageId?: string
+  uploadTime?: string
 }
 
 export const useFeedCRUD = ({
@@ -58,8 +65,13 @@ export const useFeedCRUD = ({
       await uploadBytes(storageRef, imageFile)
         .then(
           async () =>
-            await getDownloadURL(storageRef).then(async (response) => {
-              uploadToFirestore(response, desc, location, isPrivate)
+            await getDownloadURL(storageRef).then(async (downloadUrl) => {
+              uploadToFirestore({
+                downloadUrl,
+                desc,
+                location,
+                isPrivate,
+              })
             }),
         )
         .catch((error) => {
@@ -67,21 +79,21 @@ export const useFeedCRUD = ({
         })
   }
 
-  const uploadToFirestore = async (
-    downloadUrl: string,
-    desc: string,
-    location: string,
-    isPrivate: boolean,
-    storageId?: string,
-    uploadTime?: string,
-  ) => {
+  const uploadToFirestore = async ({
+    downloadUrl,
+    desc,
+    location,
+    isPrivate,
+    storageId,
+    uploadTime,
+  }: UploadToFirestoreParams) => {
     const feed: FeedItem = {
       imageUrl: downloadUrl,
       desc,
       location,
       isPrivate,
       storageId: storageId ?? randomId,
-      uploadTime: uploadTime ?? getCurrentTime(),
+      uploadTime: uploadTime ?? "new feed",
       creator: `${authService.currentUser?.uid}`,
     }
 
@@ -93,60 +105,31 @@ export const useFeedCRUD = ({
       }
     })
 
-    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
-    const firestorePersonalRef = doc(
-      DBService,
-      "users",
-      `${authService.currentUser?.uid}`,
-    )
+    // TODO: 여기서 서버랑 동기화 시키기
+    fetch(`/api/feed`, {
+      method: "POST",
+      body: JSON.stringify(feed),
+    })
 
-    updateDoc(firestoreAllRef, {
-      feed: arrayUnion(feed),
-    })
-      .catch((error) => {
-        if (error.code === "not-found") {
-          setDoc(firestoreAllRef, {
-            feed: [feed],
-          })
-        }
-      })
-      .then(() => {
-        setIsOpen?.(false)
-        resetInputs?.()
-        setIsSubmit?.(false)
-        if (storageId) return
-        resetInputs?.()
-        setImageFile?.(undefined)
-        setIsFileExist?.(false)
-      })
-    updateDoc(firestorePersonalRef, {
-      feed: arrayUnion(feed),
-    }).catch((error) => {
-      if (error.code === "not-found") {
-        setDoc(firestorePersonalRef, {
-          feed: [feed],
-        })
-      }
-    })
+    setIsOpen?.(false)
+    resetInputs?.()
+    setIsSubmit?.(false)
+    if (storageId) return
+    resetInputs?.()
+    setImageFile?.(undefined)
+    setIsFileExist?.(false)
   }
 
   const EditToFireStore = async (
     desc: string,
     location: string,
     isPrivate: boolean,
-    feedData?: FeedItem,
+    feedData: FeedItem,
   ) => {
-    if (feedData === undefined) return
-    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
-    const firestorePersonalRef = doc(
-      DBService,
-      "users",
-      `${authService.currentUser?.uid}`,
-    )
-
     setMainFeedItems((feedItems) =>
       feedItems.map((feedItem) => {
-        if (feedItem.storageId === feedData.storageId) return feedData
+        if (feedItem.storageId === feedData.storageId)
+          return { ...feedData, desc, location, isPrivate }
         return feedItem
       }),
     )
@@ -155,29 +138,38 @@ export const useFeedCRUD = ({
       return {
         ...userData,
         feed: userData.feed.map((feedItem) => {
-          if (feedItem.storageId === feedData.storageId) return feedData
+          if (feedItem.storageId === feedData.storageId)
+            return { ...feedData, desc, location, isPrivate }
           return feedItem
         }),
       }
     })
 
-    updateDoc(firestorePersonalRef, {
-      feed: arrayRemove(feedData),
-    }).catch((error) => console.log(error.code))
-    updateDoc(firestoreAllRef, {
-      feed: arrayRemove(feedData),
+    console.log({
+      ...feedData,
+      newDesc: desc,
+      newLocation: location,
+      newIsPrivate: isPrivate,
     })
-      .then(() => {
-        uploadToFirestore(
-          feedData.imageUrl,
-          desc,
-          location,
-          isPrivate,
-          feedData.storageId,
-          feedData.uploadTime,
-        )
-      })
-      .catch((error) => console.log(error.code))
+
+    // TODO: 여기서 서버랑 동기화 시키기
+    fetch(`/api/feed`, {
+      method: "POST",
+      body: JSON.stringify({
+        ...feedData,
+        newDesc: desc,
+        newLocation: location,
+        newIsPrivate: isPrivate,
+      }),
+    })
+
+    setIsOpen?.(false)
+    resetInputs?.()
+    setIsSubmit?.(false)
+    if (feedData.storageId) return
+    resetInputs?.()
+    setImageFile?.(undefined)
+    setIsFileExist?.(false)
   }
 
   const handleDeleteFeed = (feedData: FeedItem) => {

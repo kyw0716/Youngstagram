@@ -160,7 +160,6 @@ export default function Header() {
               <LineMenuIcon width={30} height={30} />
             ) : (
               <>
-                {/* TODO: userData에 info가 undefined일 경우 처리하기 */}
                 {userData &&
                 userData.info.profileImage !== "" &&
                 userData.info.profileImage !== null ? (
