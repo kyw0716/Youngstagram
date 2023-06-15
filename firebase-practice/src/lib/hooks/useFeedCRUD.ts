@@ -108,7 +108,7 @@ export const useFeedCRUD = ({
 
     // TODO: 여기서 서버랑 동기화 시키기
     axios.post(`/api/feed`, {
-      body: JSON.stringify(feed),
+      feed,
     })
 
     setIsOpen?.(false)
@@ -145,21 +145,12 @@ export const useFeedCRUD = ({
       }
     })
 
-    console.log({
+    // TODO: 여기서 서버랑 동기화 시키기
+    axios.post(`/api/feed`, {
       ...feedData,
       newDesc: desc,
       newLocation: location,
       newIsPrivate: isPrivate,
-    })
-
-    // TODO: 여기서 서버랑 동기화 시키기
-    axios.post(`/api/feed`, {
-      body: JSON.stringify({
-        ...feedData,
-        newDesc: desc,
-        newLocation: location,
-        newIsPrivate: isPrivate,
-      }),
     })
 
     setIsOpen?.(false)

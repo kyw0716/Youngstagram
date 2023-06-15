@@ -47,7 +47,7 @@ export default async function getFeed(
         .status(200)
         .json(data.sort((a, b) => Number(b.uploadTime) - Number(a.uploadTime)))
     } else {
-      res.status(500).json("Fail")
+      res.status(404).json("not found")
     }
   } else if (req.method === "POST") {
     const {
@@ -58,7 +58,7 @@ export default async function getFeed(
       storageId,
       creator,
       uploadTime,
-    } = JSON.parse(req.body)
+    } = req.body
 
     const firestoreRef = doc(DBService, "mainPage", `userFeedDataAll`)
 
@@ -88,9 +88,7 @@ export default async function getFeed(
       })
     }
     if (!isNewFeed) {
-      const { newDesc, newLocation, newIsPrivate } = JSON.parse(req.body)
-
-      console.log(req.body)
+      const { newDesc, newLocation, newIsPrivate } = req.body
 
       const feedToRemove: FeedItem = {
         imageUrl,
@@ -130,7 +128,7 @@ export default async function getFeed(
       storageId,
       creator,
       uploadTime,
-    } = JSON.parse(req.body) as FeedItem
+    } = req.body as FeedItem
 
     const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
 
