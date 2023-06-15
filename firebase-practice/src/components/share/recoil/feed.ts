@@ -1,3 +1,4 @@
+import axios from "axios"
 import { FeedItem } from "backend/dto"
 import { atom } from "recoil"
 
@@ -7,9 +8,9 @@ export const mainFeedItemsAtom = atom<FeedItem[]>({
   effects: [
     ({ setSelf, trigger }) => {
       const getFeedItems = async () => {
-        const feedItems = await fetch("/api/feed", {
+        const feedItems = await axios("/api/feed", {
           method: "GET",
-        }).then<FeedItem[]>((response) => response.json())
+        }).then<FeedItem[]>((response) => response.data)
 
         setSelf(feedItems)
       }

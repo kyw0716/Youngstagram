@@ -1,6 +1,7 @@
 import { DBService, authService, storageService } from "@FireBase"
 import { mainFeedItemsAtom } from "@share/recoil/feed"
 import { userDataState } from "@share/recoil/recoilList"
+import axios from "axios"
 import { FeedItem } from "backend/dto"
 import {
   arrayRemove,
@@ -106,8 +107,7 @@ export const useFeedCRUD = ({
     })
 
     // TODO: 여기서 서버랑 동기화 시키기
-    fetch(`/api/feed`, {
-      method: "POST",
+    axios.post(`/api/feed`, {
       body: JSON.stringify(feed),
     })
 
@@ -153,8 +153,7 @@ export const useFeedCRUD = ({
     })
 
     // TODO: 여기서 서버랑 동기화 시키기
-    fetch(`/api/feed`, {
-      method: "POST",
+    axios.post(`/api/feed`, {
       body: JSON.stringify({
         ...feedData,
         newDesc: desc,

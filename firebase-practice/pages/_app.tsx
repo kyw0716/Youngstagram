@@ -24,12 +24,12 @@ const SetCurrnentUser = () => {
       if (user) {
         const userId = user.uid
 
-        const userInfo = await fetch(`/api/profile?userId=${userId}`).then<
+        const userInfo = await axios(`/api/profile?userId=${userId}`).then<
           Omit<UserData, "feed">
-        >((res) => res.json())
-        const userFeeds = await fetch(`/api/userFeed?userId=${userId}`).then<
+        >((res) => res.data)
+        const userFeeds = await axios(`/api/userFeed?userId=${userId}`).then<
           FeedItem[]
-        >((res) => res.json())
+        >((res) => res.data)
 
         setCurrentUser({ ...userInfo, feed: userFeeds })
       }
