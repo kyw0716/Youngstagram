@@ -112,7 +112,7 @@ export const useFeedCRUD = ({
 
     // TODO: 여기서 서버랑 동기화 시키기
     axios.post(`/api/feed`, {
-      feed,
+      ...feed,
     })
 
     setIsOpen?.(false)
