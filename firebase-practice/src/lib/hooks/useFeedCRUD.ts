@@ -17,7 +17,7 @@ import {
   uploadBytes,
 } from "firebase/storage"
 import { SetStateAction } from "react"
-import { useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { v4 } from "uuid"
 
 interface Params {
@@ -50,6 +50,7 @@ export const useFeedCRUD = ({
 }: Params) => {
   const randomId = v4()
 
+  const currentUser = useRecoilValue(userDataState)
   const setMainFeedItems = useSetRecoilState(mainFeedItemsAtom)
   const setCurrentUserData = useSetRecoilState(userDataState)
 
@@ -88,7 +89,7 @@ export const useFeedCRUD = ({
     storageId,
     uploadTime,
   }: UploadToFirestoreParams) => {
-    const feed: FeedItem = {
+    const feed = {
       imageUrl: downloadUrl,
       desc,
       location,
@@ -98,11 +99,14 @@ export const useFeedCRUD = ({
       creator: `${authService.currentUser?.uid}`,
     }
 
-    setMainFeedItems((feedItems) => [feed, ...feedItems])
+    setMainFeedItems((feedItems) => [
+      { ...feed, creator: currentUser.info },
+      ...feedItems,
+    ])
     setCurrentUserData((userData) => {
       return {
         ...userData,
-        feed: [feed, ...userData.feed],
+        feed: [{ ...feed, creator: currentUser.info }, ...userData.feed],
       }
     })
 

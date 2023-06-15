@@ -1,5 +1,5 @@
 import { DBService } from "@FireBase"
-import { FeedItem } from "backend/dto"
+import { FeedItem, UserInfo } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
@@ -43,9 +43,29 @@ export default async function getFeed(
 
     if (docSnapShot.exists()) {
       const data = docSnapShot.data()?.feed as FeedItem[]
+
+      const feedItems = await Promise.all(
+        data.map(async (feedItem) => {
+          const userId = feedItem.creator
+          const getUserInfoRef = doc(DBService, "users", `${userId}`)
+          const userInfoDocSnapShot = await getDoc(getUserInfoRef)
+
+          const userInfo = userInfoDocSnapShot.data()?.info as UserInfo
+
+          return {
+            ...feedItem,
+            creator: {
+              ...userInfo,
+            },
+          }
+        }),
+      )
+
       res
         .status(200)
-        .json(data.sort((a, b) => Number(b.uploadTime) - Number(a.uploadTime)))
+        .json(
+          feedItems.sort((a, b) => Number(b.uploadTime) - Number(a.uploadTime)),
+        )
     } else {
       res.status(404).json("not found")
     }

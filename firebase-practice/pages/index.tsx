@@ -10,17 +10,11 @@ import {
   userDataState,
   userListState,
 } from "@share/recoil/recoilList"
-import { useRouter } from "next/router"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
 import Loading from "@share/Loading/Loading"
-import { mainFeedItemsAtom } from "@share/recoil/feed"
 
 const Home: NextPage = () => {
-  const router = useRouter()
-
-  const feedData = useRecoilValue(mainFeedItemsAtom)
-
   const currentUserData = useRecoilValue(userDataState)
 
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
@@ -54,7 +48,6 @@ const Home: NextPage = () => {
       <Margin direction="column" size={15} />
       {currentUserData.info.userId !== "" ? (
         <FeedList
-          feedItems={feedData}
           setIsCommentModalOpen={setIsCommentModalOpen}
           setIsLikeModalOpen={setIsLikeModalOpen}
         />

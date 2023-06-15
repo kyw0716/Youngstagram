@@ -8,9 +8,9 @@ export const mainFeedItemsAtom = atom<FeedItem[]>({
   effects: [
     ({ setSelf, trigger }) => {
       const getFeedItems = async () => {
-        const feedItems = await axios("/api/feed", {
-          method: "GET",
-        }).then<FeedItem[]>((response) => response.data)
+        const feedItems = await axios
+          .get("/api/feed")
+          .then<FeedItem[]>((response) => response.data)
 
         setSelf(feedItems)
       }

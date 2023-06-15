@@ -14,7 +14,7 @@ export type FeedItem = {
   location: string
   isPrivate: boolean
   storageId: string
-  creator: string
+  creator: UserInfo
   uploadTime: string
 }
 

@@ -10,7 +10,6 @@ import { ProfileIcon } from "icons"
 import Desc from "./Desc"
 import LikeCommentInfo from "./LikeCommentInfo"
 import Link from "next/link"
-import axios from "axios"
 
 type Props = {
   feedData: FeedItem
@@ -73,102 +72,89 @@ export default function FeedCard({
   setIsLikeModalOpen,
 }: Props) {
   const router = useRouter()
-  const [feedCreatorData, setFeedCreatorData] = useState<UserData>()
+
   const currentUser = useRecoilValue(userDataState)
   const [routingPath, setRoutingPath] = useState<string>("")
   const isDarkMode = useRecoilValue(darkModeState)
-
-  useEffect(() => {
-    axios<UserData>({
-      method: "GET",
-      url: `/api/profile?userId=${feedData.creator}`,
-    }).then((response) => {
-      setFeedCreatorData(response.data)
-    })
-  }, [feedData])
 
   useEffect(() => {
     if (routingPath !== "") router.replace(`${routingPath}`)
   }, [routingPath])
 
   return (
-    <>
-      {feedCreatorData && (
-        <Style.ImageCard
-          style={{
-            border: isDarkMode ? "1px solid lightgrey" : "",
-            backgroundColor: isDarkMode ? "black" : "",
-          }}
+    <Style.ImageCard
+      style={{
+        border: isDarkMode ? "1px solid lightgrey" : "",
+        backgroundColor: isDarkMode ? "black" : "",
+      }}
+    >
+      <Style.ImageHeader>
+        <FlexBox
+          width={"fit-content"}
+          height={58}
+          gap={15}
+          alignItems={"center"}
         >
-          <Style.ImageHeader>
-            <FlexBox
-              width={"fit-content"}
-              height={58}
-              gap={15}
-              alignItems={"center"}
+          {feedData.creator.profileImage ? (
+            <Link
+              href={
+                currentUser.info.userId === feedData.creator.userId
+                  ? "/mypage"
+                  : `/profile/${feedData.creator.userId}`
+              }
             >
-              {feedCreatorData?.info.profileImage ? (
-                <Link
-                  href={
-                    currentUser.info.userId === feedCreatorData.info.userId
-                      ? "/mypage"
-                      : `/profile/${feedCreatorData.info.userId}`
-                  }
-                >
-                  <FlexBox width={"fit-content"} height={"fit-content"}>
-                    <Image
-                      src={feedCreatorData.info.profileImage}
-                      alt="creator"
-                      width={38}
-                      height={38}
-                      style={{ borderRadius: 38, cursor: "pointer" }}
-                    />
-                  </FlexBox>
-                </Link>
-              ) : (
-                <ProfileIcon
+              <FlexBox width={"fit-content"} height={"fit-content"}>
+                <Image
+                  src={feedData.creator.profileImage}
+                  alt="creator"
                   width={38}
                   height={38}
-                  userId={feedCreatorData.info.userId}
+                  style={{ borderRadius: 38, cursor: "pointer" }}
                 />
-              )}
-              <Style.HeaderText>
-                <Style.UserName style={{ color: isDarkMode ? "white" : "" }}>
-                  {feedCreatorData?.info.name}
-                </Style.UserName>
-                <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
-              </Style.HeaderText>
-            </FlexBox>
-          </Style.ImageHeader>
-          {feedData.imageUrl ? (
-            <Image
-              src={feedData.imageUrl}
-              width={470}
-              height={600}
-              alt="Image"
-              priority
-            />
+              </FlexBox>
+            </Link>
           ) : (
-            <Image
-              src="https://giphy.com/embed/wnYB3vx9t6PXiq1ubB"
-              width={470}
-              height={600}
-              alt="Image"
+            <ProfileIcon
+              width={38}
+              height={38}
+              userId={feedData.creator.userId}
             />
           )}
-          <Margin direction="column" size={10} />
-          <LikeCommentInfo
-            feedData={feedData}
-            setIsCommentModalOpen={setIsCommentModalOpen}
-            setIsLikeModalOpen={setIsLikeModalOpen}
-          />
-          <Desc
-            feedData={feedData}
-            setIsCommentModalOpen={setIsCommentModalOpen}
-            name={feedCreatorData.info.name}
-          />
-        </Style.ImageCard>
+          <Style.HeaderText>
+            <Style.UserName style={{ color: isDarkMode ? "white" : "" }}>
+              {feedData.creator.name}
+            </Style.UserName>
+            <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
+          </Style.HeaderText>
+        </FlexBox>
+      </Style.ImageHeader>
+      {feedData.imageUrl ? (
+        <Image
+          src={feedData.imageUrl}
+          width={470}
+          height={600}
+          alt="Image"
+          priority
+        />
+      ) : (
+        <Image
+          src="https://giphy.com/embed/wnYB3vx9t6PXiq1ubB"
+          width={470}
+          height={600}
+          alt="Image"
+        />
       )}
-    </>
+      <Margin direction="column" size={10} />
+      <LikeCommentInfo
+        feedData={feedData}
+        setIsCommentModalOpen={setIsCommentModalOpen}
+        setIsLikeModalOpen={setIsLikeModalOpen}
+      />
+      <Desc
+        feedData={feedData}
+        setIsCommentModalOpen={setIsCommentModalOpen}
+        name={feedData.creator.name}
+      />
+    </Style.ImageCard>
   )
 }
