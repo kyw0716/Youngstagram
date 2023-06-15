@@ -1,5 +1,5 @@
 import type { NextPage } from "next"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { FlexBox, Margin } from "ui"
 import FeedList from "@share/Feed/mainPage/FeedList"
 import Layout from "components/layout"
@@ -46,7 +46,9 @@ const Home: NextPage = () => {
       {currentUserData?.follow !== undefined &&
         currentUserData.follow.length > 0 && (
           <FlexBox justifyContents="center">
-            <FollowListAtMainPage />
+            <Suspense fallback={<></>}>
+              <FollowListAtMainPage />
+            </Suspense>
           </FlexBox>
         )}
       <Margin direction="column" size={15} />

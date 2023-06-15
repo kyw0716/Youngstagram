@@ -178,6 +178,17 @@ export default function TextInput({
     setIsSubmit,
   })
 
+  const submitFeed = () => {
+    setIsSubmit(true)
+
+    if (feedData) {
+      EditToFireStore(desc, location, isPrivate, feedData)
+      return
+    }
+
+    uploadToStorage(desc, location, isPrivate)
+  }
+
   return (
     <Style.TextInputModeWrapper>
       <Style.SelectedImage
@@ -193,12 +204,8 @@ export default function TextInput({
       <Style.InputSection
         onSubmit={(event) => {
           event.preventDefault()
-          setIsSubmit(true)
-          if (feedData) {
-            EditToFireStore(desc, location, isPrivate, feedData)
-            return
-          }
-          uploadToStorage(desc, location, isPrivate)
+
+          submitFeed()
         }}
       >
         <Style.InputSectionHeader>
@@ -259,17 +266,7 @@ export default function TextInput({
           <LocationIcon width={16} height={16} />
         </Style.LocationInputSection>
       </Style.InputSection>
-      <Style.SubmitButton
-        onClick={() => {
-          setIsSubmit(true)
-          if (feedData) {
-            EditToFireStore(desc, location, isPrivate, feedData)
-            return
-          }
-          uploadToStorage(desc, location, isPrivate)
-        }}
-        about={isSubmit ? "none" : ""}
-      >
+      <Style.SubmitButton onClick={submitFeed} about={isSubmit ? "none" : ""}>
         공유하기
       </Style.SubmitButton>
     </Style.TextInputModeWrapper>
