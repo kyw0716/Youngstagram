@@ -36,3 +36,6 @@ yarn-error.log*
 
 # test page
 test.tsx
+
+# env
+.env

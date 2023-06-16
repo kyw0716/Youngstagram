@@ -4,13 +4,14 @@ import { getFirestore } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC7IT7tMtvVzSI2tj7JSPfdU3tZSgXCcG4",
-  authDomain: "fir-practice-d0e2e.firebaseapp.com",
-  projectId: "fir-practice-d0e2e",
-  storageBucket: "fir-practice-d0e2e.appspot.com",
-  messagingSenderId: "116460764746",
-  appId: "1:116460764746:web:73f450e7b7442ff3a230b3",
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
 }
+
 const FireBasApp = initializeApp(firebaseConfig)
 export const authService = getAuth(FireBasApp)
 export const DBService = getFirestore(FireBasApp)

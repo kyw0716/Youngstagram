@@ -25,7 +25,6 @@ import { v4 } from "uuid"
  * update : commentId, oldComment, uploadTime 모두 포함한 데이터 전송
  * new comment : userId, comment, feedId 만을 포함한 데이터 전송
  *
- *
  * method : DELETE
  * request url : /api/comment
  * request body : {commentId, comment, uploadTime, userId, feedId}
