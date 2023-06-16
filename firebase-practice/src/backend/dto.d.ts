@@ -52,5 +52,6 @@ export type UserData = {
   info: UserInfo
   follow: string[]
   follower: string[]
+  likeFeedIds: string[]
   feed: FeedItem[]
 }

@@ -10,11 +10,14 @@ import { ProfileIcon } from "icons"
 import Desc from "./Desc"
 import LikeCommentInfo from "./LikeCommentInfo"
 import Link from "next/link"
+import ThreeDotMenu from "@share/Feed/mypage/FeedSortingCard/ThreeDotMenu"
 
 type Props = {
   feedData: FeedItem
+  isCurrentUserFeed?: boolean
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>
+  setIsFeedUploadModalOpen?: React.Dispatch<SetStateAction<boolean>>
 }
 
 const Style = {
@@ -68,18 +71,13 @@ const Style = {
 
 export default function FeedCard({
   feedData,
+  isCurrentUserFeed,
   setIsCommentModalOpen,
   setIsLikeModalOpen,
+  setIsFeedUploadModalOpen,
 }: Props) {
-  const router = useRouter()
-
   const currentUser = useRecoilValue(userDataState)
-  const [routingPath, setRoutingPath] = useState<string>("")
   const isDarkMode = useRecoilValue(darkModeState)
-
-  useEffect(() => {
-    if (routingPath !== "") router.replace(`${routingPath}`)
-  }, [routingPath])
 
   return (
     <Style.ImageCard
@@ -127,6 +125,12 @@ export default function FeedCard({
             <Style.ImageTitle>{feedData.location}</Style.ImageTitle>
           </Style.HeaderText>
         </FlexBox>
+        {isCurrentUserFeed && setIsFeedUploadModalOpen && (
+          <ThreeDotMenu
+            feedData={feedData}
+            setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
+          />
+        )}
       </Style.ImageHeader>
       {feedData.imageUrl ? (
         <Image

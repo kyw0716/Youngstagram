@@ -20,6 +20,7 @@ export default async function profile(
 ) {
   if (req.method === "GET") {
     const userId = req.query?.userId
+
     const getProfileRef = doc(DBService, "users", `${userId}`)
     const docSnapShot = await getDoc(getProfileRef)
 
@@ -34,10 +35,10 @@ export default async function profile(
     const setProfileRef = doc(DBService, "users", `${userId}`)
 
     const profileForm: UserInfo = {
-      userId: userId,
-      profileImage: profileImage,
+      userId,
+      profileImage,
       name: userName,
-      email: email,
+      email,
     }
 
     await updateDoc(setProfileRef, {

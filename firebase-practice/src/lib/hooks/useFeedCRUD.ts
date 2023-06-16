@@ -167,15 +167,6 @@ export const useFeedCRUD = ({
   }
 
   const handleDeleteFeed = (feedData: FeedItem) => {
-    const storageImageRef = ref(
-      storageService,
-      `images/${feedData.creator}/${feedData.storageId}`,
-    )
-    const firestoreAllRef = doc(DBService, "mainPage", "userFeedDataAll")
-    const firestoreCommentRef = doc(DBService, "Comments", feedData.storageId)
-    const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
-    const firestoreLikeRef = doc(DBService, "like", feedData.storageId)
-
     setMainFeedItems((feedItems) =>
       feedItems.filter((feedItem) => feedItem.storageId !== feedData.storageId),
     )
@@ -193,22 +184,28 @@ export const useFeedCRUD = ({
 
     // TODO: 이 부분을 API 요청으로 대체하고, 요청 후 response에서 새로 바뀐 리스트를 반환해
     // 해당 리스트로 다시 recoil을 set해주도록 수정하기
-    updateDoc(firestorePersonalRef, {
-      feed: arrayRemove(feedData),
-    }).catch((error) => console.log(error.code))
 
-    updateDoc(firestoreAllRef, {
-      feed: arrayRemove(feedData),
-    }).catch((error) => console.log(error.code))
-
-    deleteObject(storageImageRef).catch((error) => console.log(error.code))
-    deleteDoc(firestoreCommentRef).catch((error) => console.log(error.code))
-    deleteDoc(firestoreLikeRef).catch((error) => console.log(error.code))
+    axios.delete(`/api/feed`, {
+      data: {
+        userId: currentUser.info.userId,
+        storageId: feedData.storageId,
+        imageUrl: feedData.imageUrl,
+        desc: feedData.desc,
+        location: feedData.location,
+        isPrivate: feedData.isPrivate,
+        creator: feedData.creator.userId,
+        uploadTime: feedData.uploadTime,
+      },
+    })
   }
 
   const handlePrivateToggle = (feedData: FeedItem) => {
     const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
-    const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
+    const firestorePersonalRef = doc(
+      DBService,
+      `users`,
+      `${feedData.creator.userId}`,
+    )
 
     setMainFeedItems((feedItems) =>
       feedItems.map((feedItem) => {

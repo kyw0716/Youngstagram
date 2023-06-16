@@ -32,9 +32,9 @@ export default function Icons({
     >
       <Margin direction="row" size={10} />
       {isCurrentUserLike ? (
-        <FullHeart storgateId={feedData.storageId} />
+        <FullHeart storageId={feedData.storageId} />
       ) : (
-        <HeartIcon storgateId={feedData.storageId} />
+        <HeartIcon storageId={feedData.storageId} />
       )}
       <Margin direction="row" size={15} />
       <CommentIcon

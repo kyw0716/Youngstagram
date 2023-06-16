@@ -7,10 +7,10 @@ import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH2Light, CustomH5Light } from "ui"
 import { v4 } from "uuid"
-import FeedSortingCard from "./FeedSortingCard"
+import FeedCard from "../mainPage/FeedCard"
 
 type Props = {
-  feedData: FeedItem[] | undefined
+  feeds: FeedItem[] | undefined
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>
@@ -34,7 +34,7 @@ const Style = {
 }
 
 export default function FeedSortList({
-  feedData,
+  feeds,
   setIsCommentModalOpen,
   setIsFeedUploadModalOpen,
   setIsUserListModalOpen: setIsLikeModalOpen,
@@ -48,17 +48,18 @@ export default function FeedSortList({
         <Loading width={470} height={750} borderRadius={10} count={2} />
       ) : (
         <>
-          {feedData !== undefined && feedData.length !== 0 ? (
+          {feeds !== undefined && feeds.length !== 0 ? (
             <>
-              {[...feedData]
+              {[...feeds]
                 .sort((a, b) => {
                   return Number(b.uploadTime) - Number(a.uploadTime)
                 })
-                .map((data) => {
+                .map((feed) => {
                   return (
-                    <FeedSortingCard
+                    <FeedCard
                       key={v4()}
-                      feedData={data}
+                      feedData={feed}
+                      isCurrentUserFeed={true}
                       setIsCommentModalOpen={setIsCommentModalOpen}
                       setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
                       setIsLikeModalOpen={setIsLikeModalOpen}

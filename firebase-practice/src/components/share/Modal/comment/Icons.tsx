@@ -64,9 +64,9 @@ export default function Icons({ storageId, inputRef }: Props) {
       <IconContainer>
         <Margin direction="row" size={10} />
         {isCurrentUserLiked ? (
-          <FullHeart storgateId={storageId} />
+          <FullHeart storageId={storageId} />
         ) : (
-          <HeartIcon storgateId={storageId} />
+          <HeartIcon storageId={storageId} />
         )}
         <Margin direction="row" size={15} />
         <CommentIcon

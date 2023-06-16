@@ -1,4 +1,5 @@
 import { DBService } from "@FireBase"
+import axios from "axios"
 import { FeedItem } from "backend/dto"
 import { doc, getDoc } from "firebase/firestore"
 import type { NextApiRequest, NextApiResponse } from "next"
@@ -14,15 +15,26 @@ export default async function getFeed(
   res: NextApiResponse<FeedItem[] | string>,
 ) {
   if (req.method === "GET") {
-    const getFeedRef = doc(DBService, "mainPage", "userFeedDataAll")
-    const docSnapShot = await getDoc(getFeedRef)
     const userId = req.query.userId
+
+    const getFeedRef = doc(DBService, "mainPage", "userFeedDataAll")
+    const getProfileRef = doc(DBService, "users", `${userId}`)
+
+    const docSnapShot = await getDoc(getFeedRef)
+    const userInfoDocSnapShot = await getDoc(getProfileRef)
 
     if (userId === undefined) res.status(400).json("userId query is missing")
 
     if (docSnapShot.exists()) {
-      const data = docSnapShot.data()?.feed as FeedItem[]
-      const userData = data.filter((feedItem) => feedItem.creator === userId)
+      const data = docSnapShot.data()?.feed as (Omit<FeedItem, "creator"> & {
+        creator: string
+      })[]
+      const userData = data
+        .filter((feedItem) => feedItem.creator === userId)
+        .map((feedItem) => ({
+          ...feedItem,
+          creator: userInfoDocSnapShot.data()?.info,
+        }))
 
       userData.sort((a, b) => Number(b.uploadTime) - Number(a.uploadTime))
 

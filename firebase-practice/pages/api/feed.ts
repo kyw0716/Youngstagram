@@ -3,6 +3,7 @@ import { FeedItem, UserInfo } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
+  deleteDoc,
   doc,
   getDoc,
   setDoc,
@@ -148,26 +149,37 @@ export default async function getFeed(
       storageId,
       creator,
       uploadTime,
-    } = req.body as FeedItem
+      userId,
+    } = req.body
 
-    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
+    const feedRef = doc(DBService, "mainPage", `userFeedDataAll`)
+    const userRef = doc(DBService, "users", `${userId}`)
+    const commentRef = doc(DBService, "Comments", `${storageId}`)
 
-    const feed: FeedItem = {
-      imageUrl,
-      desc,
-      location,
-      isPrivate,
-      storageId,
+    const feed: Omit<FeedItem, "creator"> & { creator: string } = {
       creator,
+      desc,
+      imageUrl,
+      isPrivate: isPrivate === "true",
+      location,
+      storageId,
       uploadTime,
     }
 
-    await updateDoc(firestoreAllRef, {
+    updateDoc(feedRef, {
       feed: arrayRemove(feed),
     }).catch((error) => {
       res.status(500).json(error.code)
     })
 
-    res.status(200).json("Success")
+    updateDoc(userRef, {
+      likeFeedIds: arrayRemove(storageId),
+    }).catch((error) => {
+      res.status(500).json(error.code)
+    })
+
+    deleteDoc(commentRef).catch((error) => {
+      res.status(500).json(error.code)
+    })
   }
 }

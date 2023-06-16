@@ -34,19 +34,18 @@ export default function Profile() {
   const currentUserData = useRecoilValue(userDataState)
 
   const feedDataType = useRecoilValue(FeedDataFilter)
-  const [feedData, setFeedData] = useState<FeedItem[]>([])
   const selectedFeedData = useRecoilValue(feedDataState)
-
-  const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
-  const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
   const likeUserList = useRecoilValue(userListState)
 
+  const [feedData, setFeedData] = useState<FeedItem[]>([])
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
+  const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
   const [isFeedUploadModalOpen, setIsFeedUploadModalOpen] =
     useState<boolean>(false)
 
   useEffect(() => {
-    if (currentUserData === undefined || currentUserData.feed === undefined)
-      return
+    if (currentUserData.feed === undefined) return
+
     if (feedDataType === "public") {
       setFeedData(
         currentUserData.feed.filter((eachFeed) => !eachFeed.isPrivate),
@@ -82,7 +81,7 @@ export default function Profile() {
         <ProfileHeader setIsUserListModalOpen={setIsUserListModalOpen} />
         {feedData !== undefined ? (
           <FeedSortList
-            feedData={feedData}
+            feeds={feedData}
             setIsCommentModalOpen={setIsCommentModalOpen}
             setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
             setIsUserListModalOpen={setIsUserListModalOpen}
