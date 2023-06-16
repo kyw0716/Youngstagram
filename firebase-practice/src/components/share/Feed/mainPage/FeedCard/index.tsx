@@ -1,7 +1,6 @@
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { FeedItem, UserData } from "backend/dto"
 import Image from "next/image"
-import { useRouter } from "next/router"
 import { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
@@ -10,7 +9,7 @@ import { ProfileIcon } from "icons"
 import Desc from "./Desc"
 import LikeCommentInfo from "./LikeCommentInfo"
 import Link from "next/link"
-import ThreeDotMenu from "@share/Feed/mypage/FeedSortingCard/ThreeDotMenu"
+import ThreeDotMenu from "@share/Feed/mypage/ThreeDotMenu"
 
 type Props = {
   feedData: FeedItem

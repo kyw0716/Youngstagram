@@ -10,7 +10,7 @@ import { v4 } from "uuid"
 import FeedCard from "../mainPage/FeedCard"
 
 type Props = {
-  feedData: FeedItem[] | undefined
+  feeds: FeedItem[] | undefined
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsUserListModalOpen: React.Dispatch<SetStateAction<boolean>>
@@ -34,7 +34,7 @@ const Style = {
 }
 
 export default function FeedSortList({
-  feedData: feeds,
+  feeds,
   setIsCommentModalOpen,
   setIsFeedUploadModalOpen,
   setIsUserListModalOpen: setIsLikeModalOpen,
