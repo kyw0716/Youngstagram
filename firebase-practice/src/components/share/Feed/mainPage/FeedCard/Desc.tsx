@@ -1,12 +1,12 @@
 import { darkModeState, feedDataState } from "@share/recoil/recoilList"
-import { FeedData } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import { SetStateAction } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { CustomH5, CustomH5Light, CustomH6, FlexBox, Margin } from "ui"
 
 type Props = {
-  feedData: FeedData
+  feedData: FeedItem
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
   name: string | null
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import debounce from "./debounce"
+import debounce from "../debounce"
 
 // TODO: 전역상태로 바꿔보기
 export default function useWindowSize() {

@@ -148,7 +148,7 @@ export default function Header() {
             <HomeIcon />
             <ImageUploadIcon
               onClick={() => {
-                if (userData !== undefined && userData.info.userId !== "") {
+                if (userData !== undefined && userData?.info.userId !== "") {
                   setIsModalOpen(true)
                   return
                 }
@@ -160,7 +160,8 @@ export default function Header() {
               <LineMenuIcon width={30} height={30} />
             ) : (
               <>
-                {userData.info.profileImage !== "" &&
+                {userData &&
+                userData.info.profileImage !== "" &&
                 userData.info.profileImage !== null ? (
                   <Image
                     src={userData.info.profileImage}

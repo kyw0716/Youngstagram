@@ -1,6 +1,4 @@
-import { DBService } from "@FireBase"
-import { FeedData, UserData, Comment } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
+import { FeedItem, UserData, Comment } from "backend/dto"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -12,9 +10,11 @@ import { useRecoilValue } from "recoil"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
 import { ProfileIcon } from "icons"
 import Link from "next/link"
+import axios from "axios"
+import Loading from "@share/Loading/Loading"
 
 type Props = {
-  feedData: FeedData
+  feedData: FeedItem
   commentAreaRef: React.RefObject<HTMLDivElement>
 }
 
@@ -67,11 +67,18 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
   const isDarkMode = useRecoilValue(darkModeState)
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "users", `${feedData.creator}`), (data) => {
-      if (data) setUserData(data.data() as UserData)
+    axios<UserData>({
+      method: "GET",
+      url: `/api/profile?userId=${feedData.creator}`,
+    }).then((response) => {
+      setUserData(response.data)
     })
-    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (data) => {
-      if (data) setCommentData(data.data()?.AllComments)
+
+    axios<Comment[]>({
+      method: "GET",
+      url: `/api/comment?commentId=${feedData.storageId}`,
+    }).then((response) => {
+      setCommentData(response.data)
     })
   }, [])
 
@@ -79,37 +86,47 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
     <>
       <Style.Header>
         <FlexBox width={32} height={32} style={{ flexShrink: 0 }}>
-          {userData?.info.profileImage ? (
-            <Link
-              href={
-                userData?.info.userId === currentUserData.info.userId
-                  ? "/mypage"
-                  : `/profile/${userData.info.userId}`
-              }
-            >
-              <FlexBox width={"fit-content"} height={"fit-content"}>
-                <Image
+          {userData?.info.profileImage === undefined ? (
+            <Loading width={32} height={32} borderRadius={32} />
+          ) : (
+            <>
+              {userData.info.profileImage !== null ? (
+                <Link
+                  href={
+                    userData?.info.userId === currentUserData.info.userId
+                      ? "/mypage"
+                      : `/profile/${userData.info.userId}`
+                  }
+                >
+                  <FlexBox width={"fit-content"} height={"fit-content"}>
+                    <Image
+                      width={32}
+                      height={32}
+                      style={{ borderRadius: "32px", cursor: "pointer" }}
+                      src={userData?.info.profileImage}
+                      alt="profile"
+                    />
+                  </FlexBox>
+                </Link>
+              ) : (
+                <ProfileIcon
                   width={32}
                   height={32}
-                  style={{ borderRadius: "32px", cursor: "pointer" }}
-                  src={userData?.info.profileImage}
-                  alt="profile"
+                  userId={userData?.info.userId}
                 />
-              </FlexBox>
-            </Link>
-          ) : (
-            <ProfileIcon
-              width={32}
-              height={32}
-              userId={userData?.info.userId}
-            />
+              )}
+            </>
           )}
         </FlexBox>
         <Margin direction="row" size={14} />
         <FlexBox column={true}>
-          <CustomH4 style={{ color: isDarkMode ? "white" : "black" }}>
-            {userData?.info.name}
-          </CustomH4>
+          {userData?.info.name === undefined ? (
+            <Loading width={100} height={15} />
+          ) : (
+            <CustomH4 style={{ color: isDarkMode ? "white" : "black" }}>
+              {userData?.info.name}
+            </CustomH4>
+          )}
           <CustomH6>{feedData.location}</CustomH6>
         </FlexBox>
       </Style.Header>
@@ -117,40 +134,47 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
       <Style.CommentWrapper>
         <Style.CommentAreaHeader>
           <FlexBox height={32} width={32} style={{ flexShrink: 0 }}>
-            {userData?.info.profileImage ? (
-              <Link
-                href={
-                  userData?.info.userId === currentUserData.info.userId
-                    ? "/mypage"
-                    : `/profile/${userData.info.userId}`
-                }
-              >
-                <FlexBox>
-                  <Image
+            {userData?.info.profileImage === undefined ? (
+              <Loading width={32} height={32} borderRadius={32} />
+            ) : (
+              <>
+                {userData.info.profileImage !== null ? (
+                  <Link
+                    href={
+                      userData?.info.userId === currentUserData.info.userId
+                        ? "/mypage"
+                        : `/profile/${userData.info.userId}`
+                    }
+                  >
+                    <FlexBox width={"fit-content"} height={"fit-content"}>
+                      <Image
+                        width={32}
+                        height={32}
+                        src={userData?.info.profileImage}
+                        alt="profile"
+                        onClick={() => {
+                          if (
+                            userData?.info.userId ===
+                            currentUserData.info.userId
+                          ) {
+                            router.push(`/mypage`)
+                            return
+                          }
+                          router.push(`/profile/${userData?.info.userId}`)
+                        }}
+                        style={{ borderRadius: "32px", cursor: "pointer" }}
+                        priority={true}
+                      />
+                    </FlexBox>
+                  </Link>
+                ) : (
+                  <ProfileIcon
                     width={32}
                     height={32}
-                    src={userData?.info.profileImage}
-                    alt="profile"
-                    onClick={() => {
-                      if (
-                        userData?.info.userId === currentUserData.info.userId
-                      ) {
-                        router.push(`/mypage`)
-                        return
-                      }
-                      router.push(`/profile/${userData?.info.userId}`)
-                    }}
-                    style={{ borderRadius: "32px", cursor: "pointer" }}
-                    priority={true}
+                    userId={userData?.info.userId}
                   />
-                </FlexBox>
-              </Link>
-            ) : (
-              <ProfileIcon
-                width={32}
-                height={32}
-                userId={userData?.info.userId}
-              />
+                )}
+              </>
             )}
           </FlexBox>
           <Margin direction="row" size={10} />
@@ -160,9 +184,13 @@ export default function CommentList({ feedData, commentAreaRef }: Props) {
             style={{ paddingRight: "20px", color: isDarkMode ? "white" : "" }}
           >
             <Margin direction="column" size={5} />
-            <CustomH4 style={{ color: isDarkMode ? "white" : "black" }}>
-              {userData?.info.name}
-            </CustomH4>
+            {userData?.info.name === undefined ? (
+              <Loading width={100} height={15} />
+            ) : (
+              <CustomH4 style={{ color: isDarkMode ? "white" : "black" }}>
+                {userData?.info.name}
+              </CustomH4>
+            )}
             {feedData.desc}
           </FlexBox>
         </Style.CommentAreaHeader>

@@ -1,25 +1,16 @@
-import { authService, DBService, storageService } from "@FireBase"
+import { authService } from "@FireBase"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
-import { FeedData } from "backend/dto"
-import {
-  arrayRemove,
-  arrayUnion,
-  doc,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore"
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { FeedItem } from "backend/dto"
 import { LocationIcon, ProfileIcon } from "icons"
-import getCurrentTime from "lib/getCurrentTime"
+import { useFeedCRUD } from "lib/hooks/useFeedCRUD"
 import Image from "next/image"
-import React, { SetStateAction, useEffect, useState } from "react"
+import React, { SetStateAction, useState } from "react"
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
 import { CustomH5, FlexBox, Margin } from "ui"
-import { v4 } from "uuid"
 
 type Props = {
-  feedData?: FeedData
+  feedData?: FeedItem
   imagePreviewSrc: string
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
   imageFile: File | undefined
@@ -163,117 +154,39 @@ export default function TextInput({
   setIsFileExist,
 }: Props) {
   const isDarkMode = useRecoilValue(darkModeState)
-  const [isSubmit, setIsSubmit] = useState<boolean>(false)
   const currentUserData = useRecoilValue(userDataState)
 
-  const [desc, setDesc] = useState<string>(feedData ? feedData.desc : "")
-  const [location, setLocation] = useState<string>(
-    feedData ? feedData.location : "",
-  )
-  const [isPrivate, setIsPrivate] = useState<boolean>(
+  const [isSubmit, setIsSubmit] = useState(false)
+  const [desc, setDesc] = useState(feedData ? feedData.desc : "")
+  const [location, setLocation] = useState(feedData ? feedData.location : "")
+  const [isPrivate, setIsPrivate] = useState(
     feedData ? feedData.isPrivate : false,
   )
-  const [randomId, setRandomId] = useState<string>(
-    feedData ? feedData.storageId : "",
-  )
 
-  useEffect(() => {
-    setRandomId(v4())
-  }, [])
-
-  const uploadToStorage = async () => {
-    const storageRef = ref(
-      storageService,
-      `images/${authService.currentUser?.uid}/${randomId}`,
-    )
-    if (imageFile !== undefined)
-      await uploadBytes(storageRef, imageFile)
-        .then(
-          async () =>
-            await getDownloadURL(storageRef).then(async (response) => {
-              uploadToFirestore(response)
-            }),
-        )
-        .catch((error) => {
-          console.log(error.code)
-        })
+  const resetInputs = () => {
+    setDesc("")
+    setIsPrivate(false)
+    setLocation("")
   }
 
-  const uploadToFirestore = async (downloadUrl: string) => {
-    const feed: FeedData = {
-      imageUrl: downloadUrl,
-      desc: desc,
-      location: location,
-      isPrivate: isPrivate,
-      storageId: feedData?.storageId ? feedData.storageId : randomId,
-      uploadTime: feedData?.uploadTime ? feedData.uploadTime : getCurrentTime(),
-      creator: `${authService.currentUser?.uid}`,
-    }
-    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
-    const firestorePersonalRef = doc(
-      DBService,
-      "users",
-      `${authService.currentUser?.uid}`,
-    )
-    await updateDoc(firestoreAllRef, {
-      feed: arrayUnion(feed),
-    })
-      .catch(async (error) => {
-        if (error.code === "not-found") {
-          await setDoc(firestoreAllRef, {
-            feed: [feed],
-          })
-        }
-      })
-      .then(() => {
-        setIsOpen(false)
-        setIsSubmit(false)
-        if (feedData) return
-        setDesc("")
-        setIsPrivate(false)
-        setLocation("")
-        setRandomId(v4())
-        setImageFile(undefined)
-        setIsFileExist(false)
-      })
-    await updateDoc(firestorePersonalRef, {
-      feed: arrayUnion(feed),
-    }).catch(async (error) => {
-      if (error.code === "not-found") {
-        await setDoc(firestorePersonalRef, {
-          feed: [feed],
-        })
-      }
-    })
-  }
+  const { EditToFireStore, uploadToStorage } = useFeedCRUD({
+    imageFile,
+    setImageFile,
+    setIsFileExist,
+    setIsOpen,
+    resetInputs,
+    setIsSubmit,
+  })
 
-  const EditToFireStore = async () => {
-    if (feedData === undefined) return
-    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
-    const firestorePersonalRef = doc(
-      DBService,
-      "users",
-      `${authService.currentUser?.uid}`,
-    )
-    const feed: FeedData = {
-      imageUrl: feedData.imageUrl,
-      desc: feedData.desc,
-      location: feedData.location,
-      isPrivate: feedData.isPrivate,
-      storageId: feedData.storageId,
-      uploadTime: feedData.uploadTime,
-      creator: feedData.creator,
+  const submitFeed = () => {
+    setIsSubmit(true)
+
+    if (feedData) {
+      EditToFireStore(desc, location, isPrivate, feedData)
+      return
     }
-    await updateDoc(firestorePersonalRef, {
-      feed: arrayRemove(feed),
-    }).catch((error) => console.log(error.code))
-    await updateDoc(firestoreAllRef, {
-      feed: arrayRemove(feed),
-    })
-      .then(async () => {
-        await uploadToFirestore(feedData.imageUrl)
-      })
-      .catch((error) => console.log(error.code))
+
+    uploadToStorage(desc, location, isPrivate)
   }
 
   return (
@@ -291,12 +204,8 @@ export default function TextInput({
       <Style.InputSection
         onSubmit={(event) => {
           event.preventDefault()
-          setIsSubmit(true)
-          if (feedData) {
-            EditToFireStore()
-            return
-          }
-          uploadToStorage()
+
+          submitFeed()
         }}
       >
         <Style.InputSectionHeader>
@@ -357,17 +266,7 @@ export default function TextInput({
           <LocationIcon width={16} height={16} />
         </Style.LocationInputSection>
       </Style.InputSection>
-      <Style.SubmitButton
-        onClick={() => {
-          setIsSubmit(true)
-          if (feedData) {
-            EditToFireStore()
-            return
-          }
-          uploadToStorage()
-        }}
-        about={isSubmit ? "none" : ""}
-      >
+      <Style.SubmitButton onClick={submitFeed} about={isSubmit ? "none" : ""}>
         공유하기
       </Style.SubmitButton>
     </Style.TextInputModeWrapper>

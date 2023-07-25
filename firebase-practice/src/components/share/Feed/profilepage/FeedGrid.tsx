@@ -1,12 +1,12 @@
-import { FeedData } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import styled from "styled-components"
 import FeedGridCard from "./FeedGridCard"
 import { v4 } from "uuid"
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 import { SetStateAction, useEffect, useState } from "react"
 
 type Props = {
-  feedDatas: FeedData[] | undefined
+  feedDatas: FeedItem[] | undefined
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
@@ -29,13 +29,13 @@ const Style = {
 export default function FeedGrid({ feedDatas, setIsCommentModalOpen }: Props) {
   const windowSize = useWindowSize()
   const [feedDataSortedByUploadTime, setFeedDataSortedByUploadTime] = useState<
-    FeedData[]
+    FeedItem[]
   >([])
   useEffect(() => {
     if (feedDatas === undefined) return
     if (feedDatas.length >= 0)
       setFeedDataSortedByUploadTime(
-        (JSON.parse(JSON.stringify(feedDatas)) as FeedData[]).sort(function (
+        (JSON.parse(JSON.stringify(feedDatas)) as FeedItem[]).sort(function (
           a,
           b,
         ) {

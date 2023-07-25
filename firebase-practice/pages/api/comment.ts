@@ -25,7 +25,6 @@ import { v4 } from "uuid"
  * update : commentId, oldComment, uploadTime 모두 포함한 데이터 전송
  * new comment : userId, comment, feedId 만을 포함한 데이터 전송
  *
- *
  * method : DELETE
  * request url : /api/comment
  * request body : {commentId, comment, uploadTime, userId, feedId}
@@ -38,7 +37,6 @@ export default async function getComment(
 ) {
   if (req.method === "GET") {
     const commentId = req.query?.commentId
-    console.log(commentId)
     const getCommentRef = doc(DBService, "Comments", `${commentId}`)
     const docSnapShot = await getDoc(getCommentRef)
 
@@ -46,7 +44,7 @@ export default async function getComment(
       const data = docSnapShot.data()?.AllComments
       res.status(200).json(data as Comment[])
     } else {
-      res.status(500).json("Fail")
+      res.status(200).json([])
     }
   }
   if (req.method === "POST") {

@@ -1,16 +1,17 @@
-import { FeedData } from "backend/dto"
-import React, { SetStateAction, useRef } from "react"
+import { FeedItem } from "backend/dto"
+import React, { SetStateAction, useEffect, useRef } from "react"
 import styled from "styled-components"
 import YoungstagramModal from "../YoungstagramModal"
 import CommentInput from "./Input"
-import useWindowSize from "lib/useWindowSize"
+import useWindowSize from "lib/hooks/useWindowSize"
 import CommentList from "./CommentList"
 import Icons from "./Icons"
+import Loading from "@share/Loading/Loading"
 
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<SetStateAction<boolean>>
-  feedData: FeedData
+  feedData: FeedItem
 }
 
 const Style = {
@@ -61,7 +62,11 @@ export default function CommentModal({ isOpen, setIsOpen, feedData }: Props) {
     >
       <Style.Wrapper>
         <Style.ImgWrapper>
-          <Style.Img src={feedData.imageUrl} alt="image" />
+          {feedData.imageUrl ? (
+            <Style.Img src={feedData.imageUrl} alt="image" />
+          ) : (
+            <Loading width={"100%"} height={"100%"} />
+          )}
         </Style.ImgWrapper>
         <Style.DetailContainer>
           <CommentList feedData={feedData} commentAreaRef={commentAreaRef} />

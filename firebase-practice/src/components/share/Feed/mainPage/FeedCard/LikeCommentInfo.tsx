@@ -1,12 +1,11 @@
-import { DBService } from "@FireBase"
 import {
   darkModeState,
   feedDataState,
   userDataState,
   userListState,
 } from "@share/recoil/recoilList"
-import { FeedData } from "backend/dto"
-import { doc, onSnapshot } from "firebase/firestore"
+import axios from "axios"
+import { Comment, FeedItem } from "backend/dto"
 import React, { SetStateAction, useEffect, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import {
@@ -20,7 +19,7 @@ import {
 } from "ui"
 
 type Props = {
-  feedData: FeedData
+  feedData: FeedItem
   setIsLikeModalOpen: React.Dispatch<SetStateAction<boolean>>
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
@@ -31,33 +30,30 @@ export default function LikeCommentInfo({
   setIsCommentModalOpen,
 }: Props) {
   const [commentData, setCommentData] = useState<Comment[]>([])
-  const [likerList, setLikerList] = useState<string[]>([])
   const currentUser = useRecoilValue(userDataState)
 
   const setLikeUserList = useSetRecoilState(userListState)
   const setSelectedFeedData = useSetRecoilState(feedDataState)
 
   const isDarkMode = useRecoilValue(darkModeState)
-  const [isCurrentUserLike, setIsCurrentUserLike] = useState<boolean>(false)
+  const [likeUserIds, setLikeUserIds] = useState<string[]>([])
 
   useEffect(() => {
-    onSnapshot(doc(DBService, "Comments", `${feedData.storageId}`), (doc) => {
-      setCommentData(doc.data()?.AllComments)
+    axios<Comment[]>({
+      method: "GET",
+      url: `/api/comment?commentId=${feedData.storageId}`,
     })
-    onSnapshot(doc(DBService, "like", `${feedData.storageId}`), (doc) => {
-      setLikerList(doc.data()?.likerList)
+      .then((res) => {
+        setCommentData(res.data)
+      })
+      .catch((error) => console.log(error))
+
+    axios.get(`/api/like?storageId=${feedData.storageId}`).then((response) => {
+      const likeUserIdsResponse = response.data
+
+      setLikeUserIds(likeUserIdsResponse)
     })
   }, [feedData])
-
-  useEffect(() => {
-    if (!likerList) return
-    if (!currentUser) return
-    if (currentUser.info.userId === "") return
-    if (likerList.includes(currentUser.info.userId)) setIsCurrentUserLike(true)
-    else {
-      setIsCurrentUserLike(false)
-    }
-  }, [likerList, currentUser])
 
   return (
     <>
@@ -68,10 +64,10 @@ export default function LikeCommentInfo({
         alignItems="center"
       >
         <Margin direction="row" size={10} />
-        {isCurrentUserLike ? (
-          <FullHeart storgateId={feedData.storageId} />
+        {(currentUser.likeFeedIds ?? []).includes(feedData.storageId) ? (
+          <FullHeart storageId={feedData.storageId} />
         ) : (
-          <HeartIcon storgateId={feedData.storageId} />
+          <HeartIcon storageId={feedData.storageId} />
         )}
         <Margin direction="row" size={15} />
         <CommentIcon
@@ -88,11 +84,11 @@ export default function LikeCommentInfo({
         <CustomH6
           style={{ cursor: "pointer", color: isDarkMode ? "white" : "" }}
           onClick={() => {
+            setLikeUserList(likeUserIds)
             setIsLikeModalOpen(true)
-            setLikeUserList(likerList)
           }}
         >
-          좋아요 {likerList ? likerList.length : "0"}개
+          좋아요 {likeUserIds ? likeUserIds.length : "0"}개
         </CustomH6>
         <CustomH6 style={{ color: isDarkMode ? "white" : "" }}>
           댓글 {commentData ? commentData.length : "0"}개

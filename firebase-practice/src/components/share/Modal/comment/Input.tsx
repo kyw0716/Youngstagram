@@ -1,6 +1,6 @@
 import { authService, DBService } from "@FireBase"
 import { darkModeState } from "@share/recoil/recoilList"
-import { Comment, FeedData } from "backend/dto"
+import { Comment, FeedItem } from "backend/dto"
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import getCurrentTime from "lib/getCurrentTime"
 import { useCallback, useState } from "react"
@@ -9,7 +9,7 @@ import styled from "styled-components"
 import { v4 } from "uuid"
 
 type Props = {
-  feedData: FeedData
+  feedData: FeedItem
   inputRef: React.RefObject<HTMLInputElement>
   commentAreaRef: React.RefObject<HTMLDivElement>
 }

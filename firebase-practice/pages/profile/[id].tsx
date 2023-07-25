@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react"
-import { DBService } from "@FireBase"
-import { doc, DocumentData, onSnapshot } from "firebase/firestore"
+import { DocumentData } from "firebase/firestore"
 import { GetServerSideProps } from "next"
 import ProfileHeader from "@feature/profile/customerProfile"
 import styled from "styled-components"
 import { Margin } from "ui"
 import Layout from "components/layout"
-import { FeedData, UserData } from "backend/dto"
+import { FeedItem, UserData } from "backend/dto"
 import { useRouter } from "next/router"
 import FeedGrid from "@share/Feed/profilepage/FeedGrid"
 import { useRecoilValue } from "recoil"
 import { feedDataState, userListState } from "@share/recoil/recoilList"
 import CommentModal from "@share/Modal/comment/CommentModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
+import axios from "axios"
+import ProfileLoadingGrid from "@share/Loading/ProfileLoadingGrid"
 
 const Style = {
   Wrapper: styled.div`
@@ -30,7 +31,7 @@ const Style = {
 export default function Profile({ userId }: Props) {
   const router = useRouter()
   const [userData, setUserData] = useState<DocumentData>()
-  const [feedData, setFeedData] = useState<FeedData[]>()
+  const [feedData, setFeedData] = useState<FeedItem[]>()
   const selectedFeedData = useRecoilValue(feedDataState)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
   const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
@@ -40,13 +41,16 @@ export default function Profile({ userId }: Props) {
     setIsUserListModalOpen(false)
     if (router.query !== undefined && router.query.id !== userId)
       router.push(`/profile/${router.query.id}`)
-    const userDataRef = doc(DBService, "users", `${userId}`)
-    onSnapshot(userDataRef, { includeMetadataChanges: true }, (doc) => {
-      if (doc) {
-        setUserData(doc.data())
-      }
-    })
   }, [router.query, userId])
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `/api/profile?userId=${userId}`,
+    }).then((response) => {
+      setUserData(response.data)
+    })
+  }, [userId])
 
   useEffect(() => {
     setFeedData(userData?.feed)
@@ -71,11 +75,13 @@ export default function Profile({ userId }: Props) {
           userData={userData as UserData}
           setIsUserListModalOpen={setIsUserListModalOpen}
         />
-        {feedData !== undefined && (
+        {feedData !== undefined ? (
           <FeedGrid
             feedDatas={feedData ? feedData : undefined}
             setIsCommentModalOpen={setIsCommentModalOpen}
           />
+        ) : (
+          <ProfileLoadingGrid />
         )}
       </Style.Wrapper>
       <Margin direction="column" size={30} />

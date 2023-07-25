@@ -1,8 +1,9 @@
 import { DBService } from "@FireBase"
-import { FeedData } from "backend/dto"
+import { FeedItem, UserInfo } from "backend/dto"
 import {
   arrayRemove,
   arrayUnion,
+  deleteDoc,
   doc,
   getDoc,
   setDoc,
@@ -16,12 +17,12 @@ import type { NextApiRequest, NextApiResponse } from "next"
  * request url : /api/feed
  * response : 메인 페이지의 피드 정보들
  *
- * TODO: 새로운 피드 등록과 피드 수정 기능 구분하기
  * method : POST
  * request url : /api/feed
  * request body for new feed : {imageUrl, desc, location, isPrivate, creator}
  * response : Success
  *
+ * uploadTime이 new feed 인 경우
  * method : POST
  * request url : /api/feed
  * request body for new feed : {imageUrl, desc, location, isPrivate, storageId, creator, uploadTime, newDesc, newLocation, newIsPrivate}
@@ -35,19 +36,39 @@ import type { NextApiRequest, NextApiResponse } from "next"
 
 export default async function getFeed(
   req: NextApiRequest,
-  res: NextApiResponse<FeedData[] | string>,
+  res: NextApiResponse<FeedItem[] | string>,
 ) {
   if (req.method === "GET") {
     const getFeedRef = doc(DBService, "mainPage", "userFeedDataAll")
     const docSnapShot = await getDoc(getFeedRef)
 
     if (docSnapShot.exists()) {
-      const data = docSnapShot.data()?.feed as FeedData[]
+      const data = docSnapShot.data()?.feed as FeedItem[]
+
+      const feedItems = await Promise.all(
+        data.map(async (feedItem) => {
+          const userId = feedItem.creator
+          const getUserInfoRef = doc(DBService, "users", `${userId}`)
+          const userInfoDocSnapShot = await getDoc(getUserInfoRef)
+
+          const userInfo = userInfoDocSnapShot.data()?.info as UserInfo
+
+          return {
+            ...feedItem,
+            creator: {
+              ...userInfo,
+            },
+          }
+        }),
+      )
+
       res
         .status(200)
-        .json(data.sort((a, b) => Number(a.uploadTime) - Number(b.uploadTime)))
+        .json(
+          feedItems.sort((a, b) => Number(b.uploadTime) - Number(a.uploadTime)),
+        )
     } else {
-      res.status(500).json("Fail")
+      res.status(404).json("not found")
     }
   } else if (req.method === "POST") {
     const {
@@ -58,89 +79,66 @@ export default async function getFeed(
       storageId,
       creator,
       uploadTime,
-      newDesc,
-      newLocation,
-      newIsPrivate,
     } = req.body
 
-    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
-    const firestorePersonalRef = doc(DBService, "users", `${creator}`)
+    const firestoreRef = doc(DBService, "mainPage", `userFeedDataAll`)
 
-    if (!uploadTime) {
-      const feed: FeedData = {
-        imageUrl: imageUrl,
-        desc: desc,
-        location: location,
-        isPrivate: isPrivate,
-        storageId: storageId,
-        creator: creator,
+    const isNewFeed = uploadTime === "new feed"
+
+    if (isNewFeed) {
+      const feed: FeedItem = {
+        imageUrl,
+        desc,
+        location,
+        isPrivate,
+        storageId,
+        creator,
         uploadTime: getCurrentTime(),
       }
 
-      await updateDoc(firestoreAllRef, {
+      await updateDoc(firestoreRef, {
         feed: arrayUnion(feed),
       }).catch(async (error) => {
         if (error.code === "not-found") {
-          await setDoc(firestoreAllRef, {
+          setDoc(firestoreRef, {
             feed: [feed],
           })
         } else {
           res.status(500).json(error.code)
         }
       })
+    }
+    if (!isNewFeed) {
+      const { newDesc, newLocation, newIsPrivate } = req.body
 
-      await updateDoc(firestorePersonalRef, {
-        feed: arrayUnion(feed),
-      }).catch(async (error) => {
-        if (error.code === "not-found") {
-          await setDoc(firestorePersonalRef, {
-            feed: [feed],
-          })
-        } else {
-          res.status(500).json(error.code)
-        }
-      })
-
-      res.status(200).json("Success")
-    } else {
-      const feedToRemove: FeedData = {
-        imageUrl: imageUrl,
-        desc: desc,
-        location: location,
-        isPrivate: isPrivate,
-        storageId: storageId,
-        creator: creator,
-        uploadTime: uploadTime,
+      const feedToRemove: FeedItem = {
+        imageUrl,
+        desc,
+        location,
+        isPrivate,
+        storageId,
+        creator,
+        uploadTime,
       }
-      const newFeed: FeedData = {
-        imageUrl: imageUrl,
+      const newFeed: FeedItem = {
+        imageUrl,
         desc: newDesc,
         location: newLocation,
         isPrivate: newIsPrivate,
-        storageId: storageId,
-        creator: creator,
-        uploadTime: uploadTime,
+        storageId,
+        creator,
+        uploadTime,
       }
 
-      await updateDoc(firestoreAllRef, {
+      updateDoc(firestoreRef, {
         feed: arrayRemove(feedToRemove),
-      }).catch((error) => res.status(500).json(error.code))
-
-      await updateDoc(firestorePersonalRef, {
-        feed: arrayRemove(feedToRemove),
-      }).catch((error) => {
-        res.status(500).json(error.code)
       })
-
-      await updateDoc(firestoreAllRef, {
-        feed: arrayUnion(newFeed),
-      }).catch((error) => res.status(500).json(error.code))
-
-      await updateDoc(firestorePersonalRef, {
-        feed: arrayUnion(newFeed),
-      }).catch((error) => res.status(500).json(error.code))
-
-      res.status(200).json("Success")
+        .then(() => {
+          updateDoc(firestoreRef, {
+            feed: arrayUnion(newFeed),
+          }).catch((error) => res.status(500).json(error.code))
+        })
+        .catch((error) => res.status(500).json(error.code))
     }
   } else if (req.method === "DELETE") {
     const {
@@ -151,33 +149,37 @@ export default async function getFeed(
       storageId,
       creator,
       uploadTime,
-    } = req.body as FeedData
+      userId,
+    } = req.body
 
-    const firestoreAllRef = doc(DBService, "mainPage", `userFeedDataAll`)
-    const firestorePersonalRef = doc(DBService, "users", `${creator}`)
+    const feedRef = doc(DBService, "mainPage", `userFeedDataAll`)
+    const userRef = doc(DBService, "users", `${userId}`)
+    const commentRef = doc(DBService, "Comments", `${storageId}`)
 
-    const feed: FeedData = {
-      imageUrl: imageUrl,
-      desc: desc,
-      location: location,
-      isPrivate: isPrivate,
-      storageId: storageId,
-      creator: creator,
-      uploadTime: uploadTime,
+    const feed: Omit<FeedItem, "creator"> & { creator: string } = {
+      creator,
+      desc,
+      imageUrl,
+      isPrivate: isPrivate === "true",
+      location,
+      storageId,
+      uploadTime,
     }
 
-    await updateDoc(firestoreAllRef, {
+    updateDoc(feedRef, {
       feed: arrayRemove(feed),
     }).catch((error) => {
       res.status(500).json(error.code)
     })
 
-    await updateDoc(firestorePersonalRef, {
-      feed: arrayRemove(feed),
+    updateDoc(userRef, {
+      likeFeedIds: arrayRemove(storageId),
     }).catch((error) => {
       res.status(500).json(error.code)
     })
 
-    res.status(200).json("Success")
+    deleteDoc(commentRef).catch((error) => {
+      res.status(500).json(error.code)
+    })
   }
 }

@@ -1,5 +1,5 @@
 import { feedDataState } from "@share/recoil/recoilList"
-import { FeedData } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import React, { SetStateAction } from "react"
 import { useSetRecoilState } from "recoil"
 import {
@@ -13,7 +13,7 @@ import {
 
 type Props = {
   isCurrentUserLike: boolean
-  feedData: FeedData
+  feedData: FeedItem
   setIsCommentModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
@@ -32,9 +32,9 @@ export default function Icons({
     >
       <Margin direction="row" size={10} />
       {isCurrentUserLike ? (
-        <FullHeart storgateId={feedData.storageId} />
+        <FullHeart storageId={feedData.storageId} />
       ) : (
-        <HeartIcon storgateId={feedData.storageId} />
+        <HeartIcon storageId={feedData.storageId} />
       )}
       <Margin direction="row" size={15} />
       <CommentIcon

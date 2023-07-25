@@ -1,18 +1,5 @@
-import { DBService, storageService } from "@FireBase"
-import {
-  darkModeState,
-  feedDataState,
-  userDataState,
-} from "@share/recoil/recoilList"
-import { FeedData } from "backend/dto"
-import {
-  arrayRemove,
-  arrayUnion,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore"
-import { deleteObject, ref } from "firebase/storage"
+import { darkModeState, feedDataState } from "@share/recoil/recoilList"
+import { FeedItem } from "backend/dto"
 import {
   DeleteIcon,
   DotMenuIcon,
@@ -21,12 +8,13 @@ import {
   LogoutIcon,
   UnLockIcon,
 } from "icons"
+import { useFeedCRUD } from "lib/hooks/useFeedCRUD"
 import { SetStateAction, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 
 type Props = {
-  feedData: FeedData
+  feedData: FeedItem
   setIsFeedUploadModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
@@ -144,87 +132,15 @@ export default function ThreeDotMenu({
 }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const setSelectedFeedData = useSetRecoilState(feedDataState)
-  const setCurrentUserData = useSetRecoilState(userDataState)
   const isDarkMode = useRecoilValue(darkModeState)
 
   const handleThreeDotMenuClick = () => {
     setIsMenuOpen((current) => !current)
   }
 
-  const handleDeleteFeed = async () => {
-    const feed: FeedData = {
-      creator: feedData.creator,
-      desc: feedData.desc,
-      imageUrl: feedData.imageUrl,
-      location: feedData.location,
-      isPrivate: feedData.isPrivate,
-      storageId: feedData.storageId,
-      uploadTime: feedData.uploadTime,
-    }
-    const storageImageRef = ref(
-      storageService,
-      `images/${feedData.creator}/${feedData.storageId}`,
-    )
-    const firestoreAllRef = doc(DBService, "mainPage", "userFeedDataAll")
-    const firestoreCommentRef = doc(DBService, "Comments", feedData.storageId)
-    const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
-    const firestoreLikeRef = doc(DBService, "like", feedData.storageId)
-
-    handleThreeDotMenuClick()
-
-    await updateDoc(firestorePersonalRef, {
-      feed: arrayRemove(feed),
-    }).catch((error) => console.log(error.code))
-    await updateDoc(firestoreAllRef, {
-      feed: arrayRemove(feed),
-    }).catch((error) => console.log(error.code))
-
-    await deleteObject(storageImageRef).catch((error) =>
-      console.log(error.code),
-    )
-    await deleteDoc(firestoreCommentRef).catch((error) =>
-      console.log(error.code),
-    )
-    await deleteDoc(firestoreLikeRef).catch((error) => console.log(error.code))
-  }
-  const handlePrivateToggle = async () => {
-    const firestoreImageAllRef = doc(DBService, "mainPage", "userFeedDataAll")
-    const firestorePersonalRef = doc(DBService, `users`, `${feedData.creator}`)
-    const feed: FeedData = {
-      creator: feedData.creator,
-      desc: feedData.desc,
-      imageUrl: feedData.imageUrl,
-      location: feedData.location,
-      isPrivate: feedData.isPrivate,
-      storageId: feedData.storageId,
-      uploadTime: feedData.uploadTime,
-    }
-    const toggleFeed: FeedData = {
-      creator: feedData.creator,
-      desc: feedData.desc,
-      imageUrl: feedData.imageUrl,
-      location: feedData.location,
-      isPrivate: !feedData.isPrivate,
-      storageId: feedData.storageId,
-      uploadTime: feedData.uploadTime,
-    }
-
-    handleThreeDotMenuClick()
-    await updateDoc(firestorePersonalRef, {
-      feed: arrayRemove(feed),
-    }).then(async () => {
-      await updateDoc(firestorePersonalRef, {
-        feed: arrayUnion(toggleFeed),
-      })
-    })
-    await updateDoc(firestoreImageAllRef, {
-      feed: arrayRemove(feed),
-    }).then(async () => {
-      await updateDoc(firestoreImageAllRef, {
-        feed: arrayUnion(toggleFeed),
-      })
-    })
-  }
+  const { handleDeleteFeed, handlePrivateToggle } = useFeedCRUD({
+    handleThreeDotMenuClick,
+  })
 
   return (
     <>
@@ -250,7 +166,7 @@ export default function ThreeDotMenu({
               편집
             </Style.EditButton>
             <Style.PrivateToggleButton
-              onClick={handlePrivateToggle}
+              onClick={() => handlePrivateToggle(feedData)}
               style={
                 isDarkMode ? { backgroundColor: "black", color: "white" } : {}
               }
@@ -264,7 +180,7 @@ export default function ThreeDotMenu({
               {feedData.isPrivate ? "공개" : "비공개"}
             </Style.PrivateToggleButton>
             <Style.Deletebutton
-              onClick={handleDeleteFeed}
+              onClick={() => handleDeleteFeed(feedData)}
               style={
                 isDarkMode ? { backgroundColor: "black", color: "white" } : {}
               }

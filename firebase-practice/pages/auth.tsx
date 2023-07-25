@@ -21,6 +21,7 @@ import { UserInfo } from "backend/dto"
 import { GitHubIcon, GoogleIcon } from "icons"
 import { useRecoilValue } from "recoil"
 import { darkModeState } from "@share/recoil/recoilList"
+import { useAuth } from "lib/hooks/useAuth"
 
 const Style = {
   Wrapper: styled.div`
@@ -107,159 +108,24 @@ const Style = {
 
 export default function Auth() {
   const router = useRouter()
-  const [Email, setEmail] = useState<string>("")
-  const [Password, setPassword] = useState<string>("")
-  const [confirmPassword, setConfirmPassword] = useState<string>("")
-  const [isNewAccount, setIsNewAccount] = useState<boolean>(false)
-  const [name, setName] = useState<string>("")
-
-  const [isLogin, setIsLogin] = useState<boolean>(false)
-  const githubProvider = new GithubAuthProvider()
-  const googleProvider = new GoogleAuthProvider()
-
   const isDarkMode = useRecoilValue(darkModeState)
 
-  const handleOnInputChange: React.ChangeEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    if (event.target.name === "Email") {
-      if (event.target.value === "서경") alert("사랑해")
-      setEmail(event.target.value)
-      return
-    }
-    setPassword(event.target.value)
-  }
-  const handleNameOnChange: React.ChangeEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    setName(event.target.value)
-  }
-  const handleOnSubmit: React.FormEventHandler<HTMLFormElement> = async (
-    event,
-  ) => {
-    event.preventDefault()
-    if (Email.length === 0) return
-    if (Password.length < 6) return
-    if (isNewAccount === true) {
-      await createUserWithEmailAndPassword(authService, Email, Password)
-        .then((response) => {
-          if (response && authService.currentUser !== null) {
-            updateProfile(authService.currentUser, {
-              displayName: name,
-            })
-            signOut(authService)
-            setIsNewAccount(false)
-            alert(
-              "회원가입에 성공 하셨습니다! 회원가입하신 정보로 로그인 바랍니다.",
-            )
-            setEmail("")
-            setPassword("")
-          }
-        })
-        .catch((error) => {
-          if (error.code === "auth/weak-password") {
-            alert("비밀번호는 최소 6자리 이상이어야 합니다.")
-            setConfirmPassword("")
-            setPassword("")
-          } else if (error.code === "auth/email-already-in-use") {
-            alert("이미 사용중인 이메일 입니다.")
-            setPassword("")
-            setConfirmPassword("")
-            setEmail("")
-          } else if (error.code === "auth/invalid-email") {
-            alert("올바른 이메일 형식을 입력해주세요")
-            setEmail("")
-          }
-        })
-      return
-    }
-    setPersistence(authService, browserSessionPersistence)
-      .then(async () => {
-        return signInWithEmailAndPassword(authService, Email, Password)
-          .then(async (response) => {
-            if (response) {
-              setIsLogin(true)
-              CreateNewUserToFirestore(response)
-            }
-          })
-          .catch((error) => {
-            if (error.code === "auth/wrong-password") {
-              alert("비밀번호가 잘못되었습니다")
-              setPassword("")
-              return
-            }
-            if (error.code === "auth/invalid-email") {
-              alert("이메일 똑바로 쓰세요")
-            } else if (error.code === "auth/user-not-found") {
-              alert("등록되지 않은 사용자 입니다")
-            }
-            setEmail("")
-            setPassword("")
-          })
-      })
-      .catch((error) => console.log(error.code))
-  }
-
-  const handleGoogleAuth = async () => {
-    setIsLogin(true)
-    await signInWithPopup(authService, googleProvider)
-      .then(async (response) => {
-        if (response) {
-          await CreateNewUserToFirestore(response)
-        }
-      })
-      .catch((error) => {
-        if (error.code === "auth/cancelled-popup-request") {
-          alert(
-            "로그인 진행중에 오류가 발생하였습니다. 팝업창을 닫지 않도록 주의하시기 바랍니다.",
-          )
-        }
-        if (error.code === "auth/account-exists-with-different-credential") {
-          alert("동일한 이메일 주소로 이미 가입된 계정이 있습니다.")
-        }
-        router.push("/auth")
-      })
-  }
-
-  const handleGitHubAuth = async () => {
-    setIsLogin(true)
-    await signInWithPopup(authService, githubProvider)
-      .then(async (response) => {
-        if (response) {
-          await CreateNewUserToFirestore(response)
-        }
-      })
-      .catch((error) => {
-        if (error.code === "auth/cancelled-popup-request") {
-          alert(
-            "로그인 진행중에 오류가 발생하였습니다. 팝업창을 닫지 않도록 주의하시기 바랍니다.",
-          )
-        }
-        if (error.code === "auth/account-exists-with-different-credential") {
-          alert("동일한 이메일 주소로 이미 가입된 계정이 있습니다.")
-        }
-        router.push("/auth")
-      })
-  }
-
-  const CreateNewUserToFirestore = async (response: UserCredential) => {
-    const newUserToFirestoreRef = doc(DBService, "users", response.user.uid)
-    const UserDataForm: UserInfo = {
-      userId: response.user.uid,
-      profileImage: response.user.photoURL,
-      name: response.user.displayName,
-      email: response.user.email,
-    }
-    await updateDoc(newUserToFirestoreRef, { info: UserDataForm }).catch(
-      async (error) => {
-        if (error.code === "not-found") {
-          await setDoc(newUserToFirestoreRef, { info: UserDataForm }).catch(
-            (error) => console.log(error.code),
-          )
-        }
-      },
-    )
-  }
+  const {
+    isLogin,
+    isNewAccount,
+    email,
+    name,
+    password,
+    confirmPassword,
+    setIsLogin,
+    setConfirmPassword,
+    setIsNewAccount,
+    handleOnInputChange,
+    handleGitHubAuth,
+    handleGoogleAuth,
+    handleOnSubmit,
+    handleNameOnChange,
+  } = useAuth()
 
   useEffect(() => {
     if (isLogin) router.push("/")
@@ -292,7 +158,7 @@ export default function Auth() {
             required
             onChange={handleOnInputChange}
             name="Email"
-            value={Email}
+            value={email}
             autoComplete="off"
             style={
               isDarkMode
@@ -304,7 +170,7 @@ export default function Auth() {
                 : {}
             }
           />
-          {Email.search(/\@\w+\.com|\@\w+\.net/) === -1 && Email.length > 3 ? (
+          {email.search(/\@\w+\.com|\@\w+\.net/) === -1 && email.length > 3 ? (
             <span style={{ color: "red", width: "268px", fontSize: "13px" }}>
               올바르지 않은 이메일 형식입니다.
             </span>
@@ -318,11 +184,11 @@ export default function Auth() {
             required
             onChange={handleOnInputChange}
             name="Password"
-            value={Password}
+            value={password}
             style={
-              Password !== confirmPassword &&
+              password !== confirmPassword &&
               confirmPassword !== "" &&
-              Password !== ""
+              password !== ""
                 ? { backgroundColor: "red" }
                 : {
                     backgroundColor: isDarkMode ? "#373e47" : "white",
@@ -342,16 +208,16 @@ export default function Auth() {
                 }}
                 type="password"
                 style={
-                  Password !== confirmPassword &&
+                  password !== confirmPassword &&
                   confirmPassword !== "" &&
-                  Password !== ""
+                  password !== ""
                     ? { backgroundColor: "red" }
                     : { backgroundColor: "white" }
                 }
               />
-              {Password !== confirmPassword &&
+              {password !== confirmPassword &&
               confirmPassword !== "" &&
-              Password !== "" ? (
+              password !== "" ? (
                 <CustomH6Light style={{ color: "red" }}>
                   비밀번호가 일치하지 않습니다
                 </CustomH6Light>
@@ -375,26 +241,26 @@ export default function Auth() {
             value={isNewAccount ? "Create Account" : "Log in"}
             color={
               isNewAccount
-                ? Email.length !== 0 &&
-                  Password.length >= 6 &&
-                  Password === confirmPassword &&
+                ? email.length !== 0 &&
+                  password.length >= 6 &&
+                  password === confirmPassword &&
                   name !== ""
                   ? ""
                   : "fail"
-                : Email.length !== 0 && Password.length >= 6
+                : email.length !== 0 && password.length >= 6
                 ? ""
                 : "fail"
             }
             disabled={
               isNewAccount
                 ? !(
-                    Email.length !== 0 &&
-                    Password.length >= 6 &&
-                    Password === confirmPassword &&
+                    email.length !== 0 &&
+                    password.length >= 6 &&
+                    password === confirmPassword &&
                     confirmPassword !== "" &&
                     name !== ""
                   )
-                : !(Email.length !== 0 && Password.length >= 6)
+                : !(email.length !== 0 && password.length >= 6)
             }
           />
           <Margin direction="column" size={15} />
@@ -412,7 +278,7 @@ export default function Auth() {
               height={40}
               onClick={() => {
                 setPersistence(authService, browserSessionPersistence).then(
-                  async () => {
+                  () => {
                     handleGoogleAuth()
                   },
                 )
@@ -424,7 +290,7 @@ export default function Auth() {
               height={40}
               onClick={() => {
                 setPersistence(authService, browserSessionPersistence).then(
-                  async () => {
+                  () => {
                     handleGitHubAuth()
                   },
                 )

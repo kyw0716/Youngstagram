@@ -1,5 +1,6 @@
 import { authService, DBService } from "@FireBase"
 import { darkModeState, userDataState } from "@share/recoil/recoilList"
+import axios from "axios"
 import {
   arrayRemove,
   arrayUnion,
@@ -8,7 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore"
 import Link from "next/link"
-import { useRecoilValue } from "recoil"
+import { useRecoilValue, useRecoilState } from "recoil"
 import styled from "styled-components"
 
 type FlexBoxProperty = {
@@ -135,22 +136,24 @@ export const CustomH4Light = TextStyle.CustomH4Light
 export const CustomH5Light = TextStyle.CustomH5Light
 export const CustomH6Light = TextStyle.CustomH6Light
 
-type HeartProps = { storgateId: string }
+type HeartProps = { storageId: string }
 
-export function HeartIcon({ storgateId }: HeartProps) {
-  const handleLike = async () => {
-    const likeRef = doc(DBService, "like", storgateId)
-    await updateDoc(likeRef, {
-      likerList: arrayUnion(authService.currentUser?.uid),
-    }).catch(async (error) => {
-      if (error.code === "not-found") {
-        await setDoc(likeRef, {
-          likerList: [authService.currentUser?.uid],
-        })
-      }
+export function HeartIcon({ storageId }: HeartProps) {
+  const [currentUser, setCurrentUser] = useRecoilState(userDataState)
+
+  const handleLike = () => {
+    setCurrentUser((user) => ({
+      ...user,
+      likeFeedIds: [...(user.likeFeedIds ?? []), storageId],
+    }))
+
+    axios.put(`/api/like`, {
+      userId: currentUser.info.userId,
+      storageId,
     })
   }
   const isDarkMode = useRecoilValue(darkModeState)
+
   return (
     <svg
       aria-label="좋아요"
@@ -377,12 +380,20 @@ export function FeedUPloadModalIcon() {
   )
 }
 
-export function FullHeart({ storgateId }: HeartProps) {
-  const likeRef = doc(DBService, "like", storgateId)
+export function FullHeart({ storageId }: HeartProps) {
+  const [currentUser, setCurrentUser] = useRecoilState(userDataState)
+
   const handleUnLike = async () => {
-    await updateDoc(likeRef, {
-      likerList: arrayRemove(authService.currentUser?.uid),
-    })
+    setCurrentUser((user) => ({
+      ...user,
+      likeFeedIds: (user.likeFeedIds ?? []).filter(
+        (feedId) => feedId !== storageId,
+      ),
+    }))
+
+    axios.delete(
+      `/api/like?userId=${currentUser.info.userId}&storageId=${storageId}`,
+    )
   }
   return (
     <svg
@@ -390,9 +401,9 @@ export function FullHeart({ storgateId }: HeartProps) {
       color="#ed4956"
       fill="#ed4956"
       height="24"
+      width="24"
       role="img"
       viewBox="0 0 48 48"
-      width="24"
       style={{ cursor: "pointer" }}
       onClick={handleUnLike}
     >

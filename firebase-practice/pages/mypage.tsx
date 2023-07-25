@@ -3,7 +3,7 @@ import FeedSortList from "@share/Feed/mypage/FeedSortList"
 import ProfileHeader from "@feature/profile/mypage"
 import styled from "styled-components"
 import Layout from "components/layout"
-import { FeedData } from "backend/dto"
+import { FeedItem } from "backend/dto"
 import { useRecoilValue } from "recoil"
 import {
   FeedDataFilter,
@@ -14,6 +14,8 @@ import {
 import CommentModal from "@share/Modal/comment/CommentModal"
 import FeedUploadModal from "@share/Modal/feed/FeedUploadModal"
 import UserListModal from "@share/Modal/userList/UserListModal"
+import { FlexBox } from "ui"
+import Loading from "@share/Loading/Loading"
 
 const Style = {
   Wrapper: styled.div`
@@ -32,19 +34,18 @@ export default function Profile() {
   const currentUserData = useRecoilValue(userDataState)
 
   const feedDataType = useRecoilValue(FeedDataFilter)
-  const [feedData, setFeedData] = useState<FeedData[]>([])
   const selectedFeedData = useRecoilValue(feedDataState)
-
-  const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
-  const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
   const likeUserList = useRecoilValue(userListState)
 
+  const [feedData, setFeedData] = useState<FeedItem[]>([])
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState<boolean>(false)
+  const [isUserListModalOpen, setIsUserListModalOpen] = useState<boolean>(false)
   const [isFeedUploadModalOpen, setIsFeedUploadModalOpen] =
     useState<boolean>(false)
 
   useEffect(() => {
-    if (currentUserData === undefined || currentUserData.feed === undefined)
-      return
+    if (currentUserData.feed === undefined) return
+
     if (feedDataType === "public") {
       setFeedData(
         currentUserData.feed.filter((eachFeed) => !eachFeed.isPrivate),
@@ -78,13 +79,17 @@ export default function Profile() {
       />
       <Style.Wrapper>
         <ProfileHeader setIsUserListModalOpen={setIsUserListModalOpen} />
-        {feedData !== undefined && (
+        {feedData !== undefined ? (
           <FeedSortList
-            feedData={feedData}
+            feeds={feedData}
             setIsCommentModalOpen={setIsCommentModalOpen}
             setIsFeedUploadModalOpen={setIsFeedUploadModalOpen}
             setIsUserListModalOpen={setIsUserListModalOpen}
           />
+        ) : (
+          <FlexBox justifyContents="center">
+            <Loading width={470} height={750} borderRadius={10} count={2} />
+          </FlexBox>
         )}
       </Style.Wrapper>
     </Layout>
